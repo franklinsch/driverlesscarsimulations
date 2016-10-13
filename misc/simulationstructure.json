@@ -1,0 +1,37 @@
+city:
+{
+  "id": 09809,
+  "bounding-box": _
+  "roads": [
+    {
+      "id": ""
+      "nodes":   
+        [
+          {
+            "id":32432,
+            "coordinates": [
+              [1,2],
+              [2,3]
+            ]
+          }
+        ]
+    }
+  ]
+}
+
+simulation:
+{
+  "id:342423,
+  "city": 09809,
+  "timeline": [
+    {
+      "timestamp": "00:00:21",
+      "objects": [
+        {
+          "type": "car",
+          "location": [1,2]
+        }
+      ] 
+    }
+  ]
+}
