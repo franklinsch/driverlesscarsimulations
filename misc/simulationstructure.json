@@ -4,7 +4,7 @@ city:
   "bounding-box": _
   "roads": [
     {
-      "id": ""
+      "id": "",
       "nodes":   
         [
           {
@@ -21,7 +21,7 @@ city:
 
 simulation:
 {
-  "id:342423,
+  "id":342423,
   "city": 09809,
   "timeline": [
     {
