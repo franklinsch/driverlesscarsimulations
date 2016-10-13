@@ -1,7 +1,7 @@
 city:
 {
   "id": 09809,
-  "bounding-box": _
+  "bounding-box": [1,2,3,4],
   "roads": [
     {
       "id": "",
