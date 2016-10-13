@@ -1,6 +1,3 @@
 ## Customize the test machine
-machine:
 
 test:
-  override:
-    - cat test
