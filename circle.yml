@@ -3,4 +3,4 @@ machine:
 
 test:
   override:
-    - echo test
+    - cat test
