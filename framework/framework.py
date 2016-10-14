@@ -1,23 +1,28 @@
 # Get the initial parameters of the simulation
-def getWorld():
+def fetchSimulationData():
 
-# Start communication with the backend presumably through some sort of socket
-def startSimulation():
+# Begin the simulation
+def fetchInitialParameters():
 
-# Send a new updated world probably bad idea
-def updateWorld(world):
+# Teardown connection maybe input some simulation id as an argument
+def stopSimulation():
+
+# Send a new updated world probably
+def sendWorld(world, timeStamp):
 
 # update specific car route
-def updateRoute(car, route):
+def updateRoute(car, route, timeStamp):
 
 # Stop car
-def emergencyStop(car):
+def emergencyStop(car, timeStamp):
 
-# End simulation
-def teardownSimulation(world):
+# Get event updated => [Event] this will include the external factors algorithm
+def handleEventUpdates():
+# New car
+# Car deleted
+# Pot hole
+# Pedestrian on zebra crossing
+# Pedestrian free roaming
+# Other external factors
 
-# Get event updated => [Events]
-def eventUpdate():
-# add car
-# delete car
 
