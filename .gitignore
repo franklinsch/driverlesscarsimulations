@@ -1,1 +1,4 @@
+.DS_Store
 node_modules
+babel_cache
+bundle.js
