@@ -42,4 +42,4 @@ Tasks put into Rejected must have a comment explaining the reason for the reject
 
 ###8. Spaces vs Tabs
 
-This should go without saying, but please indent your code with 4 spaces (except for Python).
+This should go without saying, but please indent your code with 2 spaces (except tabs for Python).
