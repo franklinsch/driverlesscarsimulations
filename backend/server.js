@@ -1,17 +1,26 @@
-// Importing node modules
 const express = require('express');
-// Importing source files
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
-// consts
+const config = require('./config');
+
 const app = express();
+
+const db = require('./models/db');
+
+//
+// Register Node.js middleware
+// -----------------------------------------------------------------------------
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use('/', routes);
 
 // arrow functions
-const server = app.listen(3000, () => {
-	// destructuring
+const server = app.listen(config.port, () => {
   const {address, port} = server.address();
-
-  // string interpolation:
-  console.log(`Example app listening at http://${address}:${port}`);
+  console.log(`The server is running at http://localhost:${port}/`);
 });
