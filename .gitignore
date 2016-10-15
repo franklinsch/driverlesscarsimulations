@@ -1,3 +1,7 @@
+# Python setup
+dist/
+*.egg_info
+
 babel_cache
 bundle.js
 data
