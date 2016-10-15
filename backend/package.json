@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "start": "node server.js",
-    "dev": "nodemon -w server.js"
+    "startDev": "nodemon -w server.js",
+    "build": "webpack -c webpack.prod.config",
+    "buildDev": "node app-dev-server.js"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,7 @@
 // webpack.config.js
 const webpack = require('webpack');
 const path = require('path');
+const config = require('./config');
 
 var cssloader = "css-loader!postcss-loader";
 var sassloader = "style-loader!css-loader!sass-loader!postcss-loader";
@@ -28,8 +29,10 @@ module.exports = {
   standardLoaders: defaultLoaders,
   cssloader: cssloader,
   sassloader: sassloader,
+  port: config.port,
   entry: path.join(__dirname, 'app.js'),
   output: {
+    publicPath: `http://localhost:${config.port}/`,
     path: path.join(__dirname, 'dev'),
     filename: 'bundle.js'
   },
