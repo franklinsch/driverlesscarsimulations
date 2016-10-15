@@ -37,7 +37,21 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: defaultLoaders
+    loaders: defaultLoaders.concat([
+      {
+        enforce: "pre",
+        test: /\.jsx?$/,
+        loader: "eslint-loader",
+        exclude: /(node_modules)/
+      }
+    ])
+  },
+  eslint: {
+    configFile: '.eslintrc',
+    emitWarning: true,
+    emitError: true,
+    failOnWarning: true,
+    failOnError: true
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
