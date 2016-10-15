@@ -39,3 +39,7 @@ A task that has moved out of Backlog must have at least one assignee.
 ###7. Tasks put into Rejected
 
 Tasks put into Rejected must have a comment explaining the reason for the rejection.
+
+###8. Spaces vs Tabs
+
+This should go without saying, but please indent your code with 2 spaces (except tabs for Python).
