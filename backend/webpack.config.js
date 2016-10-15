@@ -10,13 +10,16 @@ module.exports = {
   },
   module: {
     loaders: [{
-      test: path.join(__dirname),
+      test: /\.jsx?$/,
       loader: ['babel-loader'],
       query: {
         cacheDirectory: 'babel_cache',
         presets: ['react', 'es2015']
       }
     }]
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
   },
   plugins: [
     new webpack.DefinePlugin({
