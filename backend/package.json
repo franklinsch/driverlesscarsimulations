@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js",
     "startDev": "node app-dev-server.js",
-    "startBS": "browser-sync start --proxy localhost:3001 --files \"app/**/*\"",
     "build": "webpack --config webpack.prod.config",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
