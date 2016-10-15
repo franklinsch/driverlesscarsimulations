@@ -4,7 +4,6 @@ dist/
 
 babel_cache
 bundle.js
-data
 
 ### Node ###
 # Logs
