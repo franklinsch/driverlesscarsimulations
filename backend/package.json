@@ -4,10 +4,10 @@
   "description": "Driverless car simulation web platform",
   "main": "server.js",
   "scripts": {
+    "test": "mocha",
     "start": "node server.js",
     "startDev": "node app-dev-server.js",
-    "build": "webpack --config webpack.prod.config",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "build": "webpack --config webpack.prod.config"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
     "eslint": "^3.8.0",
     "eslint-loader": "^1.5.0",
     "eslint-plugin-react": "^6.4.1",
+    "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",
