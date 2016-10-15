@@ -12,12 +12,14 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Layout from '../../components/Layout';
 import s from './Home.css';
 
+import SimulationMap from '../../components/SimulationMap/SimulationMap';
+
 function Home({ news }) {
   return (
     <Layout>
       <div className={s.root}>
         <div className={s.container}>
-          <p> Hello </p>
+          <SimulationMap />
         </div>
       </div>
     </Layout>
