@@ -5,9 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "startDev": "nodemon -w server.js",
-    "build": "webpack --config webpack.prod.config",
     "buildDev": "node app-dev-server.js",
+    "build": "webpack --config webpack.prod.config",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
