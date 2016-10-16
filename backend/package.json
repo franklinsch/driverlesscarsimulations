@@ -34,7 +34,8 @@
     "mongoose": "^4.6.3",
     "path": "^0.12.7",
     "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.3.2",
+    "ol-react": "^0.1.5"
   },
   "devDependencies": {
     "babel-loader": "^6.2.5",
