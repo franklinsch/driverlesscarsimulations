@@ -1,6 +1,11 @@
 machine:
   timezone: Europe/London
+  node:
+    version: 4.6.0
+    
+general:
+  build_dir: backend
 
 test:
   override:
-    - echo test
+    - npm test
