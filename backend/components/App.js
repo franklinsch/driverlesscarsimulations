@@ -68,8 +68,6 @@ export default class App extends React.Component {
 
     const cars = this.state.cars;
     const currentCity = this.state.currentCity;
-
-    console.log(cars)
     
     return (
       <div>
