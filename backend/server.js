@@ -19,8 +19,32 @@ app.use(bodyParser.json());
 
 app.use('/', routes);
 
-// arrow functions
 const server = app.listen(config.port, () => {
   const {address, port} = server.address();
   console.log(`The server is running at http://localhost:${port}/`);
+});
+
+var WebSocketServer = require('websocket').server;
+var wsServer        = new WebSocketServer({ httpServer : server });
+
+wsServer.on('request', function(request) {
+  var connection = request.accept(null, request.origin);
+
+  console.log((new Date()) + ' Connection accepted.');
+
+  connection.on('message', function(message) {
+    if (message.type === 'utf8') {
+      console.log('Received Message: ' + message.utf8Data);
+      connection.sendUTF(message.utf8Data);
+    }
+    else if (message.type === 'binary') {
+      console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+      connection.sendBytes(message.binaryData);
+    }
+  });
+
+  connection.on('close', function(reasonCode, description) {
+    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+  });
+
 });

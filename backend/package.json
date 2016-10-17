@@ -35,7 +35,8 @@
     "path": "^0.12.7",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-leaflet": "^0.12.3"
+    "react-leaflet": "^0.12.3",
+    "websocket": "^1.0.23"
   },
   "devDependencies": {
     "babel-loader": "^6.2.5",
