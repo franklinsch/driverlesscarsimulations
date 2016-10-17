@@ -5,6 +5,10 @@ import CustomPropTypes from '../Utils/CustomPropTypes.js';
 
 export default class Simulation extends React.Component {
 
+  static propTypes = {
+    availableCities: React.PropTypes.arrayOf(CustomPropTypes.city)
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +33,17 @@ export default class Simulation extends React.Component {
             lng: -0.09
           } 
         }]
-      }
+      },
+      availableCities: [
+        { label: 'London', value: { position: {
+          lat: 51.505, 
+          lng: -0.09
+        }, zoom: 13 }},
+        { label: 'Munich', value: { position: {
+          lat: 48.1351, 
+          lng: 11.5820
+        }, zoom: 13 }}
+      ]
     }
   }
 
@@ -76,17 +90,7 @@ export default class Simulation extends React.Component {
   }
 
   render() {
-    let cities = [
-      { label: 'London', value: { position: {
-        lat: 51.505, 
-        lng: -0.09
-      }, zoom: 13 }},
-      { label: 'Munich', value: { position: {
-        lat: 48.1351, 
-        lng: 11.5820
-      }, zoom: 13 }}
-    ];
-
+    const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
 
