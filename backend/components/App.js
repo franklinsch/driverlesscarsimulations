@@ -1,6 +1,6 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.js';
-import Dropdown from 'Dropdown/Dropdown';
+import Dropdown from './Dropdown/Dropdown.jsx';
 
 export default class App extends React.Component {
 
