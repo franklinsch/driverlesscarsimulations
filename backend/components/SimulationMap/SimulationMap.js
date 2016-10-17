@@ -1,13 +1,13 @@
 import React from 'react';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import CustomPropTypes from '../Utils/CustomPropTypes.js'
 
 export default class SimulationMap extends React.Component {
   static propTypes = {
     width: React.PropTypes.string,
     height: React.PropTypes.string,
-    position: React.PropTypes.arrayOf(Number),
-    zoom: React.PropTypes.number,
-    markers: React.PropTypes.arrayOf(React.PropTypes.arrayOf(Number))
+    city: CustomPropTypes.city.isRequired,
+    cars: React.PropTypes.arrayOf(CustomPropTypes.car)
   }
 
   render() {
@@ -16,21 +16,23 @@ export default class SimulationMap extends React.Component {
       width: this.props.width || 300 + 'px'
     }
 
-    const markers = this.props.markers;
+    const city = this.props.city;
+    const cars = this.props.cars;
 
     return (
-      <Map center={this.props.position} zoom={13} style={style} >
+      <Map center={[city.position.lat, city.position.lng]} zoom={city.zoom} style={style} >
       <TileLayer
       url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
 
       {
-        markers &&
-        markers.map((marker, index) => {
+        cars &&
+        cars.map((car, index) => {
+          const key = car.position.lat.toString() + car.position.lng.toString()
           return (
-            <Marker position={ marker } 
-              key={ index }
+            <Marker position={ car.position } 
+              key={ key }
             />
           )
         })

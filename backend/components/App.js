@@ -1,5 +1,6 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.js';
+import Dropdown from './Dropdown/Dropdown.jsx';
 
 export default class App extends React.Component {
 
@@ -7,7 +8,22 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       coordinateString: "",
-      markers: [[51.505, -0.09]]
+      cars: [
+        {
+          id: "0",
+          position: {
+            lat: 51.505,
+            lng: -0.09
+          }
+        }
+      ],
+      currentCity: {
+        position: { 
+          lat: 51.505, 
+          lng: -0.09
+        }, 
+        zoom: 13 
+      }
     }
   }
 
@@ -17,39 +33,54 @@ export default class App extends React.Component {
     })
   }
 
-  onSubmit(event) {
-    event.preventDefault()
-    const coordinateString = this.state.coordinateString;
-    const coordinate = coordinateString.split(" ").map((str) => {
-      return parseFloat(str); 
-    });
+  onMove() {
+    const cars = this.state.cars;
 
-    const markers = this.state.markers.concat([coordinate])
+    cars.forEach( (car, i) => {
+      if (car.id === "0") {
+        car.position.lat += 0.001
+        cars[i] = car
+      }
+    })
 
     this.setState({
-      markers: markers
+      cars: cars
     })
+  } 
+
+  _onCitySelect(value) {
+    this.setState({
+      currentCity: value
+    });
   }
 
   render() {
+    let cities = [
+      { label: 'London', value: { position: {
+        lat: 51.505, 
+        lng: -0.09
+      }, zoom: 13 }},
+      { label: 'Munich', value: { position: {
+        lat: 48.1351, 
+        lng: 11.5820
+      }, zoom: 13 }}
+    ];
+
+    const cars = this.state.cars;
+    const currentCity = this.state.currentCity;
+    
     return (
       <div>
-        <form onSubmit={ (e) => { this.onSubmit(e) } }>
-          <input 
-            type="text" 
-            value={this.state.coordinateString}
-            onChange={(e) => this.onChange(e)}
-          />
-          <input type="submit"/>
-        </form>
+      <Dropdown items={cities} onSelect={(value) => { this._onCitySelect(value) }} />
 
-        <SimulationMap 
-          width={ 300 + 'px' }
-          height={ 300 + 'px' }
-          position={ [51.505, -0.09] }
-          zoom={ 13 }
-          markers= { this.state.markers }
-        />
+      <button onClick={ () => this.onMove() }>Move car</button>
+
+      <SimulationMap 
+      width={ 300 + 'px' }
+      height={ 300 + 'px' }
+      city={ currentCity }
+      cars= { cars }
+      />
       </div>
     )
   }
