@@ -3,7 +3,7 @@ import SimulationMap from './SimulationMap/SimulationMap.js';
 import Dropdown from '../Dropdown/Dropdown.jsx';
 import CustomPropTypes from '../Utils/CustomPropTypes.js';
 
-export default class Simulation extends React.Component {
+export default class Main extends React.Component {
 
   static propTypes = {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city)
