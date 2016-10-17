@@ -5,8 +5,10 @@ export default class SimulationMap extends React.Component {
   static propTypes = {
     width: React.PropTypes.string,
     height: React.PropTypes.string,
-    position: React.PropTypes.arrayOf(Number),
-    zoom: React.PropTypes.number,
+    city: React.PropTypes.shape({
+      position: React.PropTypes.arrayOf(Number),
+      zoom: React.PropTypes.number
+    }).isRequired,
     markers: React.PropTypes.arrayOf(React.PropTypes.arrayOf(Number))
   }
 
@@ -16,10 +18,11 @@ export default class SimulationMap extends React.Component {
       width: this.props.width || 300 + 'px'
     }
 
+    const city = this.props.city;
     const markers = this.props.markers;
 
     return (
-      <Map center={this.props.position} zoom={13} style={style} >
+      <Map center={city.position} zoom={city.zoom} style={style} >
       <TileLayer
       url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

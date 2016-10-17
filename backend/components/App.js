@@ -8,7 +8,11 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       coordinateString: "",
-      markers: [[51.505, -0.09]]
+      markers: [[51.505, -0.09]],
+      currentCity: {
+        position: [51.505, -0.09], 
+        zoom: 13 
+      }
     }
   }
 
@@ -25,6 +29,7 @@ export default class App extends React.Component {
       return parseFloat(str); 
     });
 
+    const currentCity = this.state.currentCity;
     const markers = this.state.markers.concat([coordinate])
 
     this.setState({
@@ -33,18 +38,23 @@ export default class App extends React.Component {
   }
 
   _onCitySelect(value) {
-    console.log(value);
+    this.setState({
+      currentCity: value
+    });
   }
 
   render() {
     let cities = [
-      { label: 'London', value: { position: 0, zoom: 0 }},
-      { label: 'Munich', value: { position: 0, zoom: 0 }}
+      { label: 'London', value: { position: [51.505, -0.09], zoom: 13 }},
+      { label: 'Munich', value: { position: [48.1351, 11.5820], zoom: 13 }}
     ];
 
+    const markers = this.state.markers;
+    const currentCity = this.state.currentCity;
+    
     return (
       <div>
-      <Dropdown items={cities} onSelect={this._onCitySelect} />
+      <Dropdown items={cities} onSelect={(value) => { this._onCitySelect(value) }} />
       <form onSubmit={ (e) => { this.onSubmit(e) } }>
       <input 
       type="text" 
@@ -57,9 +67,8 @@ export default class App extends React.Component {
       <SimulationMap 
       width={ 300 + 'px' }
       height={ 300 + 'px' }
-      position={ [51.505, -0.09] }
-      zoom={ 13 }
-      markers= { this.state.markers }
+      city={currentCity}
+      markers= { markers }
       />
       </div>
     )
