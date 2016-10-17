@@ -8,22 +8,27 @@ export default class Simulation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      coordinateString: "",
-      cars: [
-        {
-          id: "0",
+      simulationInfo: {
+        id: "0",
+        city: {
           position: {
             lat: 51.505,
             lng: -0.09
-          }
+          },
+          zoom: 13
         }
-      ],
-      currentCity: {
-        position: { 
-          lat: 51.505, 
-          lng: -0.09
-        }, 
-        zoom: 13 
+      },
+      simulationState: {
+        id: "0",
+        timestamp: "00:00:00",
+        objects: [ {
+          id: "0",
+          type: "car",
+          position: { 
+            lat: 51.505, 
+            lng: -0.09
+          } 
+        }]
       }
     }
   }
@@ -35,7 +40,8 @@ export default class Simulation extends React.Component {
   }
 
   onMove() {
-    const cars = this.state.cars;
+    const simulationState = this.state.simulationState;
+    const cars = simulationState.objects;
 
     cars.forEach( (car, i) => {
       if (car.id === "0") {
@@ -44,15 +50,29 @@ export default class Simulation extends React.Component {
       }
     })
 
+    const newSimulationState = {
+      ...simulationState,
+      objects: cars
+    }
+
     this.setState({
-      cars: cars
+      simulationState: newSimulationState
     })
   } 
 
   _onCitySelect(value) {
+    const simulationInfo = this.state.simulationInfo;
+
+    const currentCity = value
+
+    const newSimulationInfo = {
+      ...simulationInfo,
+      city: currentCity
+    }
+
     this.setState({
-      currentCity: value
-    });
+      simulationInfo: newSimulationInfo
+    })
   }
 
   render() {
@@ -67,20 +87,9 @@ export default class Simulation extends React.Component {
       }, zoom: 13 }}
     ];
 
-    const cars = this.state.cars;
-    const currentCity = this.state.currentCity;
+    const simulationInfo = this.state.simulationInfo;
+    const simulationState = this.state.simulationState;
 
-    const simulationInfo = {
-      id: "0",
-      city: currentCity
-    }
-
-    const simulationState = {
-      id: "0",
-      timestamp: "00:00:00",
-      objects: cars
-    }
-    
     return (
       <div>
       <Dropdown items={cities} onSelect={(value) => { this._onCitySelect(value) }} />
