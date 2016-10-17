@@ -34,9 +34,10 @@ export default class SimulationMap extends React.Component {
       {
         cars &&
         cars.map((car, index) => {
+          const key = car.position[0].toString() + car.position[1].toString()
           return (
             <Marker position={ car.position } 
-              key={ index }
+              key={ key }
             />
           )
         })

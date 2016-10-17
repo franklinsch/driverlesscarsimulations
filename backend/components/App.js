@@ -27,24 +27,20 @@ export default class App extends React.Component {
     })
   }
 
-  onSubmit(event) {
-    event.preventDefault()
-    const coordinateString = this.state.coordinateString;
-    const coordinate = coordinateString.split(" ").map((str) => {
-      return parseFloat(str); 
-    });
+  onMove() {
+    const cars = this.state.cars;
 
-    const cars = this.state.cars.concat([
-      {
-        id: "0",
-        coordinate: coordinate
+    cars.forEach( (car, i) => {
+      if (car.id === "0") {
+        car.position[0] += 0.001
+        cars[i] = car
       }
-    ])
+    })
 
     this.setState({
       cars: cars
     })
-  }
+  } 
 
   _onCitySelect(value) {
     this.setState({
@@ -60,18 +56,14 @@ export default class App extends React.Component {
 
     const cars = this.state.cars;
     const currentCity = this.state.currentCity;
+
+    console.log(cars)
     
     return (
       <div>
       <Dropdown items={cities} onSelect={(value) => { this._onCitySelect(value) }} />
-      <form onSubmit={ (e) => { this.onSubmit(e) } }>
-      <input 
-      type="text" 
-      value={this.state.coordinateString}
-      onChange={(e) => this.onChange(e)}
-      />
-      <input type="submit"/>
-      </form>
+
+      <button onClick={ () => this.onMove() }>Move car</button>
 
       <SimulationMap 
       width={ 300 + 'px' }
