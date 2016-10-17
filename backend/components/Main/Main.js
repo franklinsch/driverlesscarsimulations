@@ -5,10 +5,6 @@ import CustomPropTypes from '../Utils/CustomPropTypes.js';
 
 export default class Main extends React.Component {
 
-  static propTypes = {
-    availableCities: React.PropTypes.arrayOf(CustomPropTypes.city)
-  }
-
   constructor(props) {
     super(props);
 
@@ -42,8 +38,24 @@ export default class Main extends React.Component {
             lng: -0.09
           } 
         }]
-      },
-      availableCities: [
+      }
+    }
+  }
+
+  handleMessageReceive(message) {
+    console.log("Received " + message);
+
+    if (message.type === "available-cities") {
+      this.setState({
+        availableCities: message.content
+      })
+    }
+  }
+
+  _receiveCities() {
+    this.handleMessageReceive({
+      type: "available-cities",
+      content: [
         { label: 'London', value: { position: {
           lat: 51.505, 
           lng: -0.09
@@ -53,40 +65,7 @@ export default class Main extends React.Component {
           lng: 11.5820
         }, zoom: 13 }}
       ]
-    }
-  }
-
-  handleCityChange(city) {
-    const simulationInfo = this.state.simulationInfo;
-
-    const currentCity = city
-
-    const newSimulationInfo = {
-      ...simulationInfo,
-      city: currentCity
-    }
-
-    this.setState({
-      simulationInfo: newSimulationInfo
     })
-
-    const socket = this.state.socket;
-
-    socket.send({
-      ...this.socketMessage(),
-      type: "simulationInfo",
-      content: simulationInfo
-    });
-  }
-
-  handleMessageReceive(message) {
-    print("Received " + message);
-  }
-
-  _socketMessage() {
-    return {
-      date: Date.now()
-    }
   }
 
   _onMove() {
@@ -114,13 +93,17 @@ export default class Main extends React.Component {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
+    const availableCities = this.state.availableCities;
+    const socket = this.state.socket;
 
     return (
       <div>
         <SimulationSettings
-          handleCityChange={ (city) => { this.handleCityChange(city) }}
+          socket={socket}
+          availableCities={availableCities}
         />
 
+        <button onClick={ () => this._receiveCities() }>Receive cities</button>
         <button onClick={ () => this._onMove() }>Move car</button>
 
         <SimulationMap 
