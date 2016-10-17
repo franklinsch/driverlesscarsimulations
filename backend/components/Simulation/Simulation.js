@@ -60,6 +60,12 @@ export default class Simulation extends React.Component {
     print("Received " + message);
   }
 
+  socketMessage() {
+    return {
+      date: Date.now()
+    }
+  }
+
   _onMove() {
     const simulationState = this.state.simulationState;
     const cars = simulationState.objects;
@@ -94,6 +100,14 @@ export default class Simulation extends React.Component {
     this.setState({
       simulationInfo: newSimulationInfo
     })
+
+    const socket = this.state.socket;
+
+    socket.send({
+      ...socketMessage(),
+      type: "simulationInfo",
+      content: simulationInfo
+    });
   }
 
   render() {
