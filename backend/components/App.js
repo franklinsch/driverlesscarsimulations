@@ -8,7 +8,12 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       coordinateString: "",
-      markers: [[51.505, -0.09]],
+      cars: [
+        {
+          id: "0",
+          position: [51.505, -0.09]
+        }
+      ],
       currentCity: {
         position: [51.505, -0.09], 
         zoom: 13 
@@ -29,11 +34,15 @@ export default class App extends React.Component {
       return parseFloat(str); 
     });
 
-    const currentCity = this.state.currentCity;
-    const markers = this.state.markers.concat([coordinate])
+    const cars = this.state.cars.concat([
+      {
+        id: "0",
+        coordinate: coordinate
+      }
+    ])
 
     this.setState({
-      markers: markers
+      cars: cars
     })
   }
 
@@ -49,7 +58,7 @@ export default class App extends React.Component {
       { label: 'Munich', value: { position: [48.1351, 11.5820], zoom: 13 }}
     ];
 
-    const markers = this.state.markers;
+    const cars = this.state.cars;
     const currentCity = this.state.currentCity;
     
     return (
@@ -67,8 +76,8 @@ export default class App extends React.Component {
       <SimulationMap 
       width={ 300 + 'px' }
       height={ 300 + 'px' }
-      city={currentCity}
-      markers= { markers }
+      city={ currentCity }
+      cars= { cars }
       />
       </div>
     )

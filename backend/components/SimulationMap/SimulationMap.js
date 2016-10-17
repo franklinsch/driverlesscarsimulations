@@ -9,7 +9,10 @@ export default class SimulationMap extends React.Component {
       position: React.PropTypes.arrayOf(Number),
       zoom: React.PropTypes.number
     }).isRequired,
-    markers: React.PropTypes.arrayOf(React.PropTypes.arrayOf(Number))
+    cars: React.PropTypes.arrayOf(React.PropTypes.shape({
+      id: React.PropTypes.string,
+      position: React.PropTypes.arrayOf(Number)
+    }))
   }
 
   render() {
@@ -19,7 +22,7 @@ export default class SimulationMap extends React.Component {
     }
 
     const city = this.props.city;
-    const markers = this.props.markers;
+    const cars = this.props.cars;
 
     return (
       <Map center={city.position} zoom={city.zoom} style={style} >
@@ -29,10 +32,10 @@ export default class SimulationMap extends React.Component {
       />
 
       {
-        markers &&
-        markers.map((marker, index) => {
+        cars &&
+        cars.map((car, index) => {
           return (
-            <Marker position={ marker } 
+            <Marker position={ car.position } 
               key={ index }
             />
           )
