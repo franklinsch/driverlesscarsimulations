@@ -17,7 +17,7 @@ export default class Dropdown extends React.Component {
       items.push(<option value={i}>{item.label}</option>);
     }
 
-    return <option onSelect={this.props.onSelect}>
+    return <option onSelect={this._onSelect}>
       {items}
     </option>
   }

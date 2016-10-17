@@ -1,5 +1,6 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.js';
+import Dropdown from 'Dropdown/Dropdown';
 
 export default class App extends React.Component {
 
@@ -31,25 +32,35 @@ export default class App extends React.Component {
     })
   }
 
+  _onCitySelect(value) {
+    console.log(value);
+  }
+
   render() {
+    let cities = [
+      { label: 'London', value: { position: 0, zoom: 0 }},
+      { label: 'Munich', value: { position: 0, zoom: 0 }}
+    ];
+
     return (
       <div>
-        <form onSubmit={ (e) => { this.onSubmit(e) } }>
-          <input 
-            type="text" 
-            value={this.state.coordinateString}
-            onChange={(e) => this.onChange(e)}
-          />
-          <input type="submit"/>
-        </form>
+      <Dropdown items={cities} onSelect={this._onCitySelect} />
+      <form onSubmit={ (e) => { this.onSubmit(e) } }>
+      <input 
+      type="text" 
+      value={this.state.coordinateString}
+      onChange={(e) => this.onChange(e)}
+      />
+      <input type="submit"/>
+      </form>
 
-        <SimulationMap 
-          width={ 300 + 'px' }
-          height={ 300 + 'px' }
-          position={ [51.505, -0.09] }
-          zoom={ 13 }
-          markers= { this.state.markers }
-        />
+      <SimulationMap 
+      width={ 300 + 'px' }
+      height={ 300 + 'px' }
+      position={ [51.505, -0.09] }
+      zoom={ 13 }
+      markers= { this.state.markers }
+      />
       </div>
     )
   }
