@@ -35,7 +35,23 @@ wsServer.on('request', function(request) {
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       console.log('Received Message: ' + message.utf8Data);
-      connection.sendUTF(message.utf8Data);
+
+      const messageData = JSON.parse(message.utf8Data);
+      if (messageData.type === "request-available-cities") {
+        connection.send(JSON.stringify({
+          type: "available-cities",
+          content: [
+            { label: 'London', value: { position: {
+              lat: 51.505,
+              lng: -0.09
+            }, zoom: 13 }},
+            { label: 'Munich', value: { position: {
+              lat: 48.1351,
+              lng: 11.5820
+            }, zoom: 13 }}
+          ]
+        }))
+      }
     }
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');

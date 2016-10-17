@@ -2,15 +2,23 @@ import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.js';
 import SimulationSettings from './SimulationSettings/SimulationSettings.js';
 import CustomPropTypes from '../Utils/CustomPropTypes.js';
+import UtilFunctions from '../Utils/UtilFunctions.js';
 
 export default class Main extends React.Component {
 
   constructor(props) {
     super(props);
 
-    var socket = new WebSocket("ws://localhost:9000");
+    var socket = new WebSocket("ws://localhost:3000");
 
-    socket.onopen = (event) => { console.log("Connected to: " + event.currentTarget.URL) }
+    socket.onopen = (event) => { 
+      console.log("Connected to: " + event.currentTarget.URL) 
+
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-available-cities"
+      }))
+    }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
@@ -43,11 +51,11 @@ export default class Main extends React.Component {
   }
 
   handleMessageReceive(message) {
-    console.log("Received " + message);
+    const messageData = JSON.parse(message.data);
 
-    if (message.type === "available-cities") {
+    if (messageData.type === "available-cities") {
       this.setState({
-        availableCities: message.content
+        availableCities: messageData.content
       })
     }
   }

@@ -9,20 +9,8 @@ export default class SimulationSettings extends React.Component {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city)
   }
 
-  constructor(props) {
-    super(props)
-    const socket = props.socket;
-
-    if (socket && socket.readyState === 1) {
-      socket.send({
-        ...UtilFunctions.socketMessage(),
-        type:"request-available-cities"
-      })
-    }
-  }
-
   handleCityChange(city) {
-    const socket = this.state.socket;
+    const socket = this.props.socket;
 
     if (socket && socket.readyState === 1) {
       socket.send({
