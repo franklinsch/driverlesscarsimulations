@@ -11,7 +11,16 @@ export default class Simulation extends React.Component {
 
   constructor(props) {
     super(props);
+
+    var socket = new WebSocket("ws://localhost:9000");
+
+    socket.onopen = (event) => { console.log("Connected to: " + event.currentTarget.URL) }
+    socket.onerror = (error) => { console.error("WebSocket error: " + error) }
+    socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
+    socket.onmessage = (message) => { this.handleMessageReceive(message) }
+
     this.state = {
+      socket: socket,
       simulationInfo: {
         id: "0",
         city: {
@@ -45,13 +54,6 @@ export default class Simulation extends React.Component {
         }, zoom: 13 }}
       ]
     }
-
-    var socket = new WebSocket("ws://localhost:9000");
-
-    socket.onopen = (event) => { console.log("Connected to: " + event.currentTarget.URL) }
-    socket.onerror = (error) => { console.error("WebSocket error: " + error) }
-    socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
-    socket.onmessage = (message) => { this.handleMessageReceive(message) }
   }
 
   handleMessageReceive(message) {
