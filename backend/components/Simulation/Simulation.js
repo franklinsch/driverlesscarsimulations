@@ -104,7 +104,7 @@ export default class Simulation extends React.Component {
     const socket = this.state.socket;
 
     socket.send({
-      ...socketMessage(),
+      ...this.socketMessage(),
       type: "simulationInfo",
       content: simulationInfo
     });
