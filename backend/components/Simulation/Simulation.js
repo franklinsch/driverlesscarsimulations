@@ -1,6 +1,7 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.js';
 import Dropdown from '../Dropdown/Dropdown.jsx';
+import CustomPropTypes from '../Utils/CustomPropTypes.js';
 
 export default class Simulation extends React.Component {
 
@@ -68,6 +69,17 @@ export default class Simulation extends React.Component {
 
     const cars = this.state.cars;
     const currentCity = this.state.currentCity;
+
+    const simulationInfo = {
+      id: "0",
+      city: currentCity
+    }
+
+    const simulationState = {
+      id: "0",
+      timestamp: "00:00:00",
+      objects: cars
+    }
     
     return (
       <div>
@@ -78,8 +90,8 @@ export default class Simulation extends React.Component {
       <SimulationMap 
       width={ 300 + 'px' }
       height={ 300 + 'px' }
-      city={ currentCity }
-      cars= { cars }
+      simulationInfo={ simulationInfo }
+      simulationState= { simulationState }
       />
       </div>
     )

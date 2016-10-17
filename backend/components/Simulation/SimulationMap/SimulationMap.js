@@ -3,11 +3,12 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
 
 export default class SimulationMap extends React.Component {
+
   static propTypes = {
     width: React.PropTypes.string,
     height: React.PropTypes.string,
-    city: CustomPropTypes.city.isRequired,
-    cars: React.PropTypes.arrayOf(CustomPropTypes.car)
+    simulationInfo: CustomPropTypes.city.isRequired,
+    simulationState: CustomPropTypes.simulationState.isRequired
   }
 
   render() {
@@ -16,8 +17,8 @@ export default class SimulationMap extends React.Component {
       width: this.props.width || 300 + 'px'
     }
 
-    const city = this.props.city;
-    const cars = this.props.cars;
+    const city = this.props.simulationInfo.city;
+    const cars = this.props.simulationState.objects;
 
     return (
       <Map center={[city.position.lat, city.position.lng]} zoom={city.zoom} style={style} >
