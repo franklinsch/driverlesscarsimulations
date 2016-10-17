@@ -11,11 +11,17 @@ export default class App extends React.Component {
       cars: [
         {
           id: "0",
-          position: [51.505, -0.09]
+          position: {
+            lat: 51.505,
+            lng: -0.09
+          }
         }
       ],
       currentCity: {
-        position: [51.505, -0.09], 
+        position: { 
+          lat: 51.505, 
+          lng: -0.09
+        }, 
         zoom: 13 
       }
     }
@@ -32,7 +38,7 @@ export default class App extends React.Component {
 
     cars.forEach( (car, i) => {
       if (car.id === "0") {
-        car.position[0] += 0.001
+        car.position.lat += 0.001
         cars[i] = car
       }
     })
@@ -50,8 +56,14 @@ export default class App extends React.Component {
 
   render() {
     let cities = [
-      { label: 'London', value: { position: [51.505, -0.09], zoom: 13 }},
-      { label: 'Munich', value: { position: [48.1351, 11.5820], zoom: 13 }}
+      { label: 'London', value: { position: {
+        lat: 51.505, 
+        lng: -0.09
+      }, zoom: 13 }},
+      { label: 'Munich', value: { position: {
+        lat: 48.1351, 
+        lng: 11.5820
+      }, zoom: 13 }}
     ];
 
     const cars = this.state.cars;
