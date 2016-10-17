@@ -45,15 +45,20 @@ export default class Simulation extends React.Component {
         }, zoom: 13 }}
       ]
     }
+
+    var socket = new WebSocket("ws://localhost:9000");
+
+    socket.onopen = (event) => { console.log("Connected to: " + event.currentTarget.URL) }
+    socket.onerror = (error) => { console.error("WebSocket error: " + error) }
+    socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
+    socket.onmessage = (message) => { this.handleMessageReceive(message) }
   }
 
-  onChange(event) {
-    this.setState({
-      coordinateString: event.target.value
-    })
+  handleMessageReceive(message) {
+    print("Received " + message);
   }
 
-  onMove() {
+  _onMove() {
     const simulationState = this.state.simulationState;
     const cars = simulationState.objects;
 
@@ -98,7 +103,7 @@ export default class Simulation extends React.Component {
       <div>
       <Dropdown items={cities} onSelect={(value) => { this._onCitySelect(value) }} />
 
-      <button onClick={ () => this.onMove() }>Move car</button>
+      <button onClick={ () => this._onMove() }>Move car</button>
 
       <SimulationMap 
       width={ 300 + 'px' }
