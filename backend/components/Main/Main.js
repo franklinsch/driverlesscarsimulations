@@ -1,6 +1,6 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.js';
-import Dropdown from './Dropdown/Dropdown.jsx';
+import SimulationSettings from './SimulationSettings/SimulationSettings.js';
 import CustomPropTypes from '../Utils/CustomPropTypes.js';
 
 export default class Main extends React.Component {
@@ -56,11 +56,34 @@ export default class Main extends React.Component {
     }
   }
 
+  handleCityChange(city) {
+    const simulationInfo = this.state.simulationInfo;
+
+    const currentCity = city
+
+    const newSimulationInfo = {
+      ...simulationInfo,
+      city: currentCity
+    }
+
+    this.setState({
+      simulationInfo: newSimulationInfo
+    })
+
+    const socket = this.state.socket;
+
+    socket.send({
+      ...this.socketMessage(),
+      type: "simulationInfo",
+      content: simulationInfo
+    });
+  }
+
   handleMessageReceive(message) {
     print("Received " + message);
   }
 
-  socketMessage() {
+  _socketMessage() {
     return {
       date: Date.now()
     }
@@ -87,29 +110,6 @@ export default class Main extends React.Component {
     })
   } 
 
-  _onCitySelect(value) {
-    const simulationInfo = this.state.simulationInfo;
-
-    const currentCity = value
-
-    const newSimulationInfo = {
-      ...simulationInfo,
-      city: currentCity
-    }
-
-    this.setState({
-      simulationInfo: newSimulationInfo
-    })
-
-    const socket = this.state.socket;
-
-    socket.send({
-      ...this.socketMessage(),
-      type: "simulationInfo",
-      content: simulationInfo
-    });
-  }
-
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
@@ -117,16 +117,18 @@ export default class Main extends React.Component {
 
     return (
       <div>
-      <Dropdown items={cities} onSelect={(value) => { this._onCitySelect(value) }} />
+        <SimulationSettings
+          handleCityChange={ (city) => { this.handleCityChange(city) }}
+        />
 
-      <button onClick={ () => this._onMove() }>Move car</button>
+        <button onClick={ () => this._onMove() }>Move car</button>
 
-      <SimulationMap 
-      width={ 300 + 'px' }
-      height={ 300 + 'px' }
-      simulationInfo={ simulationInfo }
-      simulationState= { simulationState }
-      />
+        <SimulationMap 
+          width={ 300 + 'px' }
+          height={ 300 + 'px' }
+          simulationInfo={ simulationInfo }
+          simulationState= { simulationState }
+        />
       </div>
     )
   }
