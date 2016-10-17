@@ -1,6 +1,6 @@
 import React from 'react';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
-import CustomPropTypes from '../Utils/CustomPropTypes.js'
+import CustomPropTypes from '../../Utils/CustomPropTypes.js'
 
 export default class SimulationMap extends React.Component {
   static propTypes = {
