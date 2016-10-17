@@ -6,19 +6,19 @@ export default class Dropdown extends React.Component {
     onSelect: React.PropTypes.func
   }
 
-  _onSelect(itemIndex) {
-    let item = this.props.items[itemIndex].value;
+  _onSelect(event) {
+    let item = this.props.items[event.target.value].value;
     return this.props.onSelect(item);
   }
 
   render() {
     let items = [];
     for (let i = 0; i < this.props.items.length; i++) {
-      items.push(<option value={i}>{item.label}</option>);
+      items.push(<option key={i} value={i}>{this.props.items[i].label}</option>);
     }
 
-    return <option onSelect={this._onSelect}>
+    return <select onChange={(event) => this._onSelect(event)}>
       {items}
-    </option>
+    </select>
   }
 }
