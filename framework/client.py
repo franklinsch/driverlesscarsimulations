@@ -21,7 +21,6 @@ class SAVNConnectionAssistant:
     connectionAssistant = self
     class FrameworkClientProtocol(WebSocketClientProtocol):
       def onOpen(self):
-        print(simulationId)
         self.sendMessage(json.dumps(simulationId).encode('utf8'))
         # validate the simulationId/APIKey
 
@@ -51,6 +50,3 @@ class SAVNConnectionAssistant:
     loop.run_until_complete(coro)
     loop.run_forever()
     loop.close()
-
-savn = SAVNConnectionAssistant()
-savn.initSession(42)
