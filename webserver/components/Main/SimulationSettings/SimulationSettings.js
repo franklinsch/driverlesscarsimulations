@@ -28,7 +28,7 @@ export default class SimulationSettings extends React.Component {
       socket.send(JSON.stringify({
         ...UtilFunctions.socketMessage(),
         type: "request-simulation-start",
-        content: JSON.stringify(simulationSettings)
+        content: simulationSettings
       }))
     }
 
