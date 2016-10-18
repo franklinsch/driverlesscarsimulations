@@ -31,25 +31,40 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
 
+  console.log((new Date()) + ' Connection accepted.');
+
+  function _handleRequestAvailableCities() {
+    connection.send(JSON.stringify({
+      type: "available-cities",
+      content: [
+        { label: 'London', value: { position: {
+          lat: 51.505,
+          lng: -0.09
+        }, zoom: 13 }},
+        { label: 'Munich', value: { position: {
+          lat: 48.1351,
+          lng: 11.5820
+        }, zoom: 13 }}
+      ]
+    }))
+  }
+
+  function _handleRequestSimulationStart(message) {
+    console.log("Received simulation start data: ");
+    console.log(message);
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       console.log('Received Message: ' + message.utf8Data);
 
       const messageData = JSON.parse(message.utf8Data);
-      if (messageData.type === "request-available-cities") {
-        connection.send(JSON.stringify({
-          type: "available-cities",
-          content: [
-            { label: 'London', value: { position: {
-              lat: 51.505,
-              lng: -0.09
-            }, zoom: 13 }},
-            { label: 'Munich', value: { position: {
-              lat: 48.1351,
-              lng: 11.5820
-            }, zoom: 13 }}
-          ]
-        }))
+
+      switch (messageData.type) {
+      case "request-available-cities":
+        _handleRequestAvailableCities() 
+      case "request-simulation-start":
+        _handleRequestSimulationStart(messageData)
       }
     }
     else if (message.type === 'binary') {
@@ -64,33 +79,18 @@ frontendSocketServer.on('request', function(request) {
 });
 
 const fserver = require('http').createServer();
-const frameworkSocketServer = new WebSocketServer({ httpServer : fserver, 
-                                                    port : 9000 });
+const frameworkSocketServer = new WebSocketServer({ httpServer: fserver });
 
 frameworkSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
+
+  console.log((new Date()) + ' Connection accepted.');
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       console.log('Received Message: ' + message.utf8Data);
 
-      //const messageData = JSON.parse(message.utf8Data);
-      //if (messageData.type === "request-available-cities") {
-      //  connection.send(JSON.stringify({
-      //    type: "available-cities",
-      //    content: [
-      //      { label: 'London', value: { position: {
-      //        lat: 51.505,
-      //        lng: -0.09
-      //      }, zoom: 13 }},
-      //      { label: 'Munich', value: { position: {
-      //        lat: 48.1351,
-      //        lng: 11.5820
-      //      }, zoom: 13 }}
-      //    ]
-      //  }))
-      //}
-      connection.send("Received");
+      connection.send(JSON.stringify({'timestamp': 0}));
     }
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
