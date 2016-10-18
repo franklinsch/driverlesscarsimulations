@@ -9,13 +9,10 @@ class SAVNConnectionAssistant:
     pass
 
   def handleSimulationStart(self, initialParameters):
-    print("YAY") 
-    # new thread
-    while True:
-      pass
+    pass
 
   def handleSimulationDataUpdate(self, updates):
-   print("YO") 
+    pass
 
   def handleSimulationStop(self):
     pass
@@ -54,5 +51,3 @@ class SAVNConnectionAssistant:
     loop.run_until_complete(coro)
     loop.run_forever();
 
-connectionAssistant = SAVNConnectionAssistant()
-connectionAssistant.initSession(42)
