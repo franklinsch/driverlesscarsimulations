@@ -9,7 +9,7 @@ export default class Main extends React.Component {
   constructor(props) {
     super(props);
 
-    var socket = new WebSocket("ws://localhost:3001");
+    var socket = new WebSocket("ws://localhost:3000");
 
     socket.onopen = (event) => { 
       console.log("Connected to: " + event.currentTarget.URL) 
