@@ -18,18 +18,18 @@ export default class SimulationSettings extends React.Component {
 
   handleSimulationStart() {
     const socket = this.props.socket;
-    const selectedCity = this.state.selectedCity;
+    const selectedCity = this.state && this.state.selectedCity || this.props.availableCities[0];
 
     const simulationSettings = {
       selectedCity: selectedCity
     }
 
     if (socket && socket.readyState === 1) {
-      socket.send({
+      socket.send(JSON.stringify({
         ...UtilFunctions.socketMessage(),
         type: "request-simulation-start",
         content: JSON.stringify(simulationSettings)
-      })
+      }))
     }
 
   }
