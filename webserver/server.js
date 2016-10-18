@@ -50,7 +50,7 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function _handleRequestSimulationStart(message, cb) {
+  function _handleRequestSimulationStart(message, callback) {
     console.log("Received simulation start data: ");
     console.log(JSON.stringify(message, undefined, 2));
     const simulation = new Simulation({
@@ -60,7 +60,7 @@ frontendSocketServer.on('request', function(request) {
       simulationStates: []
     });
     console.log(simulation);
-    cb(null, simulation._id);
+    callback(null, simulation._id);
   }
 
   connection.on('message', function(message) {
