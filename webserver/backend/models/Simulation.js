@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const Simulation = mongoose.Schema({
   simulationInfo: {
-    cityID: String
+    cityID: String,
+    carIDs: [String]
   },
   simulationStates: [{
     id: String,
