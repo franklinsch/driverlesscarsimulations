@@ -7,7 +7,7 @@ export default class SimulationMap extends React.Component {
   static propTypes = {
     width: React.PropTypes.string,
     height: React.PropTypes.string,
-    simulationInfo: CustomPropTypes.city.isRequired,
+    bounds: CustomPropTypes.bounds,
     simulationState: CustomPropTypes.simulationState.isRequired
   }
 
@@ -17,11 +17,20 @@ export default class SimulationMap extends React.Component {
       width: this.props.width || 300 + 'px'
     }
 
-    const city = this.props.simulationInfo.city;
+    const bounds = this.props.bounds;
     const cars = this.props.simulationState.objects;
 
+    if (!bounds) {
+      console.log("No bounds");
+      return (
+        <p> Hey </p>
+      )
+    }
+
+    const mapBounds = [bounds.southWest, bounds.northEast]
+
     return (
-      <Map center={[city.position.lat, city.position.lng]} zoom={city.zoom} style={style} >
+      <Map bounds={mapBounds} style={style} >
       <TileLayer
       url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

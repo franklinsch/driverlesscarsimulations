@@ -16,12 +16,16 @@ export default class CustomPropTypes {
 
   static car = React.PropTypes.shape(CustomPropTypes._car);
 
+  static _bounds = {
+    southWest: CustomPropTypes.position,
+    northEast: CustomPropTypes.position
+  }
+
+  static bounds = React.PropTypes.shape(CustomPropTypes._bounds);
+
   static _city = {
     id: React.PropTypes.string,
-    bounds: {
-      southWest: CustomPropTypes.position,
-      northEast: CustomPropTypes.position
-    }
+    bounds: CustomPropTypes.bounds
   }
 
   static city = React.PropTypes.shape(CustomPropTypes._city);
