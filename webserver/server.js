@@ -44,12 +44,12 @@ frontendSocketServer.on('request', function(request) {
             id: "0",
             bounds: {
               southWest: {
-                lat: 40.712,
-                lng: -74.227
+                lat: 50.68156,
+                lng: 4.78412
               },
               northEast: {
-                lat: 40.774,
-                lng: -74.125
+                lat: 50.68357,
+                lng: 4.78830
               }
             }
           }
