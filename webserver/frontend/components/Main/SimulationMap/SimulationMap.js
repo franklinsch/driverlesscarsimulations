@@ -21,7 +21,6 @@ export default class SimulationMap extends React.Component {
     const cars = this.props.simulationState.objects;
 
     if (!bounds) {
-      console.log("No bounds");
       return (
         <p> Hey </p>
       )
