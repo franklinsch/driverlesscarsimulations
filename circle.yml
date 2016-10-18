@@ -7,3 +7,9 @@ general:
 test:
   override:
     - npm test
+
+deployment:
+  production:
+    branch: continous_deployment 
+    commands:
+      - npm start
