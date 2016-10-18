@@ -1,6 +1,9 @@
 machine:
   timezone: Europe/London
 
+general:
+  build_dir: webserver
+
 test:
   override:
-    - echo test
+    npm test
