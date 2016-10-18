@@ -2,15 +2,15 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const routes = require('./routes/routes');
-const config = require('./config');
+const routes = require('./backend/routes/routes');
+const config = require('./backend/config');
 
 const WebSocketServer = require('websocket').server;
 
 const app = express();
 
-const db = require('./models/db');
-const Simulation = require('./models/Simulation');
+const Simulation = require('./backend/models/Simulation');
+const db = require('./backend/models/db');
 
 //
 // Register Node.js middleware
