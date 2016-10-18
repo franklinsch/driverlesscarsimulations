@@ -21,11 +21,18 @@ export default class SimulationSettings extends React.Component {
     }
   }
 
+  handleSimulationStart() {
+
+  }
+
   render() {
     const cities = this.props.availableCities || [];
 
     return (
-      <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
+      <div>
+        <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
+        <button onClick={ () => this.handleSimulationStart() }>Start simulation</button>
+      </div>
     )
   }
 }
