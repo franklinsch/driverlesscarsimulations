@@ -24,8 +24,6 @@ export default class SimulationSettings extends React.Component {
   render() {
     const cities = this.props.availableCities || [];
 
-    console.log(cities);
-
     return (
       <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
     )
