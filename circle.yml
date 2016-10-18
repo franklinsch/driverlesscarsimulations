@@ -6,4 +6,4 @@ general:
 
 test:
   override:
-    npm test
+    -npm test
