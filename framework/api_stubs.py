@@ -16,3 +16,12 @@ def handleSimulationStop:
 
 def initSession(simulationID):
 def updateCarRoutes(routeData):
+
+
+FRAMEWORK                                  US
+          <---------- data --------------
+callHandler
+handlerReturns ---------- notify ---------->
+                                          SEND OK
+          <---------------- sendOK ------
+callHandler
