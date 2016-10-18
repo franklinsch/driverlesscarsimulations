@@ -17,8 +17,11 @@ export default class CustomPropTypes {
   static car = React.PropTypes.shape(CustomPropTypes._car);
 
   static _city = {
-    position: CustomPropTypes.position,
-    zoom: React.PropTypes.Number
+    id: React.PropTypes.string,
+    bounds: {
+      southWest: CustomPropTypes.position,
+      northEast: CustomPropTypes.position
+    }
   }
 
   static city = React.PropTypes.shape(CustomPropTypes._city);
