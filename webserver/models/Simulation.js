@@ -1,15 +1,21 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const Simulation = mongoose.Schema({
-  id: { type: String, unique: true, index: true },
-  cityName: String,
-  timeline: [{
+  simulationInfo: {
+    cityID: String
+  },
+  simulationStates: [{
+    id: String,
     timestamp: String,
     objects: [{
+      id: String,
       type: String,
-      location: [Number]
+      position: {
+        lat: Number,
+        lng: Number
+      }
     }]
   }]
 });
 
-export default mongoose.model('Simulation', new Simulation);
+module.exports = mongoose.model('Simulation', Simulation);
