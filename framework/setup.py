@@ -5,5 +5,6 @@ setup(name='framework',
     license='MIT',
     install_requires=[
       'requests',
+      'autobahn'
       ],
     zip_safe=False)

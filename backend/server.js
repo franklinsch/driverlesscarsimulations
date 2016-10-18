@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
 const config = require('./config');
 
+const WebSocketServer = require('websocket').server;
+
 const app = express();
 
 const db = require('./models/db');
@@ -24,10 +26,9 @@ const server = app.listen(config.port, () => {
   console.log(`The server is running at http://localhost:${port}/`);
 });
 
-var WebSocketServer = require('websocket').server;
-var wsServer        = new WebSocketServer({ httpServer : server });
+const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
-wsServer.on('request', function(request) {
+frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
 
   console.log((new Date()) + ' Connection accepted.');
@@ -76,3 +77,30 @@ wsServer.on('request', function(request) {
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
 });
+
+const fserver = require('http').createServer();
+const frameworkSocketServer = new WebSocketServer({ httpServer: fserver });
+
+frameworkSocketServer.on('request', function(request) {
+  var connection = request.accept(null, request.origin);
+
+  console.log((new Date()) + ' Connection accepted.');
+
+  connection.on('message', function(message) {
+    if (message.type === 'utf8') {
+      console.log('Received Message: ' + message.utf8Data);
+
+      connection.send(JSON.stringify({'timestamp': 0}));
+    }
+    else if (message.type === 'binary') {
+      console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+      connection.sendBytes(message.binaryData);
+    }
+  });
+
+  connection.on('close', function(reasonCode, description) {
+    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+  });
+});
+
+fserver.listen(9000);
