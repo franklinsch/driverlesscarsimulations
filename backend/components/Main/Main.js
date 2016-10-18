@@ -60,22 +60,6 @@ export default class Main extends React.Component {
     }
   }
 
-  _receiveCities() {
-    this.handleMessageReceive({
-      type: "available-cities",
-      content: [
-        { label: 'London', value: { position: {
-          lat: 51.505, 
-          lng: -0.09
-        }, zoom: 13 }},
-        { label: 'Munich', value: { position: {
-          lat: 48.1351, 
-          lng: 11.5820
-        }, zoom: 13 }}
-      ]
-    })
-  }
-
   _onMove() {
     const simulationState = this.state.simulationState;
     const cars = simulationState.objects;
@@ -111,7 +95,6 @@ export default class Main extends React.Component {
           availableCities={availableCities}
         />
 
-        <button onClick={ () => this._receiveCities() }>Receive cities</button>
         <button onClick={ () => this._onMove() }>Move car</button>
 
         <SimulationMap 
