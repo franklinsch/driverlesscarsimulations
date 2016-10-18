@@ -10,6 +10,7 @@ const WebSocketServer = require('websocket').server;
 const app = express();
 
 const db = require('./models/db');
+const Simulation = require('./models/Simulation');
 
 //
 // Register Node.js middleware
@@ -49,22 +50,34 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function _handleRequestSimulationStart(message) {
+  function _handleRequestSimulationStart(message, cb) {
     console.log("Received simulation start data: ");
-    console.log(message);
+    console.log(JSON.stringify(message, undefined, 2));
+    const simulation = new Simulation({
+      simulationInfo: {
+        cityID: message.content.selectedCity.label
+      },
+      simulationStates: []
+    });
+    console.log(simulation);
+    cb(null, simulation._id);
   }
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-      console.log('Received Message: ' + message.utf8Data);
+      // console.log('Received Message: ' + message.utf8Data);
 
       const messageData = JSON.parse(message.utf8Data);
 
       switch (messageData.type) {
       case "request-available-cities":
-        _handleRequestAvailableCities() 
+        _handleRequestAvailableCities();
+        break;
       case "request-simulation-start":
-        _handleRequestSimulationStart(messageData)
+        _handleRequestSimulationStart(messageData, (err, simID) => {
+          console.log(simID); // do something cool with object id
+        });
+        break;
       }
     }
     else if (message.type === 'binary') {

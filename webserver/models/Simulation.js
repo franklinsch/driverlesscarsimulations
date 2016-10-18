@@ -1,7 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-const Simulation = moongoose.Schema({
-  id: { type: String, unique: true, index: true },
+const Simulation = mongoose.Schema({
   simulationInfo: {
     cityID: String
   },
@@ -19,4 +18,4 @@ const Simulation = moongoose.Schema({
   }]
 });
 
-export default mongoose.model('Simulation', new Simulation);
+module.exports = mongoose.model('Simulation', Simulation);
