@@ -39,7 +39,7 @@ frontendSocketServer.on('request', function(request) {
       type: "available-cities",
       content: [
         { 
-          label: 'example', 
+          label: 'example2',
           value: { 
             id: "0",
             bounds: {
@@ -55,7 +55,9 @@ frontendSocketServer.on('request', function(request) {
           }
         },
       ]
-    }))
+    }));
+
+    setTimeout(_sendSimulationState, 2000);
   }
 
   function _handleRequestSimulationStart(message, callback) {
@@ -69,6 +71,30 @@ frontendSocketServer.on('request', function(request) {
     });
     console.log(simulation);
     callback(null, simulation._id);
+  }
+
+  var count = 0.0001;
+
+  function _sendSimulationState() {
+    console.log('send simulation state..');
+    connection.send(JSON.stringify({
+      type: "simulation-state",
+      content:
+        {
+          id: "0",
+          timestamp: "00:00:00",
+          objects: [{
+            id: "0",
+            type: "car",
+            position: {
+              lat: 50.68264,
+              lng: 4.7866131 + count
+            }
+          }]
+        }
+    }));
+    count += 0.0001;
+    setTimeout(_sendSimulationState, 2000);
   }
 
   connection.on('message', function(message) {
@@ -124,5 +150,3 @@ frameworkSocketServer.on('request', function(request) {
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
 });
-
-fserver.listen(9000);
