@@ -38,14 +38,22 @@ frontendSocketServer.on('request', function(request) {
     connection.send(JSON.stringify({
       type: "available-cities",
       content: [
-        { label: 'London', value: { position: {
-          lat: 51.505,
-          lng: -0.09
-        }, zoom: 13 }},
-        { label: 'Munich', value: { position: {
-          lat: 48.1351,
-          lng: 11.5820
-        }, zoom: 13 }}
+        { 
+          label: 'example', 
+          value: { 
+            id: "0",
+            bounds: {
+              southWest: {
+                lat: 50.68156,
+                lng: 4.78412
+              },
+              northEast: {
+                lat: 50.68357,
+                lng: 4.78830
+              }
+            }
+          }
+        },
       ]
     }))
   }
