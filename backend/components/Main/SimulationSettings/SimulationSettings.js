@@ -6,22 +6,31 @@ import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 export default class SimulationSettings extends React.Component {
   static propTypes = {
     socket: React.PropTypes.object,
-    availableCities: React.PropTypes.arrayOf(CustomPropTypes.city)
+    availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
+    selectedCity: CustomPropTypes.city
   }
 
   handleCityChange(city) {
+    this.setState({
+      selectedCity: city
+    })
+  }
+
+  handleSimulationStart() {
     const socket = this.props.socket;
+    const selectedCity = this.state.selectedCity;
+
+    const simulationSettings = {
+      selectedCity: selectedCity
+    }
 
     if (socket && socket.readyState === 1) {
       socket.send({
         ...UtilFunctions.socketMessage(),
-        type: "simulation-info",
-        content: simulationInfo
-      });
+        type: "request-simulation-start",
+        content: JSON.stringify(simulationSettings)
+      })
     }
-  }
-
-  handleSimulationStart() {
 
   }
 
