@@ -5,8 +5,13 @@ from autobahn.asyncio.websocket import WebSocketClientFactory
 from concurrent.futures import ProcessPoolExecutor
 
 class SAVNConnectionAssistant:
-  def updateCarRoute(self, routeData):
-    pass
+  def __init__(self, simulationId):
+    self.simulationId = simulationId
+    self.loop = asyncio.get_event_loop()
+    self.p = ProcessPoolExecutor(2)
+
+  def updateCarRoutes(self, routeData):
+    self.protocol.sendMessage(json.dumps(routeData).encode('utf8')) 
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -17,36 +22,40 @@ class SAVNConnectionAssistant:
   def handleSimulationStop(self):
     pass
 
-  def initSession(self, simulationId):
+  def protocolFactory(self):
     connectionAssistant = self
     class FrameworkClientProtocol(WebSocketClientProtocol):
       def onOpen(self):
-        self.sendMessage(json.dumps(simulationId).encode('utf8'))
+        self.sendMessage(json.dumps(
+                            connectionAssistant.simulationId).encode('utf8'))
         # validate the simulationId/APIKey
 
-      async def onMessage(self, payload, isBinary):
+      def onMessage(self, payload, isBinary):
         def isInitialParams(obj):
           return obj["timestamp"] == 0
 
         obj = json.loads(payload.decode('utf8'))
-        p = ProcessPoolExecutor(2)
         if isInitialParams(obj):
-          loop.run_in_executor(p,
+          connectionAssistant.loop.run_in_executor(connectionAssistant.p,
                   connectionAssistant.handleSimulationStart, obj)
         else:
-          loop.run_in_executor(p,
+          connectionAssistant.loop.run_in_executor(connectionAssistant.p,
                   connectionAssistant.handleSimulationDataUpdate, obj)
 
       def onClose(self, wasClean, code, reason):
         connectionAssistant.handleSimulationStop()
+    
+    return FrameworkClientProtocol
+
+
+  def initSession(self):
 
     factory = WebSocketClientFactory()
-    factory.protocol = FrameworkClientProtocol
+    factory.protocol = self.protocolFactory() 
 
-    loop = asyncio.get_event_loop()
+    coro = self.loop.create_connection(factory, '127.0.0.1', 9000)
+    (_, protocol) = self.loop.run_until_complete(coro)
+    self.protocol = protocol
+    self.loop.run_forever()
+    self.loop.close()
 
-    coro = loop.create_connection(factory, '127.0.0.1', 9000)
-
-    loop.run_until_complete(coro)
-    loop.run_forever()
-    loop.close()
