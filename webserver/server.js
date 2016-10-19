@@ -80,18 +80,18 @@ frontendSocketServer.on('request', function(request) {
     connection.send(JSON.stringify({
       type: "simulation-state",
       content:
-        {
+      {
+        id: "0",
+        timestamp: "00:00:00",
+        objects: [{
           id: "0",
-          timestamp: "00:00:00",
-          objects: [{
-            id: "0",
-            type: "car",
-            position: {
-              lat: 50.68264,
-              lng: 4.7866131 + count
-            }
-          }]
-        }
+          type: "car",
+          position: {
+            lat: 50.68264,
+            lng: 4.7866131 + count
+          }
+        }]
+      }
     }));
     count += 0.0001;
     setTimeout(_sendSimulationState, 2000);
@@ -150,3 +150,5 @@ frameworkSocketServer.on('request', function(request) {
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
 });
+
+fserver.listen(9000);
