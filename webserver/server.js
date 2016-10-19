@@ -73,7 +73,6 @@ frontendSocketServer.on('request', function(request) {
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-      // console.log('Received Message: ' + message.utf8Data);
 
       const messageData = JSON.parse(message.utf8Data);
 
@@ -83,7 +82,9 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-start":
         _handleRequestSimulationStart(messageData, (err, simID) => {
-          console.log(simID); // do something cool with object id
+          connection.send(JSON.stringify({
+            id: simID
+          }));
         });
         break;
       }
