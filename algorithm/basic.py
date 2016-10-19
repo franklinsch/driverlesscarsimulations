@@ -19,6 +19,32 @@ def scheduleNewRoute(car):
   car['route'] = BASE_ROUTE
   car['position'] = BASE_ROUTE['source']
 
+def moveCar(car):
+  timeLeft = TIMESLICE
+  while(timeLeft > 0):
+    print(len(car['route']['path']))
+    print(car['route']['path'][0]['timeLeft'])
+    if(car['route']['path'][0]['timeLeft'] <= timeLeft):
+      timeLeft -= car['route']['path'][0]['timeLeft']
+      del car['route']['path'][0]
+      if(len(car['route']['path']) == 0):
+        timeLeft = 0
+        car['route']['path'] = None
+      else:
+        car['direction'] = car['route']['path'][0]['direction']
+    else:
+      car['route']['path'][0]['timeLeft'] -= timeLeft
+      timeLeft = 0
+  if(car['route']['path'] == None):
+    car['position'] = car['route']['destination']
+    scheduleNewRoute(car)
+  else:
+    end = car['route']['path'][0]['end']
+    start = car['route']['path'][0]['start']
+    timeLeft = car['route']['path'][0]['timeLeft']
+    totalTime = car['route']['path'][0]['totalTime']
+    car['position'] = add(end, scale(sub(start, end), timeLeft/totalTime))
+
 def algo(state):
   for car in state:
     moveCar(car)
