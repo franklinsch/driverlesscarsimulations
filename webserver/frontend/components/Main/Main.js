@@ -27,23 +27,17 @@ export default class Main extends React.Component {
       socket: socket,
       simulationInfo: {
         id: "0",
-        city: {
-          position: {
-            lat: 51.505,
-            lng: -0.09
-          },
-          zoom: 13
-        }
+        cityID: "0"
       },
       simulationState: {
         id: "0",
         timestamp: "00:00:00",
-        objects: [ {
+        objects: [{
           id: "0",
           type: "car",
           position: { 
-            lat: 51.505, 
-            lng: -0.09
+            lat: 50.68264,
+            lng: 4.78661
           } 
         }]
       }
@@ -81,12 +75,26 @@ export default class Main extends React.Component {
     })
   } 
 
+  _boundsForCity(cityID) {
+    const availableCities = this.state.availableCities;
+
+    if (availableCities) {
+      for (const city of availableCities) {
+        if (city.value.id === cityID) {
+          return city.value.bounds
+        }
+      }
+    }
+  }
+
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
     const socket = this.state.socket;
+
+    const bounds = this._boundsForCity(simulationInfo.cityID);
 
     return (
       <div>
@@ -100,7 +108,7 @@ export default class Main extends React.Component {
         <SimulationMap 
           width={ 300 + 'px' }
           height={ 300 + 'px' }
-          simulationInfo={ simulationInfo }
+          bounds={ bounds }
           simulationState= { simulationState }
         />
       </div>
