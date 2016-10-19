@@ -155,6 +155,32 @@ frameworkSocketServer.on('request', function(request) {
     })
   }
 
+  function handleSimulationStateUpdate(message) {
+    console.log("Received simulation-update from framework");
+
+    const simulationID = message.content.simulationID;
+
+    db.Simulation.find({
+      _id: simulationID
+    }, (err, simulation) => {
+      if (error) {
+        console.log("Could not find simulation with ID " + simulationID);
+        return
+      }
+
+      const simulationState = message.content.simulationState;
+
+      simulation.simulationStates.push(simulationState);
+      simulation.save((error) => {
+        if (error) {
+          console.log("Could not save new simulation");
+        }
+
+        console.log("Updated simulationState");
+      })
+    })
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = message.utf8Data;
