@@ -8,8 +8,8 @@ class SAVNConnectionAssistant:
   def __init__(self, simulationId):
     self.simulationId = simulationId
 
-  def updateCarRoutes(self, routeData):
-    self.send(json.dumps(routeData).encode('utf8')) 
+  def updateCarStates(self, simulationId, timestamp, state):
+    self.protocol.sendMessage(json.dumps({'id': simulationId+timestamp, 'timestamp': timestamp, objects: state}).encode('utf8'))
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -42,12 +42,10 @@ class SAVNConnectionAssistant:
 
       def onClose(self, wasClean, code, reason):
         connectionAssistant.handleSimulationStop()
-    
+
     return FrameworkClientProtocol
 
-
   def initSession(self):
-
     factory = WebSocketClientFactory()
     factory.protocol = self.protocolFactory()
     self.send = factory.protocol.sendMessage
@@ -59,4 +57,3 @@ class SAVNConnectionAssistant:
 
 p = ProcessPoolExecutor(2)
 loop = asyncio.get_event_loop()
-
