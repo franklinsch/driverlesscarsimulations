@@ -9,7 +9,7 @@ class SAVNConnectionAssistant:
     self.simulationId = simulationId
 
   def updateCarStates(self, simulationId, timestamp, state):
-    self.protocol.sendMessage(json.dumps({'id': simulationId+timestamp, 'timestamp': timestamp, objects: state}).encode('utf8'))
+    self.protocol.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'id': simulationId+timestamp, 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -24,8 +24,7 @@ class SAVNConnectionAssistant:
     connectionAssistant = self
     class FrameworkClientProtocol(WebSocketClientProtocol):
       def onOpen(self):
-        self.sendMessage(json.dumps(
-                            connectionAssistant.simulationId).encode('utf8'))
+        self.sendMessage(json.dumps({{'type': 'simulation-start', content: {'simulationId': connectionAssistant.simulationId}}).encode('utf8'))
         # validate the simulationId/APIKey
 
       def onMessage(self, payload, isBinary):
