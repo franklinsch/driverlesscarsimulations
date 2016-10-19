@@ -29,8 +29,11 @@ const server = app.listen(config.port, () => {
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
+var frontendConnection;
+
 frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
+  this.frontendConnection = connection;
 
   console.log((new Date()) + ' Connection accepted.');
 
@@ -177,6 +180,10 @@ frameworkSocketServer.on('request', function(request) {
         }
 
         console.log("Updated simulationState");
+        frontendConnection.send(JSON.stringify({
+          type: "simulation-state",
+          content: simulationState
+        }))
       })
     })
   }
