@@ -14,3 +14,30 @@ def sub(v1, v2):
 
 def scale(v, s):
   return [s*v[0], s*v[1]]
+
+def scheduleNewRoute(car):
+  car['route'] = BASE_ROUTE
+  car['position'] = BASE_ROUTE['source']
+
+def algo(state):
+  for car in state:
+    moveCar(car)
+  return state
+
+def setupCars(numCars):
+  cars = []
+  for i in range(numCars):
+    car = {'identifier': i, 'position': None, 'speed': CONST_SPEED, 'direction': 0, 'route': None, 'sensorData': None}
+    cars += [car]
+    scheduleNewRoute(car)
+  return cars
+
+#useApiToStart()
+#while true:
+state = setupCars(1)
+for i in range(20):
+  #useApi()
+  print(state[0]['position'])
+  state = algo(state)
+  #useApi()
+#useApiToEnd()
