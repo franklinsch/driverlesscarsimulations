@@ -133,9 +133,36 @@ frameworkSocketServer.on('request', function(request) {
 
   console.log((new Date()) + ' Connection accepted.');
 
+  function handleSimulationStart(message) {
+    console.log("Received simulation-start from framework");
+
+    const simulationID = message.content.simulationID
+
+    db.Simulation.find({
+      _id: simulationID
+    }, (err, simulation) => {
+      if (error) {
+        console.log("Could not find simulation with ID " + simulationID);
+        return
+      }
+
+      connection.send(JSON.stringify({
+        type: "simulationInfo",
+        content: {
+          simulationInfo: simulation.simulationInfo
+        }
+      }))
+    })
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-      console.log('Received Framework Message: ' + message.utf8Data);
+      const messageData = message.utf8Data;
+
+      switch(message.type) {
+      case "simulationStart":
+        _handleSimulationStart(messageData)
+      }
 
       connection.send(JSON.stringify({'timestamp': 0}));
     }
