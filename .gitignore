@@ -1,6 +1,7 @@
 # Python setup
 dist/
-*.egg_info
+*__pycache__
+*.egg-info
 
 babel_cache
 bundle.js

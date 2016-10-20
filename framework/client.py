@@ -5,8 +5,11 @@ from autobahn.asyncio.websocket import WebSocketClientFactory
 from concurrent.futures import ProcessPoolExecutor
 
 class SAVNConnectionAssistant:
-  def updateCarRoute(self, routeData):
-    pass
+  def __init__(self, simulationId):
+    self.simulationId = simulationId
+
+  def updateCarStates(self, simulationId, timestamp, state):
+    factory.__proto__.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'simulationId': simulationId, 'id': str(timestamp), 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -17,20 +20,20 @@ class SAVNConnectionAssistant:
   def handleSimulationStop(self):
     pass
 
-  def initSession(self, simulationId):
+  def protocolFactory(self):
     connectionAssistant = self
     class FrameworkClientProtocol(WebSocketClientProtocol):
       def onOpen(self):
-        print(simulationId)
-        self.sendMessage(json.dumps(simulationId).encode('utf8'))
+        self.factory.__proto__ = self
+        self.sendMessage(json.dumps({'type': 'simulation-start', 'content': {'simulationId': connectionAssistant.simulationId}}).encode('utf8'))
         # validate the simulationId/APIKey
 
-      async def onMessage(self, payload, isBinary):
+      def onMessage(self, payload, isBinary):
         def isInitialParams(obj):
-          return obj["timestamp"] == 0
+          return obj["type"] == "simulation-info"
 
         obj = json.loads(payload.decode('utf8'))
-        p = ProcessPoolExecutor(2)
+        print(obj)
         if isInitialParams(obj):
           loop.run_in_executor(p,
                   connectionAssistant.handleSimulationStart, obj)
@@ -39,18 +42,19 @@ class SAVNConnectionAssistant:
                   connectionAssistant.handleSimulationDataUpdate, obj)
 
       def onClose(self, wasClean, code, reason):
+        self.factory.__proto__ = None
         connectionAssistant.handleSimulationStop()
 
-    factory = WebSocketClientFactory()
-    factory.protocol = FrameworkClientProtocol
+    return FrameworkClientProtocol
 
-    loop = asyncio.get_event_loop()
+  def initSession(self):
+    factory.protocol = self.protocolFactory()
 
     coro = loop.create_connection(factory, '127.0.0.1', 9000)
-
     loop.run_until_complete(coro)
     loop.run_forever()
     loop.close()
 
-savn = SAVNConnectionAssistant()
-savn.initSession(42)
+factory = WebSocketClientFactory()
+p = ProcessPoolExecutor(2)
+loop = asyncio.get_event_loop()
