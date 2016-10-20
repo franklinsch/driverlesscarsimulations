@@ -34,10 +34,9 @@ var frontendConnection;
 frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
   
-  console.log("setting up frontendConnection");
   frontendConnection = connection;
 
-  console.log((new Date()) + ' Connection accepted.');
+  console.log((new Date()) + ' Frontend Connection accepted.');
 
   function _handleRequestAvailableCities() {
     connection.send(JSON.stringify({
@@ -73,7 +72,7 @@ frontendSocketServer.on('request', function(request) {
       simulationStates: []
     });
 
-    simulation.save((err) => {
+    simulation.save((error) => {
       if (error) {
         console.log("Could not save new simulation");
         return
@@ -156,7 +155,7 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      const simulationState = message.content.simulationState;
+      const simulationState = message.content.objects;
 
       simulation.simulationStates.push(simulationState);
       simulation.save((error) => {
