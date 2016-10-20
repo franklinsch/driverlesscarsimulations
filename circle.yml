@@ -5,9 +5,14 @@ dependencies:
   override:
     - cd webserver
     - npm install
-
 test:
   override:
     - npm test
     - cd ../framework/test
     - python -m unittest client_test.py
+
+deployment:
+  production:
+    branch: continous_deployment 
+    commands:
+      - npm start
