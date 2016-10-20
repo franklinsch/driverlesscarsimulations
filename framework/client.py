@@ -9,7 +9,7 @@ class SAVNConnectionAssistant:
     self.simulationId = simulationId
 
   def updateCarStates(self, simulationId, timestamp, state):
-    factory.__proto__.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'id': simulationId+str(timestamp), 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
+    factory.__proto__.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'simulationId': simulationId, 'id': str(timestamp), 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
 
   def handleSimulationStart(self, initialParameters):
     pass
