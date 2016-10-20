@@ -16,7 +16,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 def main(argv):
   if len(argv) != 2:
     return 1
-  savn = ConnectionAssistant(argv[1])
+  savn = ConnectionAssistant(int(argv[1]))
   savn.initSession()
   return 0
 
