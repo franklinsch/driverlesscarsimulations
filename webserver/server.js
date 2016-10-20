@@ -76,7 +76,6 @@ frontendSocketServer.on('request', function(request) {
   var count = 0.0001;
 
   function _sendSimulationState() {
-    console.log('send simulation state..');
     connection.send(JSON.stringify({
       type: "simulation-state",
       content:
@@ -136,7 +135,7 @@ frameworkSocketServer.on('request', function(request) {
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-      console.log('Received Message: ' + message.utf8Data);
+      console.log('Received Framework Message: ' + message.utf8Data);
 
       connection.send(JSON.stringify({'timestamp': 0}));
     }
