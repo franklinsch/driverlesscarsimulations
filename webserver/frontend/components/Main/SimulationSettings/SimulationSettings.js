@@ -7,7 +7,8 @@ export default class SimulationSettings extends React.Component {
   static propTypes = {
     socket: React.PropTypes.object,
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
-    selectedCity: CustomPropTypes.city
+    selectedCity: CustomPropTypes.city,
+    activeSimulationID: React.PropTypes.string,
   }
 
   handleCityChange(city) {
@@ -41,6 +42,7 @@ export default class SimulationSettings extends React.Component {
       <div>
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
         <button onClick={ () => this.handleSimulationStart() }>Start simulation</button>
+        { (this.props.activeSimulationID ? <div>{ this.props.activeSimulationID }</div> : '') }
       </div>
     )
   }
