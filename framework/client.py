@@ -8,8 +8,8 @@ class SAVNConnectionAssistant:
   def __init__(self, simulationId):
     self.simulationId = simulationId
 
-  def updateCarRoutes(self, routeData):
-    self.send(json.dumps(routeData).encode('utf8')) 
+  def updateCarStates(self, simulationId, timestamp, state):
+    factory.__proto__.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'id': simulationId+timestamp, 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -24,8 +24,8 @@ class SAVNConnectionAssistant:
     connectionAssistant = self
     class FrameworkClientProtocol(WebSocketClientProtocol):
       def onOpen(self):
-        self.sendMessage(json.dumps(
-                            connectionAssistant.simulationId).encode('utf8'))
+        self.factory.__proto__ = self
+        self.sendMessage(json.dumps({'type': 'simulation-start', 'content': {'simulationId': connectionAssistant.simulationId}}).encode('utf8'))
         # validate the simulationId/APIKey
 
       def onMessage(self, payload, isBinary):
@@ -41,22 +41,19 @@ class SAVNConnectionAssistant:
                   connectionAssistant.handleSimulationDataUpdate, obj)
 
       def onClose(self, wasClean, code, reason):
+        self.factory.__proto__ = None
         connectionAssistant.handleSimulationStop()
-    
+
     return FrameworkClientProtocol
 
-
   def initSession(self):
-
-    factory = WebSocketClientFactory()
     factory.protocol = self.protocolFactory()
-    self.send = factory.protocol.sendMessage
 
     coro = loop.create_connection(factory, '127.0.0.1', 9000)
     loop.run_until_complete(coro)
     loop.run_forever()
     loop.close()
 
+factory = WebSocketClientFactory()
 p = ProcessPoolExecutor(2)
 loop = asyncio.get_event_loop()
-
