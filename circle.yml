@@ -3,13 +3,11 @@ machine:
 
 dependencies:
   override:
-    - cd webserver
-    - npm install
+    - cd webserver && npm install
 test:
   override:
     - npm test
-    - cd ../framework/test
-    - python -m unittest client_test.py
+    - cd ../framework/test && python -m unittest client_test.py
 
 deployment:
   production:
