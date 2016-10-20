@@ -7,11 +7,9 @@ from concurrent.futures import ProcessPoolExecutor
 class SAVNConnectionAssistant:
   def __init__(self, simulationId):
     self.simulationId = simulationId
-    self.loop = asyncio.get_event_loop()
-    self.p = ProcessPoolExecutor(2)
 
   def updateCarRoutes(self, routeData):
-    self.protocol.sendMessage(json.dumps(routeData).encode('utf8')) 
+    self.send(json.dumps(routeData).encode('utf8')) 
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -36,10 +34,10 @@ class SAVNConnectionAssistant:
 
         obj = json.loads(payload.decode('utf8'))
         if isInitialParams(obj):
-          connectionAssistant.loop.run_in_executor(connectionAssistant.p,
+          loop.run_in_executor(p,
                   connectionAssistant.handleSimulationStart, obj)
         else:
-          connectionAssistant.loop.run_in_executor(connectionAssistant.p,
+          loop.run_in_executor(p,
                   connectionAssistant.handleSimulationDataUpdate, obj)
 
       def onClose(self, wasClean, code, reason):
@@ -51,11 +49,14 @@ class SAVNConnectionAssistant:
   def initSession(self):
 
     factory = WebSocketClientFactory()
-    factory.protocol = self.protocolFactory() 
+    factory.protocol = self.protocolFactory()
+    self.send = factory.protocol.sendMessage
 
-    coro = self.loop.create_connection(factory, '127.0.0.1', 9000)
-    (_, protocol) = self.loop.run_until_complete(coro)
-    self.protocol = protocol
-    self.loop.run_forever()
-    self.loop.close()
+    coro = loop.create_connection(factory, '127.0.0.1', 9000)
+    loop.run_until_complete(coro)
+    loop.run_forever()
+    loop.close()
+
+p = ProcessPoolExecutor(2)
+loop = asyncio.get_event_loop()
 
