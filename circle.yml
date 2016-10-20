@@ -6,8 +6,8 @@ dependencies:
     - cd webserver && npm install
 test:
   override:
-    - npm test
-    - cd ../framework/test && python -m unittest client_test.py
+    - cd webserver && npm test
+    - cd framework/test && python -m unittest client_test.py
 
 deployment:
   production:
