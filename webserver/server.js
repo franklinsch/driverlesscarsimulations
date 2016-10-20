@@ -124,8 +124,6 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationID
 
-    console.log(db.getCollectionNames())
-
     db.simulation.find({
       _id: simulationID
     }, (err, simulation) => {
