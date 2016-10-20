@@ -9,7 +9,7 @@ class SAVNConnectionAssistant:
     self.simulationId = simulationId
 
   def updateCarStates(self, simulationId, timestamp, state):
-    factory.__proto__.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'id': simulationId+timestamp, 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
+    factory.__proto__.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'simulationId': simulationId, 'id': str(timestamp), 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -30,9 +30,10 @@ class SAVNConnectionAssistant:
 
       def onMessage(self, payload, isBinary):
         def isInitialParams(obj):
-          return obj["timestamp"] == 0
+          return obj["type"] == "simulation-info"
 
         obj = json.loads(payload.decode('utf8'))
+        print(obj)
         if isInitialParams(obj):
           loop.run_in_executor(p,
                   connectionAssistant.handleSimulationStart, obj)

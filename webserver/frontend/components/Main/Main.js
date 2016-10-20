@@ -52,6 +52,8 @@ export default class Main extends React.Component {
         availableCities: messageData.content
       })
     } else if (messageData.type === "simulation-state") {
+
+      console.log(messageData.content);
       this.setState({
         simulationState: messageData.content
       });

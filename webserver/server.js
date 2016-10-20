@@ -29,10 +29,14 @@ const server = app.listen(config.port, () => {
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
+var frontendConnection;
+
 frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
+  
+  frontendConnection = connection;
 
-  console.log((new Date()) + ' Connection accepted.');
+  console.log((new Date()) + ' Frontend Connection accepted.');
 
   function _handleRequestAvailableCities() {
     connection.send(JSON.stringify({
@@ -56,8 +60,6 @@ frontendSocketServer.on('request', function(request) {
         },
       ]
     }));
-
-    setTimeout(_sendSimulationState, 2000);
   }
 
   function _handleRequestSimulationStart(message, callback) {
@@ -69,31 +71,15 @@ frontendSocketServer.on('request', function(request) {
       },
       simulationStates: []
     });
+
+    simulation.save((error) => {
+      if (error) {
+        console.log("Could not save new simulation");
+        return
+      }
+    })
     console.log(simulation);
     callback(null, simulation._id);
-  }
-
-  var count = 0.0001;
-
-  function _sendSimulationState() {
-    connection.send(JSON.stringify({
-      type: "simulation-state",
-      content:
-      {
-        id: "0",
-        timestamp: "00:00:00",
-        objects: [{
-          id: "0",
-          type: "car",
-          position: {
-            lat: 50.68264,
-            lng: 4.7866131 + count
-          }
-        }]
-      }
-    }));
-    count += 0.0001;
-    setTimeout(_sendSimulationState, 2000);
   }
 
   connection.on('message', function(message) {
@@ -107,6 +93,7 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-start":
         _handleRequestSimulationStart(messageData, (err, simID) => {
+          console.log("Sending simID");
           connection.send(JSON.stringify({
             id: simID
           }));
@@ -133,11 +120,68 @@ frameworkSocketServer.on('request', function(request) {
 
   console.log((new Date()) + ' Connection accepted.');
 
+  function _handleSimulationStart(message) {
+    console.log("Received simulation-start from framework");
+
+    const simulationID = message.content.simulationId
+
+    Simulation.findOne({
+      _id: simulationID
+    }, (error, simulation) => {
+      if (error) {
+        console.log("Could not find simulation with ID " + simulationID);
+        return
+      }
+
+      connection.send(JSON.stringify({
+        type: "simulation-info",
+        content: {
+          simulationInfo: simulation.simulationInfo
+        }
+      }))
+    })
+  }
+
+  function _handleSimulationStateUpdate(message) {
+    console.log("Received simulation-update from framework");
+
+    const simulationID = message.content.simulationId;
+
+    Simulation.findOne({
+      _id: simulationID
+    }, (error, simulation) => {
+      if (error) {
+        console.log("Could not find simulation with ID " + simulationID);
+        return
+      }
+
+      simulation.simulationStates.push(message.content);
+      simulation.save((error) => {
+        if (error) {
+          console.log("Could not save new simulation");
+        }
+
+        console.log("Updated simulationState");
+        frontendConnection.send(JSON.stringify({
+          type: "simulation-state",
+          content: message.content
+        }))
+      })
+    })
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-      console.log('Received Framework Message: ' + message.utf8Data);
+      const messageData = JSON.parse(message.utf8Data);
 
-      connection.send(JSON.stringify({'timestamp': 0}));
+      console.log(messageData);
+
+      switch(messageData.type) {
+      case "simulation-start":
+        _handleSimulationStart(messageData);
+      case "simulation-state":
+        _handleSimulationStateUpdate(messageData);
+      }
     }
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
