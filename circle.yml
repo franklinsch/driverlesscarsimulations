@@ -1,9 +1,12 @@
 machine:
   timezone: Europe/London
+  python: 
+    version: 3.5.2
 
 dependencies:
   override:
     - cd webserver && npm install
+
 test:
   override:
     - cd webserver && npm test
@@ -13,4 +16,4 @@ deployment:
   production:
     branch: continous_deployment 
     commands:
-      - npm start
+      - cd webserver && npm start
