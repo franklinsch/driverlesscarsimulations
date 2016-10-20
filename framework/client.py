@@ -24,7 +24,7 @@ class SAVNConnectionAssistant:
     connectionAssistant = self
     class FrameworkClientProtocol(WebSocketClientProtocol):
       def onOpen(self):
-        self.sendMessage(json.dumps({{'type': 'simulation-start', content: {'simulationId': connectionAssistant.simulationId}}).encode('utf8'))
+        self.sendMessage(json.dumps({'type': 'simulation-start', 'content': {'simulationId': connectionAssistant.simulationId}}).encode('utf8'))
         # validate the simulationId/APIKey
 
       def onMessage(self, payload, isBinary):
