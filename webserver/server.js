@@ -155,9 +155,7 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      const simulationState = message.content.objects;
-
-      simulation.simulationStates.push(simulationState);
+      simulation.simulationStates.push(message.content);
       simulation.save((error) => {
         if (error) {
           console.log("Could not save new simulation");
@@ -166,7 +164,7 @@ frameworkSocketServer.on('request', function(request) {
         console.log("Updated simulationState");
         frontendConnection.send(JSON.stringify({
           type: "simulation-state",
-          content: simulationState
+          content: message.content
         }))
       })
     })
