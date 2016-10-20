@@ -70,6 +70,13 @@ frontendSocketServer.on('request', function(request) {
       },
       simulationStates: []
     });
+
+    simulation.save((err) => {
+      if (error) {
+        console.log("Could not save new simulation");
+        return
+      }
+    })
     console.log(simulation);
     callback(null, simulation._id);
   }
@@ -85,6 +92,7 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-start":
         _handleRequestSimulationStart(messageData, (err, simID) => {
+          console.log("Sending simID");
           connection.send(JSON.stringify({
             id: simID
           }));
@@ -111,12 +119,14 @@ frameworkSocketServer.on('request', function(request) {
 
   console.log((new Date()) + ' Connection accepted.');
 
-  function handleSimulationStart(message) {
+  function _handleSimulationStart(message) {
     console.log("Received simulation-start from framework");
 
     const simulationID = message.content.simulationID
 
-    db.Simulation.find({
+    console.log(db.getCollectionNames())
+
+    db.simulation.find({
       _id: simulationID
     }, (err, simulation) => {
       if (error) {
@@ -133,12 +143,12 @@ frameworkSocketServer.on('request', function(request) {
     })
   }
 
-  function handleSimulationStateUpdate(message) {
+  function _handleSimulationStateUpdate(message) {
     console.log("Received simulation-update from framework");
 
     const simulationID = message.content.simulationID;
 
-    db.Simulation.find({
+    db.simulation.find({
       _id: simulationID
     }, (err, simulation) => {
       if (error) {
@@ -165,11 +175,15 @@ frameworkSocketServer.on('request', function(request) {
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-      const messageData = message.utf8Data;
+      const messageData = JSON.parse(message.utf8Data);
 
-      switch(message.type) {
-      case "simulationStart":
-        _handleSimulationStart(messageData)
+      console.log(messageData);
+
+      switch(messageData.type) {
+      case "simulation-start":
+        _handleSimulationStart(messageData);
+      case "simulation-state":
+        _handleSimulationStateUpdate(messageData);
       }
 
       connection.send(JSON.stringify({'timestamp': 0}));
