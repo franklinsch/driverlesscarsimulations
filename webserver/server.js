@@ -122,18 +122,18 @@ frameworkSocketServer.on('request', function(request) {
   function _handleSimulationStart(message) {
     console.log("Received simulation-start from framework");
 
-    const simulationID = message.content.simulationID
+    const simulationID = message.content.simulationId
 
-    db.simulation.find({
+    Simulation.findOne({
       _id: simulationID
-    }, (err, simulation) => {
+    }, (error, simulation) => {
       if (error) {
         console.log("Could not find simulation with ID " + simulationID);
         return
       }
 
       connection.send(JSON.stringify({
-        type: "simulationInfo",
+        type: "simulation-info",
         content: {
           simulationInfo: simulation.simulationInfo
         }
@@ -144,11 +144,11 @@ frameworkSocketServer.on('request', function(request) {
   function _handleSimulationStateUpdate(message) {
     console.log("Received simulation-update from framework");
 
-    const simulationID = message.content.simulationID;
+    const simulationID = message.content.simulationId;
 
-    db.simulation.find({
+    Simulation.findOne({
       _id: simulationID
-    }, (err, simulation) => {
+    }, (error, simulation) => {
       if (error) {
         console.log("Could not find simulation with ID " + simulationID);
         return
@@ -183,8 +183,6 @@ frameworkSocketServer.on('request', function(request) {
       case "simulation-state":
         _handleSimulationStateUpdate(messageData);
       }
-
-      connection.send(JSON.stringify({'timestamp': 0}));
     }
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');

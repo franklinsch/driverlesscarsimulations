@@ -92,7 +92,7 @@ def translate(state):
 if len(sys.argv) != 2:
   sys_exit(1)
 
-simulationId = int(sys.argv[1])
+simulationId = sys.argv[1]
 savn = ConnectionAssistant(simulationId)
 savn.initSession()
 
