@@ -33,7 +33,9 @@ var frontendConnection;
 
 frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
-  this.frontendConnection = connection;
+  
+  console.log("setting up frontendConnection");
+  frontendConnection = connection;
 
   console.log((new Date()) + ' Connection accepted.');
 
