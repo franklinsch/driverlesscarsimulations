@@ -67,27 +67,6 @@ export default class Main extends React.Component {
     }
   }
 
-  _onMove() {
-    const simulationState = this.state.simulationState;
-    const cars = simulationState.objects;
-
-    cars.forEach( (car, i) => {
-      if (car.id === "0") {
-        car.position.lat += 0.001
-        cars[i] = car
-      }
-    })
-
-    const newSimulationState = {
-      ...simulationState,
-      objects: cars
-    }
-
-    this.setState({
-      simulationState: newSimulationState
-    })
-  } 
-
   _boundsForCity(cityID) {
     const availableCities = this.state.availableCities;
 
@@ -118,8 +97,6 @@ export default class Main extends React.Component {
           availableCities={availableCities}
           activeSimulationID={simulationID}
         />
-
-        <button onClick={ () => this._onMove() }>Move car</button>
 
         <SimulationMap 
           width={ 300 + 'px' }
