@@ -128,7 +128,13 @@ frameworkSocketServer.on('request', function(request) {
     Simulation.findOne({
       _id: simulationID
     }, (error, simulation) => {
-      if (error) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + simulationID
+          }
+        }))
         console.log("Could not find simulation with ID " + simulationID);
         return
       }
@@ -150,7 +156,13 @@ frameworkSocketServer.on('request', function(request) {
     Simulation.findOne({
       _id: simulationID
     }, (error, simulation) => {
-      if (error) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + simulationID
+          }
+        }))
         console.log("Could not find simulation with ID " + simulationID);
         return
       }

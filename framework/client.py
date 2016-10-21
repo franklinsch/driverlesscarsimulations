@@ -1,5 +1,6 @@
 import json
 import asyncio
+import sys
 from autobahn.asyncio.websocket import WebSocketClientProtocol
 from autobahn.asyncio.websocket import WebSocketClientFactory
 from concurrent.futures import ProcessPoolExecutor
@@ -29,12 +30,17 @@ class SAVNConnectionAssistant:
         # validate the simulationId/APIKey
 
       def onMessage(self, payload, isBinary):
+        def isError(obj):
+          return obj["type"] == "simulation-error"
+
         def isInitialParams(obj):
           return obj["type"] == "simulation-info"
 
         obj = json.loads(payload.decode('utf8'))
         print(obj)
-        if isInitialParams(obj):
+        if isError(obj):
+          sys.exit()
+        elif isInitialParams(obj):
           loop.run_in_executor(p,
                   connectionAssistant.handleSimulationStart, obj)
         else:
