@@ -1,66 +1,94 @@
 import json
 import asyncio
+import websockets
 import sys
-from autobahn.asyncio.websocket import WebSocketClientProtocol
-from autobahn.asyncio.websocket import WebSocketClientFactory
 from concurrent.futures import ProcessPoolExecutor
+
+
+
+
+HOST = 'ws://localhost:9000'
+p = ProcessPoolExecutor(2)
+loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
   def __init__(self, simulationId):
     self.simulationId = simulationId
+    self.messageQueue = asyncio.Queue()
 
-  def updateCarStates(self, simulationId, timestamp, state):
-    factory.__proto__.sendMessage(json.dumps({'type': 'simulation-state', 'content': {'simulationId': simulationId, 'id': str(timestamp), 'timestamp': timestamp, 'objects': state}}).encode('utf8'))
+  async def updateCarStates(self, timestamp, state):
+    packet = {'type': 'simulation-state',
+              'content': 
+                {'simulationId': self.simulationId,
+                 'id': str(timestamp),
+                 'timestamp': timestamp,
+                 'objects': state }}
+    await self.messageQueue.put(json.dumps(packet))
 
-  def handleSimulationStart(self, initialParameters):
+  async def handleSimulationStart(self, initialParameters):
+    ip = initialParameters["content"]
+    await self.updateCarStates(ip["timestamp"], ip["objects"])  
+
+  async def handleSimulationDataUpdate(self, updates):
     pass
 
-  def handleSimulationDataUpdate(self, updates):
+  def handleSimulationStop(self, packet):
     pass
 
-  def handleSimulationStop(self):
-    pass
+  async def fetchMessage(self):
+    return await self.messageQueue.get()
 
-  def protocolFactory(self):
-    connectionAssistant = self
-    class FrameworkClientProtocol(WebSocketClientProtocol):
-      def onOpen(self):
-        self.factory.__proto__ = self
-        self.sendMessage(json.dumps({'type': 'simulation-start', 'content': {'simulationId': connectionAssistant.simulationId}}).encode('utf8'))
-        # validate the simulationId/APIKey
+  async def handler(self):
+    async with websockets.connect(HOST) as websocket:
+      packet = {'type': 
+                  'simulation-start',
+                'content': 
+                    {'simulationId':
+                        self.simulationId}}
+      await websocket.send(json.dumps(packet))
 
-      def onMessage(self, payload, isBinary):
-        def isError(obj):
-          return obj["type"] == "simulation-error"
-
-        def isInitialParams(obj):
-          return obj["type"] == "simulation-info"
-
-        obj = json.loads(payload.decode('utf8'))
-        print(obj)
-        if isError(obj):
-          sys.exit()
-        elif isInitialParams(obj):
-          loop.run_in_executor(p,
-                  connectionAssistant.handleSimulationStart, obj)
+      while True:
+        listener_task = asyncio.ensure_future(websocket.recv())
+        producer_task = asyncio.ensure_future(self.fetchMessage())
+        done, pending = await asyncio.wait([listener_task, producer_task],
+                                           return_when=asyncio.FIRST_COMPLETED)
+        if listener_task in done:
+          message = listener_task.result()
+          await self.onMessage(json.loads(message))
         else:
-          loop.run_in_executor(p,
-                  connectionAssistant.handleSimulationDataUpdate, obj)
+          listener_task.cancel()
 
-      def onClose(self, wasClean, code, reason):
-        self.factory.__proto__ = None
-        connectionAssistant.handleSimulationStop()
+        if producer_task in done:
+          packet = producer_task.result()
+          await websocket.send(packet)
+        else:
+          producer_task.cancel()
 
-    return FrameworkClientProtocol
+  async def onMessage(self, packet):
+    def isError(packet):
+      return packet["type"] == "simulation-error"
+
+    def isInitialParams(packet):
+      return packet["type"] == "simulation-info"
+
+    def isClose(packet):
+      return packet["type"] == "close"
+
+    if isError(packet):
+      print(packet["content"]["reason"])
+      sys.exit()
+    elif isInitialParams(packet):
+      await self.handleSimulationStart(packet)
+    elif:
+      await self.handleSimulationStop(packet)
+    else:
+    await self.handleSimulationDataUpdate(packet)
+
 
   def initSession(self):
-    factory.protocol = self.protocolFactory()
+    loop.run_until_complete(savn.handler())
+    #loop.run_forever() 
 
-    coro = loop.create_connection(factory, '127.0.0.1', 9000)
-    loop.run_until_complete(coro)
-    loop.run_forever()
-    loop.close()
 
-factory = WebSocketClientFactory()
-p = ProcessPoolExecutor(2)
-loop = asyncio.get_event_loop()
+savn = SAVNConnectionAssistant(42)
+savn.initSession()
