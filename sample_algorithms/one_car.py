@@ -3,21 +3,14 @@ import time
 sys.path.append('../framework')
 
 import client
-<<<<<<< 9b9159636d7bb1e11e6d6302f417a455019c13e7
-=======
 import route
 import geojson
->>>>>>> Allow algorithm to follow route, given start and end coordinates
 
 from copy import deepcopy
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationStart(self, initialParameters):
-<<<<<<< 9b9159636d7bb1e11e6d6302f417a455019c13e7
-    #while True:
-=======
     #getGeojson(, 'map.geojson')
->>>>>>> Allow algorithm to follow route, given start and end coordinates
     state = setupCars(1)
     timestamp = 0
     #for i in range(50):
