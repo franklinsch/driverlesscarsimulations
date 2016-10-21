@@ -10,7 +10,7 @@ const WebSocketServer = require('websocket').server;
 const app = express();
 
 const Simulation = require('./backend/models/Simulation');
-const db = require('./backend/models/db');
+const City = require('./backend/models/City');
 
 //
 // Register Node.js middleware

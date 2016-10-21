@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Simulation = mongoose.Schema({
+const simulationSchema = mongoose.Schema({
   simulationInfo: {
     cityID: String
   },
@@ -18,4 +18,4 @@ const Simulation = mongoose.Schema({
   }]
 });
 
-module.exports = mongoose.model('Simulation', Simulation);
+module.exports = mongoose.model('Simulation', simulationSchema);
