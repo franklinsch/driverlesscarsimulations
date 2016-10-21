@@ -99,8 +99,8 @@ export default class Main extends React.Component {
         />
 
         <SimulationMap 
-          width={ 300 + 'px' }
-          height={ 300 + 'px' }
+          width={ 600 + 'px' }
+          height={ 600 + 'px' }
           bounds={ bounds }
           simulationState= { simulationState }
         />
