@@ -45,41 +45,27 @@ export default class Main extends React.Component {
   }
 
   handleMessageReceive(message) {
+    this.setState({simulationState: {id: "20"}});
     const messageData = JSON.parse(message.data);
 
     if (messageData.type === "available-cities") {
       this.setState({
         availableCities: messageData.content
       })
+    } else if (messageData.type === "simulation-id") {
+      this.setState({
+        simulationInfo: {
+          id: messageData.content.simulationID,
+          cityID: this.state.simulationInfo.cityID
+        }
+      });
     } else if (messageData.type === "simulation-state") {
-
       console.log(messageData.content);
       this.setState({
         simulationState: messageData.content
       });
     }
   }
-
-  _onMove() {
-    const simulationState = this.state.simulationState;
-    const cars = simulationState.objects;
-
-    cars.forEach( (car, i) => {
-      if (car.id === "0") {
-        car.position.lat += 0.001
-        cars[i] = car
-      }
-    })
-
-    const newSimulationState = {
-      ...simulationState,
-      objects: cars
-    }
-
-    this.setState({
-      simulationState: newSimulationState
-    })
-  } 
 
   _boundsForCity(cityID) {
     const availableCities = this.state.availableCities;
@@ -99,6 +85,8 @@ export default class Main extends React.Component {
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
     const socket = this.state.socket;
+    const simulationID = this.state.simulationInfo.id;
+    console.log(simulationID);
 
     const bounds = this._boundsForCity(simulationInfo.cityID);
 
@@ -107,9 +95,8 @@ export default class Main extends React.Component {
         <SimulationSettings
           socket={socket}
           availableCities={availableCities}
+          activeSimulationID={simulationID}
         />
-
-        <button onClick={ () => this._onMove() }>Move car</button>
 
         <SimulationMap 
           width={ 300 + 'px' }

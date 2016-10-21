@@ -95,7 +95,10 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestSimulationStart(messageData, (err, simID) => {
           console.log("Sending simID");
           connection.send(JSON.stringify({
-            id: simID
+            type: "simulation-id",
+            content: {
+              simulationID: simID
+            }
           }));
         });
         break;
