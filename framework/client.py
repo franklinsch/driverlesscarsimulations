@@ -2,13 +2,9 @@ import json
 import asyncio
 import websockets
 import sys
-from concurrent.futures import ProcessPoolExecutor
-
-
-
+import threading
 
 HOST = 'ws://localhost:9000'
-p = ProcessPoolExecutor(2)
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
@@ -16,27 +12,28 @@ class SAVNConnectionAssistant:
     self.simulationId = simulationId
     self.messageQueue = asyncio.Queue()
 
-  async def updateCarStates(self, timestamp, state):
+  def updateCarStates(self, timestamp, state):
     packet = {'type': 'simulation-state',
               'content': 
                 {'simulationId': self.simulationId,
                  'id': str(timestamp),
                  'timestamp': timestamp,
                  'objects': state }}
-    await self.messageQueue.put(json.dumps(packet))
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+      loop)
 
-  async def handleSimulationStart(self, initialParameters):
-    ip = initialParameters["content"]
-    await self.updateCarStates(ip["timestamp"], ip["objects"])  
+  def handleSimulationStart(self, initialParameters):
+    pass
 
-  async def handleSimulationDataUpdate(self, updates):
+  def handleSimulationDataUpdate(self, updates):
     pass
 
   def handleSimulationStop(self, packet):
     pass
 
   async def fetchMessage(self):
-    return await self.messageQueue.get()
+    message = await self.messageQueue.get()
+    return message
 
   async def handler(self):
     async with websockets.connect(HOST) as websocket:
@@ -54,7 +51,8 @@ class SAVNConnectionAssistant:
                                            return_when=asyncio.FIRST_COMPLETED)
         if listener_task in done:
           message = listener_task.result()
-          await self.onMessage(json.loads(message))
+          packet = json.loads(message)
+          loop.run_in_executor(None, self.onMessage, packet)
         else:
           listener_task.cancel()
 
@@ -64,31 +62,27 @@ class SAVNConnectionAssistant:
         else:
           producer_task.cancel()
 
-  async def onMessage(self, packet):
-    def isError(packet):
+  def onMessage(self, packet):
+    def isError():
       return packet["type"] == "simulation-error"
 
-    def isInitialParams(packet):
+    def isInitialParams():
       return packet["type"] == "simulation-info"
 
-    def isClose(packet):
+    def isClose():
       return packet["type"] == "close"
 
-    if isError(packet):
+    if isError():
       print(packet["content"]["reason"])
       sys.exit()
-    elif isInitialParams(packet):
-      await self.handleSimulationStart(packet)
-    elif:
-      await self.handleSimulationStop(packet)
+    elif isInitialParams():
+      self.handleSimulationStart(packet)
+    elif isClose():
+      self.handleSimulationStop(packet)
     else:
-    await self.handleSimulationDataUpdate(packet)
+      self.handleSimulationDataUpdate(packet)
 
 
   def initSession(self):
-    loop.run_until_complete(savn.handler())
-    #loop.run_forever() 
+    loop.run_until_complete(self.handler())
 
-
-savn = SAVNConnectionAssistant(42)
-savn.initSession()
