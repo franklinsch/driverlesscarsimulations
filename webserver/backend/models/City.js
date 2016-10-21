@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const City = mongoose.Schema({
-  id: { type: String, unique: true, index: true },
+  id: { type: String, unique: true},
   position: {
     lat: Number,
     lng: Number
