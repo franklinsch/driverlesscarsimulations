@@ -1,7 +1,12 @@
-import requests
+import overpass
+import geojson
+import os
+#from pyroutelib2.routeGeojson import route_geojson
+api = overpass.API()
+way_query = overpass.WayQuery('[name="Queen\'s Gate"]')
+response = api.Get(way_query)
 
-def get_osm_for_bounding_box(left, bottom, top, right):
-  API_URL = "http://www.overpass-api.de/api/xapi?*%5Bbbox="\
-            +str(left)+","+str(bottom)+","+str(top)+","+str(right)+"%5D"
-  r = requests.get(API_URL)
-  return r.text
+f = open("response.geojson", 'w')
+f.write(geojson.dumps(response))
+
+#route_geojson("response.geojson", "paths.geojson", mode="car")
