@@ -42,7 +42,7 @@ export default class SimulationSettings extends React.Component {
       <div>
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
         <button onClick={ () => this.handleSimulationStart() }>Start simulation</button>
-        { (this.props.activeSimulationID ? <div>{ this.props.activeSimulationID }</div> : '') }
+        { (this.props.activeSimulationID !== "0" ? <div>Current Simulation ID: { this.props.activeSimulationID }</div> : '') }
       </div>
     )
   }
