@@ -35,32 +35,32 @@ class SAVNConnectionAssistant:
     message = await self.messageQueue.get()
     return message
 
-  async def handler(self):
-    async with websockets.connect(HOST) as websocket:
+  async def startConnection(self):
       packet = {'type': 
                   'simulation-start',
                 'content': 
                     {'simulationId':
                         self.simulationId}}
-      await websocket.send(json.dumps(packet))
+      await self.ws.send(json.dumps(packet))
 
-      while True:
-        listener_task = asyncio.ensure_future(websocket.recv())
-        producer_task = asyncio.ensure_future(self.fetchMessage())
-        done, pending = await asyncio.wait([listener_task, producer_task],
-                                           return_when=asyncio.FIRST_COMPLETED)
-        if listener_task in done:
-          message = listener_task.result()
-          packet = json.loads(message)
-          loop.run_in_executor(None, self.onMessage, packet)
-        else:
-          listener_task.cancel()
+  async def handler(self):
+    while True:
+      listener_task = asyncio.ensure_future(self.ws.recv())
+      producer_task = asyncio.ensure_future(self.fetchMessage())
+      done, pending = await asyncio.wait([listener_task, producer_task],
+                                         return_when=asyncio.FIRST_COMPLETED)
+      if listener_task in done:
+        message = listener_task.result()
+        packet = json.loads(message)
+        loop.run_in_executor(None, self.onMessage, packet)
+      else:
+        listener_task.cancel()
 
-        if producer_task in done:
-          packet = producer_task.result()
-          await websocket.send(packet)
-        else:
-          producer_task.cancel()
+      if producer_task in done:
+        packet = producer_task.result()
+        await self.ws.send(packet)
+      else:
+        producer_task.cancel()
 
   def onMessage(self, packet):
     def isError():
@@ -84,5 +84,11 @@ class SAVNConnectionAssistant:
 
 
   def initSession(self):
-    loop.run_until_complete(self.handler())
+    async def coro():
+      async with websockets.connect(HOST) as websocket:
+        self.ws = websocket
+        await self.startConnection()
+        await self.handler()
+      
+    loop.run_until_complete(coro())
 
