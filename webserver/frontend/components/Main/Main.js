@@ -86,7 +86,6 @@ export default class Main extends React.Component {
     const availableCities = this.state.availableCities;
     const socket = this.state.socket;
     const simulationID = this.state.simulationInfo.id;
-    console.log(simulationID);
 
     const bounds = this._boundsForCity(simulationInfo.cityID);
 
