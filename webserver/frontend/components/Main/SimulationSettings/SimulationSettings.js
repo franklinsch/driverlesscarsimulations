@@ -41,24 +41,19 @@ export default class SimulationSettings extends React.Component {
     }
   }
 
-  _handleJourneySubmit(journey) {
-    const journeys = this.state.journeys;
-
-    const newJourneys = journeys.concat([journey])
-
+  _handleJourneySubmit(journeys) {
     this.setState({
-      journeys: newJourneys
+      journeys: journeys
     })
   }
 
-  render() {
-    const cities = this.props.availableCities || [];
+  render() { const cities = this.props.availableCities || [];
 
     return (
       <div>
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
         <JourneySettings 
-          onSubmit={(journey) => {this._handleJourneySubmit(journey)}}
+          onSubmit={(journeys) => {this._handleJourneySubmit(journeys)}}
         />
         <button onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
         { (this.props.activeSimulationID !== "0" ? <div>Current Simulation ID: { this.props.activeSimulationID }</div> : '') }

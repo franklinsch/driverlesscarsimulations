@@ -3,7 +3,7 @@ import React from 'react';
 export default class JourneySettings extends React.Component {
 
   static propTypes = {
-    onSubmit: React.PropTypes.function
+    onSubmit: React.PropTypes.func
   }
 
   constructor(props) {
@@ -22,8 +22,8 @@ export default class JourneySettings extends React.Component {
 
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
-    const destinationCurrentLat = this.state.destinationLat;
-    const destinationCurrentLng = this.state.destinationLng;
+    const destinationLat = this.state.destinationLat;
+    const destinationLng = this.state.destinationLng;
 
     const onSubmit = this.props.onSubmit;
 
@@ -40,8 +40,14 @@ export default class JourneySettings extends React.Component {
       }
     }
 
+    const journeys = this.state.journeys.concat([journey]);
+
+    this.setState({
+      journeys: journeys
+    })
+
     if (onSubmit) {
-      onSubmit(journey)
+      onSubmit(journeys)
     }
   }
 
@@ -72,12 +78,16 @@ export default class JourneySettings extends React.Component {
   renderJourneysList() {
     const journeys = this.state.journeys;
 
+    journeys.map((journey, index) => {
+      console.log(index);
+    })
+
     return (
       <ul>
       {
         journeys.map((journey, index) => {
           return (
-            <li> { index + ": " + journey.lat + " " + journey.lng } </li>)
+            <li key={index}> { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } </li>)
         })
       }
       </ul>
@@ -94,10 +104,10 @@ export default class JourneySettings extends React.Component {
     return (
       <div id="input-journeys">
         <form>
-          <input value={originLat} onChange={(e) => {this._handleOriginLatChange()}}/>
-          <input value={originLng} onChange={(e) => {this._handleOriginLngChange()}}/>
-          <input value={destinationLng} onChange={(e) => {this._handleDesinationLatChange()}}/>
-          <input value={destinationLng} onChange={(e) => {this._handleDestinationLngChange()}}/>
+          <input value={originLat} onChange={(e) => {this._handleOriginLatChange(e)}}/>
+          <input value={originLng} onChange={(e) => {this._handleOriginLngChange(e)}}/>
+          <input value={destinationLat} onChange={(e) => {this._handleDestinationLatChange(e)}}/>
+          <input value={destinationLng} onChange={(e) => {this._handleDestinationLngChange(e)}}/>
           <button type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Add journey</button>
         </form>
 
