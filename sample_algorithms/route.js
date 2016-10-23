@@ -1,6 +1,3 @@
-var $ = require("jquery");
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
 start = JSON.parse(process.argv[3].substring(1));
 end = JSON.parse(process.argv[4].substring(1));
 geojson = JSON.parse(process.argv[5].substring(1));
