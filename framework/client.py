@@ -1,4 +1,3 @@
-#Hello
 import json
 import asyncio
 import sys
