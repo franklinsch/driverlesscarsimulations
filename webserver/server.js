@@ -43,7 +43,7 @@ frontendSocketServer.on('request', function(request) {
       type: "available-cities",
       content: [
         {
-          label: 'example2',
+          name: 'example2',
           value: {
             id: "0",
             bounds: {

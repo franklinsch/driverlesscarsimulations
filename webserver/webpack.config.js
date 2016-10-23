@@ -41,8 +41,8 @@ module.exports = {
         warnings: false
       },
       mangle: true,
-      sourcemap: false,
-      beautify: false,
+      sourcemap: true,
+      beautify: true,
       dead_code: true
     }),
     new BrowserSyncPlugin({
