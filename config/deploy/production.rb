@@ -8,8 +8,6 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 #
 
-server "35.160.255.102", roles: [:app, :web, :db], :primary => true
-set :deploy_to, "/var/www/savn"
 
 
 # role-based syntax
