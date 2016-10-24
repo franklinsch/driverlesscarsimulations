@@ -1,43 +1,26 @@
-# config valid only for current version of Capistrano
-lock '3.6.1'
+set :applicatoin, "Autonomous Vehicle Simulation"
+set :repository, "git@github.com:franklinsch/driverlesscarsimulations.git"
+set :deploy_to, "./deploy"
+set :scm, :git
+set :use_sudo, false
+set :rails_env, "production"
+set :ssh_options, {:keys => "./SAVN.pem", :forward_agent => true}
 
-set :application, 'savn'
-set :repo_url, 'git@git@github.com:franklinsch/driverlesscarsimulations.git'
+server "35.160.255.102", roles: [:app, :web, :db], :primary => true, :user => "ubuntu"
 
-set :user, "ubuntu"
+set :current_path, "./webserver"
 
-set :stages, ["staging", "production"]
-set :default_stage, "staging"
+namespace :deploy do 
+  desc "install node_modules"
+  task :install_node_modules do
+    execute :npm, 'install', '-s'
+  end
+  
+  desc "run development server"
+  task :run_dev_server do
+    execute :npm, 'run', 'dev'
+  end
+end
 
-ssh_options[:keys] = ["/Users/fschrans/Downloads/SAVN.pem"]
-
-# Default branch is :master
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-
-# Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, '/var/www/my_app_name'
-
-# Default value for :scm is :git
-# set :scm, :git
-
-# Default value for :format is :airbrussh.
-# set :format, :airbrussh
-
-# You can configure the Airbrussh format using :format_options.
-# These are the defaults.
-# set :format_options, command_output: true, log_file: 'log/capistrano.log', color: :auto, truncate: :auto
-
-# Default value for :pty is false
-# set :pty, true
-
-# Default value for :linked_files is []
-# append :linked_files, 'config/database.yml', 'config/secrets.yml'
-
-# Default value for linked_dirs is []
-# append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system'
-
-# Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
-
-# Default value for keep_releases is 5
-# set :keep_releases, 5
+after "deploy", "deploy:install_node_modules"
+after "deploy", "deploy:run_dev_server"

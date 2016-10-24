@@ -87,3 +87,6 @@ Temporary Items
 
 #aws keys
 *.pem
+
+#capistrano log files
+log
