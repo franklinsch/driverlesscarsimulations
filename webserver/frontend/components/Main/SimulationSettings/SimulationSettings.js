@@ -3,6 +3,7 @@ import Dropdown from './Dropdown/Dropdown.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
+import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.js';
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
@@ -57,6 +58,20 @@ export default class SimulationSettings extends React.Component {
     })
   }
 
+  _handleJoinSimulation(simulationID) {
+    const socket = this.props.socket;
+
+    if (socket && socket.readyState === 1) {
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type: "request-simulation-join",
+        content: {
+          simulationID: simulationID
+        }
+      }))
+    }
+  }
+
   renderJourneysList() {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
@@ -73,8 +88,6 @@ export default class SimulationSettings extends React.Component {
     )
   }
 
-
-
   render() { const cities = this.props.availableCities || [];
 
     return (
@@ -85,6 +98,7 @@ export default class SimulationSettings extends React.Component {
         />
         <button onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
         { (this.props.activeSimulationID !== "0" ? <div>Current Simulation ID: { this.props.activeSimulationID }</div> : '') }
+        <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
 
         <h2> Journeys: </h2>
         { this.renderJourneysList() }
