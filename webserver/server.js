@@ -70,7 +70,7 @@ frontendSocketServer.on('request', function(request) {
         cityID: message.content.selectedCity.label,
         journeys: message.content.journeys
       },
-      frontendConnectionIndex: frontendConnections.length,
+      frontendConnectionIndices: [frontendConnections.length],
       simulationStates: []
     });
 
@@ -83,6 +83,30 @@ frontendSocketServer.on('request', function(request) {
     console.log(simulation);
 
     callback(null, simulation._id);
+  }
+
+  function _handleRequestSimulationJoin(message) {
+    Simulation.findByIdAndUpdate(message.content.simulationID, { $push: { frontendConnectionIndices: frontendConnections.length }}, { new: true }, function (error, simulation) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.content.simulationID
+          }
+        }))
+        console.log("Could not find simulation with ID " + message.content.simulationID);
+        return
+      }
+
+      frontendConnections.push(connection);
+
+      connection.send(JSON.stringify({
+        type: "simulation-info",
+        content: {
+          simulationInfo: simulation.simulationInfo
+        }
+      }));
+    })
   }
 
   connection.on('message', function(message) {
@@ -105,6 +129,10 @@ frontendSocketServer.on('request', function(request) {
           }));
         });
         break;
+      case "request-simulation-join":
+        console.log(messageData);
+        console.log(messageData);
+        _handleRequestSimulationJoin(messageData);
       }
     }
     else if (message.type === 'binary') {
@@ -180,10 +208,12 @@ frameworkSocketServer.on('request', function(request) {
         }
 
         console.log("Updated simulationState");
-        frontendConnections[simulation.frontendConnectionIndex].send(JSON.stringify({
-          type: "simulation-state",
-          content: message.content
-        }))
+        for (let index of simulation.frontendConnectionIndices) {
+          frontendConnections[index].send(JSON.stringify({
+            type: "simulation-state",
+            content: message.content
+          }))
+        }
       })
     })
   }
