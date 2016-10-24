@@ -52,4 +52,12 @@ export default class CustomPropTypes {
   }
 
   static simulationState = React.PropTypes.shape(CustomPropTypes._simulationState);
+
+  static _simulationJourney = {
+    carID: React.PropTypes.number,
+    origin: CustomPropTypes.position,
+    destination: CustomPropTypes.position
+  }
+
+  static simulationJourney = React.PropTypes.shape(CustomPropTypes._simulationJourney);
 }

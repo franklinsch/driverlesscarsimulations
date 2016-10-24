@@ -9,7 +9,45 @@ export default class SimulationMap extends React.Component {
     width: React.PropTypes.string,
     height: React.PropTypes.string,
     bounds: CustomPropTypes.bounds,
-    simulationState: CustomPropTypes.simulationState.isRequired
+    simulationState: CustomPropTypes.simulationState.isRequired,
+    handleAddJourney: React.PropTypes.func
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      origin: null,
+    }
+  }
+
+  _handleMapClick(e) {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+
+    const position = {
+      lat: lat,
+      lng: lng
+    }
+
+    const origin = this.state.origin;
+
+    if (origin) {
+      const journey = {
+        origin: origin,
+        destination: position
+      }
+
+      this.setState({
+        origin: null
+      })
+
+      this.props.handleAddJourney(journey)
+    } else {
+      this.setState({
+        origin: position
+      })
+    }
   }
 
   render() {
@@ -30,7 +68,11 @@ export default class SimulationMap extends React.Component {
     const mapBounds = [bounds.southWest, bounds.northEast]
 
     return (
-      <Map bounds={mapBounds} style={style} >
+      <Map 
+        bounds={mapBounds} 
+        style={style} 
+        onClick={(e) => { this._handleMapClick(e) }}
+      >
       <TileLayer
       url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

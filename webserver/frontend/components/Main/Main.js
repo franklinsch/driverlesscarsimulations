@@ -40,7 +40,8 @@ export default class Main extends React.Component {
             lng: 4.78661
           } 
         }]
-      }
+      },
+      mapSelectedJourneys: []
     }
   }
 
@@ -67,6 +68,14 @@ export default class Main extends React.Component {
     }
   }
 
+  handleAddJourney(journey) {
+    const journeys = this.state.mapSelectedJourneys.concat([journey]);
+
+    this.setState({
+      mapSelectedJourneys: journeys
+    })
+  }
+
   _boundsForCity(cityID) {
     const availableCities = this.state.availableCities;
 
@@ -86,7 +95,8 @@ export default class Main extends React.Component {
     const availableCities = this.state.availableCities;
     const socket = this.state.socket;
     const simulationID = this.state.simulationInfo.id;
-    console.log(simulationID);
+
+    const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
 
     const bounds = this._boundsForCity(simulationInfo.cityID);
 
@@ -96,6 +106,7 @@ export default class Main extends React.Component {
           socket={socket}
           availableCities={availableCities}
           activeSimulationID={simulationID}
+          mapSelectedJourneys={mapSelectedJourneys}
         />
 
         <SimulationMap 
@@ -103,6 +114,7 @@ export default class Main extends React.Component {
           height={ 600 + 'px' }
           bounds={ bounds }
           simulationState= { simulationState }
+          handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
         />
       </div>
     )
