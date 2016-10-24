@@ -11,6 +11,8 @@ const app = express();
 
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
+const Connection = require('./backend/models/Connection');
+const db = require('./backend/models/db');
 
 //
 // Register Node.js middleware
@@ -29,12 +31,8 @@ const server = app.listen(config.port, () => {
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
-var frontendConnection;
-
 frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
-
-  frontendConnection = connection;
 
   console.log((new Date()) + ' Frontend Connection accepted.');
 
@@ -78,6 +76,18 @@ frontendSocketServer.on('request', function(request) {
       }
     });
     console.log(simulation);
+
+    const newConnection = new Connection({
+      simulationId: simulation._id,
+      frontendConnection: connection 
+    });
+    connection.save((error) => {
+      if (error) {
+        console.log("Could not save new connection");
+        return
+      }
+    });
+
     callback(null, simulation._id);
   }
 
