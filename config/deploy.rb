@@ -6,17 +6,19 @@ set :ssh_options, {:keys => "./SAVN.pem", :forward_agent => true}
 
 server "35.160.255.102", roles: [:app, :web, :db], :primary => true, :user => "ubuntu"
 
-set :current_path, "./webserver"
-
 namespace :deploy do 
   desc "install node_modules"
   task :install_node_modules do
-    execute :npm, 'install', '-s'
+    on roles (:app) do
+      execute "cd '#{release_path}'; cd webserver; npm install"
+    end
   end
   
   desc "run development server"
   task :run_dev_server do
-    execute :npm, 'run', 'dev'
+    on roles (:app) do
+      execute "cd '#{release_path}'; cd webserver; npm start"
+    end
   end
 end
 
