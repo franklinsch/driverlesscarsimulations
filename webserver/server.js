@@ -67,7 +67,8 @@ frontendSocketServer.on('request', function(request) {
     console.log(JSON.stringify(message, undefined, 2));
     const simulation = new Simulation({
       simulationInfo: {
-        cityID: message.content.selectedCity.label
+        cityID: message.content.selectedCity.label,
+        journeys: message.content.journeys
       },
       frontendConnectionIndex: frontendConnections.length,
       simulationStates: []
