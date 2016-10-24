@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 
-const City = mongoose.Schema({
-  id: { type: String, unique: true, index: true },
-  position: {
-    lat: Number,
-    lng: Number
-  },
-  zoom: Number
-})
+const citySchema = mongoose.Schema({
+  name: String,
+  bounds: {
+    southWest: {
+      lat: Number,
+      lng: Number
+    },
+    northEast: {
+      lat: Number,
+      lng: Number
+    }
+  }
+});
 
-module.exports = mongoose.model('City', City);
+module.exports = mongoose.model('City', citySchema);
