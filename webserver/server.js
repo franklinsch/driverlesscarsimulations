@@ -11,6 +11,7 @@ const app = express();
 
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
+const db = require('./backend/models/db');
 
 //
 // Register Node.js middleware
@@ -27,15 +28,14 @@ const server = app.listen(config.port, () => {
   console.log(`The server is running at http://localhost:${port}/`);
 });
 
+const frontendConnections = []
+const frameworkConnections = []
+
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
-var frontendConnection;
-
 frontendSocketServer.on('request', function(request) {
-  var connection = request.accept(null, request.origin);
-
-  frontendConnection = connection;
-
+  const connection = request.accept(null, request.origin);
+  
   console.log((new Date()) + ' Frontend Connection accepted.');
 
   function _handleRequestAvailableCities() {
@@ -69,6 +69,7 @@ frontendSocketServer.on('request', function(request) {
       simulationInfo: {
         cityID: message.content.selectedCity.label
       },
+      frontendConnectionIndex: frontendConnections.length,
       simulationStates: []
     });
 
@@ -76,8 +77,10 @@ frontendSocketServer.on('request', function(request) {
       if (error) {
         return console.error(error);
       }
+      frontendConnections.push(connection)
     });
     console.log(simulation);
+
     callback(null, simulation._id);
   }
 
@@ -127,9 +130,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId
 
-    Simulation.findOne({
-      _id: simulationID
-    }, (error, simulation) => {
+    Simulation.findByIdAndUpdate(simulationID, { $set: { frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -141,12 +142,14 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
+      frameworkConnections.push(connection);
+
       connection.send(JSON.stringify({
         type: "simulation-info",
         content: {
           simulationInfo: simulation.simulationInfo
         }
-      }))
+      }));
     })
   }
 
@@ -172,11 +175,11 @@ frameworkSocketServer.on('request', function(request) {
       simulation.simulationStates.push(message.content);
       simulation.save((error) => {
         if (error) {
-          console.log("Could not save new simulation");
+          console.log("Could not update simulation");
         }
 
         console.log("Updated simulationState");
-        frontendConnection.send(JSON.stringify({
+        frontendConnections[simulation.frontendConnectionIndex].send(JSON.stringify({
           type: "simulation-state",
           content: message.content
         }))
