@@ -46,7 +46,6 @@ export default class Main extends React.Component {
   }
 
   handleMessageReceive(message) {
-    this.setState({simulationState: {id: "20"}});
     const messageData = JSON.parse(message.data);
 
     if (messageData.type === "available-cities") {
