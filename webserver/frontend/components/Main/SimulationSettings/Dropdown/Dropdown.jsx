@@ -15,7 +15,7 @@ export default class Dropdown extends React.Component {
   render() {
     let items = [];
     for (let i = 0; i < this.props.items.length; i++) {
-      items.push(<option key={i} value={i}>{this.props.items[i].label}</option>);
+      items.push(<option key={i} value={i}>{this.props.items[i].name}</option>);
     }
 
     return <select onChange={(event) => this._onSelect(event)}>

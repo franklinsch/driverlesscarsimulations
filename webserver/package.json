@@ -8,7 +8,8 @@
     "start": "node_modules/.bin/webpack -p && node server.js",
     "dev": "node_modules/.bin/npm-run-all --parallel watch:server watch:build",
     "watch:build": "node_modules/.bin/webpack --watch",
-    "watch:server": "node_modules/.bin/nodemon \"server.js\" --watch"
+    "watch:server": "node_modules/.bin/nodemon \"server.js\" --watch",
+    "dummy": "node scripts/insert-dummy-data.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/franklinsch/driverlesscarsimulations#readme",
   "dependencies": {
+    "async": "^2.1.2",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-polyfill": "^6.16.0",

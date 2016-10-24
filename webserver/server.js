@@ -10,7 +10,7 @@ const WebSocketServer = require('websocket').server;
 const app = express();
 
 const Simulation = require('./backend/models/Simulation');
-const db = require('./backend/models/db');
+const City = require('./backend/models/City');
 
 //
 // Register Node.js middleware
@@ -33,7 +33,7 @@ var frontendConnection;
 
 frontendSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
-  
+
   frontendConnection = connection;
 
   console.log((new Date()) + ' Frontend Connection accepted.');
@@ -42,9 +42,9 @@ frontendSocketServer.on('request', function(request) {
     connection.send(JSON.stringify({
       type: "available-cities",
       content: [
-        { 
-          label: 'example2',
-          value: { 
+        {
+          name: 'example2',
+          value: {
             id: "0",
             bounds: {
               southWest: {
@@ -72,12 +72,11 @@ frontendSocketServer.on('request', function(request) {
       simulationStates: []
     });
 
-    simulation.save((error) => {
+    simulation.save((error, simulation) => {
       if (error) {
-        console.log("Could not save new simulation");
-        return
+        return console.error(error);
       }
-    })
+    });
     console.log(simulation);
     callback(null, simulation._id);
   }
