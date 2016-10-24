@@ -61,8 +61,6 @@ export default class SimulationSettings extends React.Component {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
-    console.log(allJourneys);
-
     return (
       <ul>
       {
