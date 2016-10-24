@@ -29,8 +29,10 @@ Someone else will have to review the branch and the CircleCI tests must pass bef
 
 ###5. Kanban
 
+Never work on a task that does not have a card.
 In `Analysis`, one person may have two tasks at most.
 In `Development`, person can only have one task, excluding shared tasks.
+Tasks should not spend more than a day in `Review`.
 
 ###6. Tasks past Backlog
 
