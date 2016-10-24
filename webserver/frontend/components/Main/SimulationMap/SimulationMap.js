@@ -12,6 +12,10 @@ export default class SimulationMap extends React.Component {
     simulationState: CustomPropTypes.simulationState.isRequired
   }
 
+  _handleMapClick() {
+    console.log("here")
+  }
+
   render() {
     const style = {
       height: this.props.height || 300 + 'px',
@@ -30,7 +34,11 @@ export default class SimulationMap extends React.Component {
     const mapBounds = [bounds.southWest, bounds.northEast]
 
     return (
-      <Map bounds={mapBounds} style={style} >
+      <Map 
+        bounds={mapBounds} 
+        style={style} 
+        onClick={this._handleMapClick}
+      >
       <TileLayer
       url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
