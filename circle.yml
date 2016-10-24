@@ -12,7 +12,8 @@ test:
   override:
     - cd framework/test/ && python -m unittest client_test.py 
 deployment:
-  branch: capistrano
-  override:
+  production:
+    branch: capistrano
+  commands:
     - gem install capistrano
     - cap production deploy
