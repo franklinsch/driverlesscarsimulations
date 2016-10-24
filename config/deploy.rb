@@ -1,5 +1,5 @@
 set :applicatoin, "Autonomous Vehicle Simulation"
-set :repository, "git@github.com:franklinsch/driverlesscarsimulations.git"
+set :repo_url, "git@github.com:franklinsch/driverlesscarsimulations.git"
 set :deploy_to, "./deploy"
 set :scm, :git
 set :use_sudo, false
