@@ -15,7 +15,7 @@ const simulationSchema = mongoose.Schema({
       }
     }]
   },
-  frontendConnectionIndex: Number,
+  frontendConnectionIndices: [Number],
   frameworkConnectionIndex: Number,
   simulationStates: [{
     id: String,
