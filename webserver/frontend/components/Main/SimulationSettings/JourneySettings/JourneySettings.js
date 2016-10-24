@@ -75,26 +75,6 @@ export default class JourneySettings extends React.Component {
     })
   }
 
-  renderJourneysList() {
-    const journeys = this.state.journeys;
-
-    journeys.map((journey, index) => {
-      console.log(index);
-    })
-
-    return (
-      <ul>
-      {
-        journeys.map((journey, index) => {
-          return (
-            <li key={index}> { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } </li>)
-        })
-      }
-      </ul>
-    )
-  }
-
-
   render() {
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
@@ -110,9 +90,6 @@ export default class JourneySettings extends React.Component {
           <input value={destinationLng} onChange={(e) => {this._handleDestinationLngChange(e)}}/>
           <button type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Add journey</button>
         </form>
-
-        <h2> Journeys: </h2>
-        { this.renderJourneysList() }
       </div>
     )
   }

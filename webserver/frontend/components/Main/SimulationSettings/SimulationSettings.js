@@ -9,7 +9,16 @@ export default class SimulationSettings extends React.Component {
     socket: React.PropTypes.object,
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     selectedCity: CustomPropTypes.city,
-    activeSimulationID: React.PropTypes.string
+    activeSimulationID: React.PropTypes.string,
+    mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedCity: [],
+      journeys: []
+    }
   }
 
   handleCityChange(city) {
@@ -25,7 +34,8 @@ export default class SimulationSettings extends React.Component {
     const socket = this.props.socket;
     const selectedCity = this.state && this.state.selectedCity || this.props.availableCities[0];
 
-    const journeys = this.state.journeys;
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
     const simulationSettings = {
       selectedCity: selectedCity,
@@ -47,6 +57,24 @@ export default class SimulationSettings extends React.Component {
     })
   }
 
+  renderJourneysList() {
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+
+    return (
+      <ul>
+      {
+        journeys.map((journey, index) => {
+          return (
+            <li key={index}> { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } </li>)
+        })
+      }
+      </ul>
+    )
+  }
+
+
+
   render() { const cities = this.props.availableCities || [];
 
     return (
@@ -57,6 +85,9 @@ export default class SimulationSettings extends React.Component {
         />
         <button onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
         { (this.props.activeSimulationID !== "0" ? <div>Current Simulation ID: { this.props.activeSimulationID }</div> : '') }
+
+        <h2> Journeys: </h2>
+        { this.renderJourneysList() }
       </div>
     )
   }
