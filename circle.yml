@@ -14,6 +14,6 @@ test:
 deployment:
   production:
     branch: capistrano
-  commands:
+    commands:
     - gem install capistrano
     - cap production deploy
