@@ -1,7 +1,5 @@
-set :applicatoin, "Autonomous Vehicle Simulation"
+set :applicatoin, "SAVN"
 set :repo_url, "git@github.com:franklinsch/driverlesscarsimulations.git"
-set :deploy_to, "./deploy"
-set :scm, :git
 set :use_sudo, false
 set :rails_env, "production"
 set :ssh_options, {:keys => "./SAVN.pem", :forward_agent => true}
