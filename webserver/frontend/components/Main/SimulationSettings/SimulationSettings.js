@@ -39,7 +39,7 @@ export default class SimulationSettings extends React.Component {
 
     const simulationSettings = {
       selectedCity: selectedCity,
-      journeys: journeys
+      journeys: allJourneys
     }
 
     if (socket && socket.readyState === 1) {
@@ -61,10 +61,12 @@ export default class SimulationSettings extends React.Component {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
+    console.log(allJourneys);
+
     return (
       <ul>
       {
-        journeys.map((journey, index) => {
+        allJourneys.map((journey, index) => {
           return (
             <li key={index}> { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } </li>)
         })
