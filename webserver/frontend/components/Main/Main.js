@@ -11,8 +11,8 @@ export default class Main extends React.Component {
 
     var socket = new WebSocket("ws://localhost:3000");
 
-    socket.onopen = (event) => { 
-      console.log("Connected to: " + event.currentTarget.URL) 
+    socket.onopen = (event) => {
+      console.log("Connected to: " + event.currentTarget.URL)
 
       socket.send(JSON.stringify({
         ...UtilFunctions.socketMessage(),
@@ -35,10 +35,10 @@ export default class Main extends React.Component {
         objects: [{
           id: "0",
           type: "car",
-          position: { 
+          position: {
             lat: 50.68264,
             lng: 4.78661
-          } 
+          }
         }]
       },
       mapSelectedJourneys: []
@@ -77,13 +77,9 @@ export default class Main extends React.Component {
 
   _boundsForCity(cityID) {
     const availableCities = this.state.availableCities;
-
+    console.log("City ID:" + cityID);
     if (availableCities) {
-      for (const city of availableCities) {
-        if (city.value.id === cityID) {
-          return city.value.bounds
-        }
-      }
+      return availableCities[0].bounds
     }
   }
 
@@ -108,7 +104,7 @@ export default class Main extends React.Component {
           mapSelectedJourneys={mapSelectedJourneys}
         />
 
-        <SimulationMap 
+        <SimulationMap
           width={ 600 + 'px' }
           height={ 600 + 'px' }
           bounds={ bounds }
@@ -119,4 +115,3 @@ export default class Main extends React.Component {
     )
   }
 }
-

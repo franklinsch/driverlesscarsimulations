@@ -8,7 +8,7 @@ export default class Dropdown extends React.Component {
   }
 
   _onSelect(event) {
-    let item = this.props.items[event.target.value].value;
+    let item = this.props.items[event.target.value];
     return this.props.onSelect(item);
   }
 

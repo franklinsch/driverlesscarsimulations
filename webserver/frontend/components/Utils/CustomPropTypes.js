@@ -25,6 +25,7 @@ export default class CustomPropTypes {
 
   static _city = {
     id: React.PropTypes.string,
+    name: React.PropTypes.string,
     bounds: CustomPropTypes.bounds
   }
 
