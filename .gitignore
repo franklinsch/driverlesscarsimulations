@@ -84,3 +84,6 @@ Temporary Items
 
 #ide directories
 .idea
+
+#aws keys
+*.pem
