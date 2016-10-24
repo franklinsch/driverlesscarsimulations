@@ -28,11 +28,14 @@ const server = app.listen(config.port, () => {
   console.log(`The server is running at http://localhost:${port}/`);
 });
 
+const frontendConnections = []
+const frameworkConnections = []
+
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 frontendSocketServer.on('request', function(request) {
-  var connection = request.accept(null, request.origin);
-
+  const connection = request.accept(null, request.origin);
+  
   console.log((new Date()) + ' Frontend Connection accepted.');
 
   function _handleRequestAvailableCities() {
@@ -66,7 +69,7 @@ frontendSocketServer.on('request', function(request) {
       simulationInfo: {
         cityID: message.content.selectedCity.label
       },
-      frontendConnection: connection,
+      frontendConnectionIndex: frontendConnections.length,
       simulationStates: []
     });
 
@@ -74,6 +77,7 @@ frontendSocketServer.on('request', function(request) {
       if (error) {
         return console.error(error);
       }
+      frontendConnections.push(connection)
     });
     console.log(simulation);
 
@@ -126,7 +130,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId
 
-    Simulation.findByIdAndUpdate(simulationID, { $set: { frameworkConnection: connection }}, { new: true }, function (error, simulation) {
+    Simulation.findByIdAndUpdate(simulationID, { $set: { frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -137,6 +141,8 @@ frameworkSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + simulationID);
         return
       }
+
+      frameworkConnections.push(connection);
 
       connection.send(JSON.stringify({
         type: "simulation-info",
@@ -173,7 +179,7 @@ frameworkSocketServer.on('request', function(request) {
         }
 
         console.log("Updated simulationState");
-        simulation.frontendConnection.send(JSON.stringify({
+        frontendConnections[simulation.frontendConnectionIndex].send(JSON.stringify({
           type: "simulation-state",
           content: message.content
         }))

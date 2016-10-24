@@ -4,8 +4,8 @@ const simulationSchema = mongoose.Schema({
   simulationInfo: {
     cityID: String
   },
-  frontendConnection: Object,
-  frameworkConnection: Object,
+  frontendConnectionIndex: Number,
+  frameworkConnectionIndex: Number,
   simulationStates: [{
     id: String,
     timestamp: String,
