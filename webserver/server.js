@@ -11,7 +11,6 @@ const app = express();
 
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
-const Connection = require('./backend/models/Connection');
 const db = require('./backend/models/db');
 
 //
@@ -67,6 +66,7 @@ frontendSocketServer.on('request', function(request) {
       simulationInfo: {
         cityID: message.content.selectedCity.label
       },
+      frontendConnection: connection,
       simulationStates: []
     });
 
@@ -76,17 +76,6 @@ frontendSocketServer.on('request', function(request) {
       }
     });
     console.log(simulation);
-
-    const newConnection = new Connection({
-      simulationId: simulation._id,
-      frontendConnection: connection 
-    });
-    connection.save((error) => {
-      if (error) {
-        console.log("Could not save new connection");
-        return
-      }
-    });
 
     callback(null, simulation._id);
   }
@@ -137,9 +126,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId
 
-    Simulation.findOne({
-      _id: simulationID
-    }, (error, simulation) => {
+    Simulation.findByIdAndUpdate(simulationID, { $set: { frameworkConnection: connection }}, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -156,7 +143,7 @@ frameworkSocketServer.on('request', function(request) {
         content: {
           simulationInfo: simulation.simulationInfo
         }
-      }))
+      }));
     })
   }
 
@@ -182,11 +169,11 @@ frameworkSocketServer.on('request', function(request) {
       simulation.simulationStates.push(message.content);
       simulation.save((error) => {
         if (error) {
-          console.log("Could not save new simulation");
+          console.log("Could not update simulation");
         }
 
         console.log("Updated simulationState");
-        frontendConnection.send(JSON.stringify({
+        simulation.frontendConnection.send(JSON.stringify({
           type: "simulation-state",
           content: message.content
         }))
