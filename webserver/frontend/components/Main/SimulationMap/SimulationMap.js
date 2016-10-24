@@ -1,5 +1,6 @@
 import React from 'react';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import { Map, Marker, TileLayer } from 'react-leaflet';
+import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
 
 export default class SimulationMap extends React.Component {
@@ -39,9 +40,14 @@ export default class SimulationMap extends React.Component {
         cars &&
         cars.map((car, index) => {
           const key = car.position.lat.toString() + car.position.lng.toString()
+          const carIcon = L.icon({
+            iconUrl: "http://image.flaticon.com/icons/svg/226/226604.svg",
+            iconSize: [22, 22],
+          })
           return (
             <Marker position={ car.position } 
               key={ key }
+              icon = {carIcon}
             />
           )
         })
