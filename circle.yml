@@ -4,3 +4,9 @@ machine:
 test:
   override:
     - echo test
+deployment:
+  production:
+    branch: capistrano
+    commands:
+    - gem install capistrano
+    - cap production deploy

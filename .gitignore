@@ -84,3 +84,9 @@ Temporary Items
 
 #ide directories
 .idea
+
+#aws keys
+*.pem
+
+#capistrano log files
+log
