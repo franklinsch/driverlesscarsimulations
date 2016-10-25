@@ -43,8 +43,11 @@ class SAVNConnectionAssistant:
                         self.simulationId}}
       await self.ws.send(json.dumps(packet))
 
-  async def handler(self):
+  async def handlerLoop(self):
     while True:
+      await self.handler()
+
+  async def handler(self):
       listener_task = asyncio.ensure_future(self.ws.recv())
       producer_task = asyncio.ensure_future(self.fetchMessage())
       done, pending = await asyncio.wait([listener_task, producer_task],
@@ -88,7 +91,7 @@ class SAVNConnectionAssistant:
       async with websockets.connect(HOST) as websocket:
         self.ws = websocket
         await self.startConnection()
-        await self.handler()
+        await self.handlerLoop()
       
     loop.run_until_complete(coro())
 
