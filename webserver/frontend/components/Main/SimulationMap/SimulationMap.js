@@ -18,6 +18,7 @@ export default class SimulationMap extends React.Component {
 
     this.state = {
       origin: null,
+      destination: null
     }
   }
 
@@ -33,6 +34,11 @@ export default class SimulationMap extends React.Component {
     const origin = this.state.origin;
 
     if (origin) {
+
+      this.setState({
+        destination: position
+      })
+
       const journey = {
         origin: origin,
         destination: position
@@ -48,6 +54,24 @@ export default class SimulationMap extends React.Component {
         origin: position
       })
     }
+  }
+
+  renderMarkers() {
+    const origin = this.state.origin;
+    const destination = this.state.destination;
+
+
+    return (
+      <div id="journey-markers">
+      { 
+        origin && 
+        <Marker
+        position= { origin }
+        />
+      }
+      </div>
+    )
+
   }
 
   render() {
@@ -94,6 +118,8 @@ export default class SimulationMap extends React.Component {
           )
         })
       }
+
+      { this.renderMarkers() }
 
       </Map>
     );
