@@ -66,7 +66,7 @@ export default class SimulationMap extends React.Component {
       { 
         origin && 
         <Marker
-        position= { origin }
+          position= { origin }
         />
       }
       </div>
