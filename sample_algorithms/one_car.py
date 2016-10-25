@@ -1,5 +1,6 @@
 import sys
 import time
+import math
 sys.path.append('../framework')
 
 import client
@@ -12,16 +13,17 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 
   def handleSimulationStart(self, initialParameters):
     #getGeojson(, 'map.geojson')
+    print('Starting simulation:')
+    print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
     state = setupCars(1)
     timestamp = 0
     #for i in range(50):
     while True:
       #useApi()
       state = algo(state)
-      print(state[0]['position'])
       timestamp += TIMESLICE
       savn.updateCarStates(timestamp, translate(state))
-      time.sleep(2)
+      time.sleep(SLEEP_TIME)
     #useApiToEnd()
 
   def handleSimulationDataUpdate(self, update):
@@ -30,6 +32,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationStop(self):
     pass
 
+SLEEP_TIME = 0.1
 TIMESLICE = 1
 CONST_SPEED = 50
 
@@ -42,8 +45,16 @@ BASE_ROUTE = route.getRoute('map.geojson', geojson.dumps(start).encode('utf8'), 
 #     {'start': [50.68347, 4.78482], 'end': [50.68347, 4.78780], 'direction': 2, 'timeLeft': 2, 'totalTime': 2},
 #     {'start': [50.68347, 4.78780], 'end': [50.68166, 4.78780], 'direction': 3, 'timeLeft': 2, 'totalTime': 2},
 #     {'start': [50.68166, 4.78780], 'end': [50.68166, 4.78482], 'direction': 4, 'timeLeft': 2, 'totalTime': 2}]}
-print(BASE_ROUTE)
-print('^ bASE ROUTE')
+
+def get_direction(start, end):
+  lat1 = math.radians(start[0])
+  lng1 = math.radians(start[1])
+  lat2 = math.radians(end[0])
+  lng2 = math.radians(end[1])
+  d_long = lng2-lng1
+  y = math.sin(d_long)*math.cos(lat2)
+  x = math.cos(lat1)*math.sin(lat2)-math.sin(lat1)*math.cos(lat2)*math.cos(d_long)
+  return math.degrees(math.atan2(y, x))
 
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
@@ -57,6 +68,7 @@ def scale(v, s):
 def scheduleNewRoute(car):
   car['route'] = deepcopy(BASE_ROUTE)
   car['position'] = BASE_ROUTE[0]
+  car['direction'] = get_direction(car['route'][0], car['route'][1])
 
 #def moveCar(car):
 #  timeLeft = TIMESLICE
@@ -94,8 +106,7 @@ def moveCar(car):
     if(len(car['route']) == 1):
       scheduleNewRoute(car)
     else:
-      #car['direction'] = car['route']['path'][0]['direction']
-      pass
+      car['direction'] = get_direction(start, end)
 
 def algo(state):
   for car in state:
