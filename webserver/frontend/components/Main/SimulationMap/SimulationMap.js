@@ -57,7 +57,9 @@ export default class SimulationMap extends React.Component {
     }
 
     this.setState({
-      showJourneyMarkers: false
+      showJourneyMarkers: false,
+      origin: null,
+      destination: null
     })
   }
 
