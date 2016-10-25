@@ -71,15 +71,8 @@ export default class SimulationMap extends React.Component {
       origin: origin,
       destination: destination
     }
-    
-    const showJourneyMarkers = this.state.showJourneyMarkers;
 
-    if (!showJourneyMarkers) {
-      return <div/>
-    }
-
-    return (
-      <div>
+    return ( <div>
       { 
         origin && 
         <Marker position= { origin } />
@@ -87,15 +80,16 @@ export default class SimulationMap extends React.Component {
 
       { 
         destination &&
-        <div>
-          <Marker position= { destination } />
-          <Popup position= { destination } >
-            <div>
-              <p> Create new journey? </p>
-              <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
-            </div>
+          <div>
+          <Marker position= { destination }>
+          <Popup>
+          <div>
+          <p> Create new journey? </p>
+          <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
+          </div>
           </Popup>
-        </div>
+          </Marker>
+          </div>
       }
       </div>
     )
@@ -110,6 +104,8 @@ export default class SimulationMap extends React.Component {
 
     const bounds = this.props.bounds;
     const cars = this.props.simulationState.objects;
+
+    const showJourneyMarkers = this.state.showJourneyMarkers;
 
     if (!bounds) {
       return (
@@ -147,7 +143,9 @@ export default class SimulationMap extends React.Component {
           })
         }
 
-        { this.renderMarkers() }
+      { showJourneyMarkers &&
+        this.renderMarkers() 
+      }
 
       </Map>
     );
