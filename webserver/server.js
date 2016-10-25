@@ -9,9 +9,10 @@ const WebSocketServer = require('websocket').server;
 
 const app = express();
 
+
+const db = require('./backend/db');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
-const db = require('./backend/models/db');
 
 //
 // Register Node.js middleware
@@ -35,31 +36,17 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 frontendSocketServer.on('request', function(request) {
   const connection = request.accept(null, request.origin);
-  
+
   console.log((new Date()) + ' Frontend Connection accepted.');
 
   function _handleRequestAvailableCities() {
-    connection.send(JSON.stringify({
-      type: "available-cities",
-      content: [
-        {
-          name: 'example2',
-          value: {
-            id: "0",
-            bounds: {
-              southWest: {
-                lat: 50.68156,
-                lng: 4.78412
-              },
-              northEast: {
-                lat: 50.68357,
-                lng: 4.78830
-              }
-            }
-          }
-        },
-      ]
-    }));
+    City.find()
+      .then((response) => {
+        connection.send(JSON.stringify({
+          type: "available-cities",
+          content: response
+        }));
+      });
   }
 
   function _handleRequestSimulationStart(message, callback) {
@@ -67,7 +54,7 @@ frontendSocketServer.on('request', function(request) {
     console.log(JSON.stringify(message, undefined, 2));
     const simulation = new Simulation({
       simulationInfo: {
-        cityID: message.content.selectedCity.label,
+        cityID: message.content.selectedCity._id,
         journeys: message.content.journeys
       },
       frontendConnectionIndices: [frontendConnections.length],
@@ -120,7 +107,6 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-start":
         _handleRequestSimulationStart(messageData, (err, simID) => {
-          console.log("Sending simID");
           connection.send(JSON.stringify({
             type: "simulation-id",
             content: {

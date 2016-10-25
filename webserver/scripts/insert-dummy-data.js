@@ -1,4 +1,4 @@
-const db = require('../backend/models/db');
+const db = require('../backend/db');
 const City = require('../backend/models/City');
 const async = require('async');
 
@@ -13,12 +13,12 @@ function randomCity(city, from, to) {
     name: city,
     bounds: {
       southWest: {
-        lat: randomNumber(from, to),
-        lng: randomNumber(from, to)
+        lat: 50.68166,
+        lng: 4.78482
       },
       northEast: {
-        lat: randomNumber(from, to),
-        lng: randomNumber(from, to)
+        lat: 50.68347,
+        lng: 4.78780
       }
     }
   };
@@ -33,7 +33,7 @@ function generateRandomCities() {
           callback(err);
         } else {
           console.log(`Successfully inserted ${city}...`);
-          callback();
+          callback(null);
         }
       });
     }, (err) => {
