@@ -142,6 +142,15 @@ frontendSocketServer.on('request', function(request) {
   });
 
   connection.on('close', function(reasonCode, description) {
+    let index = frontendConnections.indexOf(connection);
+    delete frontendConnections[index];
+
+    Simulation.findOneAndUpdate({ frontendConnectionIndices: index }, { $pull: { frontendConnectionIndices: index }}, function (error, simulation) {
+      if (error) {
+        console.log("Could not find corresponding simulation for connection");
+      }
+    });
+
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
 });
