@@ -13,7 +13,6 @@ const app = express();
 const db = require('./backend/db');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
-const db = require('./backend/models/db');
 
 //
 // Register Node.js middleware
@@ -37,7 +36,7 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 frontendSocketServer.on('request', function(request) {
   const connection = request.accept(null, request.origin);
-  
+
   console.log((new Date()) + ' Frontend Connection accepted.');
 
   function _handleRequestAvailableCities() {
@@ -55,7 +54,7 @@ frontendSocketServer.on('request', function(request) {
     console.log(JSON.stringify(message, undefined, 2));
     const simulation = new Simulation({
       simulationInfo: {
-        cityID: message.content.selectedCity._id
+        cityID: message.content.selectedCity._id,
         journeys: message.content.journeys
       },
       frontendConnectionIndices: [frontendConnections.length],
