@@ -53,7 +53,7 @@ frontendSocketServer.on('request', function(request) {
     console.log("Received simulation start data: ");
     console.log(JSON.stringify(message, undefined, 2));
     const simulation = new Simulation({
-      simulationInfo: {
+      simulationStartParameters: {
         cityID: message.content.selectedCity._id,
         journeys: message.content.journeys
       },
@@ -84,16 +84,35 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + message.content.simulationID);
         return
       }
-
       frontendConnections.push(connection);
 
       connection.send(JSON.stringify({
-        type: "simulation-info",
+        type: "simulation-start-parameters",
         content: {
-          simulationInfo: simulation.simulationInfo
+          simulationStartParameters: simulation.simulationStartParameters
         }
       }));
     })
+  }
+  
+  function _handleRequestEventUpdate(message) {
+    Simulation.findById(message.content.simulationID, function (error, simulation) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.content.simulationID
+          }
+        }));
+        console.log("Could not find simulation with ID " + message.content.simulationID);
+        return
+      }
+
+      frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
+        type: "event-update",
+        content: {}
+      }));
+    });
   }
 
   connection.on('message', function(message) {
@@ -116,9 +135,9 @@ frontendSocketServer.on('request', function(request) {
         });
         break;
       case "request-simulation-join":
-        console.log(messageData);
-        console.log(messageData);
         _handleRequestSimulationJoin(messageData);
+      case "request-event-update":
+        _handleRequestEventUpdate(messageData);
       }
     }
     else if (message.type === 'binary') {
@@ -172,9 +191,9 @@ frameworkSocketServer.on('request', function(request) {
       frameworkConnections.push(connection);
 
       connection.send(JSON.stringify({
-        type: "simulation-info",
+        type: "simulation-start-parameters",
         content: {
-          simulationInfo: simulation.simulationInfo
+          simulationStartParameters: simulation.simulationStartParameters
         }
       }));
     })
