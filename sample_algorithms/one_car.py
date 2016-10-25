@@ -9,6 +9,7 @@ import geojson
 from copy import deepcopy
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
+
   def handleSimulationStart(self, initialParameters):
     #getGeojson(, 'map.geojson')
     state = setupCars(1)
@@ -19,8 +20,8 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
       state = algo(state)
       print(state[0]['position'])
       timestamp += TIMESLICE
-      savn.updateCarStates(simulationId, timestamp, translate(state))
-      time.sleep(0.1)
+      savn.updateCarStates(timestamp, translate(state))
+      time.sleep(2)
     #useApiToEnd()
 
   def handleSimulationDataUpdate(self, update):
@@ -116,10 +117,10 @@ def translate(state):
   return res
 
 if len(sys.argv) != 2:
-  sys_exit(1)
+  sys.exit(1)
 
 simulationId = sys.argv[1]
 savn = ConnectionAssistant(simulationId)
 savn.initSession()
 
-sys_exit(0)
+sys.exit(0)
