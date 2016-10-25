@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Marker, TileLayer } from 'react-leaflet';
+import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
 
@@ -18,7 +18,8 @@ export default class SimulationMap extends React.Component {
 
     this.state = {
       origin: null,
-      destination: null
+      destination: null,
+      showJourneyMarkers: false
     }
   }
 
@@ -34,40 +35,65 @@ export default class SimulationMap extends React.Component {
     const origin = this.state.origin;
 
     if (origin) {
-
       this.setState({
         destination: position
       })
-
-      const journey = {
-        origin: origin,
-        destination: position
-      }
-
-      this.setState({
-        origin: null
-      })
-
-      this.props.handleAddJourney(journey)
     } else {
       this.setState({
         origin: position
       })
     }
+
+    this.setState({
+      showJourneyMarkers: true
+    })
+  }
+
+  _handleJourneyCreate(journey) {
+    const handleAddJourney = this.props.handleAddJourney;
+
+    if (handleAddJourney) {
+      handleAddJourney(journey);
+    }
+
+    this.setState({
+      showJourneyMarkers: false
+    })
   }
 
   renderMarkers() {
     const origin = this.state.origin;
     const destination = this.state.destination;
 
+    const journey = {
+      origin: origin,
+      destination: destination
+    }
+    
+    const showJourneyMarkers = this.state.showJourneyMarkers;
+
+    if (!showJourneyMarkers) {
+      return <div/>
+    }
 
     return (
-      <div id="journey-markers">
+      <div>
       { 
         origin && 
-        <Marker
-          position= { origin }
-        />
+        <Marker position= { origin } />
+      }
+
+      { 
+        destination &&
+        <div>
+          <Marker position= { destination } />
+          <Popup position= { destination } >
+            <div>
+              <p> Create new journey? </p>
+              <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
+            </div>
+          </Popup>
+        </div>
       }
       </div>
     )
@@ -85,7 +111,7 @@ export default class SimulationMap extends React.Component {
 
     if (!bounds) {
       return (
-        <p> Hey </p>
+        <p> Loading map... </p>
       )
     }
 
@@ -97,29 +123,29 @@ export default class SimulationMap extends React.Component {
         style={style} 
         onClick={(e) => { this._handleMapClick(e) }}
       >
-      <TileLayer
-      url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
+        <TileLayer
+        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
 
-      {
-        cars &&
-        cars.map((car, index) => {
-          const key = car.position.lat.toString() + car.position.lng.toString()
-          const carIcon = L.icon({
-            iconUrl: "http://image.flaticon.com/icons/svg/226/226604.svg",
-            iconSize: [22, 22],
+        {
+          cars &&
+          cars.map((car, index) => {
+            const key = car.position.lat.toString() + car.position.lng.toString()
+            const carIcon = L.icon({
+              iconUrl: "http://image.flaticon.com/icons/svg/226/226604.svg",
+              iconSize: [22, 22],
+            })
+            return (
+              <Marker position={ car.position } 
+                key={ key }
+                icon = {carIcon}
+              />
+            )
           })
-          return (
-            <Marker position={ car.position } 
-              key={ key }
-              icon = {carIcon}
-            />
-          )
-        })
-      }
+        }
 
-      { this.renderMarkers() }
+        { this.renderMarkers() }
 
       </Map>
     );
