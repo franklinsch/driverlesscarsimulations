@@ -14,8 +14,8 @@ namespace :deploy do
     end
   end
   
-  desc "run development server"
-  task :run_dev_server do
+  desc "start server"
+  task :start_server do
     on roles (:app) do
       execute "cd '#{release_path}'; cd webserver; npm start"
     end
@@ -23,4 +23,4 @@ namespace :deploy do
 end
 
 after "deploy", "deploy:install_node_modules"
-after "deploy", "deploy:run_dev_server"
+after "deploy", "deploy:start_server"

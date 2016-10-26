@@ -15,5 +15,6 @@ deployment:
   production:
     branch: capistrano
     commands:
+    - ssh circleci@35.160.255.102 
     - gem install capistrano
     - cap production deploy
