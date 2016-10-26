@@ -14,8 +14,8 @@ namespace :deploy do
     end
   end
   
-  desc "start server"
-  task :start_server do
+  desc "restart server"
+  task :restart_server do
     on roles (:app) do
       execute "cd '#{release_path}'; cd webserver; forever stopall; forever start server.js"
     end
