@@ -1,6 +1,13 @@
 machine:
-  timezone: Europe/London
+  timezone: 
+    Europe/London
+  python:
+    version: 3.5.2
+
+dependencies:
+  override:
+    - cd framework && python setup.py install
 
 test:
   override:
-    - echo test
+    - cd framework/test/ && python -m unittest client_test.py 
