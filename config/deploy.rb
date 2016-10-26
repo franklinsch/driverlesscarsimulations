@@ -2,9 +2,9 @@ set :applicatoin, "SAVN"
 set :repo_url, "git@github.com:franklinsch/driverlesscarsimulations.git"
 set :use_sudo, false
 set :rails_env, "production"
-set :ssh_options, {:keys => "./SAVN.pem", :forward_agent => true}
+set :ssh_options, {:forward_agent => true}
 
-server "35.160.255.102", roles: [:app, :web, :db], :primary => true, :user => "ubuntu"
+server ENV["SERVER_IP"], roles: [:app, :web, :db], :primary => true, :user => "circleci"
 
 namespace :deploy do 
   desc "install node_modules"
