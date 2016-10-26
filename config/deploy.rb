@@ -17,10 +17,10 @@ namespace :deploy do
   desc "start server"
   task :start_server do
     on roles (:app) do
-      execute "cd '#{release_path}'; cd webserver; npm start"
+      execute "cd '#{release_path}'; cd webserver; forever stopall; forever start server.js"
     end
   end
 end
 
 after "deploy", "deploy:install_node_modules"
-after "deploy", "deploy:start_server"
+after "deploy", "deploy:restart_server"
