@@ -57,6 +57,22 @@ export default class SimulationMap extends React.Component {
     })
   }
 
+  _updateOriginMarkerPosition() {
+    const originMarker = this.originMarker;
+    if (!originMarker) {
+      return
+    }
+
+    const { lat, lng } = originMarker.leafletElement.getLatLng();
+
+    this.setState({
+      origin: {
+        lat: lat,
+        lng: lng
+      }
+    })
+  }
+
   _renderPopup() {
     const origin = this.state.origin;
     const destination = this.state.destination;
@@ -65,7 +81,6 @@ export default class SimulationMap extends React.Component {
       origin: origin,
       destination: destination
     }
-
 
     return (
       <Popup position={destination}>
@@ -133,7 +148,12 @@ export default class SimulationMap extends React.Component {
 
       { 
         origin && 
-        <Marker position= { origin } />
+        < Marker 
+          position= { origin } 
+          draggable
+          onDragend={() => this._updateOriginMarkerPosition()}
+          ref={(originMarker) => { this.originMarker = originMarker } }
+        />
       }
 
       { 
