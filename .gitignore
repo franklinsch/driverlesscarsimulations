@@ -85,5 +85,8 @@ Temporary Items
 #ide directories
 .idea
 
-#amazon ssh key
+#aws keys
 *.pem
+
+#capistrano log files
+log
