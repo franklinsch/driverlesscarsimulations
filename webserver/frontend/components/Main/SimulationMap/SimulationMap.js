@@ -73,9 +73,31 @@ export default class SimulationMap extends React.Component {
     })
   }
 
+  _updateDestinationMarkerPosition() {
+    const destinationMarker = this.destinationMarker;
+    if (!destinationMarker) {
+      return
+    }
+
+    const { lat, lng } = destinationMarker.leafletElement.getLatLng();
+
+    this.setState({
+      destination: {
+        lat: lat,
+        lng: lng
+      }
+    })
+  }
+
   _clearOriginMarker() {
     this.setState({
       origin: null
+    })
+  }
+
+  _clearDestinationMarker() {
+    this.setState({
+      destination: null
     })
   }
 
@@ -93,6 +115,7 @@ export default class SimulationMap extends React.Component {
       <span>
       <p> Create new journey? </p>
       <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
+      <button onClick={() => { this._clearDestinationMarker() }}> Clear </button> 
       </span>
       </Popup>
     )
@@ -129,6 +152,7 @@ export default class SimulationMap extends React.Component {
         bounds={mapBounds} 
         style={style} 
         onClick={(e) => { this._handleMapClick(e) }}
+        closePopupOnClick={false}
       >
         <TileLayer
         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -170,7 +194,14 @@ export default class SimulationMap extends React.Component {
 
       { 
         destination &&
-          <Marker position= { destination }/>
+          <Marker 
+            position= { destination }
+            draggable
+            onDragend={() => {this._updateDestinationMarkerPosition()}}
+            ref={(destinationMarker) => { this.destinationMarker = destinationMarker }}
+          >
+          {this._renderPopup()}
+          </Marker>
       }
 
       { 
