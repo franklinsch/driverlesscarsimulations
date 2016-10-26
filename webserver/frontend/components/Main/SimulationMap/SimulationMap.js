@@ -63,39 +63,6 @@ export default class SimulationMap extends React.Component {
     })
   }
 
-  renderMarkers() {
-    const origin = this.state.origin;
-    const destination = this.state.destination;
-
-    const journey = {
-      origin: origin,
-      destination: destination
-    }
-
-    return ( <div>
-      { 
-        origin && 
-        <Marker position= { origin } />
-      }
-
-      { 
-        destination &&
-          <div>
-          <Marker position= { destination }>
-          <Popup>
-          <div>
-          <p> Create new journey? </p>
-          <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
-          </div>
-          </Popup>
-          </Marker>
-          </div>
-      }
-      </div>
-    )
-
-  }
-
   render() {
     const style = {
       height: this.props.height || 300 + 'px',
@@ -105,8 +72,6 @@ export default class SimulationMap extends React.Component {
     const bounds = this.props.bounds;
     const cars = this.props.simulationState.objects;
 
-    const showJourneyMarkers = this.state.showJourneyMarkers;
-
     if (!bounds) {
       return (
         <p> Loading map... </p>
@@ -114,6 +79,17 @@ export default class SimulationMap extends React.Component {
     }
 
     const mapBounds = [bounds.southWest, bounds.northEast]
+
+    const showJourneyMarkers = this.state.showJourneyMarkers;
+
+    const origin = this.state.origin;
+    const destination = this.state.destination;
+
+    const journey = {
+      origin: origin,
+      destination: destination
+    }
+
 
     return (
       <Map 
@@ -143,8 +119,21 @@ export default class SimulationMap extends React.Component {
           })
         }
 
-      { showJourneyMarkers &&
-        this.renderMarkers() 
+      { 
+        origin && 
+        <Marker position= { origin } />
+      }
+
+      { 
+        destination &&
+          <Marker position= { destination }>
+          <Popup>
+          <div>
+          <p> Create new journey? </p>
+          <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
+          </div>
+          </Popup>
+          </Marker>
       }
 
       </Map>
