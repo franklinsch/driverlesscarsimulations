@@ -110,12 +110,17 @@ export default class SimulationMap extends React.Component {
       destination: destination
     }
 
+    const position = {
+      lat: destination.lat + 0.0001,
+      lng: destination.lng
+    }
+
     return (
-      <Popup position={destination}>
+      <Popup position={position}>
       <span>
       <p> Create new journey? </p>
       <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
-      <button onClick={() => { this._clearDestinationMarker() }}> Clear </button> 
+      <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button> 
       </span>
       </Popup>
     )
@@ -147,6 +152,21 @@ export default class SimulationMap extends React.Component {
       destination: destination
     }
 
+    const carIcon = L.icon({
+      iconUrl: "http://image.flaticon.com/icons/svg/226/226604.svg",
+      iconSize: [22, 22],
+    })
+
+    const originMarkerIcon = L.icon({
+      iconUrl: "http://image.flaticon.com/icons/svg/220/220283.svg",
+      iconSize: [30, 30]
+    })
+
+    const destinationMarkerIcon = L.icon({
+      iconUrl: "http://image.flaticon.com/icons/svg/220/220282.svg",
+      iconSize: [30, 30]
+    })
+
     return (
       <Map 
         bounds={mapBounds} 
@@ -163,10 +183,6 @@ export default class SimulationMap extends React.Component {
           cars &&
           cars.map((car, index) => {
             const key = car.position.lat.toString() + car.position.lng.toString()
-            const carIcon = L.icon({
-              iconUrl: "http://image.flaticon.com/icons/svg/226/226604.svg",
-              iconSize: [22, 22],
-            })
             return (
               <Marker position={ car.position } 
                 key={ key }
@@ -182,14 +198,20 @@ export default class SimulationMap extends React.Component {
           position= { origin } 
           draggable
           onDragend={() => this._updateOriginMarkerPosition()}
+          icon={originMarkerIcon}
           ref={(originMarker) => { this.originMarker = originMarker } }
         >
           <Popup>
             <button onClick={() => {this._clearOriginMarker()}}>
-              Clear
+              Clear destination
             </button>
           </Popup>
         </Marker>
+      }
+
+      { 
+        destination &&
+        this._renderPopup() 
       }
 
       { 
@@ -198,17 +220,12 @@ export default class SimulationMap extends React.Component {
             position= { destination }
             draggable
             onDragend={() => {this._updateDestinationMarkerPosition()}}
+            icon={destinationMarkerIcon}
             ref={(destinationMarker) => { this.destinationMarker = destinationMarker }}
           >
           {this._renderPopup()}
           </Marker>
       }
-
-      { 
-        destination &&
-        this._renderPopup() 
-      }
-
       </Map>
     );
   }
