@@ -4,7 +4,7 @@ import websockets
 import sys
 import threading
 
-HOST = 'ws://localhost:9000'
+HOST = 'ws://35.160.255.102:3000'
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
@@ -14,7 +14,7 @@ class SAVNConnectionAssistant:
 
   def updateCarStates(self, timestamp, state):
     packet = {'type': 'simulation-state',
-              'content': 
+              'content':
                 {'simulationId': self.simulationId,
                  'id': str(timestamp),
                  'timestamp': timestamp,
@@ -36,9 +36,9 @@ class SAVNConnectionAssistant:
     return message
 
   async def startConnection(self):
-      packet = {'type': 
+      packet = {'type':
                   'simulation-start',
-                'content': 
+                'content':
                     {'simulationId':
                         self.simulationId}}
       await self.ws.send(json.dumps(packet))
@@ -92,6 +92,6 @@ class SAVNConnectionAssistant:
         self.ws = websocket
         await self.startConnection()
         await self.handlerLoop()
-      
+
     loop.run_until_complete(coro())
 
