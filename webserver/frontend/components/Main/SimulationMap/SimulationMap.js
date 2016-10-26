@@ -73,6 +73,12 @@ export default class SimulationMap extends React.Component {
     })
   }
 
+  _clearOriginMarker() {
+    this.setState({
+      origin: null
+    })
+  }
+
   _renderPopup() {
     const origin = this.state.origin;
     const destination = this.state.destination;
@@ -153,7 +159,13 @@ export default class SimulationMap extends React.Component {
           draggable
           onDragend={() => this._updateOriginMarkerPosition()}
           ref={(originMarker) => { this.originMarker = originMarker } }
-        />
+        >
+          <Popup>
+            <button onClick={() => {this._clearOriginMarker()}}>
+              Clear
+            </button>
+          </Popup>
+        </Marker>
       }
 
       { 
