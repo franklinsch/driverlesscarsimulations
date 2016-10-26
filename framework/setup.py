@@ -5,6 +5,7 @@ setup(name='framework',
     license='MIT',
     install_requires=[
       'requests',
-      'autobahn'
+      'autobahn',
+      'websockets'
       ],
     zip_safe=False)
