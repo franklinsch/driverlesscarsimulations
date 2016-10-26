@@ -13,7 +13,7 @@ test:
     - cd framework/test/ && python -m unittest client_test.py 
 deployment:
   production:
-    branch: capistrano
+    branch: master
     commands:
     - gem install capistrano
     - cap production deploy
