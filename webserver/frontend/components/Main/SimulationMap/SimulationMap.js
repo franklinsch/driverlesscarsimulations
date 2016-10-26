@@ -18,8 +18,7 @@ export default class SimulationMap extends React.Component {
 
     this.state = {
       origin: null,
-      destination: null,
-      showJourneyMarkers: false
+      destination: null
     }
   }
 
@@ -43,10 +42,6 @@ export default class SimulationMap extends React.Component {
         origin: position
       })
     }
-
-    this.setState({
-      showJourneyMarkers: true
-    })
   }
 
   _handleJourneyCreate(journey) {
@@ -57,10 +52,30 @@ export default class SimulationMap extends React.Component {
     }
 
     this.setState({
-      showJourneyMarkers: false,
       origin: null,
       destination: null
     })
+  }
+
+  _renderPopup() {
+    const origin = this.state.origin;
+    const destination = this.state.destination;
+
+    const journey = {
+      origin: origin,
+      destination: destination
+    }
+
+
+    return (
+      <Popup position={destination}>
+      <span>
+      <p> Create new journey? </p>
+      <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
+      </span>
+      </Popup>
+    )
+
   }
 
   render() {
@@ -80,8 +95,6 @@ export default class SimulationMap extends React.Component {
 
     const mapBounds = [bounds.southWest, bounds.northEast]
 
-    const showJourneyMarkers = this.state.showJourneyMarkers;
-
     const origin = this.state.origin;
     const destination = this.state.destination;
 
@@ -89,7 +102,6 @@ export default class SimulationMap extends React.Component {
       origin: origin,
       destination: destination
     }
-
 
     return (
       <Map 
@@ -126,14 +138,12 @@ export default class SimulationMap extends React.Component {
 
       { 
         destination &&
-          <Marker position= { destination }>
-          <Popup>
-          <div>
-          <p> Create new journey? </p>
-          <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
-          </div>
-          </Popup>
-          </Marker>
+          <Marker position= { destination }/>
+      }
+
+      { 
+        destination &&
+        this._renderPopup() 
       }
 
       </Map>
