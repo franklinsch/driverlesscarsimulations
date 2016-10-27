@@ -188,7 +188,6 @@ export default class SimulationMap extends React.Component {
               <Marker position={ car.position } 
                 key={ key }
                 icon = {carIcon}
-                mouse
                 rotationAngle = { car.direction }
               >
                 <Popup>
