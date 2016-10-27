@@ -32,7 +32,7 @@ export default class LandmarkSearch extends React.Component {
     const bbox = data.boundingbox;
 
     return {
-      placeID: data.placeID,
+      placeID: data.place_id,
       bounds: {
         southWest: {
           lat: parseFloat(bbox[0]),
