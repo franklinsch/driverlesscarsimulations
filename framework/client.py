@@ -4,7 +4,8 @@ import websockets
 import sys
 import threading
 
-HOST = 'ws://35.160.255.102:3000'
+HOST = 'ws://35.160.255.102:9000'
+#HOST = 'ws://localhost:9000'
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
@@ -36,12 +37,8 @@ class SAVNConnectionAssistant:
     return message
 
   async def startConnection(self):
-      packet = {'type':
-                  'simulation-start',
-                'content':
-                    {'simulationId':
-                        self.simulationId}}
-      await self.ws.send(json.dumps(packet))
+    packet = {'type': 'simulation-start', 'content': {'simulationId': self.simulationId}}
+    await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):
     while True:
@@ -76,8 +73,8 @@ class SAVNConnectionAssistant:
       return packet["type"] == "close"
 
     if isError():
-      print(packet["content"]["reason"])
-      sys.exit()
+      print(packet["content"])
+      #print(packet["content"]["reason"])
     elif isInitialParams():
       self.handleSimulationStart(packet)
     elif isClose():
