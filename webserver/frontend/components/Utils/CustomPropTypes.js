@@ -61,4 +61,13 @@ export default class CustomPropTypes {
   }
 
   static simulationJourney = React.PropTypes.shape(CustomPropTypes._simulationJourney);
+
+  static _osmSearchResult = {
+    placeID: React.PropTypes.string,
+    bounds: CustomPropTypes.bounds,
+    position: CustomPropTypes.position,
+    displayName: React.PropTypes.string
+  }
+
+  static osmSearchResult = React.PropTypes.shape(CustomPropTypes._osmSearchResult);
 }
