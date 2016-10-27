@@ -7,18 +7,19 @@ export default class LandmarkSearch extends React.Component {
     super(props);
 
     this.state = {
-      inputValue: null
+      inputValue: ""
     }
   }
 
   handleChange(e) {
-    this.setState({inputValue: e.target.value});  
-
-    search(query, () => {});
+    const input = e.target.value;
+    this.setState({inputValue: input});  
   }
 
   handleSubmit(e) {
+    const input = this.state.inputValue;
 
+    this.search(input, () => {});
   }
 
   search(query, callback) {
@@ -26,10 +27,10 @@ export default class LandmarkSearch extends React.Component {
       url: "http://nominatim.openstreetmap.org/search",
       type: "GET",
       data: {
-        q: query
+        q: query,
+        format: "json"
       },
       success: (data) => {
-        console.log(data);
       }
     })
   }
@@ -41,11 +42,8 @@ export default class LandmarkSearch extends React.Component {
         type='text'
         value={this.state.inputValue} 
         onChange={ (e) => { this.handleChange(e) }}
-        onKeyPress={ (e) => { this.handleSubmit(e) }}
         />
-        <button
-        onClick={ (e) => { this.handleSubmit(e) }}
-        />
+        <button onClick={ (e) => { this.handleSubmit(e) }} >Search</button>
       </div>
     )
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import LandmarkSearch from '../LandmarkSearch/LandmarkSearch.js';
 
 export default class JourneySettings extends React.Component {
 
@@ -90,6 +91,7 @@ export default class JourneySettings extends React.Component {
           <input value={destinationLng} onChange={(e) => {this._handleDestinationLngChange(e)}}/>
           <button type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Add journey</button>
         </form>
+        <LandmarkSearch />
       </div>
     )
   }
