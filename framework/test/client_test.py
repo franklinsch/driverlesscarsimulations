@@ -27,7 +27,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
     state = {"car": 1}
     timestamp = 0
     packet = {'type': 'simulation-state',
-              'content': 
+              'content':
                 {'simulationId': self.connection.simulationId,
                  'id': str(timestamp),
                  'timestamp': timestamp,
@@ -41,7 +41,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
     msg = {'content': 'fish'}
     async def op():
        return json.dumps(msg)
-    self.connection.ws.recv = op 
+    self.connection.ws.recv = op
     self.loop.run_until_complete(self.connection.handler())
     self.loop.run_in_executor.assert_called_with(None,
         self.connection.onMessage,{'content': 'fish'})
@@ -60,7 +60,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
 
   def test_simulationStart(self):
     self.connection.handleSimulationStart = Mock()
-    packet = {'type': 'simulation-info'}
+    packet = {'type': 'simulation-start-parameters'}
     self.connection.onMessage(packet)
     self.connection.handleSimulationStart.assert_called_with(packet)
 
