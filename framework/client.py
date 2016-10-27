@@ -76,9 +76,9 @@ class SAVNConnectionAssistant:
       print(packet["content"])
       #print(packet["content"]["reason"])
     elif isInitialParams():
-      self.handleSimulationStart(packet)
+      self.handleSimulationStart(packet["content"])
     elif isClose():
-      self.handleSimulationStop(packet)
+      self.handleSimulationStop(packet["content"])
     else:
       self.handleSimulationDataUpdate(packet)
 
