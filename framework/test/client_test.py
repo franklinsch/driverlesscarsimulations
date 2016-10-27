@@ -60,21 +60,21 @@ class TestFrameworkClientMethods(unittest.TestCase):
 
   def test_simulationStart(self):
     self.connection.handleSimulationStart = Mock()
-    packet = {'type': 'simulation-start-parameters'}
+    packet = {'type': 'simulation-start-parameters', 'content': {}}
     self.connection.onMessage(packet)
-    self.connection.handleSimulationStart.assert_called_with(packet)
+    self.connection.handleSimulationStart.assert_called_with(packet['content'])
 
   def test_simulationStop(self):
     self.connection.handleSimulationStop = Mock()
     packet = {'type': 'close'}
     self.connection.onMessage(packet)
-    self.connection.handleSimulationStop.assert_called_with(packet)
+    self.connection.handleSimulationStop.assert_called_with(packet['content'])
 
   def test_simulationDataUpdate(self):
     self.connection.handleSimulationDataUpdate = Mock()
-    packet = {'type': 'simulation-update'}
+    packet = {'type': 'simulation-update', 'content': {}}
     self.connection.onMessage(packet)
-    self.connection.handleSimulationDataUpdate.assert_called_with(packet)
+    self.connection.handleSimulationDataUpdate.assert_called_with(packet['content'])
 
 
 

@@ -80,7 +80,7 @@ class SAVNConnectionAssistant:
     elif isClose():
       self.handleSimulationStop(packet["content"])
     else:
-      self.handleSimulationDataUpdate(packet)
+      self.handleSimulationDataUpdate(packet["content"])
 
 
   def initSession(self):
