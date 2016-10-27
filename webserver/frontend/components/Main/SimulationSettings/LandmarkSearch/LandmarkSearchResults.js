@@ -9,7 +9,6 @@ export default class LandmarkSearchResults extends React.Component {
   }
 
   _handleResultSelect(result) {
-    console.log(result)
     this.props.handleResultSelect(result);
   }
 

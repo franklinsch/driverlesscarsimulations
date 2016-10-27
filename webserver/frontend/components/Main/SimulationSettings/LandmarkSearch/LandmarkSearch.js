@@ -79,6 +79,7 @@ export default class LandmarkSearch extends React.Component {
         type='text'
         value={this.state.inputValue} 
         onChange={ (e) => { this.handleChange(e) }}
+        onKeyPress={ (e) => { this.handleSubmit(e) }}
         />
         <button onClick={ (e) => { this.handleSubmit(e) }} >Search</button>
         <LandmarkSearchResults results={this.state.searchResults} handleResultSelect={(result) => { this._handleResultSelect(result) }}/>
