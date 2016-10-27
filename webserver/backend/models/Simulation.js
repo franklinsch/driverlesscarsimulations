@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const simulationSchema = mongoose.Schema({
-  simulationInfo: {
+  simulationStartParameters: {
     cityID: String,
     journeys: [{
       carID: Number,
