@@ -66,7 +66,7 @@ export default class SimulationSettings extends React.Component {
       return
     }
 
-    const type = "simulation-update";
+    const type = "request-simulation-update";
     const content = {
       simulationID: simID,
       journeys: allJourneys
