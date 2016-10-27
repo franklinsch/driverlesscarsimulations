@@ -16,7 +16,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     print('Starting simulation:')
     print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
     state = setupCars(1)
-    for journey in initialParameters['simulationInfo']['journeys']:
+    for journey in initialParameters['simulationStartParameters']['journeys']:
       start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
       end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
       newRoute = route.getRoute('map.geojson', start, end)['path']
