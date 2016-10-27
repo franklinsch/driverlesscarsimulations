@@ -5,13 +5,15 @@ export default class UtilFunctions {
     }
   }
 
-  static sendSocketMessage(socket, content, message) {
+  static sendSocketMessage(socket, type, content) {
     if (socket && socket.readyState === 1) {
-      socket.send(JSON.stringify({
+      var message = JSON.stringify({
         ...UtilFunctions.socketMessage(),
         type: type,
-        content: simulationSettings
-      }))
+        content: content
+      }) 
+
+      socket.send(message);
     } else {
       console.error("Could not send socket message because the socket is not able to send");
     }

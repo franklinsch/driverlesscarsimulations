@@ -66,11 +66,13 @@ export default class SimulationSettings extends React.Component {
       return
     }
 
-    const simulationSettings = {
+    const type = "simulation-update";
+    const content = {
       simulationID: simID,
       journeys: allJourneys
     }
 
+    UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
   _handleJourneySubmit(journeys) {
@@ -94,9 +96,6 @@ export default class SimulationSettings extends React.Component {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
-    const simID = this.props.activeSimulationID;
-    const hasSimulationStarted = simID !== "0";
-
     return (
       <ul>
       {
@@ -109,7 +108,11 @@ export default class SimulationSettings extends React.Component {
     )
   }
 
-  render() { const cities = this.props.availableCities || [];
+  render() { 
+    const cities = this.props.availableCities || [];
+
+    const simID = this.props.activeSimulationID;
+    const hasSimulationStarted = simID !== "0";
 
     return (
       <div>
