@@ -36,6 +36,8 @@ export default class Main extends React.Component {
         objects: [{
           id: "0",
           type: "car",
+          speed: 50,
+          direction: 45,
           position: {
             lat: 50.68264,
             lng: 4.78661
