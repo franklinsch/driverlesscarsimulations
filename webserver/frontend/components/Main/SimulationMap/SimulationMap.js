@@ -2,6 +2,7 @@ import React from 'react';
 import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
+import 'leaflet-rotatedmarker'
 
 export default class SimulationMap extends React.Component {
 
@@ -187,7 +188,21 @@ export default class SimulationMap extends React.Component {
               <Marker position={ car.position } 
                 key={ key }
                 icon = {carIcon}
-              />
+                rotationAngle = { car.direction }
+              >
+                <Popup>
+                  <div>
+                  <dl>
+                    <dt>Speed</dt>
+                    <dd>{ car.speed }</dd>
+                  </dl>
+                  <dl>
+                    <dt>Direction</dt>
+                    <dd>{ car.direction }</dd>
+                  </dl>
+                  </div>
+                </Popup>
+              </Marker>
             )
           })
         }
@@ -211,7 +226,7 @@ export default class SimulationMap extends React.Component {
 
       { 
         destination &&
-        this._renderPopup() 
+        this._renderPopup()
       }
 
       { 

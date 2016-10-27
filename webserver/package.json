@@ -34,6 +34,7 @@
     "ejs": "^2.5.2",
     "express": "^4.14.0",
     "leaflet": "^0.7.7",
+    "leaflet-rotatedmarker": "^0.1.1",
     "mongoose": "^4.6.3",
     "path": "^0.12.7",
     "react": "^15.3.2",
