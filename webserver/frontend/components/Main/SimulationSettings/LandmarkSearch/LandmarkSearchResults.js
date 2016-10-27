@@ -4,19 +4,30 @@ import CustomPropTypes from '../../../Utils/CustomPropTypes.js';
 export default class LandmarkSearchResults extends React.Component {
 
   static propTypes = {
-    results: CustomPropTypes.osmSearchResult
+    results: React.PropTypes.arrayOf(CustomPropTypes.osmSearchResult),
+    handleResultSelect: React.PropTypes.func
+  }
+
+  _handleResultSelect(result) {
+    this.props.handleResultSelect(result);
   }
 
   render() {
-    <ul>
+    const results = this.props.results;
+
+    return(
+      <ul>
       {
         results.map((result, index) => {
           return (
-            <li key={index}> result.displayName </li>
+            <a onClick={(result) => {this._handleResultSelect(result)}}>
+              <li key={index}> { result.displayName } </li>
+            </a>
           )
         })
       }
-    </ul> 
+      </ul> 
+    )
   }
 
 }
