@@ -171,7 +171,7 @@ def algo(state):
   return state
 
 def newCar(i, baseRoute = BASE_ROUTE):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': CONST_SPEED, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute}
+  car = {'id': i, 'type': 'car', 'position': None, 'speed': CONST_SPEED_KM_H, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute}
   scheduleNewRoute(car)
   return car
 
