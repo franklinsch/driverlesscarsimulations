@@ -9,6 +9,7 @@ export default class LandmarkSearchResults extends React.Component {
   }
 
   _handleResultSelect(result) {
+    console.log(result)
     this.props.handleResultSelect(result);
   }
 
@@ -20,9 +21,11 @@ export default class LandmarkSearchResults extends React.Component {
       {
         results.map((result, index) => {
           return (
-            <a onClick={(result) => {this._handleResultSelect(result)}}>
-              <li key={index}> { result.displayName } </li>
-            </a>
+            <li key={index}> 
+              <a href="#" onClick={() => {this._handleResultSelect(result)}}>
+               { result.displayName }
+              </a>
+            </li>
           )
         })
       }

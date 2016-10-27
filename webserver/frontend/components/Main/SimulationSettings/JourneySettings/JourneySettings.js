@@ -76,6 +76,22 @@ export default class JourneySettings extends React.Component {
     })
   }
 
+  _handlePositionAdd(position) {
+    const originLat = this.state.originLat;
+
+    if (!originLat) {
+      this.setState({
+        originLat: position.lat.toString(),
+        originLng: position.lng.toString()
+      })
+    } else {
+      this.setState({
+        destinationLat: position.lat.toString(),
+        destinationLng: position.lng.toString()
+      })
+    }
+  }
+
   render() {
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
@@ -91,7 +107,9 @@ export default class JourneySettings extends React.Component {
           <input value={destinationLng} onChange={(e) => {this._handleDestinationLngChange(e)}}/>
           <button type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Add journey</button>
         </form>
-        <LandmarkSearch />
+        <LandmarkSearch 
+          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
+        />
       </div>
     )
   }

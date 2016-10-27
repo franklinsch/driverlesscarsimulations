@@ -4,6 +4,10 @@ import LandmarkSearchResults from './LandmarkSearchResults.js';
 
 export default class LandmarkSearch extends React.Component {
 
+  static propTypes = {
+    handlePositionAdd: React.PropTypes.func
+  }
+
   constructor(props) {
     super(props);
 
@@ -47,6 +51,10 @@ export default class LandmarkSearch extends React.Component {
     }
   }
 
+  _handleResultSelect(result) {
+    this.props.handlePositionAdd(result.position);
+  }
+
   search(query, callback) {
     $.ajax({
       url: "http://nominatim.openstreetmap.org/search",
@@ -62,10 +70,6 @@ export default class LandmarkSearch extends React.Component {
         this.setState({searchResults: results});
       }
     })
-  }
-
-  _handleResultSelect(result) {
-    
   }
 
   render() {
