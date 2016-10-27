@@ -1,6 +1,6 @@
-start = JSON.parse(process.argv[3].substring(1));
-end = JSON.parse(process.argv[4].substring(1));
-geojson = JSON.parse(process.argv[5].substring(1));
+start = JSON.parse(process.argv[2].substring(1));
+end = JSON.parse(process.argv[3].substring(1));
+geojson = JSON.parse(process.argv[4].substring(1));
 
 var PathFinder = require('geojson-path-finder');
 
