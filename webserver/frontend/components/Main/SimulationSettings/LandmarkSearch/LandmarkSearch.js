@@ -35,17 +35,17 @@ export default class LandmarkSearch extends React.Component {
       placeID: data.placeID,
       bounds: {
         southWest: {
-          lat: parseInt(bbox[0]),
-          lng: parseInt(bbox[2])
+          lat: parseFloat(bbox[0]),
+          lng: parseFloat(bbox[2])
         },
         northEast: {
-          lat: parseInt(bbox[1]),
-          lng: parseInt(bbox[3])
+          lat: parseFloat(bbox[1]),
+          lng: parseFloat(bbox[3])
         }
       },
       position: {
-        lat: parseInt(data.lat),
-        lng: parseInt(data.lng)
+        lat: parseFloat(data.lat),
+        lng: parseFloat(data.lon)
       },
       displayName: data.display_name
     }
