@@ -68,7 +68,7 @@ def get_direction(start, end):
   d_lng = lng2-lng1
   y = math.sin(d_lng)*math.cos(lat2)
   x = math.cos(lat1)*math.sin(lat2)-math.sin(lat1)*math.cos(lat2)*math.cos(d_lng)
-  return math.degrees(math.atan2(y, x))
+  return (math.degrees(math.atan2(y, x))+270)%360
 
 def preprocess(route):
   for i in range(len(route)-1):
