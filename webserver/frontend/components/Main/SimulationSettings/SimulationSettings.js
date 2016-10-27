@@ -43,13 +43,36 @@ export default class SimulationSettings extends React.Component {
       journeys: allJourneys
     }
 
-    if (socket && socket.readyState === 1) {
-      socket.send(JSON.stringify({
-        ...UtilFunctions.socketMessage(),
-        type: "request-simulation-start",
-        content: simulationSettings
-      }))
+    const type = "request-simulation-start";
+    const content = simulationSettings;
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
+  handleSimulationUpdate(e) {
+    e.preventDefault();
+
+    const socket = this.props.socket;
+    const selectedCity = this.state && this.state.selectedCity || this.props.availableCities[0];
+
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+
+    const simID = this.props.activeSimulationID;
+    const hasSimulationStarted = simID !== "0";
+
+    if (!hasSimulationStarted) {
+      console.error("Tried to update a simulation that hasn't started");
+      return
     }
+
+    const type = "request-simulation-update";
+    const content = {
+      simulationID: simID,
+      journeys: allJourneys
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
   _handleJourneySubmit(journeys) {
@@ -61,15 +84,12 @@ export default class SimulationSettings extends React.Component {
   _handleJoinSimulation(simulationID) {
     const socket = this.props.socket;
 
-    if (socket && socket.readyState === 1) {
-      socket.send(JSON.stringify({
-        ...UtilFunctions.socketMessage(),
-        type: "request-simulation-join",
-        content: {
-          simulationID: simulationID
-        }
-      }))
+    const type = "request-simulation-join";
+    const content = {
+      simulationID: simulationID
     }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
   renderJourneysList() {
@@ -88,7 +108,11 @@ export default class SimulationSettings extends React.Component {
     )
   }
 
-  render() { const cities = this.props.availableCities || [];
+  render() { 
+    const cities = this.props.availableCities || [];
+
+    const simID = this.props.activeSimulationID;
+    const hasSimulationStarted = simID !== "0";
 
     return (
       <div>
@@ -97,7 +121,11 @@ export default class SimulationSettings extends React.Component {
           onSubmit={(journeys) => {this._handleJourneySubmit(journeys)}}
         />
         <button onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
-        { (this.props.activeSimulationID !== "0" ? <div>Current Simulation ID: { this.props.activeSimulationID }</div> : '') }
+        { 
+          hasSimulationStarted && 
+          <div>Current Simulation ID: { simID }</div>
+        }
+        <button hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
         <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
 
         <h2> Journeys: </h2>
