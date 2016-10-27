@@ -67,7 +67,7 @@ class SAVNConnectionAssistant:
       return packet["type"] == "simulation-error"
 
     def isInitialParams():
-      return packet["type"] == "simulation-info"
+      return packet["type"] == "simulation-start-parameters"
 
     def isClose():
       return packet["type"] == "close"
