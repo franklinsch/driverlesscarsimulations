@@ -40,7 +40,8 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 
 SLEEP_TIME = 1
 TIMESLICE = 1
-CONST_SPEED = 40 * (1000 / 3600)
+CONST_SPEED_KM_H = 40
+CONST_SPEED = CONST_SPEED_KM_H * (1000 / 3600)
 
 start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
 #start = {"geometry": {"type": "Point", "coordinates": [4.778602 + 0.1 * (4.7806405-4.778602), 50.6840807 + 0.1 * (50.6834349 - 50.6840807)]}, "type": "Feature", "properties": {}}
@@ -67,7 +68,7 @@ def get_direction(start, end):
   d_lng = lng2-lng1
   y = math.sin(d_lng)*math.cos(lat2)
   x = math.cos(lat1)*math.sin(lat2)-math.sin(lat1)*math.cos(lat2)*math.cos(d_lng)
-  return math.degrees(math.atan2(y, x))
+  return (math.degrees(math.atan2(y, x))+270)%360
 
 def preprocess(route):
   for i in range(len(route)-1):
@@ -170,7 +171,7 @@ def algo(state):
   return state
 
 def newCar(i, baseRoute = BASE_ROUTE):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': CONST_SPEED, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute}
+  car = {'id': i, 'type': 'car', 'position': None, 'speed': CONST_SPEED_KM_H, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute}
   scheduleNewRoute(car)
   return car
 
@@ -183,7 +184,7 @@ def setupCars(numCars):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': car['id'], 'type': car['type'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}}]
+    res += [{'id': car['id'], 'type': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}}]
   return res
 
 if(len(sys.argv) != 2):
