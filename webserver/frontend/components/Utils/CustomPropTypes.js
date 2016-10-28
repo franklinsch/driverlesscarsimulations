@@ -39,9 +39,10 @@ export default class CustomPropTypes {
   static simulationInfo = React.PropTypes.shape(CustomPropTypes._simulationInfo);
 
   static _simulationObject = {
-    id: React.PropTypes.string,
-    type: React.PropTypes.string,
-    position: CustomPropTypes.position
+    id: React.PropTypes.string.isRequired,
+    type: React.PropTypes.string.isRequired,
+    position: CustomPropTypes.position.isRequired
+    // TODO: what about speed and direction? Probably add extra attribute 'type_info' for type-specific information
   }
 
   static simulationObject = React.PropTypes.shape(CustomPropTypes._simulationObject)
