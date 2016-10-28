@@ -57,13 +57,9 @@ export default class Main extends React.Component {
       })
     } else if (messageData.type === "simulation-id") {
       this.setState({
-        simulationInfo: {
-          id: messageData.content.simulationID,
-          cityID: this.state.simulationInfo.cityID
-        }
+        simulationInfo: messageData.content
       });
     } else if (messageData.type === "simulation-state") {
-      console.log(messageData.content);
       this.setState({
         simulationState: messageData.content
       });
@@ -78,11 +74,15 @@ export default class Main extends React.Component {
     })
   }
 
-  _boundsForCity(cityID) {
+  _boundsForCity() {
     const availableCities = this.state.availableCities;
-    console.log("City ID:" + cityID);
+    const selectedCityID = this.state.simulationInfo.cityID;
     if (availableCities) {
-      return availableCities[0].bounds
+      for (const city of availableCities) {
+        if (city._id === selectedCityID) {
+          return city.bounds;
+        }
+      }
     }
   }
 
@@ -96,7 +96,7 @@ export default class Main extends React.Component {
 
     const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
 
-    const bounds = this._boundsForCity(simulationInfo.cityID);
+    const bounds = this._boundsForCity();
 
     return (
       <div>

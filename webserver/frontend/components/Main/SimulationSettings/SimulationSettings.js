@@ -17,7 +17,7 @@ export default class SimulationSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCity: [],
+      selectedCity: null,
       journeys: []
     }
   }
@@ -45,7 +45,7 @@ export default class SimulationSettings extends React.Component {
 
     const type = "request-simulation-start";
     const content = simulationSettings;
-
+    console.log(selectedCity);
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
