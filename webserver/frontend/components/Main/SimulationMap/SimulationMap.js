@@ -11,7 +11,9 @@ export default class SimulationMap extends React.Component {
     height: React.PropTypes.string,
     bounds: CustomPropTypes.bounds,
     simulationState: CustomPropTypes.simulationState.isRequired,
-    handleAddJourney: React.PropTypes.func
+    handleAddJourney: React.PropTypes.func,
+    previewMarkerPosition: CustomPropTypes.position,
+    clearPreviewMarkerPosition: React.PropTypes.func
   }
 
   constructor(props) {
@@ -23,6 +25,11 @@ export default class SimulationMap extends React.Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    const position = newProps.previewMarkerPosition
+    this._updateMarker(position);
+  }
+
   _handleMapClick(e) {
     const lat = e.latlng.lat;
     const lng = e.latlng.lng;
@@ -32,6 +39,10 @@ export default class SimulationMap extends React.Component {
       lng: lng
     }
 
+    this._updateMarker(position);
+  }
+
+  _updateMarker(position) {
     const origin = this.state.origin;
 
     if (origin) {

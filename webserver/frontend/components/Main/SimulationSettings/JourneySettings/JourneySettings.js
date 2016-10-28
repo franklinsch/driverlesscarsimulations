@@ -4,7 +4,8 @@ import LandmarkSearch from '../LandmarkSearch/LandmarkSearch.js';
 export default class JourneySettings extends React.Component {
 
   static propTypes = {
-    onSubmit: React.PropTypes.func
+    onSubmit: React.PropTypes.func,
+    handlePositionSelect: React.PropTypes.func
   }
 
   constructor(props) {
@@ -79,17 +80,13 @@ export default class JourneySettings extends React.Component {
   _handlePositionAdd(position) {
     const originLat = this.state.originLat;
 
-    if (!originLat) {
-      this.setState({
-        originLat: position.lat.toString(),
-        originLng: position.lng.toString()
-      })
-    } else {
-      this.setState({
-        destinationLat: position.lat.toString(),
-        destinationLng: position.lng.toString()
-      })
+    const handlePositionSelect = this.props.handlePositionSelect;
+
+    if (!handlePositionSelect) {
+      return
     }
+
+    handlePositionSelect(position);
   }
 
   render() {
