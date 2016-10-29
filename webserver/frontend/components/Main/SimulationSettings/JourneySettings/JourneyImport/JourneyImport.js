@@ -32,6 +32,8 @@ export default class JourneyImport extends React.Component {
         return
       }
     }
+
+    return journeys;
   }
 
   _handleFileChange(e) {
