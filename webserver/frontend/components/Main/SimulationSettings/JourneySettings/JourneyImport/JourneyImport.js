@@ -1,4 +1,6 @@
 import React from 'react';
+import CustomPropTypes from '../../../../Utils/CustomPropTypes.js';
+import { Validator } from 'jsonschema';
 
 export default class JourneyImport extends React.Component {
 
@@ -16,6 +18,22 @@ export default class JourneyImport extends React.Component {
 
   _toJourneys(json) {
     const journeys = JSON.parse(json);
+
+    const validator = new Validator();
+
+    var schema = {
+      type: CustomPropTypes._journey
+    }
+
+    const validatorResult = validator.validate(journeys[0], schema);
+
+    console.log(validatorResult);
+
+    if (validatorResult.errors.length !== 0) {
+      console.error("Input JSON is invalid");
+      return
+    }
+
     this.props.handleJourneysSubmit(journeys);
   }
 
