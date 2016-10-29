@@ -86,6 +86,12 @@ export default class Main extends React.Component {
     }
   }
 
+  _handlePositionPreview(position) {
+    this.setState({
+      previewMarkerPosition: position
+    })
+  }
+
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
@@ -98,6 +104,8 @@ export default class Main extends React.Component {
 
     const bounds = this._boundsForCity();
 
+    const previewMarkerPosition = this.state.previewMarkerPosition;
+
     return (
       <div>
         <SimulationSettings
@@ -105,6 +113,7 @@ export default class Main extends React.Component {
           availableCities={availableCities}
           activeSimulationID={simulationID}
           mapSelectedJourneys={mapSelectedJourneys}
+          handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
         />
 
         <SimulationMap
@@ -113,6 +122,8 @@ export default class Main extends React.Component {
           bounds={ bounds }
           simulationState= { simulationState }
           handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
+          previewMarkerPosition={previewMarkerPosition}
+          clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
         />
       </div>
     )

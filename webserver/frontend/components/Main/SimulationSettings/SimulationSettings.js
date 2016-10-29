@@ -11,7 +11,8 @@ export default class SimulationSettings extends React.Component {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     selectedCity: CustomPropTypes.city,
     activeSimulationID: React.PropTypes.string,
-    mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
+    mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    handlePositionPreview: React.PropTypes.func
   }
 
   constructor(props) {
@@ -92,6 +93,15 @@ export default class SimulationSettings extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  _handlePositionSelect(position) {
+    const f = this.props.handlePositionPreview;
+    if (!f) {
+      return
+    }
+
+    f(position);
+  }
+
   renderJourneysList() {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
@@ -119,6 +129,7 @@ export default class SimulationSettings extends React.Component {
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
         <JourneySettings
           onSubmit={(journeys) => {this._handleJourneySubmit(journeys)}}
+          handlePositionSelect={(position) => this._handlePositionSelect(position)}
         />
       <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
         {

@@ -11,7 +11,9 @@ export default class SimulationMap extends React.Component {
     height: React.PropTypes.string,
     bounds: CustomPropTypes.bounds,
     simulationState: CustomPropTypes.simulationState.isRequired,
-    handleAddJourney: React.PropTypes.func
+    handleAddJourney: React.PropTypes.func,
+    previewMarkerPosition: CustomPropTypes.position,
+    clearPreviewMarkerPosition: React.PropTypes.func
   }
 
   constructor(props) {
@@ -23,6 +25,18 @@ export default class SimulationMap extends React.Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    const position = newProps.previewMarkerPosition
+
+    if (this.oldPreviewMarkerPosition && position === this.oldPreviewMarkerPosition) {
+      return
+    }
+
+    this.oldPreviewMarkerPosition = position;
+
+    this._updateMarker(position);
+  }
+
   _handleMapClick(e) {
     const lat = e.latlng.lat;
     const lng = e.latlng.lng;
@@ -32,6 +46,10 @@ export default class SimulationMap extends React.Component {
       lng: lng
     }
 
+    this._updateMarker(position);
+  }
+
+  _updateMarker(position) {
     const origin = this.state.origin;
 
     if (origin) {
@@ -183,10 +201,10 @@ export default class SimulationMap extends React.Component {
         {
           cars &&
           cars.map((car, index) => {
-            const key = car.position.lat.toString() + car.position.lng.toString()
+            const key = car.id
             return (
-              <Marker position={ car.position } 
-                key={ key }
+              <Marker position = { car.position } 
+                key = { key }
                 icon = {carIcon}
                 rotationAngle = { car.direction }
               >
