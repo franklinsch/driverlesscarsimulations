@@ -79,7 +79,7 @@ export default class SimulationSettings extends React.Component {
 
   _handleJourneysSubmit(journeys) {
     this.setState({
-      journeys: journeys
+      journeys: this.state.journeys.concat(journeys)
     })
   }
 
