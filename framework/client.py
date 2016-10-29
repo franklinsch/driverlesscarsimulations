@@ -6,7 +6,7 @@ import threading
 
 import os
 
-HOST_IP = os.environ['SAVN_HOST'] if 'SAVN_HOST' in os.environ else 'localhost'
+HOST_IP = 'localhost' if 'SAVN_DEV' in os.environ else '35.160.255.102'
 
 HOST = 'ws://' + HOST_IP + ':9000'
 
