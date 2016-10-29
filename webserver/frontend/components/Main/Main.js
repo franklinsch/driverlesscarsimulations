@@ -107,24 +107,29 @@ export default class Main extends React.Component {
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
     return (
-      <div>
-        <SimulationSettings
-          socket={socket}
-          availableCities={availableCities}
-          activeSimulationID={simulationID}
-          mapSelectedJourneys={mapSelectedJourneys}
-          handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
-        />
-
-        <SimulationMap
-          width={ 600 + 'px' }
-          height={ 600 + 'px' }
-          bounds={ bounds }
-          simulationState= { simulationState }
-          handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
-          previewMarkerPosition={previewMarkerPosition}
-          clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
-        />
+      <div className="jumbotron">
+				<div className="container">
+					<div className="row text-center">
+		        <SimulationSettings
+		          socket={socket}
+		          availableCities={availableCities}
+		          activeSimulationID={simulationID}
+		          mapSelectedJourneys={mapSelectedJourneys}
+		          handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
+		        />
+					</div>
+					<div className="row map">
+		        <SimulationMap
+		          width={ 600 + 'px' }
+		          height={ 600 + 'px' }
+		          bounds={ bounds }
+		          simulationState= { simulationState }
+		          handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
+		          previewMarkerPosition={previewMarkerPosition}
+		          clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
+		        />
+		      </div>
+	      </div>
       </div>
     )
   }

@@ -18,8 +18,18 @@ export default class Dropdown extends React.Component {
       items.push(<option key={i} value={i}>{this.props.items[i].name}</option>);
     }
 
-    return <select onChange={(event) => this._onSelect(event)}>
-      {items}
-    </select>
+    return (
+			<div className="row">
+				<div className="col-sm-4">
+				</div>
+				<div className="col-sm-4">
+					<select className="form-control" onChange={(event) => this._onSelect(event)}>
+						{items}
+					</select>
+				</div>
+				<div className="col-sm-4">
+				</div>
+			</div>
+		);
   }
 }

@@ -37,8 +37,8 @@ export default class JoinSimulationForm extends React.Component {
     return (
       <div id="input-join-simulation">
         <form>
-          <input value={simulationID} onChange={(e) => {this._handleSimulationIDChange(e)}}/>
-          <button type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Join Simulation</button>
+          <input className="form-control" value={simulationID} onChange={(e) => {this._handleSimulationIDChange(e)}}/>
+          <button className="btn btn-primary" type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Join Simulation</button>
         </form>
       </div>
     )

@@ -19,7 +19,7 @@ export default class LandmarkSearch extends React.Component {
 
   handleChange(e) {
     const input = e.target.value;
-    this.setState({inputValue: input});  
+    this.setState({inputValue: input});
   }
 
   handleSubmit(e) {
@@ -74,15 +74,20 @@ export default class LandmarkSearch extends React.Component {
 
   render() {
     return (
-      <div>
-        <input
-        type='text'
-        value={this.state.inputValue} 
-        onChange={ (e) => { this.handleChange(e) }}
-        onKeyPress={ (e) => { this.handleSubmit(e) }}
-        />
-        <button onClick={ (e) => { this.handleSubmit(e) }} >Search</button>
-        <LandmarkSearchResults results={this.state.searchResults} handleResultSelect={(result) => { this._handleResultSelect(result) }}/>
+      <div className="container">
+				<div className="row">
+					<input
+						type='text'
+						className="form-group"
+						value={this.state.inputValue}
+						onChange={ (e) => { this.handleChange(e) }}
+						onKeyPress={ (e) => { this.handleSubmit(e) }}
+						/>
+				</div>
+				<div className="row">
+					<button className="btn btn-primary" onClick={ (e) => { this.handleSubmit(e) }} >Search</button>
+					<LandmarkSearchResults results={this.state.searchResults} handleResultSelect={(result) => { this._handleResultSelect(result) }}/>
+				</div>
       </div>
     )
   }
