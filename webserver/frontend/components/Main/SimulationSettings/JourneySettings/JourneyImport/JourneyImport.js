@@ -25,11 +25,12 @@ export default class JourneyImport extends React.Component {
       type: CustomPropTypes._journey
     }
 
-    const validatorResult = validator.validate(journeys[0], schema);
-
-    if (validatorResult.errors.length !== 0) {
-      console.error("Input JSON is invalid");
-      return
+    for (const journey of journeys) {
+      const validatorResult = validator.validate(journeys[0], schema);
+      if (validatorResult.errors.length !== 0) {
+        console.error("Input JSON is invalid");
+        return
+      }
     }
 
     this.props.handleJourneysSubmit(journeys);
