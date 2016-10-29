@@ -18,7 +18,7 @@ export default class SimulationSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCity: [],
+      selectedCity: null,
       journeys: []
     }
   }
@@ -28,6 +28,7 @@ export default class SimulationSettings extends React.Component {
       selectedCity: city,
       journeys: []
     })
+		this.props.handleCityChange(city._id);
   }
 
   handleSimulationStart(e) {
@@ -46,7 +47,7 @@ export default class SimulationSettings extends React.Component {
 
     const type = "request-simulation-start";
     const content = simulationSettings;
-
+    console.log(selectedCity);
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
@@ -118,25 +119,25 @@ export default class SimulationSettings extends React.Component {
     )
   }
 
-  render() { 
+  render() {
     const cities = this.props.availableCities || [];
 
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
 
     return (
-      <div>
+      <div className="container">
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
-        <JourneySettings 
+        <JourneySettings
           onSubmit={(journeys) => {this._handleJourneySubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
         />
-        <button onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
-        { 
-          hasSimulationStarted && 
+      <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
+        {
+          hasSimulationStarted &&
           <div>Current Simulation ID: { simID }</div>
         }
-        <button hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
+        <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
         <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
 
         <h2> Journeys: </h2>

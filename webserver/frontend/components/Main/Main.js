@@ -25,6 +25,7 @@ export default class Main extends React.Component {
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
 
     this.state = {
+			selectedCityID: 0,
       socket: socket,
       simulationInfo: {
         id: "0",
@@ -53,17 +54,14 @@ export default class Main extends React.Component {
 
     if (messageData.type === "available-cities") {
       this.setState({
-        availableCities: messageData.content
+        availableCities: messageData.content,
+				selectedCityID: messageData.content[0]._id
       })
     } else if (messageData.type === "simulation-id") {
       this.setState({
-        simulationInfo: {
-          id: messageData.content.simulationID,
-          cityID: this.state.simulationInfo.cityID
-        }
+        simulationInfo: messageData.content
       });
     } else if (messageData.type === "simulation-state") {
-      console.log(messageData.content);
       this.setState({
         simulationState: messageData.content
       });
@@ -78,13 +76,23 @@ export default class Main extends React.Component {
     })
   }
 
-  _boundsForCity(cityID) {
+  _boundsForCity() {
     const availableCities = this.state.availableCities;
-    console.log("City ID:" + cityID);
+    const selectedCityID = this.state.selectedCityID;
     if (availableCities) {
-      return availableCities[0].bounds
+      for (const city of availableCities) {
+        if (city._id === selectedCityID) {
+          return city.bounds;
+        }
+      }
     }
   }
+
+	_handleCityChange(newCityId) {
+		this.setState({
+			selectedCityID: newCityId
+		})
+	}
 
   _handlePositionPreview(position) {
     this.setState({
@@ -102,29 +110,35 @@ export default class Main extends React.Component {
 
     const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
 
-    const bounds = this._boundsForCity(simulationInfo.cityID);
+    const bounds = this._boundsForCity();
 
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
     return (
-      <div>
-        <SimulationSettings
-          socket={socket}
-          availableCities={availableCities}
-          activeSimulationID={simulationID}
-          mapSelectedJourneys={mapSelectedJourneys}
-          handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
-        />
-
-        <SimulationMap
-          width={ 600 + 'px' }
-          height={ 600 + 'px' }
-          bounds={ bounds }
-          simulationState= { simulationState }
-          handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
-          previewMarkerPosition={previewMarkerPosition}
-          clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
-        />
+      <div className="jumbotron">
+				<div className="container">
+					<div className="row text-center">
+		        <SimulationSettings
+		          socket={socket}
+		          availableCities={availableCities}
+		          activeSimulationID={simulationID}
+		          mapSelectedJourneys={mapSelectedJourneys}
+		          handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
+							handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
+		        />
+					</div>
+					<div className="row map">
+		        <SimulationMap
+		          width={ 600 + 'px' }
+		          height={ 600 + 'px' }
+		          bounds={ bounds }
+		          simulationState= { simulationState }
+		          handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
+		          previewMarkerPosition={previewMarkerPosition}
+		          clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
+		        />
+		      </div>
+	      </div>
       </div>
     )
   }

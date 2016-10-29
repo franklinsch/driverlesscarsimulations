@@ -50,12 +50,11 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function _handleRequestSimulationStart(message, callback) {
-    console.log("Received simulation start data: ");
-    console.log(JSON.stringify(message, undefined, 2));
+    const data = message.content;
     const simulation = new Simulation({
       simulationStartParameters: {
-        cityID: message.content.selectedCity._id,
-        journeys: message.content.journeys
+        cityID: data.selectedCity._id,
+        journeys: data.journeys
       },
       frontendConnectionIndices: [frontendConnections.length],
       simulationStates: []
@@ -67,9 +66,8 @@ frontendSocketServer.on('request', function(request) {
       }
       frontendConnections.push(connection)
     });
-    console.log(simulation);
 
-    callback(null, simulation._id);
+    callback(null, simulation._id, data.selectedCity._id);
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -94,7 +92,7 @@ frontendSocketServer.on('request', function(request) {
       }));
     })
   }
-  
+
   function _handleRequestEventUpdate(message) {
     Simulation.findById(message.content.simulationID, function (error, simulation) {
       if (error || !simulation) {
@@ -125,11 +123,12 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestAvailableCities();
         break;
       case "request-simulation-start":
-        _handleRequestSimulationStart(messageData, (err, simID) => {
+        _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
           connection.send(JSON.stringify({
             type: "simulation-id",
             content: {
-              simulationID: simID
+              id: simID,
+              cityID: cityID
             }
           }));
         });
