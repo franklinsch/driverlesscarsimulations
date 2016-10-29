@@ -1,10 +1,11 @@
 import React from 'react';
-import LandmarkSearch from '../LandmarkSearch/LandmarkSearch.js';
+import LandmarkSearch from './LandmarkSearch/LandmarkSearch.js';
+import JourneyImport from './JourneyImport/JourneyImport.js';
 
 export default class JourneySettings extends React.Component {
 
   static propTypes = {
-    onSubmit: React.PropTypes.func,
+    handleJourneysSelect: React.PropTypes.func,
     handlePositionSelect: React.PropTypes.func
   }
 
@@ -27,7 +28,7 @@ export default class JourneySettings extends React.Component {
     const destinationLat = this.state.destinationLat;
     const destinationLng = this.state.destinationLng;
 
-    const onSubmit = this.props.onSubmit;
+    const handleJourneySelect = this.props.handleJourneysSelect;
 
     const journey = {
       // TODO
@@ -48,8 +49,8 @@ export default class JourneySettings extends React.Component {
       journeys: journeys
     })
 
-    if (onSubmit) {
-      onSubmit(journeys)
+    if (handleJourneySelect) {
+      handleJourneySelect(journeys)
     }
   }
 
@@ -89,6 +90,10 @@ export default class JourneySettings extends React.Component {
     handlePositionSelect(position);
   }
 
+  _handleJourneysFileImport(journeys) {
+    this.props.handleJourneysSelect(journeys);
+  }
+
   render() {
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
@@ -96,7 +101,7 @@ export default class JourneySettings extends React.Component {
     const destinationLng = this.state.destinationLng;
 
     return (
-			<div id="journey-settings">
+      <div id="journey-settings">
 	      <div id="input-journeys">
 	        <form>
 	          <div className="form-group">
@@ -115,7 +120,10 @@ export default class JourneySettings extends React.Component {
 	        <LandmarkSearch
 	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
 	        />
-			</div>
+        <JourneyImport 
+          handleJourneysSubmit={(journeys) => this._handleJourneysFileImport(journeys)}
+        />
+      </div>
     )
   }
 

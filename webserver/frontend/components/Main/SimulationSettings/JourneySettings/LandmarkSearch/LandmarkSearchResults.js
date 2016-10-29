@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomPropTypes from '../../../Utils/CustomPropTypes.js';
+import CustomPropTypes from '../../../../Utils/CustomPropTypes.js';
 
 export default class LandmarkSearchResults extends React.Component {
 
