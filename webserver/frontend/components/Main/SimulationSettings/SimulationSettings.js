@@ -28,6 +28,7 @@ export default class SimulationSettings extends React.Component {
       selectedCity: city,
       journeys: []
     })
+		this.props.handleCityChange(city._id);
   }
 
   handleSimulationStart(e) {
