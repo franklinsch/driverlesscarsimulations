@@ -103,6 +103,21 @@ export default class SimulationSettings extends React.Component {
     f(position);
   }
 
+  _handleExportClick() {
+    const journeys = this.state.journeys;
+    const data = JSON.stringify(journeys);
+
+    const url = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
+
+    let exportFileDefaultName = 'journeys.json';
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', url);
+    linkElement.setAttribute('target', '_blank');
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  }
+
   renderJourneysList() {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
@@ -142,6 +157,7 @@ export default class SimulationSettings extends React.Component {
 
         <h2> Journeys: </h2>
         { this.renderJourneysList() }
+        <button onClick={() => this._handleExportClick()}>Export</button>
       </div>
     )
   }
