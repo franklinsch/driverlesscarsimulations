@@ -32,8 +32,6 @@ export default class JourneyImport extends React.Component {
         return
       }
     }
-
-    this.props.handleJourneysSubmit(journeys);
   }
 
   _handleFileChange(e) {
@@ -60,7 +58,8 @@ export default class JourneyImport extends React.Component {
     const reader = new FileReader(); 
 
     reader.onloadend = () => {
-      this._toJourneys(reader.result);
+      const journeys = this._toJourneys(reader.result);
+      this.props.handleJourneysSubmit(journeys);
     }
 
     reader.readAsText(file);
