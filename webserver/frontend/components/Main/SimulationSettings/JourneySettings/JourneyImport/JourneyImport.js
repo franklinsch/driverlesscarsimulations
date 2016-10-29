@@ -26,7 +26,7 @@ export default class JourneyImport extends React.Component {
     }
 
     for (const journey of journeys) {
-      const validatorResult = validator.validate(journeys[0], schema);
+      const validatorResult = validator.validate(journey, schema);
       if (validatorResult.errors.length !== 0) {
         console.error("Input JSON is invalid");
         return
