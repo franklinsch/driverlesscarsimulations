@@ -201,10 +201,10 @@ export default class SimulationMap extends React.Component {
         {
           cars &&
           cars.map((car, index) => {
-            const key = car.position.lat.toString() + car.position.lng.toString()
+            const key = car.id
             return (
-              <Marker position={ car.position } 
-                key={ key }
+              <Marker position = { car.position } 
+                key = { key }
                 icon = {carIcon}
                 rotationAngle = { car.direction }
               >
