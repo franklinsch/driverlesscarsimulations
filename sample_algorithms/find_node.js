@@ -1,31 +1,31 @@
 const point = JSON.parse(process.argv[2].substring(1))['geometry']['coordinates'];
 const geojson = JSON.parse(process.argv[3].substring(1));
 
-distance = function(point1, point2) {
+const distance = function(point1, point2) {
   return Math.sqrt(Math.pow(point1[0]-point2[0], 2) + Math.pow(point1[1]-point2[1], 2));
 };
 
-angle = function(origin, point) {
+const angle = function(origin, point) {
   return Math.atan2(point[1]-origin[1], point[0]-origin[0]);
 }
 
-dot = function(point1, point2) {
+const dot = function(point1, point2) {
   return point1[0]*point2[0] + point1[1]*point2[1];
 };
 
-sub = function(point1, point2) {
+const sub = function(point1, point2) {
   return [point1[0]-point2[0], point1[1]-point2[1]];
 };
 
-add = function(point1, point2) {
+const add = function(point1, point2) {
   return [point1[0]+point2[0], point1[1]+point2[1]];
 };
 
-scale = function(point, scale) {
+const scale = function(point, scale) {
   return [scale * point[0], scale * point[1]];
 };
 
-equal = function(point1, point2) {
+const equal = function(point1, point2) {
   return point1[0] == point2[0] && point1[1] == point2[1];
 };
 
