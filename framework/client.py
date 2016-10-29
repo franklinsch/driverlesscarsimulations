@@ -4,8 +4,12 @@ import websockets
 import sys
 import threading
 
-#HOST = 'ws://35.160.255.102:9000'
-HOST = 'ws://localhost:9000'
+import os
+
+HOST_IP = os.environ['SAVN_HOST'] if 'SAVN_HOST' in os.environ else 'localhost'
+
+HOST = 'ws://' + HOST_IP + ':9000'
+
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
