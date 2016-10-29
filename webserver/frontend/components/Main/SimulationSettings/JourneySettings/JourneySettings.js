@@ -1,5 +1,6 @@
 import React from 'react';
 import LandmarkSearch from './LandmarkSearch/LandmarkSearch.js';
+import JourneyImport from './JourneyImport/JourneyImport.js';
 
 export default class JourneySettings extends React.Component {
 
@@ -115,6 +116,7 @@ export default class JourneySettings extends React.Component {
 	        <LandmarkSearch
 	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
 	        />
+        <JourneyImport />
 			</div>
     )
   }
