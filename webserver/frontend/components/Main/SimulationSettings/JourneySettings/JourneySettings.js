@@ -1,5 +1,5 @@
 import React from 'react';
-import LandmarkSearch from '../LandmarkSearch/LandmarkSearch.js';
+import LandmarkSearch from './LandmarkSearch/LandmarkSearch.js';
 
 export default class JourneySettings extends React.Component {
 
