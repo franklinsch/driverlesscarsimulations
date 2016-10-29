@@ -5,7 +5,7 @@ import JourneyImport from './JourneyImport/JourneyImport.js';
 export default class JourneySettings extends React.Component {
 
   static propTypes = {
-    onSubmit: React.PropTypes.func,
+    handleJourneySelect: React.PropTypes.func,
     handlePositionSelect: React.PropTypes.func
   }
 
@@ -28,7 +28,7 @@ export default class JourneySettings extends React.Component {
     const destinationLat = this.state.destinationLat;
     const destinationLng = this.state.destinationLng;
 
-    const onSubmit = this.props.onSubmit;
+    const handleJourneySelect = this.props.handleJourneySelect;
 
     const journey = {
       // TODO
@@ -49,8 +49,8 @@ export default class JourneySettings extends React.Component {
       journeys: journeys
     })
 
-    if (onSubmit) {
-      onSubmit(journeys)
+    if (handleJourneySelect) {
+      handleJourneySelect(journeys)
     }
   }
 
@@ -90,6 +90,10 @@ export default class JourneySettings extends React.Component {
     handlePositionSelect(position);
   }
 
+  _handleJourneysFileImport(journeys) {
+
+  }
+
   render() {
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
@@ -97,7 +101,7 @@ export default class JourneySettings extends React.Component {
     const destinationLng = this.state.destinationLng;
 
     return (
-			<div id="journey-settings">
+      <div id="journey-settings">
 	      <div id="input-journeys">
 	        <form>
 	          <div className="form-group">
@@ -116,8 +120,10 @@ export default class JourneySettings extends React.Component {
 	        <LandmarkSearch
 	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
 	        />
-        <JourneyImport />
-			</div>
+        <JourneyImport 
+          handleJourneysImport={(journeys) => this._handleJourneysFileImport(journeys)}
+        />
+      </div>
     )
   }
 
