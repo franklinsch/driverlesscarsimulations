@@ -5,7 +5,7 @@ import JourneyImport from './JourneyImport/JourneyImport.js';
 export default class JourneySettings extends React.Component {
 
   static propTypes = {
-    handleJourneySelect: React.PropTypes.func,
+    handleJourneysSelect: React.PropTypes.func,
     handlePositionSelect: React.PropTypes.func
   }
 
@@ -28,7 +28,7 @@ export default class JourneySettings extends React.Component {
     const destinationLat = this.state.destinationLat;
     const destinationLng = this.state.destinationLng;
 
-    const handleJourneySelect = this.props.handleJourneySelect;
+    const handleJourneySelect = this.props.handleJourneysSelect;
 
     const journey = {
       // TODO
@@ -91,7 +91,7 @@ export default class JourneySettings extends React.Component {
   }
 
   _handleJourneysFileImport(journeys) {
-
+    this.props.handleJourneysSelect(journeys);
   }
 
   render() {
@@ -121,7 +121,7 @@ export default class JourneySettings extends React.Component {
 	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
 	        />
         <JourneyImport 
-          handleJourneysImport={(journeys) => this._handleJourneysFileImport(journeys)}
+          handleJourneysSubmit={(journeys) => this._handleJourneysFileImport(journeys)}
         />
       </div>
     )

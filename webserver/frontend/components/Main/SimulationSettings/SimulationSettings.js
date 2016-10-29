@@ -77,7 +77,7 @@ export default class SimulationSettings extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  _handleJourneySubmit(journeys) {
+  _handleJourneysSubmit(journeys) {
     this.setState({
       journeys: journeys
     })
@@ -128,8 +128,8 @@ export default class SimulationSettings extends React.Component {
     return (
       <div className="container">
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
-        <JourneySettings
-          onSubmit={(journeys) => {this._handleJourneySubmit(journeys)}}
+        <JourneySettings 
+          handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
         />
       <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>

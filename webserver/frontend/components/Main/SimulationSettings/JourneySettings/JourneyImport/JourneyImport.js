@@ -18,16 +18,16 @@ export default class JourneyImport extends React.Component {
     const journeyTexts = csv.split(/\r?\n/);
     
     const journeys = journeyTexts.map((journeyText) => {
-      const {originLat, originLng, destLat, destLng} = journeyText.split(",");
+      const journeyArray = journeyText.split(",");
 
       return {
         origin: {
-          lat: originLat,
-          lng: originLng
+          lat: journeyArray[0],
+          lng: journeyArray[1]
         }, 
         destination: {
-          lat: destLat,
-          lng: destLng
+          lat: journeyArray[2],
+          lng: journeyArray[3]
         }
       }
     })
