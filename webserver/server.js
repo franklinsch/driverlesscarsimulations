@@ -109,8 +109,8 @@ frontendSocketServer.on('request', function(request) {
       }
 
       frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
-        type: "event-update",
-        content: {}
+        type: "simulation-update",
+        content: message.content
       }));
     });
   }
@@ -136,7 +136,7 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-join":
         _handleRequestSimulationJoin(messageData);
-      case "request-event-update":
+      case "request-simulation-update":
         _handleRequestEventUpdate(messageData);
       }
     }
