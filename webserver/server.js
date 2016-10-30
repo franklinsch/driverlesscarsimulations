@@ -14,11 +14,11 @@ const db = require('./backend/db');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
 
-Simulation.remove({}, function(err) {
+Simulation.update({}, { $set: {frontendConnectionIndices: []}, $unset: {frameworkConnectionIndex: ''}}, {multi: true}, function(err, numAffected) {
   if (err) {
     return;
   }
-  console.log("Initial remove successful");
+  console.log("Initial check successful");
 });
 
 //
