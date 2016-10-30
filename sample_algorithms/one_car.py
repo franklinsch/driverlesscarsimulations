@@ -10,12 +10,32 @@ import os.path
 
 from copy import deepcopy
 
+state = []
+
+SLEEP_TIME = 1
+TIMESLICE = 1
+CONST_SPEED_KM_H = 40
+CONST_SPEED = CONST_SPEED_KM_H * (1000 / 3600)
+
 class ConnectionAssistant(client.SAVNConnectionAssistant):
 
   def handleSimulationStart(self, initialParameters):
+    south = initialParameters['simulationStartParameters']['city']['bounds']['southWest']['lat']
+    west = initialParameters['simulationStartParameters']['city']['bounds']['southWest']['lng']
+    north = initialParameters['simulationStartParameters']['city']['bounds']['northEast']['lat']
+    east = initialParameters['simulationStartParameters']['city']['bounds']['northEast']['lng']
+    route.saveGeojson(south, west, north, east, 'map.geojson')
+
+    start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
+    end = {"geometry": {"type": "Point", "coordinates": [4.7942264, 50.6814472]}, "type": "Feature", "properties": {}}
+
+    BASE_ROUTE = route.getRoute('map.geojson', start, end)['path']
+    preprocess(BASE_ROUTE)
+
     print('Starting simulation:')
     print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
     global state
+    state = setupCars(1, BASE_ROUTE)
     addToState(initialParameters['simulationStartParameters']['journeys'], state)
     timestamp = 0
     #for i in range(50):
@@ -32,18 +52,6 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 
   def handleSimulationStop(self):
     pass
-
-#if(not(os.path.exists('map.geojson'))):
-route.saveGeojson(50.68166, 4.78482, 50.68347, 4.78780, 'map.geojson')
-
-SLEEP_TIME = 1
-TIMESLICE = 1
-CONST_SPEED_KM_H = 40
-CONST_SPEED = CONST_SPEED_KM_H * (1000 / 3600)
-
-start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
-#start = {"geometry": {"type": "Point", "coordinates": [4.778602 + 0.1 * (4.7806405-4.778602), 50.6840807 + 0.1 * (50.6834349 - 50.6840807)]}, "type": "Feature", "properties": {}}
-end = {"geometry": {"type": "Point", "coordinates": [4.7942264, 50.6814472]}, "type": "Feature", "properties": {}}
 
 def addToState(journeys, state):
   for journey in journeys:
@@ -83,14 +91,6 @@ def preprocess(route):
     dist = get_distance(start, end)
     time = dist/CONST_SPEED
     end.append({'timeLeft': time, 'totalTime': time})
-
-BASE_ROUTE = route.getRoute('map.geojson', start, end)['path']
-preprocess(BASE_ROUTE)
-#BASE_ROUTE = {'source': [50.68166, 4.78482], 'destination': [50.68166, 4.78482], 'path':
-#    [{'start': [50.68166, 4.78482], 'end': [50.68347, 4.78482], 'direction': 1, 'timeLeft': 2, 'totalTime': 2},
-#     {'start': [50.68347, 4.78482], 'end': [50.68347, 4.78780], 'direction': 2, 'timeLeft': 2, 'totalTime': 2},
-#     {'start': [50.68347, 4.78780], 'end': [50.68166, 4.78780], 'direction': 3, 'timeLeft': 2, 'totalTime': 2},
-#     {'start': [50.68166, 4.78780], 'end': [50.68166, 4.78482], 'direction': 4, 'timeLeft': 2, 'totalTime': 2}]}
 
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
@@ -176,15 +176,15 @@ def algo(state):
     moveCar(car)
   return state
 
-def newCar(i, baseRoute = BASE_ROUTE):
+def newCar(i, baseRoute):
   car = {'id': i, 'type': 'car', 'position': None, 'speed': CONST_SPEED_KM_H, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute}
   scheduleNewRoute(car)
   return car
 
-def setupCars(numCars):
+def setupCars(numCars, baseRoute):
   cars = []
   for i in range(numCars):
-    cars.append(newCar(i))
+    cars.append(newCar(i, baseRoute))
   return cars
 
 def translate(state):
@@ -196,7 +196,6 @@ def translate(state):
 if(len(sys.argv) != 2):
   sys.exit(1)
 
-state = setupCars(1)
 simulationId = sys.argv[1]
 savn = ConnectionAssistant(simulationId)
 savn.initSession()
