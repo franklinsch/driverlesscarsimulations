@@ -12,7 +12,8 @@ export default class SimulationSettings extends React.Component {
     selectedCity: CustomPropTypes.city,
     activeSimulationID: React.PropTypes.string,
     mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
-    handlePositionPreview: React.PropTypes.func
+    handlePositionPreview: React.PropTypes.func,
+    handleCityChange: React.PropTypes.func
   }
 
   constructor(props) {
@@ -28,7 +29,7 @@ export default class SimulationSettings extends React.Component {
       selectedCity: city,
       journeys: []
     })
-		this.props.handleCityChange(city._id);
+    this.props.handleCityChange(city._id);
   }
 
   handleSimulationStart(e) {
