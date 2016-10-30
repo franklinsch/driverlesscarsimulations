@@ -60,7 +60,7 @@ frontendSocketServer.on('request', function(request) {
     const data = message.content;
     const simulation = new Simulation({
       simulationStartParameters: {
-        cityID: data.selectedCity._id,
+        city: data.selectedCity,
         journeys: data.journeys
       },
       frontendConnectionIndices: [frontendConnections.length],

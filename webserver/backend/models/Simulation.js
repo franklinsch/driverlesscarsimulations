@@ -2,7 +2,19 @@ const mongoose = require('mongoose');
 
 const simulationSchema = mongoose.Schema({
   simulationStartParameters: {
-    cityID: String,
+    city: {
+      name: String,
+      bounds: {
+        northEast: {
+          lat: Number,
+          lng: Number
+        },
+        southWest: {
+          lat: Number,
+          lng: Number
+        }
+      }
+    },
     journeys: [{
       carID: Number,
       origin: {
