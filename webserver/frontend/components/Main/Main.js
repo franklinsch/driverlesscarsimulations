@@ -25,7 +25,7 @@ export default class Main extends React.Component {
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
 
     this.state = {
-			selectedCityID: 0,
+      selectedCityID: 0,
       socket: socket,
       simulationInfo: {
         id: "0",
@@ -55,7 +55,7 @@ export default class Main extends React.Component {
     if (messageData.type === "available-cities") {
       this.setState({
         availableCities: messageData.content,
-				selectedCityID: messageData.content[0]._id
+        selectedCityID: messageData.content[0]._id
       })
     } else if (messageData.type === "simulation-id") {
       this.setState({
@@ -88,11 +88,11 @@ export default class Main extends React.Component {
     }
   }
 
-	_handleCityChange(newCityId) {
-		this.setState({
-			selectedCityID: newCityId
-		})
-	}
+  _handleCityChange(newCityId) {
+    this.setState({
+      selectedCityID: newCityId
+    })
+  }
 
   _handlePositionPreview(position) {
     this.setState({
