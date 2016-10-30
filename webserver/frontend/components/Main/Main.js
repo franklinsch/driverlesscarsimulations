@@ -119,7 +119,7 @@ export default class Main extends React.Component {
         <Header />
          <div className="jumbotron">
           <div className="container">
-            <div className="row text-center">
+            <div className="col-md-4 text-center">
               <SimulationSettings
                 socket={socket}
                 availableCities={availableCities}
@@ -129,7 +129,7 @@ export default class Main extends React.Component {
                 handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
               />
             </div>
-            <div className="row map">
+            <div className="col-md-4 map">
               <SimulationMap
                 width={ 600 + 'px' }
                 height={ 600 + 'px' }
