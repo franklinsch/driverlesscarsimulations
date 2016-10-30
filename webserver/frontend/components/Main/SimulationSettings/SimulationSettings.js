@@ -37,7 +37,6 @@ export default class SimulationSettings extends React.Component {
 
     const type = "request-simulation-start";
     const content = simulationSettings;
-    console.log(selectedCity);
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
