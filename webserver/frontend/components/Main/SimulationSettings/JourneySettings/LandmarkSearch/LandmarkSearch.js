@@ -1,11 +1,13 @@
 import React from 'react';
 import $ from 'jquery';
+import CustomPropTypes from '../../../../Utils/CustomPropTypes.js';
 import LandmarkSearchResults from './LandmarkSearchResults.js';
 
 export default class LandmarkSearch extends React.Component {
 
   static propTypes = {
-    handlePositionAdd: React.PropTypes.func
+    handlePositionAdd: React.PropTypes.func,
+    boundLimit: CustomPropTypes.bounds
   }
 
   constructor(props) {
@@ -56,12 +58,24 @@ export default class LandmarkSearch extends React.Component {
   }
 
   search(query, callback) {
+
+    const bounds = this.props.boundLimit;
+    let viewBox = "";
+
+    if (bounds) {
+      viewBox = bounds.southWest.lng + "" + bounds.southWest.lat + "" + bounds.northEast.lng + "" + bounds.northWest.lat
+    }
+
+    console.log(viewBox);
+
     $.ajax({
       url: "http://nominatim.openstreetmap.org/search",
       type: "GET",
       data: {
         q: query,
-        format: "json"
+        format: "json",
+        viewboxlbrt: viewBox,
+        bounded: "1"
       },
       success: (data) => {
         const results = data.map((result) => {
