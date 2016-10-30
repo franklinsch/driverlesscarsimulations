@@ -747,7 +747,7 @@ pre code {
 .container {
   margin-left: auto;
   margin-right: auto;
-  padding-left: 15px;
+  /*padding-left: 15px;*/
   padding-right: 15px;
 }
 
@@ -4686,7 +4686,7 @@ a.tag:focus, a.tag:hover {
 
 @media (min-width: 576px) {
   .jumbotron {
-    padding: 4rem 2rem;
+    /*padding: 4rem 2rem;*/
   }
 }
 
