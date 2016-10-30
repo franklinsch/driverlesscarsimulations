@@ -11,7 +11,7 @@ export default class JourneyList extends React.Component {
     const journeys = this.props.journeys || [];
 
     return (
-      <div>
+      <div id="journey-list">
         <h4>Journeys</h4>
       { journeys.length == 0 &&
         <i> No journeys </i>

@@ -1,3 +1,10 @@
 #journey-settings {
 	text-align: center;
 }
+
+#journey-list {
+  border-radius: 5px;
+  border: 1px solid #dfe5e7;
+  background: #dfe5e7;
+  padding: 20px;
+}
