@@ -3,6 +3,7 @@ import SimulationMap from './SimulationMap/SimulationMap.js';
 import SimulationSettings from './SimulationSettings/SimulationSettings.js';
 import CustomPropTypes from '../Utils/CustomPropTypes.js';
 import UtilFunctions from '../Utils/UtilFunctions.js';
+import Header from './Header/Header.js';
 
 export default class Main extends React.Component {
 
@@ -22,8 +23,7 @@ export default class Main extends React.Component {
     }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
-    socket.onmessage = (message) => { this.handleMessageReceive(message) }
-
+    socket.onmessage = (message) => { this.handleMessageReceive(message) } 
     this.state = {
       selectedCityID: 0,
       socket: socket,
@@ -115,30 +115,33 @@ export default class Main extends React.Component {
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
     return (
-      <div className="jumbotron">
-				<div className="container">
-					<div className="row text-center">
-		        <SimulationSettings
-		          socket={socket}
-		          availableCities={availableCities}
-		          activeSimulationID={simulationID}
-		          mapSelectedJourneys={mapSelectedJourneys}
-		          handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
-							handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
-		        />
-					</div>
-					<div className="row map">
-		        <SimulationMap
-		          width={ 600 + 'px' }
-		          height={ 600 + 'px' }
-		          bounds={ bounds }
-		          simulationState= { simulationState }
-		          handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
-		          previewMarkerPosition={previewMarkerPosition}
-		          clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
-		        />
-		      </div>
-	      </div>
+      <div>
+        <Header />
+         <div className="jumbotron">
+          <div className="container">
+            <div className="row text-center">
+              <SimulationSettings
+                socket={socket}
+                availableCities={availableCities}
+                activeSimulationID={simulationID}
+                mapSelectedJourneys={mapSelectedJourneys}
+                handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
+                handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
+              />
+            </div>
+            <div className="row map">
+              <SimulationMap
+                width={ 600 + 'px' }
+                height={ 600 + 'px' }
+                bounds={ bounds }
+                simulationState= { simulationState }
+                handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
+                previewMarkerPosition={previewMarkerPosition}
+                clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
