@@ -13,6 +13,9 @@ export default class JourneyList extends React.Component {
     return (
       <div>
         <h4>Journeys</h4>
+      { journeys.length == 0 &&
+        <i> No journeys </i>
+      }
         <ul>
         {
           journeys.map((journey, index) => {

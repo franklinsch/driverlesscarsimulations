@@ -151,5 +151,3 @@ export default class SimulationSettings extends React.Component {
         <button onClick={() => this._handleExportClick()}>Export</button>
       </div>
     )
-  }
-}
