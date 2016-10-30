@@ -18,7 +18,8 @@ export default class JourneySettings extends React.Component {
       originLng: "",
       destinationLat: "",
       destinationLng: "",
-      journeys: []
+      journeys: [],
+      showJourneyManualAddForm: false
     }
   }
 
@@ -96,6 +97,14 @@ export default class JourneySettings extends React.Component {
     this.props.handleJourneysSelect(journeys);
   }
 
+  _toggleJourneyManualAddForm(e) {
+    e.preventDefault();
+
+    this.setState({
+      showJourneyManualAddForm: !this.state.showJourneyManualAddForm
+    })
+  }
+
   render() {
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
@@ -103,21 +112,23 @@ export default class JourneySettings extends React.Component {
     const destinationLng = this.state.destinationLng;
 
     const bounds = this.props.bounds;
+    const showJourneyManualAddForm = this.state.showJourneyManualAddForm;
 
     return (
       <div id="journey-settings">
 	      <div id="input-journeys">
 	        <form>
 	          <div className="form-group">
-							<div className="row">
-			          <input className="form-group" value={originLat} onChange={(e) => {this._handleOriginLatChange(e)}}/>
-			          <input className="form-group" value={originLng} onChange={(e) => {this._handleOriginLngChange(e)}}/>
-			          <input className="form-group" value={destinationLat} onChange={(e) => {this._handleDestinationLatChange(e)}}/>
-			          <input className="form-group" value={destinationLng} onChange={(e) => {this._handleDestinationLngChange(e)}}/>
-							</div>
-							<div className="row">
-			          <button className="btn btn-primary" type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Add journey</button>
-							</div>
+              <button onClick={(e) => this._toggleJourneyManualAddForm(e)}>Manually add journey</button>
+              { showJourneyManualAddForm &&
+                <div className="row">
+                  <input className="form-group" value={originLat} onChange={(e) => {this._handleOriginLatChange(e)}}/>
+                  <input className="form-group" value={originLng} onChange={(e) => {this._handleOriginLngChange(e)}}/>
+                  <input className="form-group" value={destinationLat} onChange={(e) => {this._handleDestinationLatChange(e)}}/>
+                  <input className="form-group" value={destinationLng} onChange={(e) => {this._handleDestinationLngChange(e)}}/>
+                  <button className="btn btn-primary" type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Add journey</button>
+                </div>
+              }
 	          </div>
 	        </form>
 				</div>

@@ -4,6 +4,7 @@ import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
 import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.js';
+import JourneyList from './JourneyList/JourneyList.js';
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
@@ -119,22 +120,6 @@ export default class SimulationSettings extends React.Component {
     linkElement.click();
   }
 
-  renderJourneysList() {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
-
-    return (
-      <ul>
-      {
-        allJourneys.map((journey, index) => {
-          return (
-            <li key={index}> { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } </li>)
-        })
-      }
-      </ul>
-    )
-  }
-
   render() {
     const cities = this.props.availableCities || [];
 
@@ -143,12 +128,13 @@ export default class SimulationSettings extends React.Component {
 
     const selectedCity = this.state.selectedCity || cities[0];
     const bounds = selectedCity ? selectedCity.bounds : null;
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
     return (
       <div className="container">
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
-        <h4> Journeys: </h4>
-        { this.renderJourneysList() }
+        <JourneyList journeys={allJourneys}/>
         <JourneySettings 
           handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
