@@ -117,6 +117,11 @@ export default class JourneySettings extends React.Component {
     return (
       <div id="journey-settings">
 	      <div id="input-journeys">
+				</div>
+	        <LandmarkSearch
+	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
+            boundLimit={bounds}
+	        />
 	        <form>
 	          <div className="form-group">
               <button onClick={(e) => this._toggleJourneyManualAddForm(e)}>Manually add journey</button>
@@ -131,11 +136,6 @@ export default class JourneySettings extends React.Component {
               }
 	          </div>
 	        </form>
-				</div>
-	        <LandmarkSearch
-	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
-            boundLimit={bounds}
-	        />
         <JourneyImport 
           handleJourneysSubmit={(journeys) => this._handleJourneysFileImport(journeys)}
         />
