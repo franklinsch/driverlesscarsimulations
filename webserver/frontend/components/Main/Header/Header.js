@@ -5,7 +5,7 @@ export default class Header extends React.Component {
   render() {
     return (
         <nav className="navbar navbar-dark bg-primary">
-          <a className="navbar-brand" href="#">Navbar</a>
+          <a className="navbar-brand" href="#">SAVN</a>
           <ul className="nav navbar-nav">
               <li className="nav-item active">
                   <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
@@ -20,8 +20,8 @@ export default class Header extends React.Component {
               </li>
           </ul>
           <form className="form-inline float-xs-right">
-              <input className="form-control" type="text" placeholder="Search"/>
-              <button className="btn btn-outline-success" type="submit">Search</button>
+              <input className="form-control" type="text" placeholder="Simulation ID"/>
+              <button className="btn btn-outline-success" type="submit">Join Simulation</button>
           </form>
       </nav>
     )
