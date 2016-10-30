@@ -3,7 +3,6 @@ import Dropdown from './Dropdown/Dropdown.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
-import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.js';
 import JourneyList from './JourneyList/JourneyList.js';
 
 export default class SimulationSettings extends React.Component {
@@ -85,17 +84,6 @@ export default class SimulationSettings extends React.Component {
     })
   }
 
-  _handleJoinSimulation(simulationID) {
-    const socket = this.props.socket;
-
-    const type = "request-simulation-join";
-    const content = {
-      simulationID: simulationID
-    }
-
-    UtilFunctions.sendSocketMessage(socket, type, content);
-  }
-
   _handlePositionSelect(position) {
     const f = this.props.handlePositionPreview;
     if (!f) {
@@ -146,7 +134,6 @@ export default class SimulationSettings extends React.Component {
           <div>Current Simulation ID: { simID }</div>
         }
         <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
-        <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
 
         <button onClick={() => this._handleExportClick()}>Export</button>
       </div>
