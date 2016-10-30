@@ -1,14 +1,12 @@
 import React from 'react';
-import Dropdown from './Dropdown/Dropdown.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
-import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.js';
+import JourneyList from './JourneyList/JourneyList.js';
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
     socket: React.PropTypes.object,
-    availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     selectedCity: CustomPropTypes.city,
     activeSimulationID: React.PropTypes.string,
     mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
@@ -19,24 +17,15 @@ export default class SimulationSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCity: null,
       journeys: []
     }
-  }
-
-  handleCityChange(city) {
-    this.setState({
-      selectedCity: city,
-      journeys: []
-    })
-    this.props.handleCityChange(city._id);
   }
 
   handleSimulationStart(e) {
     e.preventDefault();
 
     const socket = this.props.socket;
-    const selectedCity = this.state && this.state.selectedCity || this.props.availableCities[0];
+    const selectedCity = this.props.selectedCity;
 
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
@@ -56,7 +45,7 @@ export default class SimulationSettings extends React.Component {
     e.preventDefault();
 
     const socket = this.props.socket;
-    const selectedCity = this.state && this.state.selectedCity || this.props.availableCities[0];
+    const selectedCity = this.props.selectedCity;
 
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
@@ -84,17 +73,6 @@ export default class SimulationSettings extends React.Component {
     })
   }
 
-  _handleJoinSimulation(simulationID) {
-    const socket = this.props.socket;
-
-    const type = "request-simulation-join";
-    const content = {
-      simulationID: simulationID
-    }
-
-    UtilFunctions.sendSocketMessage(socket, type, content);
-  }
-
   _handlePositionSelect(position) {
     const f = this.props.handlePositionPreview;
     if (!f) {
@@ -119,34 +97,18 @@ export default class SimulationSettings extends React.Component {
     linkElement.click();
   }
 
-  renderJourneysList() {
+  render() {
+    const simID = this.props.activeSimulationID;
+    const hasSimulationStarted = simID !== "0";
+
+    const selectedCity = this.props.selectedCity;
+    const bounds = selectedCity ? selectedCity.bounds : null;
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
     return (
-      <ul>
-      {
-        allJourneys.map((journey, index) => {
-          return (
-            <li key={index}> { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } </li>)
-        })
-      }
-      </ul>
-    )
-  }
-
-  render() {
-    const cities = this.props.availableCities || [];
-
-    const simID = this.props.activeSimulationID;
-    const hasSimulationStarted = simID !== "0";
-
-    const selectedCity = this.state.selectedCity || cities[0];
-    const bounds = selectedCity ? selectedCity.bounds : null;
-
-    return (
       <div className="container">
-        <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
+        <JourneyList journeys={allJourneys}/>
         <JourneySettings 
           handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
@@ -158,10 +120,7 @@ export default class SimulationSettings extends React.Component {
           <div>Current Simulation ID: { simID }</div>
         }
         <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
-        <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
 
-        <h2> Journeys: </h2>
-        { this.renderJourneysList() }
         <button onClick={() => this._handleExportClick()}>Export</button>
       </div>
     )
