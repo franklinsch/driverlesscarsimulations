@@ -91,6 +91,7 @@ export default class LandmarkSearch extends React.Component {
 					<input
 						type='text'
 						className="form-group"
+            id="landmark-search"
             placeholder='Search name or address'
 						value={this.state.inputValue}
 						onChange={ (e) => { this.handleChange(e) }}
