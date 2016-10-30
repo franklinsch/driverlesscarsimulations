@@ -21,15 +21,9 @@ export default class Dropdown extends React.Component {
 
     return (
 			<div className="row">
-				<div className="col-sm-4">
-				</div>
-				<div className="col-sm-4">
-					<select className="form-control" onChange={(event) => this._onSelect(event)}>
-						{items}
-					</select>
-				</div>
-				<div className="col-sm-4">
-				</div>
+        <select className="form-control" onChange={(event) => this._onSelect(event)}>
+          {items}
+        </select>
 			</div>
 		);
   }

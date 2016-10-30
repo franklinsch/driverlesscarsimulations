@@ -91,13 +91,12 @@ export default class LandmarkSearch extends React.Component {
 					<input
 						type='text'
 						className="form-group"
+            id="landmark-search"
+            placeholder='Search name or address'
 						value={this.state.inputValue}
 						onChange={ (e) => { this.handleChange(e) }}
 						onKeyPress={ (e) => { this.handleSubmit(e) }}
 						/>
-				</div>
-				<div className="row">
-					<button className="btn btn-primary" onClick={ (e) => { this.handleSubmit(e) }} >Search</button>
 					<LandmarkSearchResults results={this.state.searchResults} handleResultSelect={(result) => { this._handleResultSelect(result) }}/>
 				</div>
       </div>
