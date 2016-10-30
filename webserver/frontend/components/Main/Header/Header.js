@@ -1,6 +1,23 @@
 import React from 'react';
+import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.js';
+import UtilFunctions from '../../Utils/UtilFunctions.js';
 
 export default class Header extends React.Component {
+  static propTypes = {
+    socket: React.PropTypes.object,
+    handleCityChange: React.PropTypes.func
+  }
+
+  _handleJoinSimulation(simulationID) {
+    const socket = this.props.socket;
+
+    const type = "request-simulation-join";
+    const content = {
+      simulationID: simulationID
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
 
   render() {
     return (
@@ -19,10 +36,8 @@ export default class Header extends React.Component {
                   </div>
               </li>
           </ul>
-          <form className="form-inline float-xs-right">
-              <input className="form-control" type="text" placeholder="Simulation ID"/>
-              <button className="btn btn-outline-success" type="submit">Join Simulation</button>
-          </form>
+        
+          <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
       </nav>
     )
   }

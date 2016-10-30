@@ -116,7 +116,9 @@ export default class Main extends React.Component {
 
     return (
       <div>
-        <Header />
+        <Header
+          socket={socket} 
+        />
          <div className="jumbotron">
           <div className="container">
             <div className="col-md-4 text-center">
@@ -126,7 +128,6 @@ export default class Main extends React.Component {
                 activeSimulationID={simulationID}
                 mapSelectedJourneys={mapSelectedJourneys}
                 handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
-                handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
               />
             </div>
             <div className="col-md-4 map">
