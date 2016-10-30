@@ -121,7 +121,7 @@ export default class Main extends React.Component {
         />
          <div className="jumbotron">
           <div className="container">
-            <div className="col-md-4 text-center">
+            <div className="col-md-4 text-center" id="simulation-settings">
               <SimulationSettings
                 socket={socket}
                 availableCities={availableCities}
@@ -130,9 +130,9 @@ export default class Main extends React.Component {
                 handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
               />
             </div>
-            <div className="col-md-4 map">
+            <div className="col-md-6 map" id="simulation-map">
               <SimulationMap
-                width={ 600 + 'px' }
+                width={ 680 + 'px' }
                 height={ 600 + 'px' }
                 bounds={ bounds }
                 simulationState= { simulationState }
