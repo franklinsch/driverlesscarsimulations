@@ -14,6 +14,13 @@ const db = require('./backend/db');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
 
+Simulation.remove({}, function(err) {
+  if (err) {
+    return;
+  }
+  console.log("Initial remove successful");
+});
+
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
