@@ -147,6 +147,8 @@ export default class SimulationSettings extends React.Component {
     return (
       <div className="container">
         <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
+        <h4> Journeys: </h4>
+        { this.renderJourneysList() }
         <JourneySettings 
           handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
@@ -160,8 +162,6 @@ export default class SimulationSettings extends React.Component {
         <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
         <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
 
-        <h2> Journeys: </h2>
-        { this.renderJourneysList() }
         <button onClick={() => this._handleExportClick()}>Export</button>
       </div>
     )
