@@ -63,10 +63,8 @@ export default class LandmarkSearch extends React.Component {
     let viewBox = "";
 
     if (bounds) {
-      viewBox = bounds.southWest.lng + "" + bounds.southWest.lat + "" + bounds.northEast.lng + "" + bounds.northWest.lat
+      viewBox = bounds.southWest.lng + "," + bounds.southWest.lat + "," + bounds.northEast.lng + "," + bounds.northEast.lat
     }
-
-    console.log(viewBox);
 
     $.ajax({
       url: "http://nominatim.openstreetmap.org/search",
