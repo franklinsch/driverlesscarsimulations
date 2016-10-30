@@ -1,10 +1,13 @@
 import React from 'react';
+import CustomPropTypes from '../../Utils/CustomPropTypes.js';
+import Dropdown from './Dropdown/Dropdown.jsx';
 import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.js';
 import UtilFunctions from '../../Utils/UtilFunctions.js';
 
 export default class Header extends React.Component {
   static propTypes = {
     socket: React.PropTypes.object,
+    availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     handleCityChange: React.PropTypes.func
   }
 
@@ -19,7 +22,13 @@ export default class Header extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  _handleCityChange(city) {
+    this.props.handleCityChange(city._id);
+  }
+
   render() {
+    const cities = this.props.availableCities || [];
+
     return (
         <nav className="navbar navbar-dark bg-primary">
           <a className="navbar-brand" href="#">SAVN</a>
@@ -27,13 +36,8 @@ export default class Header extends React.Component {
               <li className="nav-item active">
                   <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
               </li>
-              <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="http://example.com" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose map</a>
-                  <div className="dropdown-menu" aria-labelledby="supportedContentDropdown">
-                      <a className="dropdown-item" href="#">Action</a>
-                      <a className="dropdown-item" href="#">Another action</a>
-                      <a className="dropdown-item" href="#">Something else here</a>
-                  </div>
+              <li className="nav-item">
+                <Dropdown items={cities} onSelect={(city) => { this._handleCityChange(city) }} />
               </li>
           </ul>
         

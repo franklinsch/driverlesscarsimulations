@@ -1,5 +1,4 @@
 import React from 'react';
-import Dropdown from './Dropdown/Dropdown.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
@@ -8,7 +7,6 @@ import JourneyList from './JourneyList/JourneyList.js';
 export default class SimulationSettings extends React.Component {
   static propTypes = {
     socket: React.PropTypes.object,
-    availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     selectedCity: CustomPropTypes.city,
     activeSimulationID: React.PropTypes.string,
     mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
@@ -19,24 +17,15 @@ export default class SimulationSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCity: null,
       journeys: []
     }
-  }
-
-  handleCityChange(city) {
-    this.setState({
-      selectedCity: city,
-      journeys: []
-    })
-    this.props.handleCityChange(city._id);
   }
 
   handleSimulationStart(e) {
     e.preventDefault();
 
     const socket = this.props.socket;
-    const selectedCity = this.state && this.state.selectedCity || this.props.availableCities[0];
+    const selectedCity = this.props.selectedCity;
 
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
@@ -56,7 +45,7 @@ export default class SimulationSettings extends React.Component {
     e.preventDefault();
 
     const socket = this.props.socket;
-    const selectedCity = this.state && this.state.selectedCity || this.props.availableCities[0];
+    const selectedCity = this.props.selectedCity;
 
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
@@ -109,19 +98,16 @@ export default class SimulationSettings extends React.Component {
   }
 
   render() {
-    const cities = this.props.availableCities || [];
-
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
 
-    const selectedCity = this.state.selectedCity || cities[0];
+    const selectedCity = this.props.selectedCity;
     const bounds = selectedCity ? selectedCity.bounds : null;
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
     return (
       <div className="container">
-        <Dropdown items={cities} onSelect={(city) => { this.handleCityChange(city) }} />
         <JourneyList journeys={allJourneys}/>
         <JourneySettings 
           handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}

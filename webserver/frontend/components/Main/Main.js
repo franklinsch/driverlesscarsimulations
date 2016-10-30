@@ -105,6 +105,7 @@ export default class Main extends React.Component {
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
+    const selectedCity = availableCities && availableCities[this.state.selectedCityID];
     const socket = this.state.socket;
     const simulationID = this.state.simulationInfo.id;
 
@@ -118,14 +119,16 @@ export default class Main extends React.Component {
       <div>
         <Header
           socket={socket} 
+          availableCities={availableCities}
+          handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
         />
          <div className="jumbotron">
           <div className="container">
             <div className="row text-center">
               <SimulationSettings
                 socket={socket}
-                availableCities={availableCities}
                 activeSimulationID={simulationID}
+                selectedCity={selectedCity}
                 mapSelectedJourneys={mapSelectedJourneys}
                 handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
               />
