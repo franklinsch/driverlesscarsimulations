@@ -1,10 +1,12 @@
 import React from 'react';
+import CustomPropTypes from '../../../Utils/CustomPropTypes.js';
 import LandmarkSearch from './LandmarkSearch/LandmarkSearch.js';
 import JourneyImport from './JourneyImport/JourneyImport.js';
 
 export default class JourneySettings extends React.Component {
 
   static propTypes = {
+    bounds: CustomPropTypes.bounds,
     handleJourneysSelect: React.PropTypes.func,
     handlePositionSelect: React.PropTypes.func
   }
@@ -100,6 +102,8 @@ export default class JourneySettings extends React.Component {
     const destinationLat = this.state.destinationLat;
     const destinationLng = this.state.destinationLng;
 
+    const bounds = this.props.bounds;
+
     return (
       <div id="journey-settings">
 	      <div id="input-journeys">
@@ -119,6 +123,7 @@ export default class JourneySettings extends React.Component {
 				</div>
 	        <LandmarkSearch
 	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
+            boundLimit={bounds}
 	        />
         <JourneyImport 
           handleJourneysSubmit={(journeys) => this._handleJourneysFileImport(journeys)}
