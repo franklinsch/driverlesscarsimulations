@@ -146,22 +146,30 @@ export default class SimulationMap extends React.Component {
 
   }
 
+  componentDidUpdate() {
+    const map = this.refs.map.leafletElement;
+    const bounds = this.props.bounds;
+    const mapBounds = [bounds.southWest, bounds.northEast]
+
+    map.options.minZoom = 0;
+    map.fitBounds(mapBounds);
+    map.options.minZoom = map.getZoom();
+    map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
+  }
+
   render() {
     const style = {
       height: this.props.height || 300 + 'px',
       width: this.props.width || 300 + 'px'
     }
 
-    const bounds = this.props.bounds;
     const cars = this.props.simulationState.objects;
 
-    if (!bounds) {
+    if (!this.props.bounds) {
       return (
         <p> Loading map... </p>
       )
     }
-
-    const mapBounds = [bounds.southWest, bounds.northEast]
 
     const origin = this.state.origin;
     const destination = this.state.destination;
@@ -188,9 +196,9 @@ export default class SimulationMap extends React.Component {
 
     return (
       <Map 
-        bounds={mapBounds} 
         style={style} 
         onClick={(e) => { this._handleMapClick(e) }}
+        ref='map'
         closePopupOnClick={false}
       >
         <TileLayer
