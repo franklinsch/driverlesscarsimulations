@@ -190,7 +190,9 @@ def setupCars(numCars, baseRoute):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': car['id'], 'type': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}}]
+    res += [{'id': car['id'], 'type': car['type'], 'speed': car['speed'],
+      'direction': car['direction'], 'position': {'lat': car['position'][1],
+        'lng': car['position'][0]},'journey': car['baseRoute']}]
   return res
 
 if(len(sys.argv) != 2):
