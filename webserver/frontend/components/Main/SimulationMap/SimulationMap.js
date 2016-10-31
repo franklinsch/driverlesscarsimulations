@@ -154,6 +154,7 @@ export default class SimulationMap extends React.Component {
     map.options.minZoom = 0;
     map.fitBounds(mapBounds);
     map.options.minZoom = map.getZoom();
+    map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
   }
 
   render() {
