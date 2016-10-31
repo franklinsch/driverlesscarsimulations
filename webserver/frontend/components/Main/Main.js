@@ -112,7 +112,6 @@ export default class Main extends React.Component {
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
     const selectedCity = this._cityWithID(this.state.selectedCityID);
-    console.log(selectedCity);
     const bounds = selectedCity ? selectedCity.bounds : null;
 
     return (
