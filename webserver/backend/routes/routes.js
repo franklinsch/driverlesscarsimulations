@@ -32,13 +32,16 @@ router.route('/simulations/:simulationID/journeys')
   })
   .post((req, res) => {
     const id = req.params.simulationID;
-    const journeys = req.body.journeys;
-    const updateInfo = {
-      $push: { journeys: journeys }
+    const journeys = req.body;
+    const updateInfo = { $push: { journeys: { $each: [{carID: 4}, {carID: 11}] }}};
+    const options = {
+      upsert: true,
+      returnNewDocument: true
     };
-    Simulation.update({ _id: id }, updateInfo)
+    console.log(updateInfo);
+    Simulation.findOneAndUpdate({ _id: id }, updateInfo, options)
     .then((result) => {
-      res.sendStatus(200);
+      res.send(result);
     })
     .catch((err) => {
       res.send(err);
