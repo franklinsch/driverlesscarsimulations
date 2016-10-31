@@ -76,13 +76,12 @@ export default class Main extends React.Component {
     })
   }
 
-  _boundsForCity() {
+  _cityWithID(id) {
     const availableCities = this.state.availableCities;
-    const selectedCityID = this.state.selectedCityID;
     if (availableCities) {
       for (const city of availableCities) {
-        if (city._id === selectedCityID) {
-          return city.bounds;
+        if (city._id === id) {
+          return city;
         }
       }
     }
@@ -105,15 +104,16 @@ export default class Main extends React.Component {
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
-    const selectedCity = availableCities && availableCities[this.state.selectedCityID];
     const socket = this.state.socket;
     const simulationID = this.state.simulationInfo.id;
 
     const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
 
-    const bounds = this._boundsForCity();
-
     const previewMarkerPosition = this.state.previewMarkerPosition;
+
+    const selectedCity = this._cityWithID(this.state.selectedCityID);
+    console.log(selectedCity);
+    const bounds = selectedCity ? selectedCity.bounds : null;
 
     return (
       <div>
