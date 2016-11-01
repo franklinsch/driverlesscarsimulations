@@ -34,7 +34,10 @@ const simulationSchema = mongoose.Schema({
     timestamp: String,
     objects: [{
       id: String,
-      type: String,
+      objectType: String,
+      speed: Number,
+      direction: Number,
+      route: [{}],
       position: {
         lat: Number,
         lng: Number
