@@ -228,6 +228,7 @@ frameworkSocketServer.on('request', function(request) {
       simulation.save((error) => {
         if (error) {
           console.log("Could not update simulation");
+          return
         }
 
         console.log("Updated simulationState");
@@ -244,8 +245,6 @@ frameworkSocketServer.on('request', function(request) {
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
-
-      console.log(messageData);
 
       switch(messageData.type) {
       case "simulation-start":
