@@ -14,7 +14,7 @@ export default class Main extends React.Component {
 
     const path = window.location.pathname;
     let simID = "0";
-    if (/^\/simulation\/([a-z]|[0-9])+/.test(path)) {
+    if (/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
       const tokens = path.split("/");
       simID = tokens[tokens.length - 1];
     }
