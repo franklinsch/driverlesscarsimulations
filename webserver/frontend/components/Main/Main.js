@@ -11,6 +11,14 @@ export default class Main extends React.Component {
     super(props);
 
     const host = window.location.hostname;
+
+    const path = window.location.pathname;
+    let simID = "0";
+    if (/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
+      const tokens = path.split("/");
+      simID = tokens[tokens.length - 1];
+    }
+
     var socket = new WebSocket(`ws://${host}:3000`);
 
     socket.onopen = (event) => {
@@ -20,6 +28,9 @@ export default class Main extends React.Component {
         ...UtilFunctions.socketMessage(),
         type:"request-available-cities"
       }))
+      if (simID != "0") {
+        this.handleJoinSimulation(simID);
+      }
     }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
@@ -76,6 +87,23 @@ export default class Main extends React.Component {
     })
   }
 
+  handleJoinSimulation(simulationID) {
+    const socket = this.state.socket;
+
+    const type = "request-simulation-join";
+    const content = {
+      simulationID: simulationID
+    }
+
+    var message = JSON.stringify({
+      ...UtilFunctions.socketMessage(),
+      type: type,
+      content: content
+    })
+
+    socket.send(message);
+  }
+
   _cityWithID(id) {
     const availableCities = this.state.availableCities;
     if (availableCities) {
@@ -120,6 +148,7 @@ export default class Main extends React.Component {
           socket={socket} 
           availableCities={availableCities}
           handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
+          handleJoinSimulation={(simulationId => {this.handleJoinSimulation(simulationId)})}
         />
          <div className="jumbotron">
           <div className="container">
