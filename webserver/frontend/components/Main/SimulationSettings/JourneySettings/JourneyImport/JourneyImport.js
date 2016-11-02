@@ -12,7 +12,7 @@ export default class JourneyImport extends React.Component {
     super(props);
 
     this.state = {
-      file: null
+      showView: false
     }
   }
 
@@ -48,15 +48,6 @@ export default class JourneyImport extends React.Component {
       return
     }
 
-    this.setState({
-      file: e.target.files[0]
-    })
-  }
-
-  _handleFileSubmit(e) {
-    e.preventDefault();
-
-    const file = this.state.file;
     const reader = new FileReader(); 
 
     reader.onloadend = () => {
@@ -67,12 +58,32 @@ export default class JourneyImport extends React.Component {
     reader.readAsText(file);
   }
 
+  _toggleView(e) {
+    console.log("here");
+    e.preventDefault(); 
+
+    this.setState({
+      showView: !this.state.showView
+    })
+
+    console.log(this.state.showView)
+  }
+
   render() {
     return (
-      <form>
-        <input type="file" accept="application/json" onChange={(e) => this._handleFileChange(e)}/>
-        <button type="submit" onClick={(e) => this._handleFileSubmit(e)}> Import Journeys </button>
-      </form>
+      <div className="import-journeys">
+        <button className="btn btn-secondary" onClick={::this._toggleView}>Import journeys</button>
+        { this.state.showView && 
+          <div>
+            <form>
+              <div className="form-group">
+                <label htmlFor="inputFile">Journey import</label>
+                <input id="inputFile" className="form-control input-sm" type="file" accept="application/json" onChange={(e) => this._handleFileChange(e)}/>
+              </div>
+            </form>
+          </div>
+        }
+      </div>
     )
   }
 }
