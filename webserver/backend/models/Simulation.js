@@ -1,21 +1,32 @@
 const mongoose = require('mongoose');
-const Journey = require('./Journey');
 
 const simulationSchema = mongoose.Schema({
-  city: {
-    name: String,
-    bounds: {
-      northEast: {
+  simulationStartParameters: {
+    city: {
+      name: String,
+      bounds: {
+        northEast: {
+          lat: Number,
+          lng: Number
+        },
+        southWest: {
+          lat: Number,
+          lng: Number
+        }
+      }
+    },
+    journeys: [{
+      carID: Number,
+      origin: {
         lat: Number,
         lng: Number
       },
-      southWest: {
+      destination: {
         lat: Number,
         lng: Number
       }
-    }
+    }]
   },
-  journeys: [Journey.schema],
   frontendConnectionIndices: [Number],
   frameworkConnectionIndex: Number,
   simulationStates: [{
