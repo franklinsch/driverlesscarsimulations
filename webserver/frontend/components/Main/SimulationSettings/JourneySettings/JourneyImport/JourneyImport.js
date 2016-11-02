@@ -5,7 +5,8 @@ import { Validator } from 'jsonschema';
 export default class JourneyImport extends React.Component {
 
   static propTypes = {
-    handleJourneysSubmit: React.PropTypes.func.isRequired
+    handleJourneysSubmit: React.PropTypes.func.isRequired,
+    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
   }
 
   constructor(props) {
@@ -67,10 +68,26 @@ export default class JourneyImport extends React.Component {
 
   }
 
+  _handleExportClick() {
+    const journeys = this.props.journeys;
+    const data = JSON.stringify(journeys);
+
+    const url = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
+
+    let exportFileDefaultName = 'journeys.json';
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', url);
+    linkElement.setAttribute('target', '_blank');
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  }
+
+
   render() {
     return (
       <div id="journeys-import">
-        <button className="btn btn-secondary" onClick={::this._toggleView}>Import journeys</button>
+        <button className="btn btn-secondary" onClick={::this._toggleView}>Import/Export Journeys</button>
         { this.state.showView && 
           <div>
             <form>
@@ -79,6 +96,7 @@ export default class JourneyImport extends React.Component {
                 <input id="inputFile" className="form-control input-sm" type="file" accept="application/json" onChange={(e) => this._handleFileChange(e)}/>
               </div>
             </form>
+            <button className="btn btn-sm btn-info" onClick={() => this._handleExportClick()}>Export</button>
           </div>
         }
       </div>
