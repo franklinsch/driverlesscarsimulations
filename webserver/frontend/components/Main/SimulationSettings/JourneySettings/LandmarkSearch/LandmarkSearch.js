@@ -90,7 +90,7 @@ export default class LandmarkSearch extends React.Component {
 				<div className="row">
 					<input
 						type='text'
-						className="form-group"
+						className="form-control"
             id="landmark-search"
             placeholder='Search name or address'
 						value={this.state.inputValue}

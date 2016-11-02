@@ -113,14 +113,15 @@ export default class SimulationSettings extends React.Component {
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
           bounds={bounds}
         />
-      <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
-        {
-          hasSimulationStarted &&
-          <div>Current Simulation ID: { simID }</div>
-        }
-        <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
-
-        <button onClick={() => this._handleExportClick()}>Export</button>
+        <button className="btn btn-sm btn-info" onClick={() => this._handleExportClick()}>Export</button>
+        <div className="row">
+          <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
+            {
+              hasSimulationStarted &&
+              <div>Current Simulation ID: { simID }</div>
+            }
+            <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
+        </div>
       </div>
     )
   }

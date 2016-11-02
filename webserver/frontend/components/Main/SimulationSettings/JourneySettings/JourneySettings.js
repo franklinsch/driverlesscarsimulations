@@ -124,7 +124,7 @@ export default class JourneySettings extends React.Component {
 	        />
 	        <form>
 	          <div className="form-group">
-              <button onClick={(e) => this._toggleJourneyManualAddForm(e)}>Manually add journey</button>
+              <button className="btn btn-secondary" onClick={(e) => this._toggleJourneyManualAddForm(e)}>Manually add journey</button>
               { showJourneyManualAddForm &&
                 <div className="row">
                   <input className="form-group" value={originLat} onChange={(e) => {this._handleOriginLatChange(e)}}/>
