@@ -23,7 +23,7 @@ export default class Main extends React.Component {
     }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
-    socket.onmessage = (message) => { this.handleMessageReceive(message) } 
+    socket.onmessage = (message) => { this.handleMessageReceive(message) }
     this.state = {
       selectedCityID: 0,
       socket: socket,
@@ -53,10 +53,13 @@ export default class Main extends React.Component {
     const messageData = JSON.parse(message.data);
 
     if (messageData.type === "available-cities") {
+      if (this.state.simulationInfo.id == 0) {
+        this._startInitialSimulation(messageData.content[0]._id);
+      }
       this.setState({
         availableCities: messageData.content,
         selectedCityID: messageData.content[0]._id
-      })
+      });
     } else if (messageData.type === "simulation-id") {
       this.setState({
         simulationInfo: messageData.content
@@ -99,6 +102,18 @@ export default class Main extends React.Component {
     })
   }
 
+  _startInitialSimulation(cityId) {
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const type = "request-simulation-start";
+    const initialSettings = {
+      selectedCity: cityId,
+      journeys: allJourneys
+    }
+    const socket = this.state.socket;
+    UtilFunctions.sendSocketMessage(socket, type, initialSettings);
+  }
+
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
@@ -117,7 +132,7 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
-          socket={socket} 
+          socket={socket}
           availableCities={availableCities}
           handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
         />
