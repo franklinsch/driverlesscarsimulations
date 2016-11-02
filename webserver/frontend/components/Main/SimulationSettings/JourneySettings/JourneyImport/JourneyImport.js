@@ -71,7 +71,7 @@ export default class JourneyImport extends React.Component {
 
   render() {
     return (
-      <div className="import-journeys">
+      <div id="journeys-import">
         <button className="btn btn-secondary" onClick={::this._toggleView}>Import journeys</button>
         { this.state.showView && 
           <div>
