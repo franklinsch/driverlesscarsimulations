@@ -59,7 +59,6 @@ export default class JourneyImport extends React.Component {
   }
 
   _toggleView(e) {
-    console.log("here");
     e.preventDefault(); 
 
     this.setState({
