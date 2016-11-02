@@ -148,6 +148,7 @@ export default class Main extends React.Component {
           socket={socket} 
           availableCities={availableCities}
           handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
+          handleJoinSimulation={(simulationId => {this.handleJoinSimulation(simulationId)})}
         />
          <div className="jumbotron">
           <div className="container">
