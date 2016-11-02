@@ -82,7 +82,7 @@ export default class SimulationSettings extends React.Component {
   }
 
   _handleExportClick() {
-    const journeys = this.state.journeys;
+    const journeys = this.state.journeys.concat(this.props.mapSelectedJourneys);
     const data = JSON.stringify(journeys);
 
     const url = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
