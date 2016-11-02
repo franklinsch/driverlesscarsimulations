@@ -251,8 +251,10 @@ frameworkSocketServer.on('request', function(request) {
       switch(messageData.type) {
       case "simulation-start":
         _handleSimulationStart(messageData);
+        break;
       case "simulation-state":
         _handleSimulationStateUpdate(messageData);
+        break;
       }
     }
     else if (message.type === 'binary') {
