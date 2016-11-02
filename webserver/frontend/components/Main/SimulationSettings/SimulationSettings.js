@@ -81,21 +81,6 @@ export default class SimulationSettings extends React.Component {
     f(position);
   }
 
-  _handleExportClick() {
-    const journeys = this.state.journeys.concat(this.props.mapSelectedJourneys);
-    const data = JSON.stringify(journeys);
-
-    const url = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
-
-    let exportFileDefaultName = 'journeys.json';
-
-    let linkElement = document.createElement('a');
-    linkElement.setAttribute('href', url);
-    linkElement.setAttribute('target', '_blank');
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-  }
-
   render() {
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
@@ -112,8 +97,8 @@ export default class SimulationSettings extends React.Component {
           handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
           bounds={bounds}
+          journeys={allJourneys}
         />
-        <button className="btn btn-sm btn-info" onClick={() => this._handleExportClick()}>Export</button>
         <div className="row">
           <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
             {

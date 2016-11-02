@@ -8,7 +8,8 @@ export default class JourneySettings extends React.Component {
   static propTypes = {
     bounds: CustomPropTypes.bounds,
     handleJourneysSelect: React.PropTypes.func,
-    handlePositionSelect: React.PropTypes.func
+    handlePositionSelect: React.PropTypes.func,
+    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
   }
 
   constructor(props) {
@@ -114,6 +115,8 @@ export default class JourneySettings extends React.Component {
     const bounds = this.props.bounds;
     const showJourneyManualAddForm = this.state.showJourneyManualAddForm;
 
+    const journeys = this.props.journeys;
+
     return (
       <div id="journey-settings">
 	      <div id="input-journeys">
@@ -138,9 +141,9 @@ export default class JourneySettings extends React.Component {
 	        </form>
         <JourneyImport 
           handleJourneysSubmit={(journeys) => this._handleJourneysFileImport(journeys)}
+          journeys={journeys}
         />
       </div>
     )
   }
-
 }
