@@ -180,8 +180,8 @@ export default class SimulationMap extends React.Component {
     }
 
     const carIcon = L.icon({
-      iconUrl: "http://image.flaticon.com/icons/svg/226/226604.svg",
-      iconSize: [22, 22],
+      iconUrl: "car-icon.png",
+      iconSize: [35, 35],
     })
 
     const originMarkerIcon = L.icon({
