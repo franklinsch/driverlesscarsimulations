@@ -65,7 +65,6 @@ export default class JourneyImport extends React.Component {
       showView: !this.state.showView
     })
 
-    console.log(this.state.showView)
   }
 
   render() {
