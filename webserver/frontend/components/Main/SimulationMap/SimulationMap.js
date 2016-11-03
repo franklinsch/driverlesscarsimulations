@@ -183,7 +183,7 @@ export default class SimulationMap extends React.Component {
     }
 
     const carIcon = L.icon({
-      iconUrl: "car-icon.png",
+      iconUrl: "/car-icon.png",
       iconSize: [35, 35],
     })
 
