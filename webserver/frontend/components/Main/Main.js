@@ -39,7 +39,7 @@ export default class Main extends React.Component {
       selectedCityID: 0,
       socket: socket,
       simulationInfo: {
-        id: "0",
+        id: simID,
         cityID: "0"
       },
       simulationState: {
@@ -76,6 +76,12 @@ export default class Main extends React.Component {
     } else if (messageData.type === "simulation-state") {
       this.setState({
         simulationState: messageData.content
+      });
+    } else if (messageData.type === "simulation-start-parameters") {
+      const newSimulationInfo = this.state.simulationInfo;
+      newSimulationInfo.id = messageData.content.simID;
+      this.setState({
+        simulationInfo: newSimulationInfo
       });
     }
   }
