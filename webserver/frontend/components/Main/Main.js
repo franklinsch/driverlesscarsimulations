@@ -48,7 +48,7 @@ export default class Main extends React.Component {
         formattedTimestamp: "00:00:00",
         objects: [{
           id: "0",
-          type: "car",
+          objectType: "car",
           speed: 50,
           direction: 45,
           position: {
