@@ -3,6 +3,7 @@ import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
 import JourneyList from './JourneyList/JourneyList.js';
+import SpeedSetting from './SpeedSetting/SpeedSetting.js';
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
@@ -85,6 +86,7 @@ export default class SimulationSettings extends React.Component {
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
 
+    const socket = this.props.socket;
     const selectedCity = this.props.selectedCity;
     const bounds = selectedCity ? selectedCity.bounds : null;
     const journeys = this.state.journeys || [];
@@ -105,7 +107,12 @@ export default class SimulationSettings extends React.Component {
               hasSimulationStarted &&
               <div>Current Simulation ID: { simID }</div>
             }
-            <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
+          <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
+          <SpeedSetting 
+            hidden={!hasSimulationStarted}
+            socket={socket}
+          />
+
         </div>
       </div>
     )
