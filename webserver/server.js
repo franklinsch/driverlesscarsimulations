@@ -71,7 +71,7 @@ frontendSocketServer.on('request', function(request) {
       if (error) {
         return console.error(error);
       }
-      frontendConnections.push(connection)
+      frontendConnections.push(connection);
     });
 
     callback(null, simulation._id, data.selectedCity._id);
@@ -184,7 +184,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId
 
-    Simulation.findByIdAndUpdate(simulationID, { $set: { frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
+    Simulation.findByIdAndUpdate(simulationID, { $set: { timeslice: message.content.timeslice, frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",

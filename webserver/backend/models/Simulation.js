@@ -27,6 +27,7 @@ const simulationSchema = mongoose.Schema({
       }
     }]
   },
+  timeslice: Number,
   frontendConnectionIndices: [Number],
   frameworkConnectionIndex: Number,
   simulationStates: [{
