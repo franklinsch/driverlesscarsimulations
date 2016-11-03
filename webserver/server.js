@@ -97,7 +97,8 @@ frontendSocketServer.on('request', function(request) {
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
         content: {
-          simulationStartParameters: simulation.simulationStartParameters
+          simulationStartParameters: simulation.simulationStartParameters,
+          simID: simulation._id
         }
       }));
     })
