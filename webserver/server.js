@@ -247,9 +247,14 @@ frameworkSocketServer.on('request', function(request) {
 
         console.log("Updated simulationState");
         for (let index of simulation.frontendConnectionIndices) {
+          frontendInfo[index]['timestamp'] += frontendInfo[index]['speed']
+          if (frontendInfo[index]['timestamp'] > message.content.timestamp) {
+            frontendInfo[index]['timestamp'] = message.content.timestamp;
+          }
+          const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
           frontendConnections[index].send(JSON.stringify({
             type: "simulation-state",
-            content: message.content
+            content: simulation.simulationStates[stateIndex]
           }))
         }
       })
