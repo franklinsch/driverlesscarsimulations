@@ -1,4 +1,5 @@
 import React from 'react';
+import UtilFunctions from '../../..//Utils/UtilFunctions.js';
 import CustomPropTypes from '../../../Utils/CustomPropTypes.js';
 
 export default class SpeedSetting extends React.Component {
@@ -18,9 +19,15 @@ export default class SpeedSetting extends React.Component {
   _handleSpeedChangeSubmit(e) {
     e.preventDefault();
 
-    const requestedSpeed = this.requestedSpeed;
+    const socket = this.props.socket;
+    const requestedSpeed = this.state.requestedSpeed;
 
-    
+    const type = 'request-simulation-speed-change';
+    const content = {
+      simulationSpeed: parseFloat(requestedSpeed)
+    };
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
   _handleRequestedSpeedChange(e) {
