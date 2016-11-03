@@ -104,13 +104,12 @@ def scale(v, s):
 
 def scheduleNewRoute(car):
   start = car['baseRoute'][0]
-  if (start in locked_nodes):
+  if (isNodeLocked(start)):
     return False
   car['route'] = deepcopy(car['baseRoute'])
   car['position'] = car['baseRoute'][0]
   car['direction'] = get_direction(car['route'][0], car['route'][1])
-  car['lockedNode'] = len(locked_nodes)
-  locked_nodes.append(start)
+  car['lockedNode'] = start
   return True
 
 #def moveCar(car):
@@ -151,15 +150,18 @@ def scheduleNewRoute(car):
 #    else:
 #      car['direction'] = get_direction(start, end)
 
+def isNodeLocked(node):
+  for car in state:
+    if car['lockedNode'] == node:
+      return True
+  return False
+
 def switchNodeLock(car, start, end):
-  if (locked_nodes[car['lockedNode']] == start):
-    if (end in locked_nodes):
+  if (car['lockedNode'] == start):
+    if (isNodeLocked(end)):
       return False
 
-    locked_nodes.append(end)
-    del locked_nodes[car['lockedNode']]
-    car['lockedNode'] = len(locked_nodes)
-
+    car['lockedNode'] = end
   return True
 
 
