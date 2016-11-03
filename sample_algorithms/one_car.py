@@ -198,6 +198,6 @@ if(len(sys.argv) != 2):
 
 simulationId = sys.argv[1]
 savn = ConnectionAssistant(simulationId)
-savn.initSession()
+savn.initSession(TIMESLICE)
 
 sys.exit(0)

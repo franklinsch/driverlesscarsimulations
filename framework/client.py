@@ -41,8 +41,8 @@ class SAVNConnectionAssistant:
     message = await self.messageQueue.get()
     return message
 
-  async def startConnection(self):
-    packet = {'type': 'simulation-start', 'content': {'simulationId': self.simulationId}}
+  async def startConnection(self, timeslice):
+    packet = {'type': 'simulation-start', 'content': {'simulationId': self.simulationId, 'timeslice': timeslice}}
     await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):
@@ -91,11 +91,11 @@ class SAVNConnectionAssistant:
       self.handleSimulationDataUpdate(packet["content"])
 
 
-  def initSession(self):
+  def initSession(self, timeslice):
     async def coro():
       async with websockets.connect(HOST) as websocket:
         self.ws = websocket
-        await self.startConnection()
+        await self.startConnection(timeslice)
         await self.handlerLoop()
 
     loop.run_until_complete(coro())
