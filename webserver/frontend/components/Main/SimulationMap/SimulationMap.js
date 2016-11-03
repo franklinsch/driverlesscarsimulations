@@ -196,7 +196,7 @@ export default class SimulationMap extends React.Component {
 
     return (
       <div>
-      <p> Simulation time: { this.props.simulationState.timestamp } </p>
+      <p> Simulation time: { this.props.simulationState.formattedTimestamp } </p>
       <Map 
         style={style} 
         onClick={(e) => { this._handleMapClick(e) }}
