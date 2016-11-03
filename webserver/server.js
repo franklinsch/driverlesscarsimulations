@@ -247,8 +247,12 @@ frameworkSocketServer.on('request', function(request) {
 
         console.log("Updated simulationState");
         for (let index of simulation.frontendConnectionIndices) {
-          frontendInfo[index]['timestamp'] += frontendInfo[index]['speed']
-          if (frontendInfo[index]['timestamp'] > message.content.timestamp) {
+          if (frontendInfo[index]['speed']) {
+            frontendInfo[index]['timestamp'] += frontendInfo[index]['speed']
+            if (frontendInfo[index]['timestamp'] > message.content.timestamp) {
+              frontendInfo[index]['timestamp'] = message.content.timestamp;
+            }
+          } else {
             frontendInfo[index]['timestamp'] = message.content.timestamp;
           }
           const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
