@@ -31,6 +31,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
                 {'simulationId': self.connection.simulationId,
                  'id': str(timestamp),
                  'timestamp': timestamp,
+                 'formattedTimestamp': str(timestamp),
                  'objects': state }}
     self.connection.updateCarStates(timestamp, state)
     message = self.loop.run_until_complete(self.connection.fetchMessage())
@@ -75,13 +76,3 @@ class TestFrameworkClientMethods(unittest.TestCase):
     packet = {'type': 'simulation-update', 'content': {}}
     self.connection.onMessage(packet)
     self.connection.handleSimulationDataUpdate.assert_called_with(packet['content'])
-
-
-
-
-
-
-
-
-
-
