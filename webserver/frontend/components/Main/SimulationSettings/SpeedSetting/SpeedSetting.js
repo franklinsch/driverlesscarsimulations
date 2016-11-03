@@ -16,51 +16,40 @@ export default class SpeedSetting extends React.Component {
     }
   }
 
-  static speeds = [0.5, 1, 2, 4, 8, 20, 50]
-
-  _handleSpeedChangeSubmit() {
-    const socket = this.props.socket;
-    const requestedSpeed = this.state.requestedSpeed;
-
-    const type = 'request-simulation-speed-change';
-    const content = {
-      simulationSpeed: requestedSpeed
-    };
-
-    UtilFunctions.sendSocketMessage(socket, type, content);
-  }
-
   _handleRequestedSpeedChange(e) {
     const value = e.target.value;
 
     let speed = 1;
 
-    if (value < 5) {
+    if (value < 4) {
       speed = value / 4;
-    } else if (value > 5) {
-      speed = Math.pow(2, value - 5);
+    } else if (value > 4) {
+      speed = Math.pow(2, value - 4);
     }
-
-    //0-5: 0.0 0.25 0.5 0.75
-    //5: 1
-    //5-10: 2 4 8 16
 
     this.setState({
       requestedSpeed: speed
     })
 
-    this._handleSpeedChangeSubmit();
+    const socket = this.props.socket;
+
+    const type = 'request-simulation-speed-change';
+    const content = {
+      simulationSpeed: speed
+    };
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
   render() {
     const requestedSpeed = this.state.requestedSpeed;
 
-    let sliderValue = 5;
+    let sliderValue = 4;
 
     if (requestedSpeed < 1) {
       sliderValue = requestedSpeed * 4;
     } else if (requestedSpeed > 1) {
-      sliderValue = Math.log2(requestedSpeed) + 5;
+      sliderValue = Math.log2(requestedSpeed) + 4;
     }
 
     return (
@@ -68,7 +57,7 @@ export default class SpeedSetting extends React.Component {
         <form>
           <div className="form-group">
             <div className="row">
-              <input className="form-group" type="range" min={0} max={10} step={1} value={sliderValue} onChange={(e) => {this._handleRequestedSpeedChange(e)}}/>
+              <input className="form-group" type="range" min={0} max={9} step={1} value={sliderValue} onChange={(e) => {this._handleRequestedSpeedChange(e)}}/>
               <p>{requestedSpeed + "x"}</p>
             </div>
           </div>
