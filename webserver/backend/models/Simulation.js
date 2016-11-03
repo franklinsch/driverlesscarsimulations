@@ -31,7 +31,8 @@ const simulationSchema = mongoose.Schema({
   frameworkConnectionIndex: Number,
   simulationStates: [{
     id: String,
-    timestamp: String,
+    formattedTimestamp: String,
+    timestamp: Number,
     objects: [{
       id: String,
       objectType: String,

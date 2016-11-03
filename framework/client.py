@@ -22,6 +22,7 @@ class SAVNConnectionAssistant:
               'content':
                 {'simulationId': self.simulationId,
                  'id': str(timestamp),
+                 'formattedTimestamp': str(timestamp),
                  'timestamp': timestamp,
                  'objects': state }}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),

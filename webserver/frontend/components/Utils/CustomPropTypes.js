@@ -49,7 +49,8 @@ export default class CustomPropTypes {
 
   static _simulationState = {
     id: React.PropTypes.string,
-    timestamp: React.PropTypes.string,
+    timestamp: React.PropTypes.number,
+    formattedTimestamp: React.PropTypes.string,
     objects: React.PropTypes.arrayOf(CustomPropTypes.simulationObject)
   }
 

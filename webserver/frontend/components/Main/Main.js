@@ -44,7 +44,8 @@ export default class Main extends React.Component {
       },
       simulationState: {
         id: "0",
-        timestamp: "00:00:00",
+        timestamp: 0,
+        formattedTimestamp: "00:00:00",
         objects: [{
           id: "0",
           type: "car",
