@@ -46,7 +46,8 @@ class SAVNConnectionAssistant:
     await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):
-    while True:
+    #We handle the connection whilst the simulation is alive
+    while self.alive:
       await self.handler()
 
   async def handler(self):
@@ -54,6 +55,12 @@ class SAVNConnectionAssistant:
       producer_task = asyncio.ensure_future(self.fetchMessage())
       done, pending = await asyncio.wait([listener_task, producer_task],
                                          return_when=asyncio.FIRST_COMPLETED)
+      #if the connection is dead we will reach this point
+      if not self.alive:
+        for fut in pending:
+          fut.cancel()
+        return
+
       if listener_task in done:
         message = listener_task.result()
         packet = json.loads(message)
@@ -87,6 +94,12 @@ class SAVNConnectionAssistant:
       self.handleSimulationStart(packet["content"])
     elif isClose():
       self.handleSimulationStop(packet["content"])
+      #At this point the actual algorithm must have made sure it will terminate
+      self.alive = False
+      #The connection is officialy dead we need to terminate the handling loop,
+      #to achieve this we artificially populate the message queue 
+      asyncio.run_coroutine_threadsafe(self.messageQueue.put("close"),
+      loop)
     elif isUpdate():
       self.handleSimulationDataUpdate(packet["content"])
 
@@ -95,8 +108,12 @@ class SAVNConnectionAssistant:
     async def coro():
       async with websockets.connect(HOST) as websocket:
         self.ws = websocket
-        await self.startConnection(timeslice)
+        await self.startConnection()
+        self.alive = True
         await self.handlerLoop()
 
     loop.run_until_complete(coro())
 
+if __name__ == "__main__":
+  savn = SAVNConnectionAssistant(42)
+  savn.initSession()
