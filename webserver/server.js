@@ -37,6 +37,7 @@ const server = app.listen(config.port, () => {
 });
 
 const frontendConnections = []
+const frontendInfo = []
 const frameworkConnections = []
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
@@ -72,6 +73,7 @@ frontendSocketServer.on('request', function(request) {
         return console.error(error);
       }
       frontendConnections.push(connection);
+      frontendInfo.push({'timestamp': 0, 'speed': null});
     });
 
     callback(null, simulation._id, data.selectedCity._id);
@@ -90,6 +92,7 @@ frontendSocketServer.on('request', function(request) {
         return
       }
       frontendConnections.push(connection);
+      frontendInfo.push({'timestamp': 0, 'speed': null});
 
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
@@ -120,6 +123,11 @@ frontendSocketServer.on('request', function(request) {
     });
   }
 
+  function _handleRequestSimulationSpeedChange(message) {
+    let index = frontendConnections.indexOf(connection);
+    frontendInfo[index]['speed'] = message.content.simulationSpeed;
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
 
@@ -146,6 +154,9 @@ frontendSocketServer.on('request', function(request) {
       case "request-simulation-update":
         _handleRequestEventUpdate(messageData);
         break;
+      case "request-simulation-speed-change":
+        _handleRequestSimulationSpeedChange(messageData);
+        break;
       }
     }
     else if (message.type === 'binary') {
@@ -158,6 +169,7 @@ frontendSocketServer.on('request', function(request) {
     let index = frontendConnections.indexOf(connection);
     if (index >= 0) {
       delete frontendConnections[index];
+      delete frontendInfo[index];
 
       Simulation.findOneAndUpdate({ frontendConnectionIndices: index }, { $pull: { frontendConnectionIndices: index }}, function (error, simulation) {
         if (error || !simulation) {
