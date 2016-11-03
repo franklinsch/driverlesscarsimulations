@@ -149,12 +149,15 @@ export default class SimulationMap extends React.Component {
   componentDidUpdate() {
     const map = this.refs.map.leafletElement;
     const bounds = this.props.bounds;
-    const mapBounds = [bounds.southWest, bounds.northEast]
+    const mapBounds = [bounds.southWest, bounds.northEast];
 
-    map.options.minZoom = 0;
-    map.fitBounds(mapBounds);
-    map.options.minZoom = map.getZoom();
-    map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
+    if (this.bounds != bounds) {
+      map.options.minZoom = 0;
+      map.fitBounds(mapBounds);
+      map.options.minZoom = map.getZoom();
+      map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
+      this.bounds = bounds;
+    }
   }
 
   render() {
