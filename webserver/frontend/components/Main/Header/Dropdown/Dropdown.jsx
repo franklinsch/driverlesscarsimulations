@@ -9,7 +9,6 @@ export default class Dropdown extends React.Component {
 
   _onSelect(event) {
     let item = this.props.items[event.target.value];
-		console.log("HellO");
     return this.props.onSelect(item);
   }
 
