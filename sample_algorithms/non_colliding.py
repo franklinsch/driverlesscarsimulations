@@ -15,8 +15,8 @@ locked_nodes = []
 
 SLEEP_TIME = 1
 TIMESLICE = 1
-CONST_SPEED_KM_H = 40
-CONST_SPEED = CONST_SPEED_KM_H * (1000 / 3600)
+MAX_SPEED_KM_H = 40
+MAX_SPEED = MAX_SPEED_KM_H * (1000 / 3600)
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
 
@@ -89,9 +89,13 @@ def preprocess(route):
   for i in range(len(route)-1):
     start = route[i]
     end = route[i+1]
+    #node = get_node(start, end)
     dist = get_distance(start, end)
-    time = dist/CONST_SPEED
-    end.append({'timeLeft': time, 'totalTime': time})
+    time = dist/MAX_SPEED
+    maxSpeed = MAX_SPEED
+    #if 'maxSpeed' in node:
+    #  maxSpeed = node['maxSpeed']
+    end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed})
 
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
@@ -150,20 +154,22 @@ def scheduleNewRoute(car):
 #    else:
 #      car['direction'] = get_direction(start, end)
 
+def isEqualNodes(node1, node2):
+  return node1[0] == node2[0] and node1[1] == node2[1]
+
 def isNodeLocked(node):
   for car in state:
-    if car['lockedNode'] == node:
+    if isEqualNodes(car['lockedNode'], node):
       return True
   return False
 
 def switchNodeLock(car, start, end):
-  if (car['lockedNode'] == start):
+  if (isEqualNodes(car['lockedNode'], start)):
     if (isNodeLocked(end)):
       return False
 
     car['lockedNode'] = end
   return True
-
 
 def moveCar(car):
   timeLeft = TIMESLICE
@@ -205,7 +211,7 @@ def algo(state):
   return state
 
 def newCar(i, baseRoute):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': CONST_SPEED_KM_H, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
+  car = {'id': i, 'type': 'car', 'position': None, 'speed': MAX_SPEED_KM_H, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
 
@@ -218,7 +224,7 @@ def setupCars(numCars, baseRoute):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': car['id'], 'type': car['type'], 'speed': car['speed'],
+    res += [{'id': car['id'], 'objectType': car['type'], 'speed': car['speed'],
       'direction': car['direction'], 'position': {'lat': car['position'][1],
         'lng': car['position'][0]},'journey': car['baseRoute']}]
   return res
@@ -228,6 +234,6 @@ if(len(sys.argv) != 2):
 
 simulationId = sys.argv[1]
 savn = ConnectionAssistant(simulationId)
-savn.initSession()
+savn.initSession(TIMESLICE)
 
 sys.exit(0)
