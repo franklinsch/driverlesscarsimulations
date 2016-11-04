@@ -87,18 +87,23 @@ export default class Main extends React.Component {
   }
 
   handleAddJourney(journey) {
-    const simID = this.state.
-    fetch('https://mywebsite.com/endpoint/', {
+    const simID = this.state.selectedCityID;
+    const fetchUrl = "/" + simID + "/journeys";
+    fetch(fetchUrl, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({firstParam: 'yourValue', secondParam: 'yourOtherValue'})
+        body: journey
+    })
+    .then((response) => {
+      const journeys = this.state.mapSelectedJourneys.concat([journey]);
+      this.setState({mapSelectedJourneys: journeys})
+    })
+    .catch((err) => {
+      console.log("New journey was not saved due to: " + err);
     });
-    const journeys = this.state.mapSelectedJourneys.concat([journey]);
-
-    this.setState({mapSelectedJourneys: journeys})
   }
 
   handleJoinSimulation(simulationID) {
