@@ -23,7 +23,7 @@ export default class Main extends React.Component {
     }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
-    socket.onmessage = (message) => { this.handleMessageReceive(message) } 
+    socket.onmessage = (message) => { this.handleMessageReceive(message) }
     this.state = {
       selectedCityID: 0,
       socket: socket,
@@ -69,11 +69,18 @@ export default class Main extends React.Component {
   }
 
   handleAddJourney(journey) {
+    const simID = this.state.
+    fetch('https://mywebsite.com/endpoint/', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({firstParam: 'yourValue', secondParam: 'yourOtherValue'})
+    });
     const journeys = this.state.mapSelectedJourneys.concat([journey]);
 
-    this.setState({
-      mapSelectedJourneys: journeys
-    })
+    this.setState({mapSelectedJourneys: journeys})
   }
 
   _cityWithID(id) {
@@ -117,7 +124,7 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
-          socket={socket} 
+          socket={socket}
           availableCities={availableCities}
           handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
         />
