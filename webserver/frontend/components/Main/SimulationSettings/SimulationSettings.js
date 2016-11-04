@@ -3,6 +3,7 @@ import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
 import JourneyList from './JourneyList/JourneyList.js';
+import SpeedSetting from './SpeedSetting/SpeedSetting.js';
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
@@ -81,25 +82,11 @@ export default class SimulationSettings extends React.Component {
     f(position);
   }
 
-  _handleExportClick() {
-    const journeys = this.state.journeys.concat(this.props.mapSelectedJourneys);
-    const data = JSON.stringify(journeys);
-
-    const url = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
-
-    let exportFileDefaultName = 'journeys.json';
-
-    let linkElement = document.createElement('a');
-    linkElement.setAttribute('href', url);
-    linkElement.setAttribute('target', '_blank');
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-  }
-
   render() {
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
 
+    const socket = this.props.socket;
     const selectedCity = this.props.selectedCity;
     const bounds = selectedCity ? selectedCity.bounds : null;
     const journeys = this.state.journeys || [];
@@ -112,15 +99,20 @@ export default class SimulationSettings extends React.Component {
           handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
           bounds={bounds}
+          journeys={allJourneys}
         />
-        <button className="btn btn-sm btn-info" onClick={() => this._handleExportClick()}>Export</button>
         <div className="row">
           <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
             {
               hasSimulationStarted &&
               <div>Current Simulation ID: { simID }</div>
             }
-            <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
+          <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
+          <SpeedSetting 
+            hidden={!hasSimulationStarted}
+            socket={socket}
+          />
+
         </div>
       </div>
     )

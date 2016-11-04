@@ -2,7 +2,7 @@ import React from 'react';
 import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
-import 'leaflet-rotatedmarker'
+import RotatableMarker from './RotatableMarker'
 
 export default class SimulationMap extends React.Component {
 
@@ -149,12 +149,15 @@ export default class SimulationMap extends React.Component {
   componentDidUpdate() {
     const map = this.refs.map.leafletElement;
     const bounds = this.props.bounds;
-    const mapBounds = [bounds.southWest, bounds.northEast]
+    const mapBounds = [bounds.southWest, bounds.northEast];
 
-    map.options.minZoom = 0;
-    map.fitBounds(mapBounds);
-    map.options.minZoom = map.getZoom();
-    map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
+    if (this.bounds != bounds) {
+      map.options.minZoom = 0;
+      map.fitBounds(mapBounds);
+      map.options.minZoom = map.getZoom();
+      map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
+      this.bounds = bounds;
+    }
   }
 
   render() {
@@ -180,7 +183,7 @@ export default class SimulationMap extends React.Component {
     }
 
     const carIcon = L.icon({
-      iconUrl: "car-icon.png",
+      iconUrl: "/car-icon.png",
       iconSize: [35, 35],
     })
 
@@ -195,6 +198,8 @@ export default class SimulationMap extends React.Component {
     })
 
     return (
+      <div>
+      <p> Simulation time: { this.props.simulationState.formattedTimestamp } </p>
       <Map 
         style={style} 
         onClick={(e) => { this._handleMapClick(e) }}
@@ -211,7 +216,7 @@ export default class SimulationMap extends React.Component {
           cars.map((car, index) => {
             const key = car.id
             return (
-              <Marker position = { car.position } 
+              <RotatableMarker position = { car.position } 
                 key = { key }
                 icon = {carIcon}
                 rotationAngle = { car.direction }
@@ -228,7 +233,7 @@ export default class SimulationMap extends React.Component {
                   </dl>
                   </div>
                 </Popup>
-              </Marker>
+              </RotatableMarker>
             )
           })
         }
@@ -268,6 +273,7 @@ export default class SimulationMap extends React.Component {
           </Marker>
       }
       </Map>
+      </div>
     );
   }
 

@@ -37,6 +37,7 @@ const server = app.listen(config.port, () => {
 });
 
 const frontendConnections = []
+const frontendInfo = []
 const frameworkConnections = []
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
@@ -71,7 +72,8 @@ frontendSocketServer.on('request', function(request) {
       if (error) {
         return console.error(error);
       }
-      frontendConnections.push(connection)
+      frontendConnections.push(connection);
+      frontendInfo.push({'timestamp': 0, 'speed': null});
     });
 
     callback(null, simulation._id, data.selectedCity._id);
@@ -90,11 +92,13 @@ frontendSocketServer.on('request', function(request) {
         return
       }
       frontendConnections.push(connection);
+      frontendInfo.push({'timestamp': 0, 'speed': null});
 
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
         content: {
-          simulationStartParameters: simulation.simulationStartParameters
+          simulationStartParameters: simulation.simulationStartParameters,
+          simID: simulation._id
         }
       }));
     })
@@ -120,6 +124,11 @@ frontendSocketServer.on('request', function(request) {
     });
   }
 
+  function _handleRequestSimulationSpeedChange(message) {
+    let index = frontendConnections.indexOf(connection);
+    frontendInfo[index]['speed'] = message.content.simulationSpeed;
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
 
@@ -142,8 +151,13 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-join":
         _handleRequestSimulationJoin(messageData);
+        break;
       case "request-simulation-update":
         _handleRequestEventUpdate(messageData);
+        break;
+      case "request-simulation-speed-change":
+        _handleRequestSimulationSpeedChange(messageData);
+        break;
       }
     }
     else if (message.type === 'binary') {
@@ -156,6 +170,7 @@ frontendSocketServer.on('request', function(request) {
     let index = frontendConnections.indexOf(connection);
     if (index >= 0) {
       delete frontendConnections[index];
+      delete frontendInfo[index];
 
       Simulation.findOneAndUpdate({ frontendConnectionIndices: index }, { $pull: { frontendConnectionIndices: index }}, function (error, simulation) {
         if (error || !simulation) {
@@ -182,7 +197,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId
 
-    Simulation.findByIdAndUpdate(simulationID, { $set: { frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
+    Simulation.findByIdAndUpdate(simulationID, { $set: { timeslice: message.content.timeslice, frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -233,9 +248,18 @@ frameworkSocketServer.on('request', function(request) {
 
         console.log("Updated simulationState");
         for (let index of simulation.frontendConnectionIndices) {
+          if (frontendInfo[index]['speed'] != undefined) {
+            frontendInfo[index]['timestamp'] += frontendInfo[index]['speed']
+            if (frontendInfo[index]['timestamp'] > message.content.timestamp) {
+              frontendInfo[index]['timestamp'] = message.content.timestamp;
+            }
+          } else {
+            frontendInfo[index]['timestamp'] = message.content.timestamp;
+          }
+          const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
           frontendConnections[index].send(JSON.stringify({
             type: "simulation-state",
-            content: message.content
+            content: simulation.simulationStates[stateIndex]
           }))
         }
       })
@@ -249,8 +273,10 @@ frameworkSocketServer.on('request', function(request) {
       switch(messageData.type) {
       case "simulation-start":
         _handleSimulationStart(messageData);
+        break;
       case "simulation-state":
         _handleSimulationStateUpdate(messageData);
+        break;
       }
     }
     else if (message.type === 'binary') {

@@ -41,9 +41,9 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     #for i in range(50):
     while True:
       #useApi()
+      savn.updateCarStates(timestamp, translate(state))
       state = algo(state)
       timestamp += TIMESLICE
-      savn.updateCarStates(timestamp, translate(state))
       time.sleep(SLEEP_TIME)
     #useApiToEnd()
 
@@ -198,6 +198,6 @@ if(len(sys.argv) != 2):
 
 simulationId = sys.argv[1]
 savn = ConnectionAssistant(simulationId)
-savn.initSession()
+savn.initSession(TIMESLICE)
 
 sys.exit(0)

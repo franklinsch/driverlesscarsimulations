@@ -12,14 +12,7 @@ export default class Header extends React.Component {
   }
 
   _handleJoinSimulation(simulationID) {
-    const socket = this.props.socket;
-
-    const type = "request-simulation-join";
-    const content = {
-      simulationID: simulationID
-    }
-
-    UtilFunctions.sendSocketMessage(socket, type, content);
+    this.props.handleJoinSimulation(simulationID);
   }
 
   _handleCityChange(city) {

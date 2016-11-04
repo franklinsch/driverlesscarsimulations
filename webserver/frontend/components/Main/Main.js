@@ -11,6 +11,14 @@ export default class Main extends React.Component {
     super(props);
 
     const host = window.location.hostname;
+
+    const path = window.location.pathname;
+    let simID = "0";
+    if (/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
+      const tokens = path.split("/");
+      simID = tokens[tokens.length - 1];
+    }
+
     var socket = new WebSocket(`ws://${host}:3000`);
 
     socket.onopen = (event) => {
@@ -20,6 +28,9 @@ export default class Main extends React.Component {
         ...UtilFunctions.socketMessage(),
         type:"request-available-cities"
       }))
+      if (simID != "0") {
+        this.handleJoinSimulation(simID);
+      }
     }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
@@ -28,15 +39,16 @@ export default class Main extends React.Component {
       selectedCityID: 0,
       socket: socket,
       simulationInfo: {
-        id: "0",
+        id: simID,
         cityID: "0"
       },
       simulationState: {
         id: "0",
-        timestamp: "00:00:00",
+        timestamp: 0,
+        formattedTimestamp: "00:00:00",
         objects: [{
           id: "0",
-          type: "car",
+          objectType: "car",
           speed: 50,
           direction: 45,
           position: {
@@ -65,6 +77,12 @@ export default class Main extends React.Component {
       this.setState({
         simulationState: messageData.content
       });
+    } else if (messageData.type === "simulation-start-parameters") {
+      const newSimulationInfo = this.state.simulationInfo;
+      newSimulationInfo.id = messageData.content.simID;
+      this.setState({
+        simulationInfo: newSimulationInfo
+      });
     }
   }
 
@@ -81,6 +99,23 @@ export default class Main extends React.Component {
     const journeys = this.state.mapSelectedJourneys.concat([journey]);
 
     this.setState({mapSelectedJourneys: journeys})
+  }
+
+  handleJoinSimulation(simulationID) {
+    const socket = this.state.socket;
+
+    const type = "request-simulation-join";
+    const content = {
+      simulationID: simulationID
+    }
+
+    var message = JSON.stringify({
+      ...UtilFunctions.socketMessage(),
+      type: type,
+      content: content
+    })
+
+    socket.send(message);
   }
 
   _cityWithID(id) {
@@ -127,6 +162,7 @@ export default class Main extends React.Component {
           socket={socket}
           availableCities={availableCities}
           handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
+          handleJoinSimulation={(simulationId => {this.handleJoinSimulation(simulationId)})}
         />
          <div className="jumbotron">
           <div className="container">
