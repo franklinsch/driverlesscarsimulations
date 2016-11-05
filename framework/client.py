@@ -47,7 +47,7 @@ class SAVNConnectionAssistant:
 
   async def handlerLoop(self):
     #We handle the connection whilst the simulation is alive
-    while self.alive:
+    while self.active:
       await self.handler()
 
   async def handler(self):
@@ -55,8 +55,16 @@ class SAVNConnectionAssistant:
       producer_task = asyncio.ensure_future(self.fetchMessage())
       done, pending = await asyncio.wait([listener_task, producer_task],
                                          return_when=asyncio.FIRST_COMPLETED)
+
+      if producer_task in done:
+        packet = producer_task.result()
+        await self.ws.send(packet)
+      else:
+        producer_task.cancel()
+
       #if the connection is dead we will reach this point
       if not self.alive:
+        self.active = False
         for fut in pending:
           fut.cancel()
         return
@@ -67,12 +75,6 @@ class SAVNConnectionAssistant:
         loop.run_in_executor(None, self.onMessage, packet)
       else:
         listener_task.cancel()
-
-      if producer_task in done:
-        packet = producer_task.result()
-        await self.ws.send(packet)
-      else:
-        producer_task.cancel()
 
   def onMessage(self, packet):
     def isError():
@@ -97,8 +99,9 @@ class SAVNConnectionAssistant:
       #At this point the actual algorithm must have made sure it will terminate
       self.alive = False
       #The connection is officialy dead we need to terminate the handling loop,
-      #to achieve this we artificially populate the message queue 
-      asyncio.run_coroutine_threadsafe(self.messageQueue.put("close"),
+      #to achieve this we populate the message queue with a confirmation packet
+      packet = {'type': 'simulation-close', 'content': {'simulationId': self.simulationId}}
+      asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
     elif isUpdate():
       self.handleSimulationDataUpdate(packet["content"])
@@ -108,8 +111,9 @@ class SAVNConnectionAssistant:
     async def coro():
       async with websockets.connect(HOST) as websocket:
         self.ws = websocket
-        await self.startConnection()
+        await self.startConnection(timeslice)
         self.alive = True
+        self.active = True
         await self.handlerLoop()
 
     loop.run_until_complete(coro())

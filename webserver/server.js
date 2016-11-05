@@ -180,6 +180,7 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-close":
         _handleRequestSimulationClose(messageData);
+        break;
       }
     }
     else if (message.type === 'binary') {
@@ -288,6 +289,32 @@ frameworkSocketServer.on('request', function(request) {
     })
   }
 
+  function _handleSimulationClose(message) {
+    console.log("Received close confirmation from framework");
+
+    const simulationID = message.content.simulationId;
+
+    Simulation.findOne({
+      _id: simulationID
+    }, (error, simulation) => {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + simulationID
+          }
+        }))
+        console.log("Could not find simulation with ID " + simulationID);
+        return
+      }
+      for (let index of simulation.frontendConnectionIndices) {
+        frontendConnections[index].send(JSON.stringify({
+          type: "simulation-confirm-close",
+        }));
+      }
+    });
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
@@ -299,6 +326,8 @@ frameworkSocketServer.on('request', function(request) {
       case "simulation-state":
         _handleSimulationStateUpdate(messageData);
         break;
+      case "simulation-close":
+        _handleSimulationClose(messageData);
       }
     }
     else if (message.type === 'binary') {

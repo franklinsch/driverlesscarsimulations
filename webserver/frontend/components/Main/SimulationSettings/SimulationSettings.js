@@ -33,8 +33,12 @@ export default class SimulationSettings extends React.Component {
 
   handleSimulationClose() {
     const socket = this.props.socket;
+    const simID = this.props.activeSimulationID;
     const type = "request-simulation-close";
-    UtilFunctions.sendSocketMessage(socket, type, {});
+    const content = {
+      simulationID: simID
+    }
+    UtilFunctions.sendSocketMessage(socket, type, content); 
   }
 
   handleSimulationStart() {

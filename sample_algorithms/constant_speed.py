@@ -39,7 +39,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     addToState(initialParameters['simulationStartParameters']['journeys'], state)
     timestamp = 0
     #for i in range(50):
-    while True:
+    while self.alive:
       #useApi()
       savn.updateCarStates(timestamp, translate(state))
       state = algo(state)
@@ -50,7 +50,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
 
-  def handleSimulationStop(self):
+  def handleSimulationStop(self, packet):
     pass
 
 def addToState(journeys, state):

@@ -83,6 +83,12 @@ export default class Main extends React.Component {
       this.setState({
         simulationInfo: newSimulationInfo
       });
+    } else if (messageData.type === "simulation-confirm-close") {
+      const newSimulationInfo = this.state.simulationInfo;
+      newSimulationInfo.id = "0";
+      this.setState({
+        simulationInfo: newSimulationInfo
+      });
     }
   }
 
