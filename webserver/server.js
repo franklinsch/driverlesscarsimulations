@@ -129,6 +129,26 @@ frontendSocketServer.on('request', function(request) {
     frontendInfo[index]['speed'] = message.content.simulationSpeed;
   }
 
+  function _handleRequestSimulationClose(message) {
+    Simulation.findById(message.content.simulationID, function (error, simulation) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.content.simulationID
+          }
+        }));
+        console.log("Could not find simulation with ID " + message.content.simulationID);
+        return
+      }
+
+      frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
+        type: "simulation-close",
+        content: message.content
+      }));
+    });
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
 
@@ -158,6 +178,8 @@ frontendSocketServer.on('request', function(request) {
       case "request-simulation-speed-change":
         _handleRequestSimulationSpeedChange(messageData);
         break;
+      case "request-simulation-close":
+        _handleRequestSimulationClose(messageData);
       }
     }
     else if (message.type === 'binary') {

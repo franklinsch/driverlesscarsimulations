@@ -82,7 +82,7 @@ class SAVNConnectionAssistant:
       return packet["type"] == "simulation-start-parameters"
 
     def isClose():
-      return packet["type"] == "close"
+      return packet["type"] == "simulation-close"
 
     def isUpdate():
       return packet["type"] == "simulation-update"
@@ -114,6 +114,3 @@ class SAVNConnectionAssistant:
 
     loop.run_until_complete(coro())
 
-if __name__ == "__main__":
-  savn = SAVNConnectionAssistant(42)
-  savn.initSession()
