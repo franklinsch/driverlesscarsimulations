@@ -7,7 +7,6 @@ import asyncio
 from unittest.mock import Mock
 
 class AsyncMock(Mock):
-
   def __call__(self, *args, **kwargs):
     parent = super(AsyncMock, self)
     async def coro():
@@ -20,6 +19,7 @@ class AsyncMock(Mock):
 class TestFrameworkClientMethods(unittest.TestCase):
   def setUp(self):
     self.connection = SAVNConnectionAssistant(42)
+    self.connection.alive = True
     self.connection.ws = Mock()
     self.loop = asyncio.get_event_loop()
 
@@ -67,7 +67,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
 
   def test_simulationStop(self):
     self.connection.handleSimulationStop = Mock()
-    packet = {'type': 'close', 'content': {}}
+    packet = {'type': 'simulation-close', 'content': {}}
     self.connection.onMessage(packet)
     self.connection.handleSimulationStop.assert_called_with(packet['content'])
 
