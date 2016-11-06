@@ -42,9 +42,13 @@ export default class ObjectSettings extends React.Component {
   }
 
   _handleModalHide() {
+    const firstKind = this.props.settings[0].name;
+
     this.setState({
-      showAddObject: false
+      showAddObject: false,
+      kind: firstKind
     })
+
   }
 
   _renderKindDropdown() {
