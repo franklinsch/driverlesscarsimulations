@@ -26,6 +26,19 @@ function randomCity(city, from, to) {
 
 const CITIES = [
   {
+    name: 'Greater London',
+    bounds: {
+      southWest: {
+        lat: 51.2867602,
+        lng: -0.5103751
+      },
+      northEast: {
+        lat: 51.6918741,
+        lng: 0.3340155
+      }
+    }
+  },
+  {
     name: 'Moulin',
     bounds: {
       southWest: {
