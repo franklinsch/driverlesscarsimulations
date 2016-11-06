@@ -2,6 +2,7 @@ import React from 'react';
 import CustomPropTypes from '../../../Utils/CustomPropTypes.js';
 import LandmarkSearch from './LandmarkSearch/LandmarkSearch.js';
 import JourneyImport from './JourneyImport/JourneyImport.js';
+import ObjectSettings from './ObjectSettings/ObjectSettings.js';
 
 export default class JourneySettings extends React.Component {
 
@@ -143,6 +144,7 @@ export default class JourneySettings extends React.Component {
             }
           </div>
         </form>
+        <ObjectSettings />
       </div>
     )
   }
