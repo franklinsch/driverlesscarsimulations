@@ -46,7 +46,8 @@ class SAVNConnectionAssistant:
     await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):
-    while True:
+    #We handle the connection whilst the simulation is alive
+    while self.active:
       await self.handler()
 
   async def handler(self):
@@ -54,18 +55,26 @@ class SAVNConnectionAssistant:
       producer_task = asyncio.ensure_future(self.fetchMessage())
       done, pending = await asyncio.wait([listener_task, producer_task],
                                          return_when=asyncio.FIRST_COMPLETED)
-      if listener_task in done:
-        message = listener_task.result()
-        packet = json.loads(message)
-        loop.run_in_executor(None, self.onMessage, packet)
-      else:
-        listener_task.cancel()
 
       if producer_task in done:
         packet = producer_task.result()
         await self.ws.send(packet)
       else:
         producer_task.cancel()
+
+      #if the connection is dead we will reach this point
+      if not self.alive:
+        self.active = False
+        for fut in pending:
+          fut.cancel()
+        return
+
+      if listener_task in done:
+        message = listener_task.result()
+        packet = json.loads(message)
+        loop.run_in_executor(None, self.onMessage, packet)
+      else:
+        listener_task.cancel()
 
   def onMessage(self, packet):
     def isError():
@@ -75,7 +84,7 @@ class SAVNConnectionAssistant:
       return packet["type"] == "simulation-start-parameters"
 
     def isClose():
-      return packet["type"] == "close"
+      return packet["type"] == "simulation-close"
 
     def isUpdate():
       return packet["type"] == "simulation-update"
@@ -87,6 +96,13 @@ class SAVNConnectionAssistant:
       self.handleSimulationStart(packet["content"])
     elif isClose():
       self.handleSimulationStop(packet["content"])
+      #At this point the actual algorithm must have made sure it will terminate
+      self.alive = False
+      #The connection is officialy dead we need to terminate the handling loop,
+      #to achieve this we populate the message queue with a confirmation packet
+      packet = {'type': 'simulation-close', 'content': {'simulationId': self.simulationId}}
+      asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+      loop)
     elif isUpdate():
       self.handleSimulationDataUpdate(packet["content"])
 
@@ -96,6 +112,8 @@ class SAVNConnectionAssistant:
       async with websockets.connect(HOST) as websocket:
         self.ws = websocket
         await self.startConnection(timeslice)
+        self.alive = True
+        self.active = True
         await self.handlerLoop()
 
     loop.run_until_complete(coro())

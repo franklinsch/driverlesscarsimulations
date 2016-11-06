@@ -22,9 +22,26 @@ export default class SimulationSettings extends React.Component {
     }
   }
 
-  handleSimulationStart(e) {
+  handleSimulationButton(e, started) {
     e.preventDefault();
+    if (started) {
+      this.handleSimulationClose();
+    } else {
+      this.handleSimulationStart()
+    }
+  }
 
+  handleSimulationClose() {
+    const socket = this.props.socket;
+    const simID = this.props.activeSimulationID;
+    const type = "request-simulation-close";
+    const content = {
+      simulationID: simID
+    }
+    UtilFunctions.sendSocketMessage(socket, type, content); 
+  }
+
+  handleSimulationStart() {
     const socket = this.props.socket;
     const selectedCity = this.props.selectedCity;
 
@@ -102,7 +119,9 @@ export default class SimulationSettings extends React.Component {
           journeys={allJourneys}
         />
         <div className="row">
-          <button className="btn btn-primary" onClick={ (e) => this.handleSimulationStart(e) }>Start simulation</button>
+          <button className="btn btn-primary" onClick={ (e) => this.handleSimulationButton(e, hasSimulationStarted) }>
+            { hasSimulationStarted  && <p>End Simulation</p> || <p>Start simulation</p>}
+          </button>
             {
               hasSimulationStarted &&
               <div>Current Simulation ID: { simID }</div>

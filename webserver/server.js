@@ -129,6 +129,26 @@ frontendSocketServer.on('request', function(request) {
     frontendInfo[index]['speed'] = message.content.simulationSpeed;
   }
 
+  function _handleRequestSimulationClose(message) {
+    Simulation.findById(message.content.simulationID, function (error, simulation) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.content.simulationID
+          }
+        }));
+        console.log("Could not find simulation with ID " + message.content.simulationID);
+        return
+      }
+
+      frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
+        type: "simulation-close",
+        content: message.content
+      }));
+    });
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
 
@@ -157,6 +177,9 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-speed-change":
         _handleRequestSimulationSpeedChange(messageData);
+        break;
+      case "request-simulation-close":
+        _handleRequestSimulationClose(messageData);
         break;
       }
     }
@@ -266,6 +289,32 @@ frameworkSocketServer.on('request', function(request) {
     })
   }
 
+  function _handleSimulationClose(message) {
+    console.log("Received close confirmation from framework");
+
+    const simulationID = message.content.simulationId;
+
+    Simulation.findOne({
+      _id: simulationID
+    }, (error, simulation) => {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + simulationID
+          }
+        }))
+        console.log("Could not find simulation with ID " + simulationID);
+        return
+      }
+      for (let index of simulation.frontendConnectionIndices) {
+        frontendConnections[index].send(JSON.stringify({
+          type: "simulation-confirm-close",
+        }));
+      }
+    });
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
@@ -277,6 +326,8 @@ frameworkSocketServer.on('request', function(request) {
       case "simulation-state":
         _handleSimulationStateUpdate(messageData);
         break;
+      case "simulation-close":
+        _handleSimulationClose(messageData);
       }
     }
     else if (message.type === 'binary') {
