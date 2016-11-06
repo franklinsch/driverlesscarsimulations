@@ -72,4 +72,20 @@ export default class CustomPropTypes {
   }
 
   static osmSearchResult = React.PropTypes.shape(CustomPropTypes._osmSearchResult);
+
+  static _simulationKindSetting = {
+    name: React.PropTypes.string,
+    kind: React.PropTypes.string, // 'dropdown'/'text'
+    value: React.PropTypes.string,
+    allowedValues: React.PropTypes.arrayOf(React.PropTypes.string)
+  }
+
+  static simulationKindSetting = React.PropTypes.shape(CustomPropTypes._simulationKindSetting);
+
+  static _simulationObjectKind = {
+    name: React.PropTypes.string,
+    parameters: React.PropTypes.arrayOf(CustomPropTypes.simulationKindSetting)
+  }
+
+  static simulationObjectKind = React.PropTypes.shape(CustomPropTypes._simulationObjectKind);
 }
