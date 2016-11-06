@@ -39,7 +39,6 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     state = setupCars(1, BASE_ROUTE)
     addToState(initialParameters['simulationStartParameters']['journeys'], state)
     timestamp = 0
-    #for i in range(50):
     while True:
       #useApi()
       state = algo(state)

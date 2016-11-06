@@ -38,7 +38,6 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     state = setupCars(1, BASE_ROUTE)
     addToState(initialParameters['journeys'], state)
     timestamp = 0
-    #for i in range(50):
     while self.alive:
       #useApi()
       savn.updateCarStates(timestamp, translate(state))
