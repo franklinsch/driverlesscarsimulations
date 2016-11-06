@@ -107,6 +107,10 @@ export default class JourneySettings extends React.Component {
     })
   }
 
+  _handleAddObject(settings) {
+    console.log(settings);
+  }
+
   render() {
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
@@ -144,7 +148,9 @@ export default class JourneySettings extends React.Component {
             }
           </div>
         </form>
-        <ObjectSettings />
+        <ObjectSettings 
+          handleSave={::this._handleAddObject}
+        />
       </div>
     )
   }

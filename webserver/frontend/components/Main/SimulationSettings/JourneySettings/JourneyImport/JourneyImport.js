@@ -101,5 +101,3 @@ export default class JourneyImport extends React.Component {
         }
       </div>
     )
-  }
-}
