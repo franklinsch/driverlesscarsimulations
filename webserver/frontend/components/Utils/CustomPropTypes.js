@@ -75,7 +75,7 @@ export default class CustomPropTypes {
 
   static _simulationKindSetting = {
     name: React.PropTypes.string,
-    kind: React.PropTypes.string, // 'dropdown'/'text'
+    kind: React.PropTypes.string, // 'text'/'predefined'
     value: React.PropTypes.string,
     allowedValues: React.PropTypes.arrayOf(React.PropTypes.string)
   }
