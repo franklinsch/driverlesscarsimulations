@@ -37,6 +37,7 @@
     "jsonschema": "^1.1.0",
     "leaflet": "^0.7.7",
     "leaflet-rotatedmarker": "^0.1.1",
+    "leaflet.ajax": "^1.1.0",
     "mongoose": "^4.6.3",
     "path": "^0.12.7",
     "react": "^15.3.2",
