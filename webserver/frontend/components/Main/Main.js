@@ -34,7 +34,7 @@ export default class Main extends React.Component {
     }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
-    socket.onmessage = (message) => { this.handleMessageReceive(message) } 
+    socket.onmessage = (message) => { this.handleMessageReceive(message) }
     this.state = {
       selectedCityID: 0,
       socket: socket,
@@ -87,11 +87,23 @@ export default class Main extends React.Component {
   }
 
   handleAddJourney(journey) {
-    const journeys = this.state.mapSelectedJourneys.concat([journey]);
-
-    this.setState({
-      mapSelectedJourneys: journeys
+    const simID = this.state.selectedCityID;
+    const fetchUrl = "/" + simID + "/journeys";
+    fetch(fetchUrl, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: journey
     })
+    .then((response) => {
+      const journeys = this.state.mapSelectedJourneys.concat([journey]);
+      this.setState({mapSelectedJourneys: journeys})
+    })
+    .catch((err) => {
+      console.log("New journey was not saved due to: " + err);
+    });
   }
 
   handleJoinSimulation(simulationID) {
@@ -152,7 +164,7 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
-          socket={socket} 
+          socket={socket}
           availableCities={availableCities}
           handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
           handleJoinSimulation={(simulationId => {this.handleJoinSimulation(simulationId)})}
