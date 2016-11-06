@@ -248,7 +248,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId;
 
-    Simulation.findByIdAndUpdate(simulationID, { $push: { simulationStates: message.content } }, function (error, simulation) {
+    Simulation.findByIdAndUpdate(simulationID, { $push: { simulationStates: message.content } }, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
