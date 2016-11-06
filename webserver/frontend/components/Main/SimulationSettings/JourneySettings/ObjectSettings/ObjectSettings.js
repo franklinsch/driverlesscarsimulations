@@ -1,10 +1,12 @@
 import React from 'react';
 import Modal from 'react-bootstrap-modal';
+import CustomPropTypes from '../../../../Utils/CustomPropTypes.js';
 
 export default class ObjectSettings extends React.Component {
 
   static propTypes = {
-    handleSave: React.PropTypes.func.isRequired
+    handleSave: React.PropTypes.func.isRequired,
+    settings: React.PropTypes.arrayOf(CustomPropTypes.simulationObjectKind)
   }
 
   constructor(props) {
@@ -17,7 +19,7 @@ export default class ObjectSettings extends React.Component {
       avgSpeed: '',
       topSpeed: '',
       length: '',
-      weight: ''      
+      weight: ''
     }
   }
 
