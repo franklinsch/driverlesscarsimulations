@@ -12,18 +12,14 @@ export default class ObjectSettings extends React.Component {
   constructor(props) {
     super(props);
 
+    const firstKind = props.settings[0].name;
+
     this.state = {
       showSettings: false,
       showAddObject: false,
-      kind: '',
-      avgSpeed: '',
-      topSpeed: '',
-      length: '',
-      weight: ''
+      kind: firstKind
     }
   }
-
-  static objectKinds = ["vehicule", "pedestrian"];
 
   _toggleShow() {
     this.setState({
@@ -37,34 +33,8 @@ export default class ObjectSettings extends React.Component {
     })
   }
 
-  _handleKindSelect(e) {
-    const kind = e.target.value;
-
-    this.setState({
-      kind: kind
-    })
-  }
-
-  _renderSelectKind() {
-    return (
-      <select onChange={::this._handleKindSelect}>
-        {
-          ObjectSettings.objectKinds.map((kind, index) => {
-            return <option value={kind} key={index}>{kind}</option>
-          })
-        }
-      </select>
-    )
-  }
-
   _handleFormSave() {
-    const objectSettings = {
-      kind: this.state.kind,
-      avgSpeed: this.state.avgSpeed, 
-      topSpeed: this.state.topSpeed,
-      length: this.state.length,
-      weight: this.state.weight
-    }
+    const objectSettings = this.state.settings;
 
     this.props.handleSave(objectSettings);
 
@@ -75,6 +45,101 @@ export default class ObjectSettings extends React.Component {
     this.setState({
       showAddObject: false
     })
+  }
+
+  _renderKindDropdown() {
+    const settings = this.props.settings;
+
+    return (
+      <select onChange={(e) => {
+        const kindName = e.target.value;
+
+        this.setState({
+          kind: kindName,
+          settings: null
+        }, () => {
+          const parameters = this._paramsForKindName(kindName);
+
+          for (const parameter of parameters) {
+            if (parameter.kind === "predefined") {
+              this._updateSetting(parameter.name, parameter.allowedValues[0]);
+            }
+          }
+        })
+      }}>
+      {
+        settings.map((setting, index) => {
+          const name = setting.name;
+          return <option value={name} key={index}>{name}</option>
+        })
+      }
+    </select>
+    )
+  }
+
+  _paramsForKindName(kindName) {
+    for (const setting of this.props.settings) { 
+      if (setting.name === kindName) {
+        return setting.parameters;
+      }
+    }
+  }
+
+  _updateSetting(name, value) {
+    this.setState({
+      settings: {
+        ...this.state.settings,
+        [name]: value
+      }
+    })
+  }
+
+  _renderSettings() {
+    const parameters = this._paramsForKindName(this.state.kind); 
+
+    return (
+      <div>
+        {
+          parameters.map((parameter, index) => {
+            const name = parameter.name;
+            const kind = parameter.kind;
+
+            if (kind === "predefined") {
+              const allowedValues = parameter.allowedValues;
+
+              const onChange = (e) => {
+                const value = e.target.value;
+                this._updateSetting(name, value);
+              }
+
+              return (
+                <div className="form-group" key={index}>
+                  <label htmlFor={name}> {name} </label>
+                  <select onChange={onChange}>
+                    {
+                      allowedValues.map((value, index1) => {
+                        return <option id={name} key={index1} value={value} className="form-control">{value}</option>
+                      })
+                    }
+                  </select>
+                </div>
+              )
+            } else if (kind === "text") {
+              const onChange = (e) => {
+                this._updateSetting(name, e.target.value);
+              }
+
+              return (
+                <div className="form-group" key={index}>
+                  <label htmlFor={name}> {name} </label>
+                  <input id={name} value={this.state[name]} onChange={onChange} className="form-control"/>
+                </div>
+              )
+            }
+          })
+        }
+      </div>
+    )
   }
 
   render() {
@@ -97,28 +162,10 @@ export default class ObjectSettings extends React.Component {
 								<Modal.Body>
                   <div className="form-group">
                     <label htmlFor="kind">Kind</label>
-                    {this._renderSelectKind()}
+                    {this._renderKindDropdown()}
                   </div>
 
-                  <div className="form-group">
-                    <label htmlFor="avgSpeed"> Average Speed </label>
-                    <input id="avgSpeed" className="form-control" value={this.state.avgSpeed} onChange={(e) => this.setState({avgSpeed: e.target.value})}/>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="topSpeed"> Top Speed </label>
-                    <input id="topSpeed" className="form-control" value={this.state.topSpeed} onChange={(e) => this.setState({topSpeed: e.target.value})}/>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="length"> Length </label>
-                    <input id="length" className="form-control" value={this.state.length} onChange={(e) => this.setState({length: e.target.value})}/>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="weight"> Weight </label>
-                    <input id="weight" className="form-control" value={this.state.weight} onChange={(e) => this.setState({weight: e.target.value})}/>
-                  </div>
+                  {this._renderSettings()}
 
 								</Modal.Body>
 								<Modal.Footer>
