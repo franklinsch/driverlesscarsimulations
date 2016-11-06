@@ -23,7 +23,7 @@ export default class JourneyImport extends React.Component {
     const validator = new Validator();
 
     var schema = {
-      type: CustomPropTypes._journey
+      type: CustomPropTypes._simulationJourney
     }
 
     for (const journey of journeys) {
