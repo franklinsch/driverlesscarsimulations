@@ -112,10 +112,12 @@ export default class ObjectSettings extends React.Component {
   }
 
   _renderTypeNameInput() {
+    const typeName = this.state.typeName || '';
+
     return (
-      <div className="form-group">
+      <div className="form-group" title={title}>
         <label htmlFor="typeName">Type name</label>
-        <input id="typeName" className="form-control" value={this.state.typeName || ''} onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
+        <input id="typeName" className="form-control" value={title} onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
       </div>
     )
   }
@@ -177,7 +179,16 @@ export default class ObjectSettings extends React.Component {
         <ul>
           {
             objects.map((object, index) => {
-              return <li key={index}> {object.name} </li>
+              const parameters = object.parameters || [];
+              const title = object.kindName + ":\n" + Object.keys(parameters).map((key) => {
+                if (parameters.hasOwnProperty(key)) {
+                  return key + ": " + parameters[key];
+                }
+
+                return "";
+              }).join("\n");
+
+              return <li title={title} key={index}> {object.name} </li>
             })
           }
         </ul>
