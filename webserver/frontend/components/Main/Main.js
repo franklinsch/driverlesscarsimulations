@@ -102,21 +102,23 @@ export default class Main extends React.Component {
     }
   }
 
-  postJourney(journey, simID) {
-    const fetchUrl = "/simulations/" + simID + "/journeys";
+  handleAddJourney(journey) {
+    const simID = this.state.selectedCityID;
+    const fetchUrl = "/" + simID + "/journeys";
+
     fetch(fetchUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(journey)
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(journey)
     })
-    .then((response) => {
-    })
-    .catch((err) => {
-      console.log("New journey was not saved due to: " + err);
-    });
+      .then((response) => {
+      })
+      .catch((err) => {
+        console.log("New journey was not saved due to: " + err);
+      });
 
   }
   handleAddJourney(journey) {

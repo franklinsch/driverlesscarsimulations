@@ -131,10 +131,12 @@ export default class SimulationMap extends React.Component {
     const origin = this.state.origin;
     const destination = this.state.destination;
 
+    const typeInfo = this.state.selectedObjectType || this.props.objectTypes[0]
+
     const journey = {
       origin: origin,
       destination: destination,
-      typeInfo: this.state.selectedObjectType
+      typeInfo: typeInfo
     }
 
     const position = {
