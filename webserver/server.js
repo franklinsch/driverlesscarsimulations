@@ -70,6 +70,24 @@ frontendSocketServer.on('request', function(request) {
       });
   }
 
+  function _handleRequestDefaultObjectTypes() {
+    // TODO Store defaults in db
+    
+    connection.send(JSON.stringify({
+      type: "default-object-types",
+      content: [{
+        name: "Car",
+        kindName: "vehicle",
+        parameters: {
+          "Average Speed": "50",
+          "Top Speed": "120",
+          "Length": "450",
+          "Weight": "1355"
+        }
+      }]
+    }));
+  }
+
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
     const simulation = new Simulation({
@@ -169,6 +187,9 @@ frontendSocketServer.on('request', function(request) {
       switch (messageData.type) {
       case "request-available-cities":
         _handleRequestAvailableCities();
+        break;
+      case "request-default-object-types":
+        _handleRequestDefaultObjectTypes();
         break;
       case "request-simulation-start":
         _handleRequestSimulationStart(messageData, (err, simID, cityID) => {

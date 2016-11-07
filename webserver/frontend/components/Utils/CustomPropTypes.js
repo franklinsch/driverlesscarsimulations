@@ -91,8 +91,8 @@ export default class CustomPropTypes {
 
   static _typeInfo = {
     name: React.PropTypes.string,
-    kindInfo: CustomPropTypes.simulationObjectKind,
-    kindName: React.PropTypes.string
+    kindName: React.PropTypes.string,
+    parameters: React.PropTypes.object
   }
 
   static typeInfo = React.PropTypes.shape(CustomPropTypes._typeInfo)
