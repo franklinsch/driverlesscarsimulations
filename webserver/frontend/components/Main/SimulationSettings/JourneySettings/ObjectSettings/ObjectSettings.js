@@ -35,16 +35,19 @@ export default class ObjectSettings extends React.Component {
   }
 
   _handleFormSave() {
-    const objectSettings = {
-      name: this.state.kind,
-      parameters: this.state.settings
+    const typeInfo = {
+      name: this.state.typeName,
+      kindInfo: {
+        name: this.state.kind,
+        parameters: this.state.settings
+      }
     }
 
     this.setState({
-      objects: this.state.objects.concat([objectSettings])
+      objects: this.state.objects.concat([typeInfo])
     })
 
-    this.props.handleSave(objectSettings);
+    this.props.handleSave(typeInfo);
 
     this._handleModalHide()
   }
@@ -104,6 +107,15 @@ export default class ObjectSettings extends React.Component {
         [name]: value
       }
     })
+  }
+
+  _renderTypeNameInput() {
+    return (
+      <div className="form-group">
+        <label htmlFor="typeName">Type name</label>
+        <input id="typeName" className="form-control" value={this.state.typeName || ''} onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
+      </div>
+    )
   }
 
   _renderSettings() {
@@ -179,6 +191,7 @@ export default class ObjectSettings extends React.Component {
 									<Modal.Title id='ModalHeader'>Add Object Type</Modal.Title>
 								</Modal.Header>
 								<Modal.Body>
+                  {this._renderTypeNameInput()}
                   <div className="form-group">
                     <label htmlFor="kind">Kind</label>
                     {this._renderKindDropdown()}
