@@ -115,9 +115,9 @@ export default class ObjectSettings extends React.Component {
     const typeName = this.state.typeName || '';
 
     return (
-      <div className="form-group" title={title}>
+      <div className="form-group">
         <label htmlFor="typeName">Type name</label>
-        <input id="typeName" className="form-control" value={title} onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
+        <input id="typeName" className="form-control" onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
       </div>
     )
   }
@@ -176,26 +176,26 @@ export default class ObjectSettings extends React.Component {
     return (
       <div id="object-settings">
         <button className="btn btn-secondary" onClick={::this._toggleShow}>Show Objects</button>
-        <ul>
-          {
-            objects.map((object, index) => {
-              const parameters = object.parameters || [];
-              const title = object.kindName + ":\n" + Object.keys(parameters).map((key) => {
-                if (parameters.hasOwnProperty(key)) {
-                  return key + ": " + parameters[key];
-                }
-
-                return "";
-              }).join("\n");
-
-              return <li title={title} key={index}> {object.name} </li>
-            })
-          }
-        </ul>
 				{
 					this.state.showSettings &&
-						<div>
-							<button type='button' className="btn" onClick={::this._toggleShowAdd}>Add Object Type</button>
+            <div>
+              <ul>
+                {
+                  objects.map((object, index) => {
+                    const parameters = object.parameters || [];
+                    const title = object.kindName + ":\n" + Object.keys(parameters).map((key) => {
+                      if (parameters.hasOwnProperty(key)) {
+                        return key + ": " + parameters[key];
+                      }
+
+                      return "";
+                    }).join("\n");
+
+                    return <li title={title} key={index}> {object.name} </li>
+                  })
+                }
+              </ul>
+              <button type='button' className="btn" onClick={::this._toggleShowAdd}>Add Object Type</button>
 
 							<Modal
 								show={this.state.showAddObject}
