@@ -13,7 +13,8 @@ export default class SimulationMap extends React.Component {
     simulationState: CustomPropTypes.simulationState.isRequired,
     handleAddJourney: React.PropTypes.func,
     previewMarkerPosition: CustomPropTypes.position,
-    clearPreviewMarkerPosition: React.PropTypes.func
+    clearPreviewMarkerPosition: React.PropTypes.func,
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
   }
 
   constructor(props) {
@@ -132,7 +133,8 @@ export default class SimulationMap extends React.Component {
 
     const journey = {
       origin: origin,
-      destination: destination
+      destination: destination,
+      typeInfo: this.state.selectedObjectType
     }
 
     const position = {
@@ -140,14 +142,25 @@ export default class SimulationMap extends React.Component {
       lng: destination.lng
     }
 
+    const objectTypes = this.props.objectTypes || [];
+
     return (
       <Popup position={position}>
-      <span>
-      <p> Create new journey? </p>
-      <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
-      <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button> 
-      </span>
-      </Popup>
+        <span>
+          <p> Create new journey? </p>
+          <div className="form-group">
+            <select className="form-control" onChange={(e)=>{this.setState({selectedObjectType: e.target.value})}}>
+              {
+                objectTypes.map((object) => {return object.name}).map((name, index) => {
+                  return <option value={name} key={index}>{name}</option>
+                })
+              }
+            </select>
+              <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
+              <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button> 
+            </div>
+          </span>
+          </Popup>
     )
 
   }

@@ -240,6 +240,7 @@ export default class Main extends React.Component {
                 handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
                 previewMarkerPosition={previewMarkerPosition}
                 clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
+                objectTypes={this.state.objectTypes}
               />
             </div>
           </div>
