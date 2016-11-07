@@ -88,6 +88,45 @@ frontendSocketServer.on('request', function(request) {
     }));
   }
 
+  function _handleRequestObjectKinds() {
+    // TODO Store this in the db
+    
+    connection.send(JSON.stringify({
+      type: "object-kind-info",
+      content: [{
+        name: "vehicle",
+        parameters: [
+          {
+            name: "Average Speed",
+            kind: "text"
+          },
+          {
+            name: "Top Speed",
+            kind: "text"
+          },
+          {
+            name: "Weight",
+            kind: "text"
+          },
+          {
+            name: "Length",
+            kind: "text"
+          }
+        ]
+      },
+      {
+        name: "creature",
+        parameters: [
+          {
+            name: "Type",
+            kind: "predefined",
+            allowedValues: ["unicorn", "dog"]
+          }
+        ]
+      }]
+    }))
+  }
+
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
     const simulation = new Simulation({
@@ -190,6 +229,9 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-default-object-types":
         _handleRequestDefaultObjectTypes();
+        break;
+      case "request-object-kind-info":
+        _handleRequestObjectKinds();
         break;
       case "request-simulation-start":
         _handleRequestSimulationStart(messageData, (err, simID, cityID) => {

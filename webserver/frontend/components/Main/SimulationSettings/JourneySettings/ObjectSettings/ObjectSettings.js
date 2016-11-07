@@ -6,15 +6,17 @@ export default class ObjectSettings extends React.Component {
 
   static propTypes = {
     handleSave: React.PropTypes.func.isRequired,
-    settings: React.PropTypes.arrayOf(CustomPropTypes.simulationObjectKind),
     objects: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
-    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
+    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo)
   }
 
   constructor(props) {
     super(props);
 
-    const firstKind = props.settings[0].name;
+    let firstKind = null;
+    if (props && props.settings) {
+      firstKind = props.settings[0].name;
+    }
 
     this.state = {
       showSettings: false,
@@ -53,7 +55,10 @@ export default class ObjectSettings extends React.Component {
   }
 
   _handleModalHide() {
-    const firstKind = this.props.settings[0].name;
+    let firstKind = null;
+    if (this.props && this.props.settings) {
+      firstKind = this.props.settings[0].name;
+    }
 
     this.setState({
       showAddObject: false,
@@ -65,7 +70,7 @@ export default class ObjectSettings extends React.Component {
   }
 
   _renderKindDropdown() {
-    const settings = this.props.settings;
+    const settings = this.props.objectKindInfo || [];
 
     return (
       <select onChange={(e) => {
@@ -95,7 +100,7 @@ export default class ObjectSettings extends React.Component {
   }
 
   _paramsForKindName(kindName) {
-    for (const setting of this.props.settings) { 
+    for (const setting of this.props.objectKindInfo) { 
       if (setting.name === kindName) {
         return setting.parameters;
       }
@@ -123,7 +128,7 @@ export default class ObjectSettings extends React.Component {
   }
 
   _renderSettings() {
-    const parameters = this._paramsForKindName(this.state.kind); 
+    const parameters = this._paramsForKindName(this.state.kind) || []; 
 
     return (
       <div>

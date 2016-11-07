@@ -33,6 +33,10 @@ export default class Main extends React.Component {
         ...UtilFunctions.socketMessage(),
         type:"request-default-object-types"
       }))
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-object-kind-info"
+      }))
       if (simID != "0") {
         this.handleJoinSimulation(simID);
       }
@@ -106,6 +110,12 @@ export default class Main extends React.Component {
     } else if (messageData.type === "default-object-types") {
       this.setState({
         objectTypes: messageData.content
+      })
+    } else if (messageData.type === "object-kind-info") {
+
+      console.log(messageData.content)
+      this.setState({
+        objectKindInfo: messageData.content
       })
     }
   }
@@ -239,6 +249,7 @@ export default class Main extends React.Component {
                 handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
                 handleObjectTypeCreate={(typeInfo) => {this._handleObjectTypeCreate(typeInfo)}}
                 objectTypes={this.state.objectTypes}
+                objectKindInfo={this.state.objectKindInfo}
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">

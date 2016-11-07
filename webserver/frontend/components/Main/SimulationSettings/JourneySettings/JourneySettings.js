@@ -12,7 +12,8 @@ export default class JourneySettings extends React.Component {
     handlePositionSelect: React.PropTypes.func,
     handleObjectCreate: React.PropTypes.func,
     journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
-    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
+    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo)
   }
 
   constructor(props) {
@@ -124,40 +125,6 @@ export default class JourneySettings extends React.Component {
 
     const journeys = this.props.journeys;
 
-    const objectSettings = [
-      {
-        name: "vehicle",
-        parameters: [
-          {
-            name: "Average Speed",
-            kind: "text"
-          },
-          {
-            name: "Top Speed",
-            kind: "text"
-          },
-          {
-            name: "Weight",
-            kind: "text"
-          },
-          {
-            name: "Length",
-            kind: "text"
-          }
-        ]
-      },
-      {
-        name: "creature",
-        parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["unicorn", "dog"]
-          }
-        ]
-      },
-    ]
-
     return (
       <div id="journey-settings">
 	      <div id="input-journeys">
@@ -185,9 +152,9 @@ export default class JourneySettings extends React.Component {
           </div>
         </form>
         <ObjectSettings 
-          settings={objectSettings}
           handleSave={::this._handleAddObject}
           objectTypes={this.props.objectTypes}
+          objectKindInfo={this.props.objectKindInfo}
         />
       </div>
     )

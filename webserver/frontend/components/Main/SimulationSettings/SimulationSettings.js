@@ -14,7 +14,8 @@ export default class SimulationSettings extends React.Component {
     handlePositionPreview: React.PropTypes.func,
     handleCityChange: React.PropTypes.func,
     handleObjectTypeCreate: React.PropTypes.func,
-    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
+    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo)
   }
 
   constructor(props) {
@@ -125,6 +126,7 @@ export default class SimulationSettings extends React.Component {
           bounds={bounds}
           journeys={allJourneys}
           objectTypes={this.props.objectTypes}
+          objectKindInfo={this.props.objectKindInfo}
         />
         <div className="row">
           <button className="btn btn-primary" onClick={ (e) => this.handleSimulationButton(e, hasSimulationStarted) }>
@@ -143,5 +145,3 @@ export default class SimulationSettings extends React.Component {
         </div>
       </div>
     )
-  }
-}
