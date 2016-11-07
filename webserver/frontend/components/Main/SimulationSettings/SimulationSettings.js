@@ -12,7 +12,9 @@ export default class SimulationSettings extends React.Component {
     activeSimulationID: React.PropTypes.string,
     mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     handlePositionPreview: React.PropTypes.func,
-    handleCityChange: React.PropTypes.func
+    handleCityChange: React.PropTypes.func,
+    handleObjectTypeCreate: React.PropTypes.func,
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
   }
 
   constructor(props) {
@@ -99,6 +101,10 @@ export default class SimulationSettings extends React.Component {
     f(position);
   }
 
+  _handleObjectTypeCreate(typeInfo) {
+    this.props.handleObjectTypeCreate(typeInfo);
+  }
+
   render() {
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
@@ -115,8 +121,10 @@ export default class SimulationSettings extends React.Component {
         <JourneySettings 
           handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
           handlePositionSelect={(position) => this._handlePositionSelect(position)}
+          handleObjectCreate={(typeInfo) => this._handleObjectTypeCreate(typeInfo)}
           bounds={bounds}
           journeys={allJourneys}
+          objectTypes={this.props.objectTypes}
         />
         <div className="row">
           <button className="btn btn-primary" onClick={ (e) => this.handleSimulationButton(e, hasSimulationStarted) }>

@@ -42,10 +42,7 @@ export default class CustomPropTypes {
     id: React.PropTypes.string.isRequired,
     objectType: React.PropTypes.string.isRequired,
     position: CustomPropTypes.position.isRequired,
-    typeInfo: React.PropTypes.shape({
-      name: React.PropTypes.string,
-      kindInfo: CustomPropTypes.simulationObjectKind
-    })
+    typeInfo: CustomPropTypes.typeInfo
   }
 
   static simulationObject = React.PropTypes.shape(CustomPropTypes._simulationObject)
@@ -91,4 +88,12 @@ export default class CustomPropTypes {
   }
 
   static simulationObjectKind = React.PropTypes.shape(CustomPropTypes._simulationObjectKind);
+
+  static _typeInfo = {
+    name: React.PropTypes.string,
+    kindInfo: CustomPropTypes.simulationObjectKind,
+    kindName: React.PropTypes.string
+  }
+
+  static typeInfo = React.PropTypes.shape(CustomPropTypes._typeInfo)
 }

@@ -10,7 +10,9 @@ export default class JourneySettings extends React.Component {
     bounds: CustomPropTypes.bounds,
     handleJourneysSelect: React.PropTypes.func,
     handlePositionSelect: React.PropTypes.func,
-    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
+    handleObjectCreate: React.PropTypes.func,
+    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
   }
 
   constructor(props) {
@@ -108,7 +110,7 @@ export default class JourneySettings extends React.Component {
   }
 
   _handleAddObject(settings) {
-    console.log(settings);
+    this.props.handleObjectCreate(settings);
   }
 
   render() {
@@ -185,6 +187,7 @@ export default class JourneySettings extends React.Component {
         <ObjectSettings 
           settings={objectSettings}
           handleSave={::this._handleAddObject}
+          objectTypes={this.props.objectTypes}
         />
       </div>
     )

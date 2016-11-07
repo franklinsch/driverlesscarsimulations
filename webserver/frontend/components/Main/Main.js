@@ -187,6 +187,13 @@ export default class Main extends React.Component {
       this.postJourney(journey, simID);
     }
   }
+    
+  _handleObjectTypeCreate(typeInfo) {
+    const objectTypes = this.state.objectTypes || [];
+    this.setState({
+      objectTypes: objectTypes.concat([typeInfo])
+    })
+  }
 
   render() {
     const cities = this.state.availableCities;
@@ -220,6 +227,8 @@ export default class Main extends React.Component {
                 selectedCity={selectedCity}
                 mapSelectedJourneys={mapSelectedJourneys}
                 handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
+                handleObjectTypeCreate={(typeInfo) => {this._handleObjectTypeCreate(typeInfo)}}
+                objectTypes={this.state.objectTypes}
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">

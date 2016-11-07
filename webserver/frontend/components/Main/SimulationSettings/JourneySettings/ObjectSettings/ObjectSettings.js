@@ -6,7 +6,9 @@ export default class ObjectSettings extends React.Component {
 
   static propTypes = {
     handleSave: React.PropTypes.func.isRequired,
-    settings: React.PropTypes.arrayOf(CustomPropTypes.simulationObjectKind)
+    settings: React.PropTypes.arrayOf(CustomPropTypes.simulationObjectKind),
+    objects: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
   }
 
   constructor(props) {
@@ -37,10 +39,8 @@ export default class ObjectSettings extends React.Component {
   _handleFormSave() {
     const typeInfo = {
       name: this.state.typeName,
-      kindInfo: {
-        name: this.state.kind,
-        parameters: this.state.settings
-      }
+      kindName: this.state.kind,
+      parameters: this.state.settings
     }
 
     this.setState({
@@ -169,12 +169,14 @@ export default class ObjectSettings extends React.Component {
   }
 
   render() {
+    const objects = this.props.objectTypes || [];
+
     return (
       <div id="object-settings">
         <button className="btn btn-secondary" onClick={::this._toggleShow}>Show Objects</button>
         <ul>
           {
-            this.state.objects.map((object, index) => {
+            objects.map((object, index) => {
               return <li key={index}> {object.name} </li>
             })
           }
