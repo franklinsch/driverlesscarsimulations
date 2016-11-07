@@ -17,7 +17,8 @@ export default class ObjectSettings extends React.Component {
     this.state = {
       showSettings: false,
       showAddObject: false,
-      kind: firstKind
+      kind: firstKind,
+      objects: []
     }
   }
 
@@ -34,7 +35,14 @@ export default class ObjectSettings extends React.Component {
   }
 
   _handleFormSave() {
-    const objectSettings = this.state.settings;
+    const objectSettings = {
+      name: this.state.kind,
+      parameters: this.state.settings
+    }
+
+    this.setState({
+      objects: this.state.objects.concat([objectSettings])
+    })
 
     this.props.handleSave(objectSettings);
 
@@ -149,7 +157,14 @@ export default class ObjectSettings extends React.Component {
   render() {
     return (
       <div id="object-settings">
-        <button className="btn btn-primary" onClick={::this._toggleShow}>Show</button>
+        <button className="btn btn-secondary" onClick={::this._toggleShow}>Show Objects</button>
+        <ul>
+          {
+            this.state.objects.map((object, index) => {
+              return <li key={index}> {object.name} </li>
+            })
+          }
+        </ul>
 				{
 					this.state.showSettings &&
 						<div>
