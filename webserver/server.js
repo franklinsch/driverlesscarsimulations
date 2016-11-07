@@ -94,7 +94,7 @@ frontendSocketServer.on('request', function(request) {
     connection.send(JSON.stringify({
       type: "object-kind-info",
       content: [{
-        name: "vehicle",
+        name: "Vehicle",
         parameters: [
           {
             name: "Average Speed",
@@ -115,12 +115,26 @@ frontendSocketServer.on('request', function(request) {
         ]
       },
       {
-        name: "creature",
+        name: "Creature",
         parameters: [
           {
             name: "Type",
             kind: "predefined",
             allowedValues: ["unicorn", "dog"]
+          }
+        ]
+      },
+      {
+        name: "Road Hazard",
+        parameters: [
+          {
+            name: "Type",
+            kind: "predefined",
+            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+          },
+          {
+            name: "Slowdown factor",
+            kind: "text"
           }
         ]
       }]
