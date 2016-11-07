@@ -60,10 +60,8 @@ frontendSocketServer.on('request', function(request) {
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
     const simulation = new Simulation({
-      simulationStartParameters: {
-        city: data.selectedCity,
-        journeys: data.journeys
-      },
+      city: data.selectedCity,
+      journeys: data.journeys,
       frontendConnectionIndices: [frontendConnections.length],
       simulationStates: []
     });
@@ -97,8 +95,9 @@ frontendSocketServer.on('request', function(request) {
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
         content: {
-          simulationStartParameters: simulation.simulationStartParameters,
-          simID: simulation._id
+          simID: simulation._id,
+          city: simulation.city,
+          journeys: simulation.journeys
         }
       }));
     })
@@ -237,7 +236,8 @@ frameworkSocketServer.on('request', function(request) {
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
         content: {
-          simulationStartParameters: simulation.simulationStartParameters
+          city: simulation.city,
+          journeys: simulation.journeys
         }
       }));
     })

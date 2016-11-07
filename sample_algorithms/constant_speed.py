@@ -20,10 +20,10 @@ CONST_SPEED = CONST_SPEED_KM_H * (1000 / 3600)
 class ConnectionAssistant(client.SAVNConnectionAssistant):
 
   def handleSimulationStart(self, initialParameters):
-    south = initialParameters['simulationStartParameters']['city']['bounds']['southWest']['lat']
-    west = initialParameters['simulationStartParameters']['city']['bounds']['southWest']['lng']
-    north = initialParameters['simulationStartParameters']['city']['bounds']['northEast']['lat']
-    east = initialParameters['simulationStartParameters']['city']['bounds']['northEast']['lng']
+    south = initialParameters['city']['bounds']['southWest']['lat']
+    west = initialParameters['city']['bounds']['southWest']['lng']
+    north = initialParameters['city']['bounds']['northEast']['lat']
+    east = initialParameters['city']['bounds']['northEast']['lng']
     route.saveGeojson(south, west, north, east, 'map.geojson')
 
     start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
@@ -36,7 +36,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
     global state
     state = setupCars(1, BASE_ROUTE)
-    addToState(initialParameters['simulationStartParameters']['journeys'], state)
+    addToState(initialParameters['journeys'], state)
     timestamp = 0
     #for i in range(50):
     while self.alive:

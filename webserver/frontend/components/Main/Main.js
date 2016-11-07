@@ -65,11 +65,15 @@ export default class Main extends React.Component {
     const messageData = JSON.parse(message.data);
 
     if (messageData.type === "available-cities") {
+      if (this.state.simulationInfo.id == 0) {
+        //this._startInitialSimulation(messageData.content[0]._id);
+      }
       this.setState({
         availableCities: messageData.content,
         selectedCityID: messageData.content[0]._id
-      })
+      });
     } else if (messageData.type === "simulation-id") {
+      this.postInitialJourneys(messageData.content.id);
       this.setState({
         simulationInfo: messageData.content
       });
@@ -92,9 +96,8 @@ export default class Main extends React.Component {
     }
   }
 
-  handleAddJourney(journey) {
-    const simID = this.state.selectedCityID;
-    const fetchUrl = "/" + simID + "/journeys";
+  postJourney(journey, simID) {
+    const fetchUrl = "/simulations/" + simID + "/journeys";
     fetch(fetchUrl, {
         method: 'POST',
         headers: {
@@ -104,12 +107,19 @@ export default class Main extends React.Component {
         body: journey
     })
     .then((response) => {
-      const journeys = this.state.mapSelectedJourneys.concat([journey]);
-      this.setState({mapSelectedJourneys: journeys})
     })
     .catch((err) => {
       console.log("New journey was not saved due to: " + err);
     });
+
+  }
+  handleAddJourney(journey) {
+    const simID = this.state.simulationInfo.id;
+    if (simID != "0") {
+      this.postJourney(journey, simID);
+    }
+    const journeys = this.state.mapSelectedJourneys.concat([journey]);
+    this.setState({mapSelectedJourneys: journeys});
   }
 
   handleJoinSimulation(simulationID) {
@@ -150,6 +160,26 @@ export default class Main extends React.Component {
     this.setState({
       previewMarkerPosition: position
     })
+  }
+
+  _startInitialSimulation(cityId) {
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const type = "request-simulation-start";
+    const initialSettings = {
+      selectedCity: cityId,
+      journeys: allJourneys
+    }
+    const socket = this.state.socket;
+    UtilFunctions.sendSocketMessage(socket, type, initialSettings);
+  }
+
+  postInitialJourneys(simID) {
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    for (const journey of allJourneys) {
+      this.postJourney(journey, simID);
+    }
   }
 
   render() {
