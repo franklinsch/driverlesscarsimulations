@@ -9,10 +9,6 @@ router.get('/simulations/:simulationid', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 })
 
-router.get('*', (req, res) => {
-  res.sendFile(path.resolve('public/index.html'));
-});
-
 router.route('/simulations/:simulationID/journeys')
   .get((req, res) => {
     Simulation.findOne({
@@ -56,5 +52,9 @@ router.route('/simulations/:simulationID/journeys')
       });
     });
   });
+
+router.get('*', (req, res) => {
+  res.sendFile(path.resolve('public/index.html'));
+});
 
 module.exports = router;
