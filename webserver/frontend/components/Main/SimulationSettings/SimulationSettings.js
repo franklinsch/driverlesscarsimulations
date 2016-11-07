@@ -145,3 +145,5 @@ export default class SimulationSettings extends React.Component {
         </div>
       </div>
     )
+  }
+}
