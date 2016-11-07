@@ -65,10 +65,13 @@ export default class Main extends React.Component {
     const messageData = JSON.parse(message.data);
 
     if (messageData.type === "available-cities") {
+      if (this.state.simulationInfo.id == 0) {
+        //this._startInitialSimulation(messageData.content[0]._id);
+      }
       this.setState({
         availableCities: messageData.content,
         selectedCityID: messageData.content[0]._id
-      })
+      });
     } else if (messageData.type === "simulation-id") {
       this.setState({
         simulationInfo: messageData.content
@@ -150,6 +153,18 @@ export default class Main extends React.Component {
     this.setState({
       previewMarkerPosition: position
     })
+  }
+
+  _startInitialSimulation(cityId) {
+    const journeys = this.state.journeys || [];
+    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const type = "request-simulation-start";
+    const initialSettings = {
+      selectedCity: cityId,
+      journeys: allJourneys
+    }
+    const socket = this.state.socket;
+    UtilFunctions.sendSocketMessage(socket, type, initialSettings);
   }
 
   render() {
