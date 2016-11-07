@@ -57,6 +57,8 @@ export default class ObjectSettings extends React.Component {
 
     this.setState({
       showAddObject: false,
+      typeName: null,
+      settings: null,
       kind: firstKind
     })
 
