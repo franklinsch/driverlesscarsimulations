@@ -29,6 +29,10 @@ export default class Main extends React.Component {
         ...UtilFunctions.socketMessage(),
         type:"request-available-cities"
       }))
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-default-object-types"
+      }))
       if (simID != "0") {
         this.handleJoinSimulation(simID);
       }
@@ -99,6 +103,10 @@ export default class Main extends React.Component {
       this.setState({
         simulationInfo: newSimulationInfo
       });
+    } else if (messageData.type === "default-object-types") {
+      this.setState({
+        objectTypes: messageData.content
+      })
     }
   }
 
