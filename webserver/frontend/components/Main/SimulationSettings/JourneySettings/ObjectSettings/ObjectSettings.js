@@ -156,10 +156,16 @@ export default class ObjectSettings extends React.Component {
                 this._updateSetting(name, e.target.value);
               }
 
+              let value = "";
+
+              if (this.state.settings) {
+                value = this.state.settings[name];
+              }
+
               return (
                 <div className="form-group" key={index}>
                   <label htmlFor={name}> {name} </label>
-                  <input id={name} value={this.state[name]} onChange={onChange} className="form-control"/>
+                  <input id={name} value={value} onChange={onChange} className="form-control"/>
                 </div>
               )
             }
