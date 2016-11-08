@@ -13,15 +13,9 @@ export default class ObjectSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    let firstKind = null;
-    if (props && props.settings) {
-      firstKind = props.settings[0].name;
-    }
-
     this.state = {
       showSettings: false,
       showAddObject: false,
-      kind: firstKind,
       objects: []
     }
   }
@@ -181,8 +175,8 @@ export default class ObjectSettings extends React.Component {
     return (
       <div id="object-settings">
         <button className="btn btn-secondary" onClick={::this._toggleShow}>Show Objects</button>
-				{
-					this.state.showSettings &&
+        {
+          this.state.showSettings &&
             <div>
               <ul>
                 {
@@ -202,15 +196,15 @@ export default class ObjectSettings extends React.Component {
               </ul>
               <button type='button' className="btn" onClick={::this._toggleShowAdd}>Add Object Type</button>
 
-							<Modal
-								show={this.state.showAddObject}
+              <Modal
+                show={this.state.showAddObject}
                 onHide={::this._handleModalHide}
-								aria-labelledby="ModalHeader"
-							>
-								<Modal.Header closeButton>
-									<Modal.Title id='ModalHeader'>Add Object Type</Modal.Title>
-								</Modal.Header>
-								<Modal.Body>
+                aria-labelledby="ModalHeader"
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title id='ModalHeader'>Add Object Type</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                   {this._renderTypeNameInput()}
                   <div className="form-group">
                     <label htmlFor="kind">Kind</label>
@@ -219,16 +213,16 @@ export default class ObjectSettings extends React.Component {
 
                   {this._renderSettings()}
 
-								</Modal.Body>
-								<Modal.Footer>
-									<Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
 
-									<button className='btn btn-primary' onClick={::this._handleFormSave}>
-										Save
-									</button>
-								</Modal.Footer>
-							</Modal>
-						</div>
+                  <button className='btn btn-primary' onClick={::this._handleFormSave}>
+                    Save
+                  </button>
+                </Modal.Footer>
+              </Modal>
+            </div>
         }
       </div>
     )
