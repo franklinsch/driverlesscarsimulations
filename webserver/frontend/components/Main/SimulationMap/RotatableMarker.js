@@ -10,12 +10,23 @@ export default class RotatableMarker extends React.Component {
     opacity: PropTypes.number,
     position: CustomPropTypes.position.isRequired,
     zIndexOffset: PropTypes.number,
-    rotationAngle: PropTypes.number
+    rotationAngle: PropTypes.number,
+    handleMouseOver: PropTypes.func,
+    handleMouseOut: PropTypes.func
   }
 
-  constructor(props) {
-    super(props);
+  componentDidMount() {
+    if (this.leafletElement) {
+      if (this.props.handleMouseOver) {
+        this.leafletElement.on('mouseover', this.props.handleMouseOver);
+      }
 
+      if (this.props.handleMouseOut) {
+        this.leafletElement.on('mouseout', this.props.handleMouseOut);
+      }
+    } else {
+      console.log('No leaflet element found');
+    }
   }
 
   componentDidUpdate(prevProps) {

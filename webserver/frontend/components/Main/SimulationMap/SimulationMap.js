@@ -206,7 +206,14 @@ export default class SimulationMap extends React.Component {
         ref='map'
         closePopupOnClick={false}
       >
-        
+        <GeoJson key={Math.random()} data={
+          { "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": (this.props.simulationState.objects[0].route ? this.props.simulationState.objects[0].route : [])
+        } } ] } } />
 
         <TileLayer
         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -218,19 +225,12 @@ export default class SimulationMap extends React.Component {
           cars.map((car, index) => {
             const key = car.id
             return (
-              <RotatableMarker position = { car.position } 
-                key = { key }
-                icon = {carIcon}
-                rotationAngle = { car.direction }
+              <RotatableMarker position={car.position} 
+                key={key}
+                icon={carIcon}
+                rotationAngle={car.direction}
+                handleMouseOver={() => console.log('test2')}
               >
-              <GeoJson key={Math.random()}data={
-          { "type": "FeatureCollection",
-    "features": [
-      { "type": "Feature",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": (this.props.simulationState.objects[0].route ? this.props.simulationState.objects[0].route : [])
-        } } ] } } />
                 <Popup>
                   <div>
                   <dl>
