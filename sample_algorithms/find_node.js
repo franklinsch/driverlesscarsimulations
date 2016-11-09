@@ -1,5 +1,6 @@
 const point = JSON.parse(process.argv[2].substring(1))['geometry']['coordinates'];
-const geojson = JSON.parse(process.argv[3].substring(1));
+var fs = require('fs');
+const geojson = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 
 const distance = function(point1, point2) {
   return Math.sqrt(Math.pow(point1[0]-point2[0], 2) + Math.pow(point1[1]-point2[1], 2));

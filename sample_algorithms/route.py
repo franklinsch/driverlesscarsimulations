@@ -15,10 +15,8 @@ def saveGeojson(bottom, left, top, right, output):
 def getRoute(inp, start, end):
   start = newPoint(getNearest(inp, start))
   end = newPoint(getNearest(inp, end))
-  gjson = None
-  with open(inp) as data_file:
-    gjson = geojson.load(data_file)
-  os.system("node route.js " + str(geojson.dumps(start).encode('utf8')) + " " + str(geojson.dumps(end).encode('utf8')) + " " + str(geojson.dumps(gjson).encode('utf8')) + " > path.json");
+
+  os.system("node route.js " + str(geojson.dumps(start).encode('utf8')) + " " + str(geojson.dumps(end).encode('utf8')) + " " + inp + " > path.json");
   path = None
   with open("path.json") as data_file:
     path = json.load(data_file)
@@ -28,14 +26,11 @@ def newPoint(coordinates):
   return {"geometry": {"type": "Point", "coordinates": coordinates}, "type": "Feature", "properties": {}}
 
 def getNearest(inp, point):
-  gjson = None
-  with open(inp) as data_file:
-    gjson = geojson.load(data_file)
-  os.system("node find_node.js " + str(geojson.dumps(point).encode('utf8')) + " " + str(geojson.dumps(gjson).encode('utf8')) + " > find.json");
-  path = None
+  os.system("node find_node.js " + str(geojson.dumps(point).encode('utf8')) + " " + inp + " > find.json")
+  proj = None
   with open("find.json") as data_file:
-    path = json.load(data_file)
-  return path
+    proj = json.load(data_file)
+  return proj
 
 #saveGeojson(50.68166, 4.78482, 50.68347, 4.78780, 'map.geojson')
 #start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
