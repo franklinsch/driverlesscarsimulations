@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
+import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
 import RotatableMarker from './RotatableMarker'
@@ -206,6 +206,8 @@ export default class SimulationMap extends React.Component {
         ref='map'
         closePopupOnClick={false}
       >
+        
+
         <TileLayer
         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -221,6 +223,14 @@ export default class SimulationMap extends React.Component {
                 icon = {carIcon}
                 rotationAngle = { car.direction }
               >
+              <GeoJson key={Math.random()}data={
+          { "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": (this.props.simulationState.objects[0].route ? this.props.simulationState.objects[0].route : [])
+        } } ] } } />
                 <Popup>
                   <div>
                   <dl>
