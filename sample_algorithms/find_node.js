@@ -1,5 +1,6 @@
+const fs = require("fs");
 const point = JSON.parse(process.argv[2].substring(1))['geometry']['coordinates'];
-const geojson = JSON.parse(process.argv[3].substring(1));
+const geojson = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 
 const distance = function(point1, point2) {
   return Math.sqrt(Math.pow(point1[0]-point2[0], 2) + Math.pow(point1[1]-point2[1], 2));
@@ -29,11 +30,11 @@ const equal = function(point1, point2) {
   return point1[0] == point2[0] && point1[1] == point2[1];
 };
 
-var min2_angle = undefined, min2_point, min2_i, min2_j;
-var min_distance = -1, min_point, min_i, min_j, min_point_angle;
+let min2_angle = undefined, min2_point, min2_i, min2_j;
+let min_distance = -1, min_point, min_i, min_j, min_point_angle;
 for (let i in geojson['features']) {
   const feature = geojson['features'][i]
-  var last_point = null;
+  let last_point = null;
   if (feature['geometry']['type'] == 'LineString' && feature['properties']['highway']) {
     for (let j in feature['geometry']['coordinates']) {
       const coordinate = feature['geometry']['coordinates'][j];
@@ -82,7 +83,6 @@ if (min2_i == min_i && Math.abs(min2_j - min_j) == 1) {
     }
     geojson['features'][min_i]['geometry']['coordinates'].splice(j, 0, proj);
 
-    var fs = require("fs");
     fs.writeFile("map.geojson", JSON.stringify(geojson), function (err) {
        if (err) throw err;
     });
