@@ -144,6 +144,24 @@ export default class Main extends React.Component {
     socket.send(message);
   }
 
+  postJourney(journey, simID) {
+    const fetchUrl = "/simulations/" + simID + "/journeys";
+    fetch(fetchUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: journey
+    })
+      .then((response) => {
+      })
+      .catch((err) => {
+        console.log("New journey was not saved due to: " + err);
+      });
+
+  }
+
   _cityWithID(id) {
     const availableCities = this.state.availableCities;
     if (availableCities) {
