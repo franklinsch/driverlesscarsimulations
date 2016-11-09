@@ -131,7 +131,15 @@ export default class SimulationMap extends React.Component {
     const origin = this.state.origin;
     const destination = this.state.destination;
 
-    const typeInfo = this.state.selectedObjectType || this.props.objectTypes[0]
+    let typeInfo = this.props.objectTypes[0];
+
+    if (this.state.selectedObjectTypeName) {
+      for (const objectType of this.props.objectTypes) {
+        if (objectType.name === this.state.selectedObjectTypeName) {
+          typeInfo = objectType
+        }
+      }
+    }
 
     const journey = {
       origin: origin,
@@ -151,7 +159,7 @@ export default class SimulationMap extends React.Component {
         <span>
           <p> Create new journey? </p>
           <div className="form-group">
-            <select className="form-control" onChange={(e)=>{this.setState({selectedObjectType: e.target.value})}}>
+            <select className="form-control" onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
               {
                 objectTypes.map((object) => {return object.name}).map((name, index) => {
                   return <option value={name} key={index}>{name}</option>

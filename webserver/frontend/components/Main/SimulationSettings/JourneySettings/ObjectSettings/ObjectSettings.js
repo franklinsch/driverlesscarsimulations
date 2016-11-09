@@ -39,19 +39,15 @@ export default class ObjectSettings extends React.Component {
       parameters: this.state.settings
     }
 
-    this.setState({
-      objects: this.state.objects.concat([typeInfo])
-    })
-
     this.props.handleSave(typeInfo);
 
-    this._handleModalHide()
+    this._handleModalHide();
   }
 
   _handleModalHide() {
     let firstKind = null;
-    if (this.props && this.props.settings) {
-      firstKind = this.props.settings[0].name;
+    if (this.props && this.props.objectKindInfo) {
+      firstKind = this.props.objectKindInfo[0].name;
     }
 
     this.setState({
@@ -176,7 +172,7 @@ export default class ObjectSettings extends React.Component {
   }
 
   render() {
-    const objects = this.props.objectTypes || [];
+    const objects = this.props.objects || [];
 
     return (
       <div id="object-settings">

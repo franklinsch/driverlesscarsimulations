@@ -153,7 +153,7 @@ export default class JourneySettings extends React.Component {
         </form>
         <ObjectSettings 
           handleSave={::this._handleAddObject}
-          objectTypes={this.props.objectTypes}
+          objects={this.props.objectTypes}
           objectKindInfo={this.props.objectKindInfo}
         />
       </div>

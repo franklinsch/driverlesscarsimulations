@@ -159,7 +159,6 @@ export default class Main extends React.Component {
       .catch((err) => {
         console.log("New journey was not saved due to: " + err);
       });
-
   }
 
   _cityWithID(id) {
