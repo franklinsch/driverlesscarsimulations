@@ -13,22 +13,10 @@ const auth = jwt({
   userProperty: 'payload'
 });
 
-// Catch unauthorised errors
-app.use((err, req, res, next) => {
-  if (err.name === 'UnauthorizedError') {
-    res.status(401);
-    res.json({
-      "message": err.name + ": " + err.message
-    });
-  }
-});
-
-router.get('/profile', auth, ctrlProfile.profileRead);
-
 
 router.get('/simulations/:simulationid', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
-})
+});
 
 router.route('/simulations/:simulationID/journeys')
   .get((req, res) => {
@@ -82,40 +70,50 @@ router.route('/simulations/:simulationID/journeys')
     });
   });
 
-router.route('/user')
+router.route('/register')
   .post((req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const user = new User({
       username: username,
-      password: password,
       admin: false,
       created_at: Date.now(),
       simulations: []
     });
-    user.save()
-      .then((user) => {
-        res.sendStatus(200);
-        res.send(user._id);
-      })
-      .catch((err) => {
-        console.log("User save unsuccessful");
-        res.sendStatus(400);
+    user.setPassword(password);
+
+
+    user.save((err) => {
+      const token = user.generateJwt();
+      res.status(200);
+      res.json({
+        "token": token
       });
+    });
   });
 
 router.route('/login')
   .get((req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    User.findOne({
-      username: username
-    }, (err, user) => {
+    passport.authenticate('local', (err, user, info) => {
+
+      // If Passport throws/catches an error
       if (err) {
-        res.sendStatus(400);
+        res.status(404).json(err);
+        return;
       }
 
-    });
+      // If a user is found
+      if (user) {
+        const token = user.generateJwt();
+        res.status(200);
+        res.json({
+          "token": token
+        });
+      } else {
+        // If user is not found
+        res.status(401).json(info);
+      }
+    })(req, res);
   });
 
 
