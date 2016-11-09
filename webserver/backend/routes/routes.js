@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const async = require('async');
-const Simulation = require('../models/Simulation');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
+const Simulation = require('../models/Simulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
 
@@ -82,6 +84,18 @@ router.route('/user')
         console.log("User save unsuccessful");
         res.sendStatus(400);
       });
+  });
+
+router.route('/login')
+  .get((req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    User.findOne({ username: username }, (err, user) => {
+      if (err) {
+        res.sendStatus(400);
+      }
+
+    });
   });
 
 
