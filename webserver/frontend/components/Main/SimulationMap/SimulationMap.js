@@ -21,7 +21,8 @@ export default class SimulationMap extends React.Component {
 
     this.state = {
       origin: null,
-      destination: null
+      destination: null,
+      clickedCar: null
     }
   }
 
@@ -146,6 +147,10 @@ export default class SimulationMap extends React.Component {
 
   }
 
+  _handleCarMarkerClick(car, e) {
+    this.setState({ clickedCar: car });
+  }
+
   componentDidUpdate() {
     const map = this.refs.map.leafletElement;
     const bounds = this.props.bounds;
@@ -206,14 +211,16 @@ export default class SimulationMap extends React.Component {
         ref='map'
         closePopupOnClick={false}
       >
-        <GeoJson key={Math.random()} data={
+        { this.state.clickedCar && 
+          <GeoJson key={Math.random()} data={
           { "type": "FeatureCollection",
     "features": [
       { "type": "Feature",
         "geometry": {
           "type": "LineString",
-          "coordinates": (this.props.simulationState.objects[0].route ? this.props.simulationState.objects[0].route : [])
+          "coordinates": this.state.clickedCar.route
         } } ] } } />
+        }
 
         <TileLayer
         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -229,7 +236,7 @@ export default class SimulationMap extends React.Component {
                 key={key}
                 icon={carIcon}
                 rotationAngle={car.direction}
-                handleMouseOver={() => console.log('test2')}
+                handleMouseOver={(e) => this._handleCarMarkerClick(car, e) }
               >
                 <Popup>
                   <div>

@@ -18,7 +18,7 @@ export default class RotatableMarker extends React.Component {
   componentDidMount() {
     if (this.leafletElement) {
       if (this.props.handleMouseOver) {
-        this.leafletElement.on('mouseover', this.props.handleMouseOver);
+        this.leafletElement.on('click', this.props.handleMouseOver);
       }
 
       if (this.props.handleMouseOut) {
