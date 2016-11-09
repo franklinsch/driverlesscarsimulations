@@ -174,7 +174,9 @@ frontendSocketServer.on('request', function(request) {
         return;
       }
       frontendConnections.push(connection);
-      frontendInfo.push({'timestamp': 0, 'speed': null});
+      const numStates = simulation.simulationStates.length;
+      const latestTimestamp = simulation.simulationStates[numStates-1]['timestamp']
+      frontendInfo.push({'timestamp': latestTimestamp, 'speed': null});
 
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
@@ -309,7 +311,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId
 
-    Simulation.findByIdAndUpdate(simulationID, { $set: { timeslice: message.content.timeslice, frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
+    Simulation.findByIdAndUpdate(simulationID, { $set: { timeslice: message.content.timeslice, frameworkConnectionIndex: frameworkConnections.length, simulationStates: [] }}, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -322,6 +324,10 @@ frameworkSocketServer.on('request', function(request) {
       }
 
       frameworkConnections.push(connection);
+
+      for (let index of simulation.frontendConnectionIndices) {
+        frontendInfo[index]['timestamp'] = 0;
+      }
 
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
