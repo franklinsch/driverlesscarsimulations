@@ -35,7 +35,7 @@ export default class ObjectSettings extends React.Component {
   _handleFormSave() {
     const typeInfo = {
       name: this.state.typeName,
-      kindName: this.state.kind,
+      kindName: this.state.kind || this.props.objectKindInfo[0].name,
       parameters: this.state.settings
     }
 
@@ -118,7 +118,8 @@ export default class ObjectSettings extends React.Component {
   }
 
   _renderSettings() {
-    const parameters = this._paramsForKindName(this.state.kind) || []; 
+    const kind = this.state.kind || this.props.objectKindInfo[0].name;
+    const parameters = this._paramsForKindName(kind) || [];
 
     return (
       <div>
@@ -154,7 +155,7 @@ export default class ObjectSettings extends React.Component {
 
               let value = "";
 
-              if (this.state.settings) {
+              if (this.state.settings && this.state.settings[name]) {
                 value = this.state.settings[name];
               }
 
