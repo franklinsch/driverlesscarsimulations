@@ -1,4 +1,5 @@
 const fs = require("fs");
+
 const point = JSON.parse(process.argv[2].substring(1))['geometry']['coordinates'];
 const geojson = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 

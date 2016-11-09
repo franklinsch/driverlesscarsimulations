@@ -15,16 +15,16 @@ locked_nodes = []
 
 SLEEP_TIME = 1
 TIMESLICE = 1
-MAX_SPEED_KM_H = 40
+MAX_SPEED_KM_H = 60
 MAX_SPEED = MAX_SPEED_KM_H * (1000 / 3600)
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
 
   def handleSimulationStart(self, initialParameters):
-    south = initialParameters['simulationStartParameters']['city']['bounds']['southWest']['lat']
-    west = initialParameters['simulationStartParameters']['city']['bounds']['southWest']['lng']
-    north = initialParameters['simulationStartParameters']['city']['bounds']['northEast']['lat']
-    east = initialParameters['simulationStartParameters']['city']['bounds']['northEast']['lng']
+    south = initialParameters['city']['bounds']['southWest']['lat']
+    west = initialParameters['city']['bounds']['southWest']['lng']
+    north = initialParameters['city']['bounds']['northEast']['lat']
+    east = initialParameters['city']['bounds']['northEast']['lng']
     route.saveGeojson(south, west, north, east, 'map.geojson')
 
     start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
@@ -37,7 +37,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
     global state
     state = setupCars(1, BASE_ROUTE)
-    addToState(initialParameters['simulationStartParameters']['journeys'], state)
+    addToState(initialParameters['journeys'], state)
     timestamp = 0
     while True:
       #useApi()
@@ -88,12 +88,15 @@ def preprocess(route):
   for i in range(len(route)-1):
     start = route[i]
     end = route[i+1]
-    #node = get_node(start, end)
+    #props = route.get_properties('map.geojson', start, end)
     dist = get_distance(start, end)
     time = dist/MAX_SPEED
     maxSpeed = MAX_SPEED
-    #if 'maxSpeed' in node:
-    #  maxSpeed = node['maxSpeed']
+    #if 'maxSpeed' in props:
+    #  maxSpeed = props['maxSpeed']
+    #  print("There's a maxSpeed: " + str(maxSpeed))
+    #else:
+    #  print("Using default     : " + str(maxSpeed))
     end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed})
 
 def add(v1, v2):
@@ -226,6 +229,7 @@ def translate(state):
     res += [{'id': car['id'], 'objectType': car['type'], 'speed': car['speed'],
       'direction': car['direction'], 'position': {'lat': car['position'][1],
         'lng': car['position'][0]},'journey': car['baseRoute']}]
+  print(res)
   return res
 
 if(len(sys.argv) != 2):
