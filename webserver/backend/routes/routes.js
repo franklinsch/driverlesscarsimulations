@@ -88,7 +88,7 @@ router.route('/register')
   });
 
 router.route('/login')
-  .get((req, res) => {
+  .post((req, res) => {
     passport.authenticate('local', (err, user, info) => {
 
       // If Passport throws/catches an error
