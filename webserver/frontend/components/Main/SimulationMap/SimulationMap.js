@@ -153,7 +153,9 @@ export default class SimulationMap extends React.Component {
   }
 
   _handleCarMarkerClick(car, e) {
-    this.setState({ clickedCar: car });
+    this.setState({
+      clickedCar: car
+    });
   }
 
   componentDidUpdate() {
