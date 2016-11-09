@@ -3,15 +3,11 @@ const router = express.Router();
 const async = require('async');
 const path = require('path');
 const jwt = require('express-jwt');
+const passport = require('passport');
 const config = require('../config');
 const Simulation = require('../models/Simulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
-
-const auth = jwt({
-  secret: config.token_secret,
-  userProperty: 'payload'
-});
 
 
 router.get('/simulations/:simulationid', (req, res) => {
