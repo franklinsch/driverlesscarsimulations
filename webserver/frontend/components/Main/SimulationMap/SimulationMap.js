@@ -251,7 +251,7 @@ export default class SimulationMap extends React.Component {
                 key={key}
                 icon={carIcon}
                 rotationAngle={car.direction}
-                handleMouseOver={(e) => this._handleCarMarkerClick(car, e) }
+                handleClick={(e) => this._handleCarMarkerClick(car, e) }
               >
                 <Popup>
                   <div>

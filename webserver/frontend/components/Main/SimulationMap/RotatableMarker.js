@@ -11,18 +11,13 @@ export default class RotatableMarker extends React.Component {
     position: CustomPropTypes.position.isRequired,
     zIndexOffset: PropTypes.number,
     rotationAngle: PropTypes.number,
-    handleMouseOver: PropTypes.func,
-    handleMouseOut: PropTypes.func
+    handleClick: PropTypes.func
   }
 
   componentDidMount() {
     if (this.leafletElement) {
-      if (this.props.handleMouseOver) {
-        this.leafletElement.on('click', this.props.handleMouseOver);
-      }
-
-      if (this.props.handleMouseOut) {
-        this.leafletElement.on('mouseout', this.props.handleMouseOut);
+      if (this.props.handleClick) {
+        this.leafletElement.on('click', this.props.handleClick);
       }
     } else {
       console.log('No leaflet element found');
@@ -30,8 +25,15 @@ export default class RotatableMarker extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.leafletElement && this.props.rotationAngle !== prevProps.rotationAngle) {
-      this.leafletElement.setRotationAngle(this.props.rotationAngle)
+    if (this.leafletElement) {
+      if (this.props.handleClick != prevProps.handleClick) {
+        this.leafletElement.off('click', prevProps.handleClick);
+        this.leafletElement.on('click', this.props.handleClick);
+      }
+
+      if (this.props.rotationAngle !== prevProps.rotationAngle) {
+        this.leafletElement.setRotationAngle(this.props.rotationAngle);
+      }
     }
   }
 
