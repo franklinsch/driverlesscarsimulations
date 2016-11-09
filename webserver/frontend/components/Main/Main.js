@@ -4,6 +4,7 @@ import SimulationSettings from './SimulationSettings/SimulationSettings.js';
 import CustomPropTypes from '../Utils/CustomPropTypes.js';
 import UtilFunctions from '../Utils/UtilFunctions.js';
 import Header from './Header/Header.js';
+import 'whatwg-fetch';
 
 export default class Main extends React.Component {
 
@@ -104,7 +105,7 @@ export default class Main extends React.Component {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: journey
+        body: JSON.stringify(journey)
     })
     .then((response) => {
     })
