@@ -48,6 +48,11 @@ export default class SimulationMap extends React.Component {
     }
 
     this._updateMarker(position);
+
+    // If one clicks on the map, the currently clicked car isn't active anymore
+    this.setState({
+      clickedCar: null
+    });
   }
 
   _updateMarker(position) {
