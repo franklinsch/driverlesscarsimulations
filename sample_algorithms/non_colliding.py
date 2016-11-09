@@ -41,9 +41,9 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     timestamp = 0
     while True:
       #useApi()
+      savn.updateCarStates(timestamp, translate(state))
       state = algo(state)
       timestamp += TIMESLICE
-      savn.updateCarStates(timestamp, translate(state))
       time.sleep(SLEEP_TIME)
     #useApiToEnd()
 
@@ -229,7 +229,6 @@ def translate(state):
     res += [{'id': car['id'], 'objectType': car['type'], 'speed': car['speed'],
       'direction': car['direction'], 'position': {'lat': car['position'][1],
         'lng': car['position'][0]},'journey': car['baseRoute']}]
-  print(res)
   return res
 
 if(len(sys.argv) != 2):
