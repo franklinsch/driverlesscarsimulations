@@ -112,8 +112,6 @@ export default class Main extends React.Component {
         objectTypes: messageData.content
       })
     } else if (messageData.type === "object-kind-info") {
-
-      console.log(messageData.content)
       this.setState({
         objectKindInfo: messageData.content
       })
