@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 const routes = require('./backend/routes/routes');
 const config = require('./backend/config');
+const passwordConfig = require('./backend/password');
 
 const WebSocketServer = require('websocket').server;
 
@@ -28,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 app.use('/', routes);
 

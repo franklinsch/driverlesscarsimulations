@@ -2,11 +2,29 @@ const express = require('express');
 const router = express.Router();
 const async = require('async');
 const path = require('path');
-const jwt = require('jsonwebtoken');
+const jwt = require('express-jwt');
 const config = require('../config');
 const Simulation = require('../models/Simulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
+
+const auth = jwt({
+  secret: config.token_secret,
+  userProperty: 'payload'
+});
+
+// Catch unauthorised errors
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401);
+    res.json({
+      "message": err.name + ": " + err.message
+    });
+  }
+});
+
+router.get('/profile', auth, ctrlProfile.profileRead);
+
 
 router.get('/simulations/:simulationid', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
@@ -90,7 +108,9 @@ router.route('/login')
   .get((req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    User.findOne({ username: username }, (err, user) => {
+    User.findOne({
+      username: username
+    }, (err, user) => {
       if (err) {
         res.sendStatus(400);
       }
