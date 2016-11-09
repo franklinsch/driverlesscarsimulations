@@ -170,6 +170,25 @@ export default class SimulationMap extends React.Component {
     }
   }
 
+  _renderGeoJson() {
+    // We use a random key so that on each change, the GeoJson is rerendered (GeoJson implementation is immutable)
+    return this.state.clickedCar && 
+            <GeoJson key={Math.random()} data={
+                { "type": "FeatureCollection",
+                  "features": [
+                    {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "LineString",
+                        "coordinates": this.state.clickedCar.route
+                      }
+                    }
+                  ]
+                } 
+              }
+            />;
+  }
+
   render() {
     const style = {
       height: this.props.height || 300 + 'px',
@@ -216,16 +235,7 @@ export default class SimulationMap extends React.Component {
         ref='map'
         closePopupOnClick={false}
       >
-        { this.state.clickedCar && 
-          <GeoJson key={Math.random()} data={
-          { "type": "FeatureCollection",
-    "features": [
-      { "type": "Feature",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": this.state.clickedCar.route
-        } } ] } } />
-        }
+        { this._renderGeoJson() }
 
         <TileLayer
         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
