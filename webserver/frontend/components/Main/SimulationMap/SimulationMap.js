@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
+import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
 import RotatableMarker from './RotatableMarker'
@@ -21,7 +21,8 @@ export default class SimulationMap extends React.Component {
 
     this.state = {
       origin: null,
-      destination: null
+      destination: null,
+      clickedCar: null
     }
   }
 
@@ -47,6 +48,11 @@ export default class SimulationMap extends React.Component {
     }
 
     this._updateMarker(position);
+
+    // If one clicks on the map, the currently clicked car isn't active anymore
+    this.setState({
+      clickedCar: null
+    });
   }
 
   _updateMarker(position) {
@@ -146,6 +152,12 @@ export default class SimulationMap extends React.Component {
 
   }
 
+  _handleCarMarkerClick(car, e) {
+    this.setState({
+      clickedCar: car
+    });
+  }
+
   componentDidUpdate() {
     const map = this.refs.map.leafletElement;
     const bounds = this.props.bounds;
@@ -158,6 +170,25 @@ export default class SimulationMap extends React.Component {
       map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
       this.bounds = bounds;
     }
+  }
+
+  _renderGeoJson() {
+    // We use a random key so that on each change, the GeoJson is rerendered (GeoJson implementation is immutable)
+    return this.state.clickedCar && 
+            <GeoJson key={Math.random()} data={
+                { "type": "FeatureCollection",
+                  "features": [
+                    {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "LineString",
+                        "coordinates": this.state.clickedCar.route
+                      }
+                    }
+                  ]
+                } 
+              }
+            />;
   }
 
   render() {
@@ -206,6 +237,8 @@ export default class SimulationMap extends React.Component {
         ref='map'
         closePopupOnClick={false}
       >
+        { this._renderGeoJson() }
+
         <TileLayer
         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -216,10 +249,11 @@ export default class SimulationMap extends React.Component {
           cars.map((car, index) => {
             const key = car.id
             return (
-              <RotatableMarker position = { car.position } 
-                key = { key }
-                icon = {carIcon}
-                rotationAngle = { car.direction }
+              <RotatableMarker position={car.position} 
+                key={key}
+                icon={carIcon}
+                rotationAngle={car.direction}
+                handleClick={(e) => this._handleCarMarkerClick(car, e) }
               >
                 <Popup>
                   <div>
