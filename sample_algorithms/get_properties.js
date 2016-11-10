@@ -7,19 +7,28 @@ const equal = function(point1, point2) {
   return point1[0] == point2[0] && point1[1] == point2[1];
 };
 
-const equalNodes = function(node1, node2) {
-  return equal(node1[0], node2[0]) && equal(node1[1], node2[1]);
-};
-
 for (const feature of geojson['features']) {
   if (feature['geometry']['type'] == 'LineString' && feature['properties']['highway']) {
-    for (let i = 0; i < feature['geometry']['coordinates'].length - 1; i++) {
+    clength = feature['geometry']['coordinates'].length
+    for (let i = 0; i < clength; i++) {
       const start = feature['geometry']['coordinates'][i];
-      const end = feature['geometry']['coordinates'][i+1];
-      if (equalNodes(node, [start, end])) {
-        console.log(JSON.stringify(feature['properties']));
-        return;
+      if (equal(start, node[0])) {
+        if (i < clength - 1) {
+          const end = feature['geometry']['coordinates'][i+1];
+          if (equal(end, node[1])) {
+            console.log(JSON.stringify(feature['properties']));
+            return;
+          }
+        }
+        if (i > 0) {
+          const end = feature['geometry']['coordinates'][i-1];
+          if (equal(end, node[1])) {
+            console.log(JSON.stringify(feature['properties']));
+            return;
+          }
+        }
       }
     }
   }
 }
+console.log(JSON.stringify({}));
