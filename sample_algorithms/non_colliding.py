@@ -4,7 +4,7 @@ import math
 sys.path.append('../framework')
 
 import client
-import route
+import route as R
 import geojson
 import os.path
 
@@ -16,7 +16,6 @@ locked_nodes = []
 SLEEP_TIME = 1
 TIMESLICE = 1
 MAX_SPEED_KM_H = 60
-MAX_SPEED = MAX_SPEED_KM_H * (1000 / 3600)
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
 
@@ -25,20 +24,22 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     west = initialParameters['city']['bounds']['southWest']['lng']
     north = initialParameters['city']['bounds']['northEast']['lat']
     east = initialParameters['city']['bounds']['northEast']['lng']
-    route.saveGeojson(south, west, north, east, 'map.geojson')
+    R.saveGeojson(south, west, north, east, 'map.geojson')
 
     start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
     end = {"geometry": {"type": "Point", "coordinates": [4.7942264, 50.6814472]}, "type": "Feature", "properties": {}}
 
-    BASE_ROUTE = route.getRoute('map.geojson', start, end)['path']
+    BASE_ROUTE = R.getRoute('map.geojson', start, end)['path']
     preprocess(BASE_ROUTE)
 
-    print('Starting simulation:')
-    print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
     global state
     state = setupCars(1, BASE_ROUTE)
     addToState(initialParameters['journeys'], state)
     timestamp = 0
+
+    print('Starting simulation:')
+    print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
+
     while True:
       #useApi()
       savn.updateCarStates(timestamp, translate(state))
@@ -57,7 +58,7 @@ def addToState(journeys, state):
   for journey in journeys:
     start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
     end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
-    newRoute = route.getRoute('map.geojson', start, end)['path']
+    newRoute = R.getRoute('map.geojson', start, end)['path']
     preprocess(newRoute)
     state.append(newCar(len(state), baseRoute=newRoute))
 
@@ -88,16 +89,15 @@ def preprocess(route):
   for i in range(len(route)-1):
     start = route[i]
     end = route[i+1]
-    #props = route.get_properties('map.geojson', start, end)
+
+    props = R.getProperties('map.geojson', start, end)
+    maxSpeed_km_h = MAX_SPEED_KM_H
+    if 'maxspeed' in props:
+      maxSpeed_km_h = int(props['maxspeed']) #Will break with mph or any suffix
+
     dist = get_distance(start, end)
-    time = dist/MAX_SPEED
-    maxSpeed = MAX_SPEED
-    #if 'maxSpeed' in props:
-    #  maxSpeed = props['maxSpeed']
-    #  print("There's a maxSpeed: " + str(maxSpeed))
-    #else:
-    #  print("Using default     : " + str(maxSpeed))
-    end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed})
+    time = dist/(maxSpeed_km_h*1000/3600)
+    end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed_km_h})
 
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
@@ -179,8 +179,10 @@ def moveCar(car):
   end = car['route'][1]
 
   if (not switchNodeLock(car, start, end)):
+    car['speed'] = 0
     return
 
+  car['speed'] = end[2]['maxSpeed']
   while(timeLeft > 0):
     if(end[2]['timeLeft'] <= timeLeft):
       timeLeft -= end[2]['timeLeft']
@@ -192,9 +194,11 @@ def moveCar(car):
       else:
         start = end
         end = car['route'][1]
+        car['speed'] = end[2]['maxSpeed']
         car['direction'] = get_direction(start, end)
 
         if (not switchNodeLock(car, start, end)):
+          car['speed'] = 0
           break
     else:
       end[2]['timeLeft'] -= timeLeft
@@ -213,7 +217,7 @@ def algo(state):
   return state
 
 def newCar(i, baseRoute):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': MAX_SPEED_KM_H, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
+  car = {'id': i, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
 
