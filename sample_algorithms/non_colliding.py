@@ -24,20 +24,27 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     west = initialParameters['city']['bounds']['southWest']['lng']
     north = initialParameters['city']['bounds']['northEast']['lat']
     east = initialParameters['city']['bounds']['northEast']['lng']
+    print('Initialising geographical data')
     R.saveGeojson(south, west, north, east, 'map.geojson')
+    print('\t\t\t... Done')
 
     start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
     end = {"geometry": {"type": "Point", "coordinates": [4.7942264, 50.6814472]}, "type": "Feature", "properties": {}}
 
-    BASE_ROUTE = R.getRoute('map.geojson', start, end)['path']
-    preprocess(BASE_ROUTE)
-
+    print('Creating initial state')
     global state
-    state = setupCars(1, BASE_ROUTE)
+
+    #BASE_ROUTE = R.getRoute('map.geojson', start, end)['path']
+    #preprocess(BASE_ROUTE)
+    #state = setupCars(1, BASE_ROUTE)
+
+    print('Preprocessing routes')
     addToState(initialParameters['journeys'], state)
-    timestamp = 0
+    print('\t\t\t... Done')
 
     print('Starting simulation:')
+    timestamp = 0
+
     print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
     while True:
@@ -230,9 +237,7 @@ def setupCars(numCars, baseRoute):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': car['id'], 'objectType': car['type'], 'speed': car['speed'],
-      'direction': car['direction'], 'position': {'lat': car['position'][1],
-        'lng': car['position'][0]},'journey': car['baseRoute']}]
+    res += [{'id': str(car['id']), 'objectType': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
   return res
 
 if(len(sys.argv) != 2):
