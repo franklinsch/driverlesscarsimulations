@@ -16,44 +16,17 @@ locked_nodes = []
 SLEEP_TIME = 1
 TIMESLICE = 1
 MAX_SPEED_KM_H = 60
+INP_FILE = 'map.geojson'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
-
   def handleSimulationStart(self, initialParameters):
-    south = initialParameters['city']['bounds']['southWest']['lat']
-    west = initialParameters['city']['bounds']['southWest']['lng']
-    north = initialParameters['city']['bounds']['northEast']['lat']
-    east = initialParameters['city']['bounds']['northEast']['lng']
-    print('Initialising geographical data')
-    R.saveGeojson(south, west, north, east, 'map.geojson')
-    print('\t\t\t... Done')
+    try:
+      #simulation(self, initialParameters)
+      testInitialisation(initialParameters)
+    except Exception as err:
+      print(err)
 
-    start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}
-    end = {"geometry": {"type": "Point", "coordinates": [4.7942264, 50.6814472]}, "type": "Feature", "properties": {}}
-
-    print('Creating initial state')
-    global state
-
-    #BASE_ROUTE = R.getRoute('map.geojson', start, end)['path']
-    #preprocess(BASE_ROUTE)
-    #state = setupCars(1, BASE_ROUTE)
-
-    print('Preprocessing routes')
-    addToState(initialParameters['journeys'], state)
-    print('\t\t\t... Done')
-
-    print('Starting simulation:')
-    timestamp = 0
-
-    print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
-
-    while True:
-      #useApi()
-      savn.updateCarStates(timestamp, translate(state))
-      state = algo(state)
-      timestamp += TIMESLICE
-      time.sleep(SLEEP_TIME)
-    #useApiToEnd()
+    print("Done")
 
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
@@ -61,11 +34,65 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationStop(self):
     pass
 
+def postParams(initialParameters):
+  print(initialParameters)
+
+def testInitialisation(initialParameters):
+  global INP_FILE
+  n = 100
+  ts = 0
+
+  south = initialParameters['city']['bounds']['southWest']['lat']
+  west = initialParameters['city']['bounds']['southWest']['lng']
+  north = initialParameters['city']['bounds']['northEast']['lat']
+  east = initialParameters['city']['bounds']['northEast']['lng']
+  R.saveGeojson(south, west, north, east, INP_FILE)
+  INP_FILE = 'cpmap.geojson'
+  global state
+  for i in range(n):
+    os.system("cp map.geojson " + INP_FILE);
+    state = []
+    t = time.time()
+    addToState(initialParameters['journeys'], state)
+    t = time.time() - t
+    ts += t
+    print('Iteration ' + str(i) + ': ' + str(t) + ' seconds')
+  print('Average time: ' + str(ts / n))
+
+def simulation(savn, initialParameters):
+  south = initialParameters['city']['bounds']['southWest']['lat']
+  west = initialParameters['city']['bounds']['southWest']['lng']
+  north = initialParameters['city']['bounds']['northEast']['lat']
+  east = initialParameters['city']['bounds']['northEast']['lng']
+  print('Initialising geographical data')
+  R.saveGeojson(south, west, north, east, INP_FILE)
+  print('\t\t\t... Done')
+
+  print('Creating initial state')
+  global state
+
+  print('Preprocessing routes')
+  addToState(initialParameters['journeys'], state)
+  print('\t\t\t... Done')
+
+  print('Starting simulation:')
+  timestamp = 0
+
+  print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
+
+  while savn.alive:
+    #useApi()
+    savn.updateCarStates(timestamp, translate(state))
+    state = algo(state)
+    timestamp += TIMESLICE
+    time.sleep(SLEEP_TIME)
+  #useApiToEnd()
+
 def addToState(journeys, state):
   for journey in journeys:
     start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
     end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
-    newRoute = R.getRoute('map.geojson', start, end)['path']
+    newRoute = R.getRoute(INP_FILE, start, end)['path']
     preprocess(newRoute)
     state.append(newCar(len(state), baseRoute=newRoute))
 
@@ -97,7 +124,7 @@ def preprocess(route):
     start = route[i]
     end = route[i+1]
 
-    props = R.getProperties('map.geojson', start, end)
+    props = R.getProperties(INP_FILE, start, end)
     maxSpeed_km_h = MAX_SPEED_KM_H
     if 'maxspeed' in props:
       maxSpeed_km_h = int(props['maxspeed']) #Will break with mph or any suffix
