@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const routes = require('./backend/routes/routes');
 const config = require('./backend/config');
-const passwordConfig = require('./backend/password');
+const passwordConfig = require('./backend/passport');
 
 const WebSocketServer = require('websocket').server;
 
