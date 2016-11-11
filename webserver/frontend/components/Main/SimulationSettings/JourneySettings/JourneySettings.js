@@ -2,6 +2,7 @@ import React from 'react';
 import CustomPropTypes from '../../../Utils/CustomPropTypes.js';
 import LandmarkSearch from './LandmarkSearch/LandmarkSearch.js';
 import JourneyImport from './JourneyImport/JourneyImport.js';
+import ObjectSettings from './ObjectSettings/ObjectSettings.js';
 
 export default class JourneySettings extends React.Component {
 
@@ -9,7 +10,10 @@ export default class JourneySettings extends React.Component {
     bounds: CustomPropTypes.bounds,
     handleJourneysSelect: React.PropTypes.func,
     handlePositionSelect: React.PropTypes.func,
-    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
+    handleObjectCreate: React.PropTypes.func,
+    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
+    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo)
   }
 
   constructor(props) {
@@ -106,6 +110,10 @@ export default class JourneySettings extends React.Component {
     })
   }
 
+  _handleAddObject(settings) {
+    this.props.handleObjectCreate(settings);
+  }
+
   render() {
     const originLat = this.state.originLat;
     const originLng = this.state.originLng;
@@ -143,6 +151,11 @@ export default class JourneySettings extends React.Component {
             }
           </div>
         </form>
+        <ObjectSettings 
+          handleSave={::this._handleAddObject}
+          objects={this.props.objectTypes}
+          objectKindInfo={this.props.objectKindInfo}
+        />
       </div>
     )
   }
