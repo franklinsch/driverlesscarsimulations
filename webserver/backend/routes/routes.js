@@ -100,6 +100,7 @@ router.route('/login')
       if (user) {
         const token = user.generateJwt();
         res.status(200);
+        res.setHeader('token', token);
         res.json({
           "token": token
         });
@@ -111,7 +112,7 @@ router.route('/login')
   });
 
 
-router.get('*', (req, res) => {
+router.get('*', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 
