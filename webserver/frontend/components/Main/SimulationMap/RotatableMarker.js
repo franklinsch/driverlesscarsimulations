@@ -38,9 +38,11 @@ export default class RotatableMarker extends React.Component {
   }
 
   render() {
+    const key = this.props.key+'Marker';
+
     return (
       <Marker position={this.props.position} 
-              key={this.props.key}
+              key={key}
               icon={this.props.icon}
               rotationAngle={this.props.rotationAngle}
               ref={(marker) => { if (marker) this.leafletElement = marker.leafletElement }}

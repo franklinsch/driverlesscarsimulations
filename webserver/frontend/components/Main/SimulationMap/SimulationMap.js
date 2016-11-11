@@ -29,8 +29,7 @@ export default class SimulationMap extends React.Component {
 
   componentWillReceiveProps(newProps) {
     const position = newProps.previewMarkerPosition
-
-    if (this.oldPreviewMarkerPosition && position === this.oldPreviewMarkerPosition) {
+    if (!position || this.oldPreviewMarkerPosition && position === this.oldPreviewMarkerPosition) {
       return
     }
 
