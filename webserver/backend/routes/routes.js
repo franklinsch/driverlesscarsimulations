@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const async = require('async');
 const path = require('path');
-const jwt = require('express-jwt');
-const passport = require('passport');
 const Simulation = require('../models/Simulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
+const config = require('../config');
+const auth = require('../authenticate');
 
+router.get('/protected', auth);
 
 router.get('/simulations/:simulationid', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
