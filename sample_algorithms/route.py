@@ -12,6 +12,13 @@ def saveGeojson(bottom, left, top, right, output):
   f = open(output, 'w')
   f.write(geojson.dumps(response))
 
+def getProperties(inp, start, end):
+  os.system("node get_properties.js " + str(geojson.dumps([start, end]).encode('utf8')) + " " + inp + " > props.json");
+  props = {}
+  with open("props.json") as data_file:
+    props = json.load(data_file)
+  return props
+
 def getRoute(inp, start, end):
   start = newPoint(getNearest(inp, start))
   end = newPoint(getNearest(inp, end))
