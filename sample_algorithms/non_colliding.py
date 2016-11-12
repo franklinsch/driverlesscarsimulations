@@ -21,12 +21,10 @@ INP_FILE = 'map.geojson'
 class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationStart(self, initialParameters):
     try:
-      #simulation(self, initialParameters)
-      testInitialisation(initialParameters)
+      simulation(self, initialParameters)
+      #testInitialisation(initialParameters)
     except Exception as err:
       print(err)
-
-    print("Done")
 
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
