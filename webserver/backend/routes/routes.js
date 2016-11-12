@@ -10,6 +10,20 @@ const auth = require('../authenticate');
 
 router.get('/protected', auth);
 
+router.route('/simulations')
+  .get(auth, (req, res) => {
+    const userId = res._headers.token._id;
+    User.findOne({
+        _id: userId
+      })
+      .then((result) => {
+        res.json(result.simulations);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  })
+
 router.get('/simulations/:simulationid', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
@@ -65,6 +79,7 @@ router.route('/simulations/:simulationID/journeys')
         });
     });
   });
+
 
 router.route('/register')
   .post((req, res) => {
