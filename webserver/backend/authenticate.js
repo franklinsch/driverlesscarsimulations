@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
         });
       } else {
         // if everything is good, save to request for use in other routes
-        res.setHeader('token', token);
+        res.setHeader('token', decoded);
         User
           .findById(decoded._id)
           .exec(function(err, user) {
