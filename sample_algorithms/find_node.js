@@ -87,7 +87,7 @@ if (min2_i == min_i && Math.abs(min2_j - min_j) == 1) {
     }
     geojson['features'][min_i]['geometry']['coordinates'].splice(j, 0, proj);
 
-    fs.writeFile("map.geojson", JSON.stringify(geojson), function (err) {
+    fs.writeFile(process.argv[3], JSON.stringify(geojson), function (err) {
        if (err) throw err;
     });
   }
