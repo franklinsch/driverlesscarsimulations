@@ -2,7 +2,7 @@ import React from 'react';
 import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
-import RotatableMarker from './RotatableMarker'
+import RotatableMarker from './RotatableMarker/RotatableMarker'
 
 export default class SimulationMap extends React.Component {
 
