@@ -175,7 +175,10 @@ frontendSocketServer.on('request', function(request) {
       }
       frontendConnections.push(connection);
       const numStates = simulation.simulationStates.length;
-      const latestTimestamp = simulation.simulationStates[numStates-1]['timestamp']
+      let latestTimestamp = 0;
+      if (numStates > 0) {
+        latestTimestamp = simulation.simulationStates[numStates-1]['timestamp'];
+      }
       frontendInfo.push({'timestamp': latestTimestamp, 'speed': null});
 
       connection.send(JSON.stringify({
