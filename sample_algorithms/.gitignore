@@ -1,2 +1,3 @@
 *.geojson
 *.json
+!package.json

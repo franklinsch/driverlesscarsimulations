@@ -41,8 +41,8 @@ export default class CustomPropTypes {
   static _simulationObject = {
     id: React.PropTypes.string.isRequired,
     objectType: React.PropTypes.string.isRequired,
-    position: CustomPropTypes.position.isRequired
-    // TODO: what about speed and direction? Probably add extra attribute 'type_info' for type-specific information
+    position: CustomPropTypes.position.isRequired,
+    typeInfo: CustomPropTypes.typeInfo
   }
 
   static simulationObject = React.PropTypes.shape(CustomPropTypes._simulationObject)
@@ -57,7 +57,7 @@ export default class CustomPropTypes {
   static simulationState = React.PropTypes.shape(CustomPropTypes._simulationState);
 
   static _simulationJourney = {
-    carID: React.PropTypes.number,
+    objectID: React.PropTypes.number,
     origin: CustomPropTypes.position,
     destination: CustomPropTypes.position
   }
@@ -72,4 +72,28 @@ export default class CustomPropTypes {
   }
 
   static osmSearchResult = React.PropTypes.shape(CustomPropTypes._osmSearchResult);
+
+  static _simulationKindSetting = {
+    name: React.PropTypes.string,
+    kind: React.PropTypes.string, // 'text'/'predefined'
+    value: React.PropTypes.string,
+    allowedValues: React.PropTypes.arrayOf(React.PropTypes.string)
+  }
+
+  static simulationKindSetting = React.PropTypes.shape(CustomPropTypes._simulationKindSetting);
+
+  static _typeInfo = {
+    name: React.PropTypes.string,
+    kindName: React.PropTypes.string,
+    parameters: React.PropTypes.object
+  }
+
+  static typeInfo = React.PropTypes.shape(CustomPropTypes._typeInfo)
+
+  static _kindInfo = {
+    name: React.PropTypes.string,
+    parameters: React.PropTypes.arrayOf(CustomPropTypes.simulationKindSetting)
+  }
+
+  static kindInfo = React.PropTypes.shape(CustomPropTypes._kindInfo);
 }

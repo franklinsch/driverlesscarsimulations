@@ -13,7 +13,8 @@ export default class SimulationMap extends React.Component {
     simulationState: CustomPropTypes.simulationState.isRequired,
     handleAddJourney: React.PropTypes.func,
     previewMarkerPosition: CustomPropTypes.position,
-    clearPreviewMarkerPosition: React.PropTypes.func
+    clearPreviewMarkerPosition: React.PropTypes.func,
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
   }
 
   constructor(props) {
@@ -130,9 +131,20 @@ export default class SimulationMap extends React.Component {
     const origin = this.state.origin;
     const destination = this.state.destination;
 
+    let typeInfo = this.props.objectTypes[0];
+
+    if (this.state.selectedObjectTypeName) {
+      for (const objectType of this.props.objectTypes) {
+        if (objectType.name === this.state.selectedObjectTypeName) {
+          typeInfo = objectType
+        }
+      }
+    }
+
     const journey = {
       origin: origin,
-      destination: destination
+      destination: destination,
+      typeInfo: typeInfo
     }
 
     const position = {
@@ -140,14 +152,25 @@ export default class SimulationMap extends React.Component {
       lng: destination.lng
     }
 
+    const objectTypes = this.props.objectTypes || [];
+
     return (
       <Popup position={position}>
-      <span>
-      <p> Create new journey? </p>
-      <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
-      <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button> 
-      </span>
-      </Popup>
+        <span>
+          <p> Create new journey? </p>
+          <div className="form-group">
+            <select className="form-control" onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
+              {
+                objectTypes.map((object) => {return object.name}).map((name, index) => {
+                  return <option value={name} key={index}>{name}</option>
+                })
+              }
+            </select>
+              <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
+              <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button> 
+            </div>
+          </span>
+          </Popup>
     )
 
   }
@@ -159,16 +182,18 @@ export default class SimulationMap extends React.Component {
   }
 
   componentDidUpdate() {
-    const map = this.refs.map.leafletElement;
-    const bounds = this.props.bounds;
-    const mapBounds = [bounds.southWest, bounds.northEast];
+    if (this.refs.map) {
+      const map = this.refs.map.leafletElement;
+      const bounds = this.props.bounds;
+      const mapBounds = [bounds.southWest, bounds.northEast];
 
-    if (this.bounds != bounds) {
-      map.options.minZoom = 0;
-      map.fitBounds(mapBounds);
-      map.options.minZoom = map.getZoom();
-      map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
-      this.bounds = bounds;
+      if (this.bounds != bounds) {
+        map.options.minZoom = 0;
+        map.fitBounds(mapBounds);
+        map.options.minZoom = map.getZoom();
+        map.zoomControl._zoomOutButton.classList.add("leaflet-disabled"); //This MAY be hacky
+        this.bounds = bounds;
+      }
     }
   }
 

@@ -29,6 +29,14 @@ export default class Main extends React.Component {
         ...UtilFunctions.socketMessage(),
         type:"request-available-cities"
       }))
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-default-object-types"
+      }))
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-object-kind-info"
+      }))
       if (simID != "0") {
         this.handleJoinSimulation(simID);
       }
@@ -99,26 +107,17 @@ export default class Main extends React.Component {
       this.setState({
         simulationInfo: newSimulationInfo
       });
+    } else if (messageData.type === "default-object-types") {
+      this.setState({
+        objectTypes: messageData.content
+      })
+    } else if (messageData.type === "object-kind-info") {
+      this.setState({
+        objectKindInfo: messageData.content
+      })
     }
   }
 
-  postJourney(journey, simID) {
-    const fetchUrl = "/simulations/" + simID + "/journeys";
-    fetch(fetchUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(journey)
-    })
-    .then((response) => {
-    })
-    .catch((err) => {
-      console.log("New journey was not saved due to: " + err);
-    });
-
-  }
   handleAddJourney(journey) {
     const simID = this.state.simulationInfo.id;
     if (simID != "0") {
@@ -143,6 +142,23 @@ export default class Main extends React.Component {
     })
 
     socket.send(message);
+  }
+
+  postJourney(journey, simID) {
+    const fetchUrl = "/simulations/" + simID + "/journeys";
+    fetch(fetchUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: journey
+    })
+      .then((response) => {
+      })
+      .catch((err) => {
+        console.log("New journey was not saved due to: " + err);
+      });
   }
 
   _cityWithID(id) {
@@ -187,6 +203,13 @@ export default class Main extends React.Component {
       this.postJourney(journey, simID);
     }
   }
+    
+  _handleObjectTypeCreate(typeInfo) {
+    const objectTypes = this.state.objectTypes || [];
+    this.setState({
+      objectTypes: objectTypes.concat([typeInfo])
+    })
+  }
 
   render() {
     const cities = this.state.availableCities;
@@ -220,6 +243,9 @@ export default class Main extends React.Component {
                 selectedCity={selectedCity}
                 mapSelectedJourneys={mapSelectedJourneys}
                 handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
+                handleObjectTypeCreate={(typeInfo) => {this._handleObjectTypeCreate(typeInfo)}}
+                objectTypes={this.state.objectTypes}
+                objectKindInfo={this.state.objectKindInfo}
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">
@@ -231,6 +257,7 @@ export default class Main extends React.Component {
                 handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
                 previewMarkerPosition={previewMarkerPosition}
                 clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
+                objectTypes={this.state.objectTypes}
               />
             </div>
           </div>

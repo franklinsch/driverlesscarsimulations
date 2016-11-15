@@ -70,6 +70,77 @@ frontendSocketServer.on('request', function(request) {
       });
   }
 
+  function _handleRequestDefaultObjectTypes() {
+    // TODO Store defaults in db
+    
+    connection.send(JSON.stringify({
+      type: "default-object-types",
+      content: [{
+        name: "Car",
+        kindName: "vehicle",
+        parameters: {
+          "Average Speed": "50",
+          "Top Speed": "120",
+          "Length": "450",
+          "Weight": "1355"
+        }
+      }]
+    }));
+  }
+
+  function _handleRequestObjectKinds() {
+    // TODO Store this in the db
+    
+    connection.send(JSON.stringify({
+      type: "object-kind-info",
+      content: [{
+        name: "Vehicle",
+        parameters: [
+          {
+            name: "Average Speed",
+            kind: "text"
+          },
+          {
+            name: "Top Speed",
+            kind: "text"
+          },
+          {
+            name: "Weight",
+            kind: "text"
+          },
+          {
+            name: "Length",
+            kind: "text"
+          }
+        ]
+      },
+      {
+        name: "Creature",
+        parameters: [
+          {
+            name: "Type",
+            kind: "predefined",
+            allowedValues: ["unicorn", "dog"]
+          }
+        ]
+      },
+      {
+        name: "Road Hazard",
+        parameters: [
+          {
+            name: "Type",
+            kind: "predefined",
+            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+          },
+          {
+            name: "Slowdown factor",
+            kind: "text"
+          }
+        ]
+      }]
+    }))
+  }
+
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
     const simulation = new Simulation({
@@ -103,7 +174,9 @@ frontendSocketServer.on('request', function(request) {
         return;
       }
       frontendConnections.push(connection);
-      frontendInfo.push({'timestamp': 0, 'speed': null});
+      const numStates = simulation.simulationStates.length;
+      const latestTimestamp = simulation.simulationStates[numStates-1]['timestamp']
+      frontendInfo.push({'timestamp': latestTimestamp, 'speed': null});
 
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
@@ -170,6 +243,12 @@ frontendSocketServer.on('request', function(request) {
       case "request-available-cities":
         _handleRequestAvailableCities();
         break;
+      case "request-default-object-types":
+        _handleRequestDefaultObjectTypes();
+        break;
+      case "request-object-kind-info":
+        _handleRequestObjectKinds();
+        break;
       case "request-simulation-start":
         _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
           connection.send(JSON.stringify({
@@ -232,7 +311,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationId
 
-    Simulation.findByIdAndUpdate(simulationID, { $set: { timeslice: message.content.timeslice, frameworkConnectionIndex: frameworkConnections.length }}, { new: true }, function (error, simulation) {
+    Simulation.findByIdAndUpdate(simulationID, { $set: { timeslice: message.content.timeslice, frameworkConnectionIndex: frameworkConnections.length, simulationStates: [] }}, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -245,6 +324,10 @@ frameworkSocketServer.on('request', function(request) {
       }
 
       frameworkConnections.push(connection);
+
+      for (let index of simulation.frontendConnectionIndices) {
+        frontendInfo[index]['timestamp'] = 0;
+      }
 
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",

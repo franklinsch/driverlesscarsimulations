@@ -1,10 +1,11 @@
 const fs = require("fs");
+
 const point = JSON.parse(process.argv[2].substring(1))['geometry']['coordinates'];
 const geojson = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 
 const distance = function(point1, point2) {
   return Math.sqrt(Math.pow(point1[0]-point2[0], 2) + Math.pow(point1[1]-point2[1], 2));
-};
+}; //Does this need to be more exact?
 
 const angle = function(origin, point) {
   return Math.atan2(point[1]-origin[1], point[0]-origin[0]);
@@ -74,16 +75,19 @@ const A = sub(point, min_point);
 const sc = scale(B, dot(A, B)/dot(B, B));
 const proj = add(sc, min_point);
 if (min2_i == min_i && Math.abs(min2_j - min_j) == 1) {
-  console.log(proj);
+  const proj_distance = distance(proj, min_point);
+  if (proj_distance < 0.00001) {
+    console.log(min_point);
+  } else {
+    console.log(proj);
 
-  if (min_distance != 0 && !equal(proj, min_point)) {
     j = min_j;
     if (min2_j > min_j) {
       j = min2_j;
     }
     geojson['features'][min_i]['geometry']['coordinates'].splice(j, 0, proj);
 
-    fs.writeFile("map.geojson", JSON.stringify(geojson), function (err) {
+    fs.writeFile(process.argv[3], JSON.stringify(geojson), function (err) {
        if (err) throw err;
     });
   }
