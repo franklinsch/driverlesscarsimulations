@@ -255,10 +255,12 @@ frontendSocketServer.on('request', function(request) {
         return
       }
 
-      frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
-        type: "simulation-close",
-        content: message.content
-      }));
+      if (simulation.frameworkConnectionIndex) {
+        frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
+          type: "simulation-close",
+          content: message.content
+        }));
+      }
     });
   }
 
