@@ -214,7 +214,9 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestSimulationSpeedChange(message) {
     let index = frontendConnections.indexOf(connection);
-    frontendInfo[index]['speed'] = message.content.simulationSpeed;
+    if (index >= 0) {
+      frontendInfo[index]['speed'] = message.content.simulationSpeed;
+    }
   }
 
   function _handleRequestSimulationTimestampChange(message) {
