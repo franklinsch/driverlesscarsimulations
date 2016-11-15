@@ -6,13 +6,14 @@ export default class SpeedSetting extends React.Component {
 
   static propTypes = {
     hidden: React.PropTypes.bool,
-    socket: React.PropTypes.object
+    socket: React.PropTypes.object,
+    handlers: React.PropTypes.object
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      requestedSpeed: 1,
+      requestedSpeed: 1
     }
   }
 
@@ -27,18 +28,11 @@ export default class SpeedSetting extends React.Component {
       speed = Math.pow(2, value - 4);
     }
 
+    this.props.handlers.handleSpeedChange(speed);
+
     this.setState({
       requestedSpeed: speed
     })
-
-    const socket = this.props.socket;
-
-    const type = 'request-simulation-speed-change';
-    const content = {
-      simulationSpeed: speed
-    };
-
-    UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
   render() {

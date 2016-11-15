@@ -175,7 +175,10 @@ frontendSocketServer.on('request', function(request) {
       }
       frontendConnections.push(connection);
       const numStates = simulation.simulationStates.length;
-      const latestTimestamp = simulation.simulationStates[numStates-1]['timestamp']
+      let latestTimestamp = 0;
+      if (numStates > 0) {
+        latestTimestamp = simulation.simulationStates[numStates-1]['timestamp'];
+      }
       frontendInfo.push({'timestamp': latestTimestamp, 'speed': null});
 
       connection.send(JSON.stringify({
@@ -214,6 +217,31 @@ frontendSocketServer.on('request', function(request) {
     frontendInfo[index]['speed'] = message.content.simulationSpeed;
   }
 
+  function _handleRequestSimulationTimestampChange(message) {
+    let index = frontendConnections.indexOf(connection);
+    Simulation.findById(message.content.simulationID, function (error, simulation) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.content.simulationID
+          }
+        }));
+        console.log("Could not find simulation with ID " + message.content.simulationID);
+        return
+      }
+
+      frontendInfo[index]['timestamp'] = message.content.timestamp;
+      const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
+      frontendConnections[index].send(JSON.stringify({
+        type: "simulation-state",
+        content: {
+          state: simulation.simulationStates[stateIndex]
+        }
+      }))
+    });
+  }
+
   function _handleRequestSimulationClose(message) {
     Simulation.findById(message.content.simulationID, function (error, simulation) {
       if (error || !simulation) {
@@ -227,10 +255,12 @@ frontendSocketServer.on('request', function(request) {
         return
       }
 
-      frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
-        type: "simulation-close",
-        content: message.content
-      }));
+      if (simulation.frameworkConnectionIndex) {
+        frameworkConnections[simulation.frameworkConnectionIndex].send(JSON.stringify({
+          type: "simulation-close",
+          content: message.content
+        }));
+      }
     });
   }
 
@@ -268,6 +298,9 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-speed-change":
         _handleRequestSimulationSpeedChange(messageData);
+        break;
+      case "request-simulation-timestamp-change":
+        _handleRequestSimulationTimestampChange(messageData);
         break;
       case "request-simulation-close":
         _handleRequestSimulationClose(messageData);
@@ -369,7 +402,10 @@ frameworkSocketServer.on('request', function(request) {
         const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
         frontendConnections[index].send(JSON.stringify({
           type: "simulation-state",
-          content: simulation.simulationStates[stateIndex]
+          content: {
+            state: simulation.simulationStates[stateIndex],
+            latestTimestamp: message.content.timestamp
+          }
         }))
       }
     });

@@ -54,22 +54,9 @@ export default class Main extends React.Component {
       simulationState: {
         id: "0",
         timestamp: 0,
+        latestTimestamp: 0,
         formattedTimestamp: "00:00:00",
-        objects: [{
-          id: "0",
-          objectType: "car",
-          speed: 50,
-          direction: 45,
-          route: [
-              [4.778602,50.6840807],[4.7806405,50.6834349],[4.7825824,50.6829387],[4.7874197,50.6825434],
-              [4.7892558,50.6824288],[4.7905647,50.6822793],[4.7918953,50.6820401],[4.7920023,50.6820209],
-              [4.7929465,50.681851],[4.7934554,50.6817269], [4.7939013,50.6815791],[4.7942264,102.6814472]
-          ],
-          position: {
-            lat: 50.68264,
-            lng: 4.78661
-          }
-        }]
+        objects: []
       },
       mapSelectedJourneys: []
     }
@@ -92,8 +79,14 @@ export default class Main extends React.Component {
         simulationInfo: messageData.content
       });
     } else if (messageData.type === "simulation-state") {
+      const simulationState = messageData.content.state;
+      if (messageData.content.latestTimestamp) {
+        simulationState['latestTimestamp'] = messageData.content.latestTimestamp;
+      } else {
+        simulationState['latestTimestamp'] = this.state.simulationState['latestTimestamp'];
+      }
       this.setState({
-        simulationState: messageData.content
+        simulationState: simulationState
       });
     } else if (messageData.type === "simulation-start-parameters") {
       const newSimulationInfo = this.state.simulationInfo;
@@ -178,7 +171,7 @@ export default class Main extends React.Component {
     })
   }
 
-  _handlePositionPreview(position) {
+  handlePositionPreview(position) {
     this.setState({
       previewMarkerPosition: position
     })
@@ -204,11 +197,58 @@ export default class Main extends React.Component {
     }
   }
     
-  _handleObjectTypeCreate(typeInfo) {
+  handleObjectTypeCreate(typeInfo) {
     const objectTypes = this.state.objectTypes || [];
     this.setState({
       objectTypes: objectTypes.concat([typeInfo])
     })
+  }
+
+  handleSpeedChange(newSpeed) {
+    const socket = this.state.socket;
+    const type = 'request-simulation-speed-change';
+    const content = {
+      simulationSpeed: newSpeed
+    };
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+
+    this.setState({
+      currentSpeed: newSpeed
+    });
+  }
+
+  handlePause() {
+    if (this.state.currentSpeed != undefined) {
+      this.setState({
+        pausedSpeed: this.state.currentSpeed
+      });
+    }
+
+    this.handleSpeedChange(0);
+  }
+
+  handleResume() {
+    if (this.state.pausedSpeed == undefined) {
+      this.handleSpeedChange(1);
+    } else {
+      this.handleSpeedChange(this.state.pausedSpeed);
+
+      this.setState({
+        pausedSpeed: null
+      });
+    }
+  }
+
+  handleScrub(newTimestamp) {
+    const socket = this.state.socket;
+    const type = 'request-simulation-timestamp-change';
+    const content = {
+      simulationID: this.state.simulationInfo.id,
+      timestamp: newTimestamp
+    };
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
   render() {
@@ -226,6 +266,18 @@ export default class Main extends React.Component {
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const bounds = selectedCity ? selectedCity.bounds : null;
 
+    const simulationSettingsHandlers = {
+      handlePositionPreview  : ::this.handlePositionPreview,
+      handleObjectTypeCreate : ::this.handleObjectTypeCreate,
+      handleSpeedChange      : ::this.handleSpeedChange
+    }
+    const simulationMapHandlers = {
+      handleAddJourney : ::this.handleAddJourney,
+      handlePause      : ::this.handlePause,
+      handleResume     : ::this.handleResume,
+      handleScrub      : ::this.handleScrub
+    }
+
     return (
       <div>
         <Header
@@ -242,10 +294,9 @@ export default class Main extends React.Component {
                 activeSimulationID={simulationID}
                 selectedCity={selectedCity}
                 mapSelectedJourneys={mapSelectedJourneys}
-                handlePositionPreview={(position) => {this._handlePositionPreview(position)}}
-                handleObjectTypeCreate={(typeInfo) => {this._handleObjectTypeCreate(typeInfo)}}
                 objectTypes={this.state.objectTypes}
                 objectKindInfo={this.state.objectKindInfo}
+                handlers={simulationSettingsHandlers}
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">
@@ -254,10 +305,10 @@ export default class Main extends React.Component {
                 height={ 600 + 'px' }
                 bounds={ bounds }
                 simulationState= { simulationState }
-                handleAddJourney= { (journey) => { this.handleAddJourney(journey) } }
                 previewMarkerPosition={previewMarkerPosition}
                 clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
                 objectTypes={this.state.objectTypes}
+                handlers={simulationMapHandlers}
               />
             </div>
           </div>
