@@ -80,7 +80,6 @@ export default class Main extends React.Component {
       });
     } else if (messageData.type === "simulation-state") {
       const simulationState = messageData.content.state;
-      console.log(simulationState.timestamp);
       if (messageData.content.latestTimestamp) {
         simulationState['latestTimestamp'] = messageData.content.latestTimestamp;
       } else {
