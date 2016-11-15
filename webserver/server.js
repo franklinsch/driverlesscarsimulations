@@ -476,7 +476,7 @@ frameworkSocketServer.on('request', function(request) {
     if (index >= 0) {
       delete frameworkConnections[index];
 
-      Simulation.update({ frameworkConnectionIndices: index }, { $unset: { frameworkConnectionIndices: "" }}, function (error, numAffected) {
+      Simulation.update({ frameworkConnectionIndices: index }, { $unset: { frameworkConnectionIndices: [] }}, function (error, numAffected) {
         if (error || !numAffected) {
           console.log("Could not find corresponding simulation for connection");
           return
@@ -487,5 +487,3 @@ frameworkSocketServer.on('request', function(request) {
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
 });
-
-fserver.listen(9000);
