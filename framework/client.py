@@ -13,18 +13,20 @@ HOST = 'ws://' + HOST_IP + ':9000'
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
-  def __init__(self, simulationId):
-    self.simulationId = simulationId
+  def __init__(self, simulationID):
+    self.simulationID = simulationID
     self.messageQueue = asyncio.Queue()
+    self.frameworkID = 0
 
   def updateCarStates(self, timestamp, state):
     packet = {'type': 'simulation-state',
               'content':
-                {'simulationId': self.simulationId,
+                {'simulationID': self.simulationID,
                  'id': str(timestamp),
                  'timestamp': timestamp,
                  'formattedTimestamp': str(timestamp),
-                 'objects': state }}
+                 'objects': state,
+                 'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
 
@@ -45,7 +47,7 @@ class SAVNConnectionAssistant:
     return message
 
   async def startConnection(self, timeslice):
-    packet = {'type': 'simulation-start', 'content': {'simulationId': self.simulationId, 'timeslice': timeslice}}
+    packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'timeslice': timeslice}}
     await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):
@@ -99,6 +101,7 @@ class SAVNConnectionAssistant:
       print(packet["content"])
       #print(packet["content"]["reason"])
     elif isInitialParams():
+      self.frameworkID = packet["content"]["frameworkID"]
       self.handleSimulationStart(packet["content"])
     elif isClose():
       self.handleSimulationStop(packet["content"])
@@ -106,7 +109,7 @@ class SAVNConnectionAssistant:
       self.alive = False
       #The connection is officialy dead we need to terminate the handling loop,
       #to achieve this we populate the message queue with a confirmation packet
-      packet = {'type': 'simulation-close', 'content': {'simulationId': self.simulationId}}
+      packet = {'type': 'simulation-close', 'content': {'simulationID': self.simulationID}}
       asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
     elif isUpdate():
