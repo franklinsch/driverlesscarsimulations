@@ -388,12 +388,37 @@ frameworkSocketServer.on('request', function(request) {
     })
   }
 
-  function _handleSimulationStateUpdate(message) {
+  function _handleSimulationStateUpdate(message, frameworkID) {
     console.log("Received simulation-update from framework");
 
     const simulationID = message.content.simulationId;
 
-    Simulation.findByIdAndUpdate(simulationID, { $push: { simulationStates: message.content } }, { new: true }, function (error, simulation) {
+    function _filterState(state, frameworkID) {
+      const objects = state.objects.filter((object, index) => {
+        if (object.frameworkID == undefined) {
+          // If the object hasn't been set with a frameworkID, set it to the ID of 
+          // the framework which sent it.
+          state.objects[index] = frameworkID;
+          return true;
+        } else if (object.frameworkID == frameworkID) {
+          return true;
+        } else {
+          console.log("Framework with ID "+ frameworkID + " tried to update a simulation object it doesn't own");
+          return false;
+        }
+      })
+
+      const newState = state;
+      state.objects = objects;
+      return state;
+    }
+
+    console.log(message.content);
+    console.log("----")
+    const newState = _filterState(message.content, frameworkID);
+    console.log(newState);
+
+    Simulation.findByIdAndUpdate(simulationID, { $push: { simulationStates: newState } }, { new: true }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -406,6 +431,7 @@ frameworkSocketServer.on('request', function(request) {
       }
 
       console.log("Updated simulationState");
+
       for (let index of simulation.frameworkConnectionIndices) {
         if (connection != frameworkConnections[index]) {
           frameworkConnections[index].send(JSON.stringify({
@@ -424,10 +450,11 @@ frameworkSocketServer.on('request', function(request) {
           frontendInfo[index]['timestamp'] = message.content.timestamp;
         }
         const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
+        const state = simulation.simulationStates[stateIndex];
         frontendConnections[index].send(JSON.stringify({
           type: "simulation-state",
           content: {
-            state: simulation.simulationStates[stateIndex],
+            state: state,
             latestTimestamp: message.content.timestamp
           }
         }))
@@ -470,7 +497,8 @@ frameworkSocketServer.on('request', function(request) {
         _handleSimulationStart(messageData);
         break;
       case "simulation-state":
-        _handleSimulationStateUpdate(messageData);
+        const frameworkID = connection.socket._server.port;
+        _handleSimulationStateUpdate(messageData, frameworkID);
         break;
       case "simulation-close":
         _handleSimulationClose(messageData);
