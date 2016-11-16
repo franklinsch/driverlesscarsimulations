@@ -86,6 +86,18 @@ def simulation(savn, initialParameters):
     time.sleep(SLEEP_TIME)
   #useApiToEnd()
 
+def translateDataToSensor(data):
+  for obj in data:
+    for car in state:
+      car['sensorData'] = translateObjectToSensor(car, obj)
+
+def translateObjectToSensor(car, obj):
+  cameraSensorRadius = 30.0
+  cameraData = []
+  if 'position' in obj and get_distance(car['position'], obj['position']) <= cameraSensorRadius:
+    cameraData.append(obj)
+  return {'cameraData': cameraData}
+
 def addToState(journeys, state):
   for journey in journeys:
     start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
