@@ -86,6 +86,18 @@ def simulation(savn, initialParameters):
     time.sleep(SLEEP_TIME)
   #useApiToEnd()
 
+def translateDataToSensor(data):
+  for obj in data:
+    for car in state:
+      car['sensorData'] = translateObjectToSensor(car, obj)
+
+def translateObjectToSensor(car, obj):
+  cameraSensorRadius = 30.0
+  cameraData = []
+  if 'position' in obj and get_distance(car['position'], obj['position']) <= cameraSensorRadius:
+    cameraData.append(obj)
+  return {'cameraData': cameraData}
+
 def addToState(journeys, state):
   for journey in journeys:
     start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
@@ -149,44 +161,6 @@ def scheduleNewRoute(car):
   car['direction'] = get_direction(car['route'][0], car['route'][1])
   car['lockedNode'] = start
   return True
-
-#def moveCar(car):
-#  timeLeft = TIMESLICE
-#  while(timeLeft > 0):
-#    if(car['route']['path'][0]['timeLeft'] <= timeLeft):
-#      timeLeft -= car['route']['path'][0]['timeLeft']
-#      del car['route']['path'][0]
-#      if(len(car['route']['path']) == 0):
-#        timeLeft = 0
-#        car['route']['path'] = None
-#      else:
-#        car['direction'] = car['route']['path'][0]['direction']
-#    else:
-#      car['route']['path'][0]['timeLeft'] -= timeLeft
-#      timeLeft = 0
-#  if(car['route']['path'] == None):
-#    car['position'] = car['route']['destination']
-#    scheduleNewRoute(car)
-#  else:
-#    end = car['route']['path'][0]['end']
-#    start = car['route']['path'][0]['start']
-#    timeLeft = car['route']['path'][0]['timeLeft']
-#    totalTime = car['route']['path'][0]['totalTime']
-#    car['position'] = add(end, scale(sub(start, end), timeLeft/totalTime))
-
-#def moveCar(car):
-#  car['timeOnPath'] += TIMESLICE
-#  start = car['route'][0]
-#  end = car['route'][1]
-#  car['position'] = add(start, scale(sub(end, start), car['timeOnPath']/CONST_SPEED))
-#
-#  if(car['timeOnPath'] == CONST_SPEED):
-#    del car['route'][0]
-#    car['timeOnPath'] = 0
-#    if(len(car['route']) == 1):
-#      scheduleNewRoute(car)
-#    else:
-#      car['direction'] = get_direction(start, end)
 
 def isEqualNodes(node1, node2):
   return node1[0] == node2[0] and node1[1] == node2[1]
