@@ -406,6 +406,14 @@ frameworkSocketServer.on('request', function(request) {
       }
 
       console.log("Updated simulationState");
+      for (let index of simulation.frameworkConnectionIndices) {
+        if (connection != frameworkConnections[index]) {
+          frameworkConnections[index].send(JSON.stringify({
+            type: "simulation-communicate",
+            content: message.content
+          }))
+        }
+      }
       for (let index of simulation.frontendConnectionIndices) {
         if (frontendInfo[index]['speed'] != undefined) {
           frontendInfo[index]['timestamp'] += frontendInfo[index]['speed']
