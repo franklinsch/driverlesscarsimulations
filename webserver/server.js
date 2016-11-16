@@ -417,7 +417,8 @@ frameworkSocketServer.on('request', function(request) {
     console.log("Received simulation-update from framework");
 
     const simulationID = message.content.simulationId;
-    const frameworkID = message.content.frameworkId;
+    const frameworkID = message.content.frameworkID;
+    console.log(frameworkID);
 
     const newState = _filterState(message.content, frameworkID);
 
