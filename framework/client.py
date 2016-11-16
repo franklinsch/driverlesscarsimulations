@@ -16,7 +16,7 @@ class SAVNConnectionAssistant:
   def __init__(self, simulationID):
     self.simulationID = simulationID
     self.messageQueue = asyncio.Queue()
-    self.frameworkdID = 0
+    self.frameworkID = 0
 
   def updateCarStates(self, timestamp, state):
     packet = {'type': 'simulation-state',
@@ -47,7 +47,7 @@ class SAVNConnectionAssistant:
     return message
 
   async def startConnection(self, timeslice):
-    packet = {'type': 'simulation-start', 'content': {'simulationId': self.simulationID, 'timeslice': timeslice}}
+    packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'timeslice': timeslice}}
     await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):
@@ -109,7 +109,7 @@ class SAVNConnectionAssistant:
       self.alive = False
       #The connection is officialy dead we need to terminate the handling loop,
       #to achieve this we populate the message queue with a confirmation packet
-      packet = {'type': 'simulation-close', 'content': {'simulationId': self.simulationId}}
+      packet = {'type': 'simulation-close', 'content': {'simulationID': self.simulationID}}
       asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
     elif isUpdate():
