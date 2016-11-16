@@ -18,7 +18,7 @@ const simulationSchema = mongoose.Schema({
   timeslice: Number,
   journeys: [Journey.schema],
   frontendConnectionIndices: [Number],
-  frameworkConnectionIndex: Number,
+  frameworkConnectionIndices: [Number],
   simulationStates: [{
     id: String,
     formattedTimestamp: String,
