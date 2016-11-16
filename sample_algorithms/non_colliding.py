@@ -29,6 +29,9 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
 
+  def handleSimulationCommunication(self, data):
+    translateDataToSensors(data)
+
   def handleSimulationStop(self):
     pass
 

@@ -34,6 +34,9 @@ class SAVNConnectionAssistant:
   def handleSimulationDataUpdate(self, updates):
     pass
 
+  def handleSimulationCommunication(self, data):
+    pass
+
   def handleSimulationStop(self, packet):
     pass
 
@@ -89,6 +92,9 @@ class SAVNConnectionAssistant:
     def isUpdate():
       return packet["type"] == "simulation-update"
 
+    def isCommunication():
+      return packet["type"] == "simulation-communicate"
+
     if isError():
       print(packet["content"])
       #print(packet["content"]["reason"])
@@ -105,6 +111,8 @@ class SAVNConnectionAssistant:
       loop)
     elif isUpdate():
       self.handleSimulationDataUpdate(packet["content"])
+    elif isCommunication():
+      self.handleSimulationCommunication(packet["content"])
 
 
   def initSession(self, timeslice):
