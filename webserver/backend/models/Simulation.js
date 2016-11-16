@@ -25,6 +25,7 @@ const simulationSchema = mongoose.Schema({
     timestamp: Number,
     objects: [{
       id: String,
+      frameworkID: String,
       objectType: String,
       speed: Number,
       direction: Number,
