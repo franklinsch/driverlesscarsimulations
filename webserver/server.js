@@ -349,7 +349,7 @@ frameworkSocketServer.on('request', function(request) {
   function _handleSimulationStart(message) {
     console.log("Received simulation-start from framework");
 
-    const simulationID = message.content.simulationId
+    const simulationID = message.content.simulationID;
 
     Simulation.findByIdAndUpdate(simulationID, { 
       $set: { 
@@ -416,9 +416,8 @@ frameworkSocketServer.on('request', function(request) {
 
     console.log("Received simulation-update from framework");
 
-    const simulationID = message.content.simulationId;
+    const simulationID = message.content.simulationID;
     const frameworkID = message.content.frameworkID;
-    console.log(frameworkID);
 
     const newState = _filterState(message.content, frameworkID);
 
@@ -469,7 +468,7 @@ frameworkSocketServer.on('request', function(request) {
   function _handleSimulationClose(message) {
     console.log("Received close confirmation from framework");
 
-    const simulationID = message.content.simulationId;
+    const simulationID = message.content.simulationID;
 
     Simulation.findOne({
       _id: simulationID

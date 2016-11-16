@@ -13,19 +13,20 @@ HOST = 'ws://' + HOST_IP + ':9000'
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
-  def __init__(self, simulationId):
-    self.simulationId = simulationId
+  def __init__(self, simulationID):
+    self.simulationID = simulationID
     self.messageQueue = asyncio.Queue()
+    self.frameworkdID = 0
 
   def updateCarStates(self, timestamp, state):
     packet = {'type': 'simulation-state',
               'content':
-                {'simulationId': self.simulationId,
+                {'simulationID': self.simulationID,
                  'id': str(timestamp),
                  'timestamp': timestamp,
                  'formattedTimestamp': str(timestamp),
                  'objects': state,
-                 'frameworkID': frameworkID}}
+                 'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
 
@@ -46,7 +47,7 @@ class SAVNConnectionAssistant:
     return message
 
   async def startConnection(self, timeslice):
-    packet = {'type': 'simulation-start', 'content': {'simulationId': self.simulationId, 'timeslice': timeslice}}
+    packet = {'type': 'simulation-start', 'content': {'simulationId': self.simulationID, 'timeslice': timeslice}}
     await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):
@@ -100,8 +101,7 @@ class SAVNConnectionAssistant:
       print(packet["content"])
       #print(packet["content"]["reason"])
     elif isInitialParams():
-      global frameworkID
-      frameworkID = packet["content"]["frameworkID"]
+      self.frameworkID = packet["content"]["frameworkID"]
       self.handleSimulationStart(packet["content"])
     elif isClose():
       self.handleSimulationStop(packet["content"])
