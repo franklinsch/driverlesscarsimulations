@@ -16,7 +16,7 @@ const db = require('./backend/db');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
 
-Simulation.update({}, { $set: {frontendConnectionIndices: []}, $unset: {frameworkConnectionIndices: []}}, {multi: true}, function(err, numAffected) {
+Simulation.update({}, { $set: {frontendConnectionIndices: [], frameworkConnectionIndices: []}}, {multi: true}, function(err, numAffected) {
   if (err) {
     return;
   }
@@ -147,6 +147,7 @@ frontendSocketServer.on('request', function(request) {
       city: data.selectedCity,
       journeys: data.journeys,
       frontendConnectionIndices: [frontendConnections.length],
+      frameworkConnectionIndices: [],
       simulationStates: []
     });
 
@@ -223,27 +224,29 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestSimulationTimestampChange(message) {
     let index = frontendConnections.indexOf(connection);
-    Simulation.findById(message.content.simulationID, function (error, simulation) {
-      if (error || !simulation) {
-        connection.send(JSON.stringify({
-          type: "simulation-error",
-          content: {
-            message: "Could not find simulation with ID " + message.content.simulationID
-          }
-        }));
-        console.log("Could not find simulation with ID " + message.content.simulationID);
-        return
-      }
-
-      frontendInfo[index]['timestamp'] = message.content.timestamp;
-      const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
-      frontendConnections[index].send(JSON.stringify({
-        type: "simulation-state",
-        content: {
-          state: simulation.simulationStates[stateIndex]
+    if (index >= 0) {
+      Simulation.findById(message.content.simulationID, function (error, simulation) {
+        if (error || !simulation) {
+          connection.send(JSON.stringify({
+            type: "simulation-error",
+            content: {
+              message: "Could not find simulation with ID " + message.content.simulationID
+            }
+          }));
+          console.log("Could not find simulation with ID " + message.content.simulationID);
+          return
         }
-      }))
-    });
+
+        frontendInfo[index]['timestamp'] = message.content.timestamp;
+        const stateIndex = Math.floor(frontendInfo[index]['timestamp'] / simulation.timeslice);
+        frontendConnections[index].send(JSON.stringify({
+          type: "simulation-state",
+          content: {
+            state: simulation.simulationStates[stateIndex]
+          }
+        }))
+      });
+    }
   }
 
   function _handleRequestSimulationClose(message) {
@@ -329,9 +332,9 @@ frontendSocketServer.on('request', function(request) {
           return
         }
       });
-    }
 
-    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+      console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+    }
   });
 });
 
@@ -476,7 +479,7 @@ frameworkSocketServer.on('request', function(request) {
     if (index >= 0) {
       delete frameworkConnections[index];
 
-      Simulation.update({ frameworkConnectionIndices: index }, { $unset: { frameworkConnectionIndices: [] }}, function (error, numAffected) {
+      Simulation.update({ frameworkConnectionIndices: index }, { $pull: { frameworkConnectionIndices: index }}, function (error, numAffected) {
         if (error || !numAffected) {
           console.log("Could not find corresponding simulation for connection");
           return
