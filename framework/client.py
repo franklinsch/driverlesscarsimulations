@@ -24,7 +24,8 @@ class SAVNConnectionAssistant:
                  'id': str(timestamp),
                  'timestamp': timestamp,
                  'formattedTimestamp': str(timestamp),
-                 'objects': state }}
+                 'objects': state,
+                 'frameworkID': frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
 
@@ -99,6 +100,8 @@ class SAVNConnectionAssistant:
       print(packet["content"])
       #print(packet["content"]["reason"])
     elif isInitialParams():
+      global frameworkID
+      frameworkID = packet["content"]["frameworkID"]
       self.handleSimulationStart(packet["content"])
     elif isClose():
       self.handleSimulationStop(packet["content"])
