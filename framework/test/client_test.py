@@ -28,11 +28,12 @@ class TestFrameworkClientMethods(unittest.TestCase):
     timestamp = 0
     packet = {'type': 'simulation-state',
               'content':
-                {'simulationId': self.connection.simulationId,
+                {'simulationID': self.connection.simulationID,
                  'id': str(timestamp),
                  'timestamp': timestamp,
                  'formattedTimestamp': str(timestamp),
-                 'objects': state }}
+                 'objects': state,
+                 'frameworkID': 0}}
     self.connection.updateCarStates(timestamp, state)
     message = self.loop.run_until_complete(self.connection.fetchMessage())
     self.assertEqual(json.dumps(packet), message)
@@ -61,7 +62,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
 
   def test_simulationStart(self):
     self.connection.handleSimulationStart = Mock()
-    packet = {'type': 'simulation-start-parameters', 'content': {}}
+    packet = {'type': 'simulation-start-parameters', 'content': {'frameworkID': 0}}
     self.connection.onMessage(packet)
     self.connection.handleSimulationStart.assert_called_with(packet['content'])
 

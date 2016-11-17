@@ -29,6 +29,9 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
 
+  def handleSimulationCommunication(self, data):
+    translateDataToSensors(data)
+
   def handleSimulationStop(self):
     pass
 
@@ -85,6 +88,18 @@ def simulation(savn, initialParameters):
     timestamp += TIMESLICE
     time.sleep(SLEEP_TIME)
   #useApiToEnd()
+
+def translateDataToSensor(data):
+  for obj in data:
+    for car in state:
+      car['sensorData'] = translateObjectToSensor(car, obj)
+
+def translateObjectToSensor(car, obj):
+  cameraSensorRadius = 30.0
+  cameraData = []
+  if 'position' in obj and get_distance(car['position'], obj['position']) <= cameraSensorRadius:
+    cameraData.append(obj)
+  return {'cameraData': cameraData}
 
 def addToState(journeys, state):
   for journey in journeys:
@@ -149,44 +164,6 @@ def scheduleNewRoute(car):
   car['direction'] = get_direction(car['route'][0], car['route'][1])
   car['lockedNode'] = start
   return True
-
-#def moveCar(car):
-#  timeLeft = TIMESLICE
-#  while(timeLeft > 0):
-#    if(car['route']['path'][0]['timeLeft'] <= timeLeft):
-#      timeLeft -= car['route']['path'][0]['timeLeft']
-#      del car['route']['path'][0]
-#      if(len(car['route']['path']) == 0):
-#        timeLeft = 0
-#        car['route']['path'] = None
-#      else:
-#        car['direction'] = car['route']['path'][0]['direction']
-#    else:
-#      car['route']['path'][0]['timeLeft'] -= timeLeft
-#      timeLeft = 0
-#  if(car['route']['path'] == None):
-#    car['position'] = car['route']['destination']
-#    scheduleNewRoute(car)
-#  else:
-#    end = car['route']['path'][0]['end']
-#    start = car['route']['path'][0]['start']
-#    timeLeft = car['route']['path'][0]['timeLeft']
-#    totalTime = car['route']['path'][0]['totalTime']
-#    car['position'] = add(end, scale(sub(start, end), timeLeft/totalTime))
-
-#def moveCar(car):
-#  car['timeOnPath'] += TIMESLICE
-#  start = car['route'][0]
-#  end = car['route'][1]
-#  car['position'] = add(start, scale(sub(end, start), car['timeOnPath']/CONST_SPEED))
-#
-#  if(car['timeOnPath'] == CONST_SPEED):
-#    del car['route'][0]
-#    car['timeOnPath'] = 0
-#    if(len(car['route']) == 1):
-#      scheduleNewRoute(car)
-#    else:
-#      car['direction'] = get_direction(start, end)
 
 def isEqualNodes(node1, node2):
   return node1[0] == node2[0] and node1[1] == node2[1]
@@ -268,8 +245,8 @@ def translate(state):
 if(len(sys.argv) != 2):
   sys.exit(1)
 
-simulationId = sys.argv[1]
-savn = ConnectionAssistant(simulationId)
+simulationID = sys.argv[1]
+savn = ConnectionAssistant(simulationID)
 savn.initSession(TIMESLICE)
 
 sys.exit(0)

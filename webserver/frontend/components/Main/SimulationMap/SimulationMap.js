@@ -2,7 +2,8 @@ import React from 'react';
 import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.js'
-import RotatableMarker from './RotatableMarker'
+import RotatableMarker from './RotatableMarker/RotatableMarker'
+import ScrubTimer from './ScrubTimer/ScrubTimer'
 
 export default class SimulationMap extends React.Component {
 
@@ -11,10 +12,10 @@ export default class SimulationMap extends React.Component {
     height: React.PropTypes.string,
     bounds: CustomPropTypes.bounds,
     simulationState: CustomPropTypes.simulationState.isRequired,
-    handleAddJourney: React.PropTypes.func,
     previewMarkerPosition: CustomPropTypes.position,
     clearPreviewMarkerPosition: React.PropTypes.func,
-    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo)
+    objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
+    handlers: React.PropTypes.object
   }
 
   constructor(props) {
@@ -29,8 +30,7 @@ export default class SimulationMap extends React.Component {
 
   componentWillReceiveProps(newProps) {
     const position = newProps.previewMarkerPosition
-
-    if (this.oldPreviewMarkerPosition && position === this.oldPreviewMarkerPosition) {
+    if (!position || this.oldPreviewMarkerPosition && position === this.oldPreviewMarkerPosition) {
       return
     }
 
@@ -71,7 +71,7 @@ export default class SimulationMap extends React.Component {
   }
 
   _handleJourneyCreate(journey) {
-    const handleAddJourney = this.props.handleAddJourney;
+    const handleAddJourney = this.props.handlers.handleAddJourney;
 
     if (handleAddJourney) {
       handleAddJourney(journey);
@@ -253,9 +253,20 @@ export default class SimulationMap extends React.Component {
       iconSize: [30, 30]
     })
 
+    const scrubHandlers = {
+      handlePause: this.props.handlers.handlePause,
+      handleResume: this.props.handlers.handleResume,
+      handleScrub: this.props.handlers.handleScrub
+    }
+
     return (
       <div>
-      <p> Simulation time: { this.props.simulationState.formattedTimestamp } </p>
+      <ScrubTimer 
+        timestamp={this.props.simulationState.timestamp}
+        formattedTimestamp={this.props.simulationState.formattedTimestamp}
+        latestTimestamp={this.props.simulationState.latestTimestamp}
+        handlers={scrubHandlers}
+      />
       <Map 
         style={style} 
         onClick={(e) => { this._handleMapClick(e) }}

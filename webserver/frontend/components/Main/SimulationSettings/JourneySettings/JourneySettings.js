@@ -8,12 +8,10 @@ export default class JourneySettings extends React.Component {
 
   static propTypes = {
     bounds: CustomPropTypes.bounds,
-    handleJourneysSelect: React.PropTypes.func,
-    handlePositionSelect: React.PropTypes.func,
-    handleObjectCreate: React.PropTypes.func,
     journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
-    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo)
+    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
+    handlers: React.PropTypes.object
   }
 
   constructor(props) {
@@ -36,7 +34,7 @@ export default class JourneySettings extends React.Component {
     const destinationLat = this.state.destinationLat;
     const destinationLng = this.state.destinationLng;
 
-    const handleJourneySelect = this.props.handleJourneysSelect;
+    const handleJourneySelect = this.props.handlers.handleJourneysSelect;
 
     const journey = {
       // TODO
@@ -89,7 +87,7 @@ export default class JourneySettings extends React.Component {
   _handlePositionAdd(position) {
     const originLat = this.state.originLat;
 
-    const handlePositionSelect = this.props.handlePositionSelect;
+    const handlePositionSelect = this.props.handlers.handlePositionSelect;
 
     if (!handlePositionSelect) {
       return
@@ -99,7 +97,7 @@ export default class JourneySettings extends React.Component {
   }
 
   _handleJourneysFileImport(journeys) {
-    this.props.handleJourneysSelect(journeys);
+    this.props.handlers.handleJourneysSelect(journeys);
   }
 
   _toggleJourneyManualAddForm(e) {
@@ -111,7 +109,7 @@ export default class JourneySettings extends React.Component {
   }
 
   _handleAddObject(settings) {
-    this.props.handleObjectCreate(settings);
+    this.props.handlers.handleObjectCreate(settings);
   }
 
   render() {
@@ -129,10 +127,10 @@ export default class JourneySettings extends React.Component {
       <div id="journey-settings">
 	      <div id="input-journeys">
 				</div>
-	        <LandmarkSearch
-	          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
-            boundLimit={bounds}
-	        />
+        <LandmarkSearch
+          handlePositionAdd={(position) => {this._handlePositionAdd(position)}}
+          boundLimit={bounds}
+        />
         <JourneyImport 
           handleJourneysSubmit={(journeys) => this._handleJourneysFileImport(journeys)}
           journeys={journeys}

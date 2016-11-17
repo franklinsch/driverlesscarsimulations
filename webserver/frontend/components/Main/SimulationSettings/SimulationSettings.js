@@ -8,14 +8,12 @@ import SpeedSetting from './SpeedSetting/SpeedSetting.js';
 export default class SimulationSettings extends React.Component {
   static propTypes = {
     socket: React.PropTypes.object,
-    selectedCity: CustomPropTypes.city,
     activeSimulationID: React.PropTypes.string,
+    selectedCity: CustomPropTypes.city,
     mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
-    handlePositionPreview: React.PropTypes.func,
-    handleCityChange: React.PropTypes.func,
-    handleObjectTypeCreate: React.PropTypes.func,
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
-    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo)
+    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
+    handlers: React.PropTypes.object
   }
 
   constructor(props) {
@@ -25,16 +23,16 @@ export default class SimulationSettings extends React.Component {
     }
   }
 
-  handleSimulationButton(e, started) {
+  _handleSimulationButton(e, started) {
     e.preventDefault();
     if (started) {
-      this.handleSimulationClose();
+      this._handleSimulationClose();
     } else {
-      this.handleSimulationStart()
+      this._handleSimulationStart()
     }
   }
 
-  handleSimulationClose() {
+  _handleSimulationClose() {
     const socket = this.props.socket;
     const simID = this.props.activeSimulationID;
     const type = "request-simulation-close";
@@ -44,7 +42,7 @@ export default class SimulationSettings extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content); 
   }
 
-  handleSimulationStart() {
+  _handleSimulationStart() {
     const socket = this.props.socket;
     const selectedCity = this.props.selectedCity;
 
@@ -61,7 +59,7 @@ export default class SimulationSettings extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  handleSimulationUpdate(e) {
+  _handleSimulationUpdate(e) {
     e.preventDefault();
 
     const socket = this.props.socket;
@@ -87,23 +85,19 @@ export default class SimulationSettings extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  _handleJourneysSubmit(journeys) {
+  handleJourneysSubmit(journeys) {
     this.setState({
       journeys: this.state.journeys.concat(journeys)
     })
   }
 
-  _handlePositionSelect(position) {
-    const f = this.props.handlePositionPreview;
+  handlePositionSelect(position) {
+    const f = this.props.handlers.handlePositionPreview;
     if (!f) {
       return
     }
 
     f(position);
-  }
-
-  _handleObjectTypeCreate(typeInfo) {
-    this.props.handleObjectTypeCreate(typeInfo);
   }
 
   render() {
@@ -116,30 +110,39 @@ export default class SimulationSettings extends React.Component {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
+    const journeySettingsHandlers = {
+      handleJourneysSelect: ::this.handleJourneysSubmit,
+      handlePositionSelect: ::this.handlePositionSelect,
+      handleObjectCreate: this.props.handlers.handleObjectTypeCreate
+    }
+
+    const speedSettingHandlers = {
+      handleSpeedChange: this.props.handlers.handleSpeedChange
+    }
+
     return (
       <div className="container">
         <JourneyList journeys={allJourneys}/>
         <JourneySettings 
-          handleJourneysSelect={(journeys) => {this._handleJourneysSubmit(journeys)}}
-          handlePositionSelect={(position) => this._handlePositionSelect(position)}
-          handleObjectCreate={(typeInfo) => this._handleObjectTypeCreate(typeInfo)}
           bounds={bounds}
           journeys={allJourneys}
           objectTypes={this.props.objectTypes}
           objectKindInfo={this.props.objectKindInfo}
+          handlers={journeySettingsHandlers}
         />
         <div className="row">
-          <button className="btn btn-primary" onClick={ (e) => this.handleSimulationButton(e, hasSimulationStarted) }>
+          <button className="btn btn-primary" onClick={ (e) => this._handleSimulationButton(e, hasSimulationStarted) }>
             { hasSimulationStarted  && <p>End Simulation</p> || <p>Start simulation</p>}
           </button>
             {
               hasSimulationStarted &&
               <div>Current Simulation ID: { simID }</div>
             }
-          <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this.handleSimulationUpdate(e) }>Update simulation</button>
+          <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this._handleSimulationUpdate(e) }>Update simulation</button>
           <SpeedSetting 
             hidden={!hasSimulationStarted}
             socket={socket}
+            handlers={speedSettingHandlers}
           />
 
         </div>
