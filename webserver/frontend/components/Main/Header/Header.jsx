@@ -39,7 +39,6 @@ export default class Header extends React.Component {
               />
             </li>
           </ul>
-        
           <JoinSimulationForm 
             handlers = {joinSimulationFormHandlers} 
           />
