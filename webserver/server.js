@@ -867,7 +867,7 @@ frameworkSocketServer.on('request', function(request) {
         'networkTime': epochAtReception - epochAtSend,
         'dbTime': epochAtUpdate - epochAtReception
       };
-      fs.writeFile("../stress_test.log", dump, function(err) {
+      fs.appendFile("logs/stress_test_"+simulationID+".log", dump, function(err) {
         if (err) throw err;
       });
 
