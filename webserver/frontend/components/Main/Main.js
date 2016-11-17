@@ -45,6 +45,7 @@ export default class Main extends React.Component {
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
     this.state = {
+      token: '',
       selectedCityID: 0,
       socket: socket,
       simulationInfo: {
@@ -171,6 +172,12 @@ export default class Main extends React.Component {
     })
   }
 
+  _handleTokenChange(newToken) {
+    this.setState({
+      token: newToken
+    });
+  }
+
   handlePositionPreview(position) {
     this.setState({
       previewMarkerPosition: position
@@ -258,6 +265,7 @@ export default class Main extends React.Component {
     const availableCities = this.state.availableCities;
     const socket = this.state.socket;
     const simulationID = this.state.simulationInfo.id;
+    const token = this.state.token || '';
 
     const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
 
@@ -282,8 +290,10 @@ export default class Main extends React.Component {
       <div>
         <Header
           socket={socket}
+          token={token}
           availableCities={availableCities}
           handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
+          handleTokenChange={(newToken => {this._handleTokenChange(newToken)})}
           handleJoinSimulation={(simulationId => {this.handleJoinSimulation(simulationId)})}
         />
          <div className="jumbotron">

@@ -5,6 +5,8 @@ const config = require('../config');
 const SALT_BYTES_LENGTH = 10;
 const HASH_ITERATIONS = 1000;
 const HASH_KEY_LENGTH = 64;
+const DIGEST = 'sha1';
+
 
 
 const userSchema = mongoose.Schema({
@@ -25,11 +27,11 @@ const userSchema = mongoose.Schema({
 
 userSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(SALT_BYTES_LENGTH).toString('hex');
-  this.hash = crypto.pbkdf2Sync(password, this.salt, HASH_ITERATIONS, HASH_KEY_LENGTH).toString('hex');
+  this.hash = crypto.pbkdf2Sync(password, this.salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
 };
 
 userSchema.methods.validPassword = function(password) {
-  var hash = crypto.pbkdf2Sync(password, this.salt, HASH_ITERATIONS, HASH_KEY_LENGTH).toString('hex');
+  var hash = crypto.pbkdf2Sync(password, this.salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
   return this.hash === hash;
 };
 

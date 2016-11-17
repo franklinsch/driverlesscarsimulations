@@ -9,7 +9,9 @@ export default class Header extends React.Component {
   static propTypes = {
     socket: React.PropTypes.object,
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
-    handleCityChange: React.PropTypes.func
+    handleCityChange: React.PropTypes.func,
+    handleTokenChange: React.PropTypes.func,
+    token: React.PropTypes.string
   }
 
   _handleJoinSimulation(simulationID) {
@@ -20,9 +22,12 @@ export default class Header extends React.Component {
     this.props.handleCityChange(city._id);
   }
 
+  _handleTokenChange(token) {
+    this.props.handleTokenChange(token);
+  }
+
   render() {
     const cities = this.props.availableCities || [];
-
     return (
         <nav className="navbar navbar-dark bg-primary">
           <a className="navbar-brand" href="#">SAVN</a>
@@ -34,7 +39,7 @@ export default class Header extends React.Component {
                 <Dropdown items={cities} onSelect={(city) => { this._handleCityChange(city) }} />
               </li>
               <li className="nav-item">
-                <LoginDropdown />
+                <LoginDropdown token={this.props.token} onTokenChange={(token) => {this._handleTokenChange(token) }} />
               </li>
           </ul>
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const async = require('async');
 const path = require('path');
+const passport = require('passport');
 const Simulation = require('../models/Simulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
