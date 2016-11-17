@@ -196,7 +196,8 @@ def moveCar(car):
   start = car['route'][0]
   end = car['route'][1]
 
-  if (not switchNodeLock(car, start, end) || len(car['sensorData']['cameraData']) > 0):
+  if (not switchNodeLock(car, start, end) or 
+      ('cameraData' in car['sensorData'] and len(car['sensorData']['cameraData']) > 0)):
     car['speed'] = 0
     return
 
@@ -235,7 +236,8 @@ def executeGlobalAlgorithm(state):
   return state
 
 def createNewCar(i, baseRoute):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
+  car = {'id': i, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
+      'route': None, 'sensorData': {}, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
 

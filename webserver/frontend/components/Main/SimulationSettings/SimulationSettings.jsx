@@ -42,6 +42,12 @@ export default class SimulationSettings extends React.Component {
     this.props.handlers.handleSimulationUpdate(allJourneys);
   }
 
+  _handleBenchmarkRequest(e) {
+    e.preventDefault();
+
+    this.props.handlers.handleBenchmarkRequest();
+  }
+
   handleJourneysSubmit(journeys) {
     this.setState({
       journeys: this.state.journeys.concat(journeys)
@@ -56,6 +62,8 @@ export default class SimulationSettings extends React.Component {
     const bounds = selectedCity ? selectedCity.bounds : null;
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+
+    const benchmarkValue = this.props.benchmarkValue;
 
     const journeySettingsHandlers = {
       handleJourneysFileImport : ::this.handleJourneysSubmit,
@@ -84,7 +92,9 @@ export default class SimulationSettings extends React.Component {
             className = "btn btn-primary" 
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
           >
-            { hasSimulationStarted  && <p>End Simulation</p> || <p>Start simulation</p>}
+            { hasSimulationStarted  && 
+              <p>End Simulation</p> || <p>Start simulation</p>
+            }
           </button>
 
           {
@@ -104,6 +114,17 @@ export default class SimulationSettings extends React.Component {
             hidden   = {!hasSimulationStarted}
             handlers = {speedSettingHandlers}
           />
+
+          <button 
+            className = "btn btn-primary" 
+            hidden    = {!hasSimulationStarted} 
+            onClick   = {::this._handleBenchmarkRequest}
+          >
+            Request benchmark
+          </button>
+          <p hidden={benchmarkValue == undefined}>
+          {benchmarkValue} is the average speed to destination in km/s
+          </p>
         </div>
       </div>
     )
