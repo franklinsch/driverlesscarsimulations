@@ -28,14 +28,16 @@ export default class ScrubTimer extends React.Component {
 
   _handlePause(e) {
     this.setState({
-      dragging: true
+      dragging: true,
+      storedMax: this.props.latestTimestamp
     });
     this.props.handlers.handlePause();
   }
 
   _handleResume(e) {
     this.setState({
-      dragging: false
+      dragging: false,
+      storedMax: null
     });
     this.props.handlers.handleResume();
   }
@@ -50,7 +52,7 @@ export default class ScrubTimer extends React.Component {
 
   render() {
     const scrubTime = this.state.scrubTime;
-    const latestTimestamp = this.props.latestTimestamp;
+    const maxTimestamp = this.state.storedMax || this.props.latestTimestamp;
     const formattedTimestamp = this.props.formattedTimestamp;
 
     return (
@@ -60,7 +62,7 @@ export default class ScrubTimer extends React.Component {
           <div className="form-group">
             <div className="row">
               <input 
-                className="form-group" type="range" min={0} max={latestTimestamp} step={1}
+                className="form-group" type="range" min={0} max={maxTimestamp} step={1}
                 value={scrubTime}
                 onMouseDown={(e) => {this._handlePause(e)}}
                 onMouseUp={(e) => {this._handleResume(e)}}
