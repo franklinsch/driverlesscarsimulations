@@ -165,7 +165,8 @@ export default class SimulationSettings extends React.Component {
           />
 
           <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this._handleBenchmarkRequest(e) }>Request benchmark</button>
-          <p hidden={!benchmarkValue}>{benchmarkValue} is the average speed to destination in s/m</p>
+          <p hidden={benchmarkValue == null || benchmarkValue == undefined}>
+          {benchmarkValue} is the average speed to destination in km/s</p>
         </div>
       </div>
     )
