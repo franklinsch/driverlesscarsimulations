@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import CustomPropTypes from '../../../Utils/CustomPropTypes.js'
+import CustomPropTypes from '../../../Utils/CustomPropTypes.jsx'
 
 export default class ScrubTimer extends React.Component {
   static propTypes = {
@@ -62,11 +62,15 @@ export default class ScrubTimer extends React.Component {
           <div className="form-group">
             <div className="row">
               <input 
-                className="form-group" type="range" min={0} max={maxTimestamp} step={1}
-                value={scrubTime}
-                onMouseDown={(e) => {this._handlePause(e)}}
-                onMouseUp={(e) => {this._handleResume(e)}}
-                onChange={(e) => {this._handleScrubTimeChange(e)}}
+                className   = "form-group" 
+                type        = "range" 
+                min         = {0} 
+                max         = {maxTimestamp} 
+                step        = {1}
+                value       = {scrubTime}
+                onMouseDown = {::this._handlePause}
+                onMouseUp   = {::this._handleResume}
+                onChange    = {::this._handleScrubTimeChange}
               />
             </div>
           </div>

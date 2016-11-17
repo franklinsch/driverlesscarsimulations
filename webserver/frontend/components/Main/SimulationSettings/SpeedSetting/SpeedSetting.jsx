@@ -1,6 +1,6 @@
 import React from 'react';
-import UtilFunctions from '../../..//Utils/UtilFunctions.js';
-import CustomPropTypes from '../../../Utils/CustomPropTypes.js';
+import UtilFunctions from '../../..//Utils/UtilFunctions.jsx';
+import CustomPropTypes from '../../../Utils/CustomPropTypes.jsx';
 
 export default class SpeedSetting extends React.Component {
 
@@ -51,7 +51,15 @@ export default class SpeedSetting extends React.Component {
         <form>
           <div className="form-group">
             <div className="row">
-              <input className="form-group" type="range" min={0} max={9} step={1} value={sliderValue} onChange={(e) => {this._handleRequestedSpeedChange(e)}}/>
+              <input 
+                className = "form-group"
+                type      = "range"
+                min       = {0}
+                max       = {9}
+                step      = {1}
+                value     = {sliderValue}
+                onChange  = {::this._handleRequestedSpeedChange}
+              />
               <p>{requestedSpeed + "x"}</p>
             </div>
           </div>

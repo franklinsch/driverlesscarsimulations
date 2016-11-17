@@ -1,9 +1,9 @@
 import React from 'react';
-import UtilFunctions from '../../Utils/UtilFunctions.js';
-import CustomPropTypes from '../../Utils/CustomPropTypes.js';
-import JourneySettings from './JourneySettings/JourneySettings.js';
-import JourneyList from './JourneyList/JourneyList.js';
-import SpeedSetting from './SpeedSetting/SpeedSetting.js';
+import UtilFunctions from '../../Utils/UtilFunctions.jsx';
+import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
+import JourneySettings from './JourneySettings/JourneySettings.jsx';
+import JourneyList from './JourneyList/JourneyList.jsx';
+import SpeedSetting from './SpeedSetting/SpeedSetting.jsx';
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
@@ -91,15 +91,6 @@ export default class SimulationSettings extends React.Component {
     })
   }
 
-  handlePositionSelect(position) {
-    const f = this.props.handlers.handlePositionPreview;
-    if (!f) {
-      return
-    }
-
-    f(position);
-  }
-
   render() {
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
@@ -111,40 +102,53 @@ export default class SimulationSettings extends React.Component {
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
     const journeySettingsHandlers = {
-      handleJourneysSelect: ::this.handleJourneysSubmit,
-      handlePositionSelect: ::this.handlePositionSelect,
-      handleObjectCreate: this.props.handlers.handleObjectTypeCreate
+      handleJourneysFileImport : ::this.handleJourneysSubmit,
+      handlePositionAdd        : this.props.handlers.handlePositionSelect,
+      handleObjectCreate       : this.props.handlers.handleObjectTypeCreate
     }
 
     const speedSettingHandlers = {
-      handleSpeedChange: this.props.handlers.handleSpeedChange
+      handleSpeedChange : this.props.handlers.handleSpeedChange
     }
 
     return (
       <div className="container">
-        <JourneyList journeys={allJourneys}/>
+        <JourneyList 
+          journeys = {allJourneys}
+        />
         <JourneySettings 
-          bounds={bounds}
-          journeys={allJourneys}
-          objectTypes={this.props.objectTypes}
-          objectKindInfo={this.props.objectKindInfo}
-          handlers={journeySettingsHandlers}
+          bounds         = {bounds}
+          journeys       = {allJourneys}
+          objectTypes    = {this.props.objectTypes}
+          objectKindInfo = {this.props.objectKindInfo}
+          handlers       = {journeySettingsHandlers}
         />
         <div className="row">
-          <button className="btn btn-primary" onClick={ (e) => this._handleSimulationButton(e, hasSimulationStarted) }>
+          <button 
+            className = "btn btn-primary" 
+            onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+          >
             { hasSimulationStarted  && <p>End Simulation</p> || <p>Start simulation</p>}
           </button>
-            {
-              hasSimulationStarted &&
-              <div>Current Simulation ID: { simID }</div>
-            }
-          <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this._handleSimulationUpdate(e) }>Update simulation</button>
-          <SpeedSetting 
-            hidden={!hasSimulationStarted}
-            socket={socket}
-            handlers={speedSettingHandlers}
-          />
 
+          {
+            hasSimulationStarted &&
+            <div>Current Simulation ID: { simID }</div>
+          }
+
+          <button 
+            className = "btn btn-primary"
+            hidden    = {!hasSimulationStarted}
+            onClick   = {::this._handleSimulationUpdate}
+          >
+            Update simulation
+          </button>
+
+          <SpeedSetting 
+            hidden   = {!hasSimulationStarted}
+            socket   = {socket}
+            handlers = {speedSettingHandlers}
+          />
         </div>
       </div>
     )

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Map, Marker, TileLayer, Popup } from 'react-leaflet';
 import L, { Icon, marker } from 'leaflet'
-import CustomPropTypes from '../../../Utils/CustomPropTypes.js'
+import CustomPropTypes from '../../../Utils/CustomPropTypes.jsx'
 import 'leaflet-rotatedmarker'
 
 export default class RotatableMarker extends React.Component {
@@ -41,11 +41,12 @@ export default class RotatableMarker extends React.Component {
     const key = this.props.key+'Marker';
 
     return (
-      <Marker position={this.props.position} 
-              key={key}
-              icon={this.props.icon}
-              rotationAngle={this.props.rotationAngle}
-              ref={(marker) => { if (marker) this.leafletElement = marker.leafletElement }}
+      <Marker 
+        position      = {this.props.position}
+        key           = {key}
+        icon          = {this.props.icon}
+        rotationAngle = {this.props.rotationAngle}
+        ref           = {(marker) => {if (marker) this.leafletElement = marker.leafletElement}}
       >
         {this.props.children}
       </Marker>

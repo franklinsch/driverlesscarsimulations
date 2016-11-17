@@ -1,9 +1,9 @@
 import React from 'react';
-import SimulationMap from './SimulationMap/SimulationMap.js';
-import SimulationSettings from './SimulationSettings/SimulationSettings.js';
-import CustomPropTypes from '../Utils/CustomPropTypes.js';
-import UtilFunctions from '../Utils/UtilFunctions.js';
-import Header from './Header/Header.js';
+import SimulationMap from './SimulationMap/SimulationMap.jsx';
+import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
+import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
+import UtilFunctions from '../Utils/UtilFunctions.jsx';
+import Header from './Header/Header.jsx';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
@@ -165,7 +165,7 @@ export default class Main extends React.Component {
     }
   }
 
-  _handleCityChange(newCityId) {
+  handleCityChange(newCityId) {
     this.setState({
       selectedCityID: newCityId
     })
@@ -266,11 +266,17 @@ export default class Main extends React.Component {
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const bounds = selectedCity ? selectedCity.bounds : null;
 
+    const headerHandlers = {
+      handleJoinSimulation : ::this.handleJoinSimulation,
+      handleCityChange     : ::this.handleCityChange
+    }
+
     const simulationSettingsHandlers = {
-      handlePositionPreview  : ::this.handlePositionPreview,
+      handlePositionSelect   : ::this.handlePositionPreview,
       handleObjectTypeCreate : ::this.handleObjectTypeCreate,
       handleSpeedChange      : ::this.handleSpeedChange
     }
+
     const simulationMapHandlers = {
       handleAddJourney : ::this.handleAddJourney,
       handlePause      : ::this.handlePause,
@@ -281,34 +287,32 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
-          socket={socket}
-          availableCities={availableCities}
-          handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
-          handleJoinSimulation={(simulationId => {this.handleJoinSimulation(simulationId)})}
+          socket          = {socket}
+          availableCities = {availableCities}
+          handlers        = {headerHandlers}
         />
-         <div className="jumbotron">
+        <div className="jumbotron">
           <div className="container">
             <div className="col-md-4 text-center" id="simulation-settings">
               <SimulationSettings
-                socket={socket}
-                activeSimulationID={simulationID}
-                selectedCity={selectedCity}
-                mapSelectedJourneys={mapSelectedJourneys}
-                objectTypes={this.state.objectTypes}
-                objectKindInfo={this.state.objectKindInfo}
-                handlers={simulationSettingsHandlers}
+                socket              = {socket}
+                activeSimulationID  = {simulationID}
+                selectedCity        = {selectedCity}
+                mapSelectedJourneys = {mapSelectedJourneys}
+                objectTypes         = {this.state.objectTypes}
+                objectKindInfo      = {this.state.objectKindInfo}
+                handlers            = {simulationSettingsHandlers}
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">
               <SimulationMap
-                width={ 680 + 'px' }
-                height={ 600 + 'px' }
-                bounds={ bounds }
-                simulationState= { simulationState }
-                previewMarkerPosition={previewMarkerPosition}
-                clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
-                objectTypes={this.state.objectTypes}
-                handlers={simulationMapHandlers}
+                width                      = {680 + 'px'}
+                height                     = {600 + 'px'}
+                bounds                     = {bounds}
+                simulationState            = {simulationState}
+                previewMarkerPosition      = {previewMarkerPosition}
+                objectTypes                = {this.state.objectTypes}
+                handlers                   = {simulationMapHandlers}
               />
             </div>
           </div>
