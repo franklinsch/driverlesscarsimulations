@@ -295,6 +295,24 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  handleBenchmarkRequest() {
+    const socket = this.state.socket;
+
+    const simID = this.state.simulationInfo.id;
+    const hasSimulationStarted = simID !== "0";
+
+    if (!hasSimulationStarted) {
+      console.error("Tried to benchmark a simulation that hasn't started");
+      return
+    }
+
+    const type = "request-simulation-benchmark";
+    const content = {
+      simulationID: simID,
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
 
   render() {
     const cities = this.state.availableCities;
@@ -316,6 +334,7 @@ export default class Main extends React.Component {
     }
 
     const simulationSettingsHandlers = {
+      handleBenchmarkRequest : ::this.handleBenchmarkRequest,
       handleSimulationStart  : ::this.handleSimulationStart,
       handleSimulationUpdate : ::this.handleSimulationUpdate,
       handleSimulationClose  : ::this.handleSimulationClose,

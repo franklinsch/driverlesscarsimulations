@@ -280,6 +280,22 @@ frontendSocketServer.on('request', function(request) {
       }
     });
   }
+  
+  function _handleRequestSimulationBenchmark(message) {
+    console.log('Message received');
+    Simulation.findById(message.content.simulationID, function (error, simulation) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.content.simulationID
+          }
+        }));
+        console.log("Could not find simulation with ID " + message.content.simulationID);
+        return
+      }
+    });
+  }
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
@@ -321,6 +337,9 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-close":
         _handleRequestSimulationClose(messageData);
+        break;
+      case "request-simulation-benchmark":
+        _handleRequestSimulationBenchmark(messageData);
         break;
       }
     }

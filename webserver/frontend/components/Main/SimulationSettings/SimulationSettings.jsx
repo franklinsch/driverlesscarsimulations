@@ -42,6 +42,12 @@ export default class SimulationSettings extends React.Component {
     this.props.handlers.handleSimulationUpdate(allJourneys);
   }
 
+  _handleBenchmarkRequest(e) {
+    e.preventDefault();
+
+    this.props.handlers.handleBenchmarkRequest();
+  }
+
   handleJourneysSubmit(journeys) {
     this.setState({
       journeys: this.state.journeys.concat(journeys)
@@ -84,7 +90,9 @@ export default class SimulationSettings extends React.Component {
             className = "btn btn-primary" 
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
           >
-            { hasSimulationStarted  && <p>End Simulation</p> || <p>Start simulation</p>}
+            { hasSimulationStarted  && 
+              <p>End Simulation</p> || <p>Start simulation</p>
+            }
           </button>
 
           {
@@ -104,6 +112,14 @@ export default class SimulationSettings extends React.Component {
             hidden   = {!hasSimulationStarted}
             handlers = {speedSettingHandlers}
           />
+
+          <button 
+            className = "btn btn-primary" 
+            hidden    = {!hasSimulationStarted} 
+            onClick   = {::this._handleBenchmarkRequest}
+          >
+            Request benchmark
+          </button>
         </div>
       </div>
     )

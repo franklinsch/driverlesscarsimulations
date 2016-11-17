@@ -90,3 +90,6 @@ Temporary Items
 
 #capistrano log files
 log
+
+#vim gunk
+*.swp*
