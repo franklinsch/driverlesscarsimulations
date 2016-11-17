@@ -12,10 +12,12 @@ export default class JourneyList extends React.Component {
     const simulationJourneys = this.props.simulationJourneys || [];
     const pendingJourneys = this.props.pendingJourneys || [];
 
+    console.log(simulationJourneys);
+
     return (
       <div id="journey-list">
         <h4>Journeys</h4>
-        { (simulationJourneys.length == 0 || pendingJourneys.length == 0) &&
+        { (simulationJourneys.length == 0 && pendingJourneys.length == 0) &&
           <i> No journeys </i>
         }
         <ul>

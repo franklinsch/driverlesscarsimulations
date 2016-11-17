@@ -61,7 +61,7 @@ export default class SimulationSettings extends React.Component {
 
     const selectedCity = this.props.selectedCity;
     const bounds = selectedCity ? selectedCity.bounds : null;
-    const simulationJourneys = this.state.simulationJourneys || [];
+    const simulationJourneys = this.props.simulationJourneys || [];
     const pendingJourneys = this.props.pendingJourneys || [];
 
     const benchmarkValue = this.props.benchmarkValue;

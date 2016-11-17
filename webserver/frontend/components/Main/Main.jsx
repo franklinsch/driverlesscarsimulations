@@ -90,8 +90,14 @@ export default class Main extends React.Component {
       const journeys = this.state.pendingJourneys; //TODO: Check if simulation settings journeys are also added
       this.postPendingJourneys(messageData.content.id, journeys);
       this.setState({
-        simulationInfo: messageData.content
+        simulationInfo: messageData.content.simulationInfo,
+        simulationJourneys: messageData.content.journeys
       });
+    } else if (messageData.type === "simulation-journeys-update") {
+      this.setState({
+        simulationJourneys: messageData.content.journeys
+      });
+      console.log(messageData.content);
     } else if (messageData.type === "simulation-state") {
       const simulationState = messageData.content.state;
       if (messageData.content.latestTimestamp) {
@@ -331,6 +337,7 @@ export default class Main extends React.Component {
     const simulationID = this.state.simulationInfo.id;
 
     const pendingJourneys = this.state.pendingJourneys || [];
+    const simulationJourneys = this.state.simulationJourneys || [];
 
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
@@ -374,6 +381,7 @@ export default class Main extends React.Component {
                 activeSimulationID  = {simulationID}
                 selectedCity        = {selectedCity}
                 pendingJourneys     = {pendingJourneys}
+                simulationJourneys  = {simulationJourneys}
                 objectTypes         = {this.state.objectTypes}
                 objectKindInfo      = {this.state.objectKindInfo}
                 benchmarkValue      = {this.state.benchmarkValue}
