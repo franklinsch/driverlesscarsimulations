@@ -2,7 +2,7 @@ import React from 'react';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import Dropdown from './Dropdown/Dropdown.jsx';
 import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.js';
-import LoginForm from './LoginForm/LoginForm.js';
+import LoginDropdown from './LoginButton/LoginButton.js';
 import UtilFunctions from '../../Utils/UtilFunctions.js';
 
 export default class Header extends React.Component {
@@ -33,10 +33,12 @@ export default class Header extends React.Component {
               <li className="nav-item">
                 <Dropdown items={cities} onSelect={(city) => { this._handleCityChange(city) }} />
               </li>
+              <li className="nav-item">
+                <LoginDropdown />
+              </li>
           </ul>
 
           <JoinSimulationForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
-          <LoginForm onSubmit={(simID) => {this._handleJoinSimulation(simID)}} />
       </nav>
     )
   }

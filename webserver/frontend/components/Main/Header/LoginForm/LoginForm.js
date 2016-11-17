@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class LoginForm extends React.Component {
+export default class LoginButton extends React.Component {
 
   static propTypes = {
     onSubmit: React.PropTypes.func
@@ -35,10 +35,15 @@ export default class LoginForm extends React.Component {
     const simulationID = this.state.simulationID;
 
     return (
-      <div id="login-button">
-        <form className="form-inline float-xs-right">
-          <button className="btn btn-success" type="submit" onClick={(e) => {this._handleJourneySubmit(e)}}>Login</button>
-        </form>
+      <div>
+      <a className="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Dropdown link
+      </a>
+      <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a className="dropdown-item" href="#">Action</a>
+        <a className="dropdown-item" href="#">Another action</a>
+        <a className="dropdown-item" href="#">Something else here</a>
+      </div>
       </div>
     )
   }

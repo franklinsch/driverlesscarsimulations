@@ -196,7 +196,7 @@ export default class Main extends React.Component {
       this.postJourney(journey, simID);
     }
   }
-    
+
   handleObjectTypeCreate(typeInfo) {
     const objectTypes = this.state.objectTypes || [];
     this.setState({
