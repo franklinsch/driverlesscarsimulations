@@ -58,8 +58,21 @@ export default class Main extends React.Component {
         formattedTimestamp: "00:00:00",
         objects: []
       },
-      mapSelectedJourneys: []
+      pendingJourneys: []
     }
+  }
+
+  handlePendingJourneyAdd(pendingJourney) {
+    const pendingJourneys = this.state.pendingJourneys || [];
+    this.setState({
+      pendingJourneys: pendingJourneys.concat([pendingJourney])
+    })
+  }
+
+  handlePendingJourneysClear() {
+    this.setState({
+      pendingJourneys: []
+    })
   }
 
   handleMessageReceive(message) {
@@ -74,7 +87,7 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
-      const journeys = this.state.journeys; //TODO: Check if simulation settings journeys are also added
+      const journeys = this.state.pendingJourneys; //TODO: Check if simulation settings journeys are also added
       this.postPendingJourneys(messageData.content.id, journeys);
       this.setState({
         simulationInfo: messageData.content
@@ -115,11 +128,6 @@ export default class Main extends React.Component {
         benchmarkValue: benchmarkValue
       })
     }
-  }
-
-  handleAddJourney(journey) {
-    const journeys = this.state.mapSelectedJourneys.concat([journey]);
-    this.setState({mapSelectedJourneys: journeys});
   }
 
   handleJoinSimulation(simulationID) {
@@ -180,12 +188,11 @@ export default class Main extends React.Component {
   }
 
   _startInitialSimulation(cityId) {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const journeys = this.state.pendingJourneys || [];
     const type = "request-simulation-start";
     const initialSettings = {
       selectedCity: cityId,
-      journeys: allJourneys
+      journeys: journeys
     }
     const socket = this.state.socket;
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
@@ -323,7 +330,7 @@ export default class Main extends React.Component {
     const availableCities = this.state.availableCities;
     const simulationID = this.state.simulationInfo.id;
 
-    const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
+    const pendingJourneys = this.state.pendingJourneys || [];
 
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
@@ -336,17 +343,19 @@ export default class Main extends React.Component {
     }
 
     const simulationSettingsHandlers = {
-      handleBenchmarkRequest : ::this.handleBenchmarkRequest,
-      handleSimulationStart  : ::this.handleSimulationStart,
-      handleSimulationUpdate : ::this.handleSimulationUpdate,
-      handleSimulationClose  : ::this.handleSimulationClose,
-      handlePositionSelect   : ::this.handlePositionPreview,
-      handleObjectTypeCreate : ::this.handleObjectTypeCreate,
-      handleSpeedChange      : ::this.handleSpeedChange
+      handleBenchmarkRequest     : ::this.handleBenchmarkRequest,
+      handleSimulationStart      : ::this.handleSimulationStart,
+      handleSimulationUpdate     : ::this.handleSimulationUpdate,
+      handleSimulationClose      : ::this.handleSimulationClose,
+      handlePositionSelect       : ::this.handlePositionPreview,
+      handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
+      handleSpeedChange          : ::this.handleSpeedChange
+      handlePendingJourneysClear : ::this.handlePendingJourneysClear,
+      handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
     }
 
     const simulationMapHandlers = {
-      handleAddJourney : ::this.handleAddJourney,
+      handleAddJourney : ::this.handlePendingJourneyAdd,
       handlePause      : ::this.handlePause,
       handleResume     : ::this.handleResume,
       handleScrub      : ::this.handleScrub
@@ -364,7 +373,7 @@ export default class Main extends React.Component {
               <SimulationSettings
                 activeSimulationID  = {simulationID}
                 selectedCity        = {selectedCity}
-                mapSelectedJourneys = {mapSelectedJourneys}
+                pendingJourneys     = {pendingJourneys}
                 objectTypes         = {this.state.objectTypes}
                 objectKindInfo      = {this.state.objectKindInfo}
                 benchmarkValue      = {this.state.benchmarkValue}

@@ -4,24 +4,37 @@ import CustomPropTypes from '../../../Utils/CustomPropTypes.jsx';
 export default class JourneyList extends React.Component {
 
   static propTypes = {
-    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
+    simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
   }
 
   render() {
-    const journeys = this.props.journeys || [];
+    const simulationJourneys = this.props.simulationJourneys || [];
+    const pendingJourneys = this.props.pendingJourneys || [];
 
     return (
       <div id="journey-list">
         <h4>Journeys</h4>
-        { journeys.length == 0 &&
+        { (simulationJourneys.length == 0 || pendingJourneys.length == 0) &&
           <i> No journeys </i>
         }
         <ul>
           {
-            journeys.map((journey, index) => {
+            simulationJourneys.map((journey, index) => {
               return (
                 <li key={index}>
                   { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } 
+                </li>
+              )
+            })
+          }
+        </ul>
+        <ul>
+          {
+            pendingJourneys.map((journey, index) => {
+              return (
+                <li key={index}>
+                  { "(Pending) " + index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } 
                 </li>
               )
             })
