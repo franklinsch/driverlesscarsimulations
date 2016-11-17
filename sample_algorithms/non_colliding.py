@@ -96,8 +96,11 @@ def translateDataToSensor(data):
 
 def translateObjectToSensor(car, obj):
   cameraSensorRadius = 30.0
+  cameraSensorFOVAngle = 100.0
   cameraData = []
-  if 'position' in obj and get_distance(car['position'], obj['position']) <= cameraSensorRadius:
+  distance = get_distance(car['position'], obj['position'])
+  direction = get_direction(car['position'], obj['position'])
+  if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
     cameraData.append(obj)
   return {'cameraData': cameraData}
 
@@ -140,7 +143,7 @@ def preprocess(route):
     props = R.getProperties(INP_FILE, start, end)
     maxSpeed_km_h = MAX_SPEED_KM_H
     if 'maxspeed' in props:
-      maxSpeed_km_h = int(props['maxspeed']) #Will break with mph or any suffix
+      maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
 
     dist = get_distance(start, end)
     time = dist/(maxSpeed_km_h*1000/3600)
