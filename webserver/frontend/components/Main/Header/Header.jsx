@@ -2,6 +2,7 @@ import React from 'react';
 import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
 import Dropdown from './Dropdown/Dropdown.jsx';
 import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.jsx';
+import LoginButton from './LoginButton/LoginButton.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 
 export default class Header extends React.Component {
@@ -37,6 +38,9 @@ export default class Header extends React.Component {
                 items    = {cities}
                 handlers = {dropdownHandlers}
               />
+            </li>
+            <li className="nav-item">
+              <LoginButton />
             </li>
           </ul>
           <JoinSimulationForm 
