@@ -48,7 +48,6 @@ function averageSpeedToDestination(journeys, states) {
     for (let obj of state.objects) {
       if (obj.id in carsOnTheRoad) {
  				const journey = journeys[obj.id];
-				console.log(journey);
 				dest = journey.destination;
 				pos = obj.position;
         if (pos.lat == dest.lat && pos.lng == dest.lng) {
