@@ -1,1877 +1,1877 @@
 [
   {
     "stationName": "Acton Town",
-    "lat": "51.502817347",
-    "lng": "-00.280214656",
+    "lat": 51.502817347,
+    "lng": -00.280214656,
     "entryPlusExitInMillions": 6.235045,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Aldgate ",
-    "lat": "51.514342817",
-    "lng": "-00.075600611",
+    "lat": 51.514342817,
+    "lng": -00.075600611,
     "entryPlusExitInMillions": 7.52781,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Aldgate East ",
-    "lat": "51.515300715",
-    "lng": "-00.072274025",
+    "lat": 51.515300715,
+    "lng": -00.072274025,
     "entryPlusExitInMillions": 12.839311,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Alperton ",
-    "lat": "51.540757238",
-    "lng": "-00.299447373",
+    "lat": 51.540757238,
+    "lng": -00.299447373,
     "entryPlusExitInMillions": 3.205455,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Amersham ",
-    "lat": "51.674200078",
-    "lng": "-00.607416256",
+    "lat": 51.674200078,
+    "lng": -00.607416256,
     "entryPlusExitInMillions": 2.287149,
     "localAuthority": "Chiltern"
   },
   {
     "stationName": "Angel ",
-    "lat": "51.532570565",
-    "lng": "-00.105772295",
+    "lat": 51.532570565,
+    "lng": -00.105772295,
     "entryPlusExitInMillions": 19.756365,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Archway ",
-    "lat": "51.565495779",
-    "lng": "-00.135099708",
+    "lat": 51.565495779,
+    "lng": -00.135099708,
     "entryPlusExitInMillions": 9.794439,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Arnos Grove ",
-    "lat": "51.616398898",
-    "lng": "-00.133501198",
+    "lat": 51.616398898,
+    "lng": -00.133501198,
     "entryPlusExitInMillions": 4.550587,
     "localAuthority": "Enfield"
   },
   {
     "stationName": "Arsenal ",
-    "lat": "51.558561500",
-    "lng": "-00.105746916",
+    "lat": 51.558561500,
+    "lng": -00.105746916,
     "entryPlusExitInMillions": 2.802635,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Baker Street ",
-    "lat": "51.523131159",
-    "lng": "-00.156881847",
+    "lat": 51.523131159,
+    "lng": -00.156881847,
     "entryPlusExitInMillions": 29.379132,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Balham ",
-    "lat": "51.443404055",
-    "lng": "-00.153182996",
+    "lat": 51.443404055,
+    "lng": -00.153182996,
     "entryPlusExitInMillions": 14.178948,
     "localAuthority": "Wandsworth"
   },
   {
     "stationName": "Bank & Monument",
-    "lat": "51.513373502",
-    "lng": "-00.088906725",
+    "lat": 51.513373502,
+    "lng": -00.088906725,
     "entryPlusExitInMillions": 57.512971,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Barbican ",
-    "lat": "51.520213415",
-    "lng": "-00.097698591",
+    "lat": 51.520213415,
+    "lng": -00.097698591,
     "entryPlusExitInMillions": 11.283478,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Barking ",
-    "lat": "51.539520555",
-    "lng": "00.080855743",
+    "lat": 51.539520555,
+    "lng": 00.080855743,
     "entryPlusExitInMillions": 16.055212,
     "localAuthority": "Barking and Dagenham"
   },
   {
     "stationName": "Barkingside ",
-    "lat": "51.585855444",
-    "lng": "00.088509189",
+    "lat": 51.585855444,
+    "lng": 00.088509189,
     "entryPlusExitInMillions": 1.406286,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Barons Court ",
-    "lat": "51.490227393",
-    "lng": "-00.213576608",
+    "lat": 51.490227393,
+    "lng": -00.213576608,
     "entryPlusExitInMillions": 7.295186,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Bayswater ",
-    "lat": "51.512299747",
-    "lng": "-00.188009447",
+    "lat": 51.512299747,
+    "lng": -00.188009447,
     "entryPlusExitInMillions": 5.21959,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Becontree ",
-    "lat": "51.540363533",
-    "lng": "00.127401050",
+    "lat": 51.540363533,
+    "lng": 00.127401050,
     "entryPlusExitInMillions": 3.490288,
     "localAuthority": "Barking and Dagenham"
   },
   {
     "stationName": "Belsize Park ",
-    "lat": "51.550493839",
-    "lng": "-00.164212238",
+    "lat": 51.550493839,
+    "lng": -00.164212238,
     "entryPlusExitInMillions": 6.155599,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Bermondsey ",
-    "lat": "51.498024522",
-    "lng": "-00.063635613",
+    "lat": 51.498024522,
+    "lng": -00.063635613,
     "entryPlusExitInMillions": 10.163683,
     "localAuthority": "Southwark"
   },
   {
     "stationName": "Bethnal Green ",
-    "lat": "51.527267549",
-    "lng": "-00.055423847",
+    "lat": 51.527267549,
+    "lng": -00.055423847,
     "entryPlusExitInMillions": 16.164737,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Blackfriars ",
-    "lat": "51.511562507",
-    "lng": "-00.103596123",
+    "lat": 51.511562507,
+    "lng": -00.103596123,
     "entryPlusExitInMillions": 13.702647,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Blackhorse Road ",
-    "lat": "51.587012708",
-    "lng": "-00.040984391",
+    "lat": 51.587012708,
+    "lng": -00.040984391,
     "entryPlusExitInMillions": 8.360092,
     "localAuthority": "Waltham Forest"
   },
   {
     "stationName": "Bond Street ",
-    "lat": "51.513879061",
-    "lng": "-00.149315708",
+    "lat": 51.513879061,
+    "lng": -00.149315708,
     "entryPlusExitInMillions": 37.119274,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Borough ",
-    "lat": "51.501270700",
-    "lng": "-00.093692651",
+    "lat": 51.501270700,
+    "lng": -00.093692651,
     "entryPlusExitInMillions": 5.358351,
     "localAuthority": "Southwark"
   },
   {
     "stationName": "Boston Manor ",
-    "lat": "51.495765550",
-    "lng": "-00.324729543",
+    "lat": 51.495765550,
+    "lng": -00.324729543,
     "entryPlusExitInMillions": 2.242854,
     "localAuthority": "Ealing Hounslow"
   },
   {
     "stationName": "Bounds Green ",
-    "lat": "51.607152312",
-    "lng": "-00.124210461",
+    "lat": 51.607152312,
+    "lng": -00.124210461,
     "entryPlusExitInMillions": 6.4623,
     "localAuthority": "Haringey"
   },
   {
     "stationName": "Bow Road ",
-    "lat": "51.526866904",
-    "lng": "-00.024809606",
+    "lat": 51.526866904,
+    "lng": -00.024809606,
     "entryPlusExitInMillions": 6.102443,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Brent Cross ",
-    "lat": "51.576860881",
-    "lng": "-00.213428926",
+    "lat": 51.576860881,
+    "lng": -00.213428926,
     "entryPlusExitInMillions": 2.566618,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Brixton ",
-    "lat": "51.462653263",
-    "lng": "-00.114611795",
+    "lat": 51.462653263,
+    "lng": -00.114611795,
     "entryPlusExitInMillions": 30.830921,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Bromley By Bow ",
-    "lat": "51.524842766",
-    "lng": "-00.011657480",
+    "lat": 51.524842766,
+    "lng": -00.011657480,
     "entryPlusExitInMillions": 3.68584,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Buckhurst Hill ",
-    "lat": "51.626575799",
-    "lng": "00.046733076",
+    "lat": 51.626575799,
+    "lng": 00.046733076,
     "entryPlusExitInMillions": 2.063838,
     "localAuthority": "Epping Forest"
   },
   {
     "stationName": "Burnt Oak ",
-    "lat": "51.602738309",
-    "lng": "-00.264170829",
+    "lat": 51.602738309,
+    "lng": -00.264170829,
     "entryPlusExitInMillions": 4.383772,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Caledonian Road ",
-    "lat": "51.548491331",
-    "lng": "-00.118292408",
+    "lat": 51.548491331,
+    "lng": -00.118292408,
     "entryPlusExitInMillions": 6.126683,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Camden Town ",
-    "lat": "51.539468601",
-    "lng": "-00.142709548",
+    "lat": 51.539468601,
+    "lng": -00.142709548,
     "entryPlusExitInMillions": 21.898497,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Canada Water ",
-    "lat": "51.497965204",
-    "lng": "-00.049695892",
+    "lat": 51.497965204,
+    "lng": -00.049695892,
     "entryPlusExitInMillions": 12.77743,
     "localAuthority": "Southwark"
   },
   {
     "stationName": "Canary Wharf ",
-    "lat": "51.503623130",
-    "lng": "-00.019426407",
+    "lat": 51.503623130,
+    "lng": -00.019426407,
     "entryPlusExitInMillions": 54.441424,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Canning Town ",
-    "lat": "51.513908219",
-    "lng": "00.008181999",
+    "lat": 51.513908219,
+    "lng": 00.008181999,
     "entryPlusExitInMillions": 10.916031,
     "localAuthority": "Newham"
   },
   {
     "stationName": "Cannon Street ",
-    "lat": "51.511505842",
-    "lng": "-00.090681195",
+    "lat": 51.511505842,
+    "lng": -00.090681195,
     "entryPlusExitInMillions": 7.485065,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Canons Park ",
-    "lat": "51.607820681",
-    "lng": "-00.294618585",
+    "lat": 51.607820681,
+    "lng": -00.294618585,
     "entryPlusExitInMillions": 2.786006,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "Chalfont & Latimer ",
-    "lat": "51.668076304",
-    "lng": "-00.560477729",
+    "lat": 51.668076304,
+    "lng": -00.560477729,
     "entryPlusExitInMillions": 1.437534,
     "localAuthority": "Chiltern"
   },
   {
     "stationName": "Chalk Farm ",
-    "lat": "51.544151895",
-    "lng": "-00.153701577",
+    "lat": 51.544151895,
+    "lng": -00.153701577,
     "entryPlusExitInMillions": 5.752495,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Chancery Lane ",
-    "lat": "51.518194371",
-    "lng": "-00.111660401",
+    "lat": 51.518194371,
+    "lng": -00.111660401,
     "entryPlusExitInMillions": 16.355373,
     "localAuthority": "City of London Camden"
   },
   {
     "stationName": "Charing Cross ",
-    "lat": "51.508661338",
-    "lng": "-00.124733426",
+    "lat": 51.508661338,
+    "lng": -00.124733426,
     "entryPlusExitInMillions": 20.690327,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Chesham ",
-    "lat": "51.705072763",
-    "lng": "-00.611158209",
+    "lat": 51.705072763,
+    "lng": -00.611158209,
     "entryPlusExitInMillions": 0.875261,
     "localAuthority": "Chiltern"
   },
   {
     "stationName": "Chigwell ",
-    "lat": "51.617931677",
-    "lng": "00.074523461",
+    "lat": 51.617931677,
+    "lng": 00.074523461,
     "entryPlusExitInMillions": 0.559061,
     "localAuthority": "Epping Forest"
   },
   {
     "stationName": "Chiswick Park ",
-    "lat": "51.494371103",
-    "lng": "-00.267715593",
+    "lat": 51.494371103,
+    "lng": -00.267715593,
     "entryPlusExitInMillions": 2.148469,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Chorleywood ",
-    "lat": "51.654266956",
-    "lng": "-00.518312173",
+    "lat": 51.654266956,
+    "lng": -00.518312173,
     "entryPlusExitInMillions": 1.137678,
     "localAuthority": "Three Rivers"
   },
   {
     "stationName": "Clapham Common ",
-    "lat": "51.461803357",
-    "lng": "-00.138295129",
+    "lat": 51.461803357,
+    "lng": -00.138295129,
     "entryPlusExitInMillions": 10.072099,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Clapham North ",
-    "lat": "51.464923475",
-    "lng": "-00.129515616",
+    "lat": 51.464923475,
+    "lng": -00.129515616,
     "entryPlusExitInMillions": 7.026138,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Clapham South ",
-    "lat": "51.452674157",
-    "lng": "-00.147959970",
+    "lat": 51.452674157,
+    "lng": -00.147959970,
     "entryPlusExitInMillions": 8.584904,
     "localAuthority": "Wandsworth"
   },
   {
     "stationName": "Cockfosters ",
-    "lat": "51.651744780",
-    "lng": "-00.149604351",
+    "lat": 51.651744780,
+    "lng": -00.149604351,
     "entryPlusExitInMillions": 1.847585,
     "localAuthority": "Enfield"
   },
   {
     "stationName": "Colindale ",
-    "lat": "51.595351419",
-    "lng": "-00.250108975",
+    "lat": 51.595351419,
+    "lng": -00.250108975,
     "entryPlusExitInMillions": 5.946531,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Colliers Wood ",
-    "lat": "51.418149511",
-    "lng": "-00.177678808",
+    "lat": 51.418149511,
+    "lng": -00.177678808,
     "entryPlusExitInMillions": 6.515664,
     "localAuthority": "Merton"
   },
   {
     "stationName": "Covent Garden ",
-    "lat": "51.512979259",
-    "lng": "-00.124146712",
+    "lat": 51.512979259,
+    "lng": -00.124146712,
     "entryPlusExitInMillions": 14.66925,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Croxley ",
-    "lat": "51.647103901",
-    "lng": "-00.441669863",
+    "lat": 51.647103901,
+    "lng": -00.441669863,
     "entryPlusExitInMillions": 1.059406,
     "localAuthority": "Three Rivers"
   },
   {
     "stationName": "Dagenham East ",
-    "lat": "51.544187099",
-    "lng": "00.165864184",
+    "lat": 51.544187099,
+    "lng": 00.165864184,
     "entryPlusExitInMillions": 2.858892,
     "localAuthority": "Barking and Dagenham"
   },
   {
     "stationName": "Dagenham Heathway ",
-    "lat": "51.541701213",
-    "lng": "00.147674142",
+    "lat": 51.541701213,
+    "lng": 00.147674142,
     "entryPlusExitInMillions": 6.065247,
     "localAuthority": "Barking and Dagenham"
   },
   {
     "stationName": "Debden ",
-    "lat": "51.645494269",
-    "lng": "00.083832469",
+    "lat": 51.645494269,
+    "lng": 00.083832469,
     "entryPlusExitInMillions": 2.4625,
     "localAuthority": "Epping Forest"
   },
   {
     "stationName": "Dollis Hill ",
-    "lat": "51.551969462",
-    "lng": "-00.238775764",
+    "lat": 51.551969462,
+    "lng": -00.238775764,
     "entryPlusExitInMillions": 3.085602,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Ealing Broadway ",
-    "lat": "51.514979099",
-    "lng": "-00.301471777",
+    "lat": 51.514979099,
+    "lng": -00.301471777,
     "entryPlusExitInMillions": 16.840132,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Ealing Common ",
-    "lat": "51.510196802",
-    "lng": "-00.288221583",
+    "lat": 51.510196802,
+    "lng": -00.288221583,
     "entryPlusExitInMillions": 3.516563,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Earls Court ",
-    "lat": "51.491876177",
-    "lng": "-00.193526047",
+    "lat": 51.491876177,
+    "lng": -00.193526047,
     "entryPlusExitInMillions": 20.501361,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "East Acton ",
-    "lat": "51.516648287",
-    "lng": "-00.247481639",
+    "lat": 51.516648287,
+    "lng": -00.247481639,
     "entryPlusExitInMillions": 4.009433,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "East Finchley ",
-    "lat": "51.587335007",
-    "lng": "-00.164725648",
+    "lat": 51.587335007,
+    "lng": -00.164725648,
     "entryPlusExitInMillions": 7.342555,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "East Ham ",
-    "lat": "51.538996697",
-    "lng": "00.051467145",
+    "lat": 51.538996697,
+    "lng": 00.051467145,
     "entryPlusExitInMillions": 15.094316,
     "localAuthority": "Newham"
   },
   {
     "stationName": "East Putney ",
-    "lat": "51.458878826",
-    "lng": "-00.210975744",
+    "lat": 51.458878826,
+    "lng": -00.210975744,
     "entryPlusExitInMillions": 5.99512,
     "localAuthority": "Wandsworth"
   },
   {
     "stationName": "Eastcote ",
-    "lat": "51.576553216",
-    "lng": "-00.396806460",
+    "lat": 51.576553216,
+    "lng": -00.396806460,
     "entryPlusExitInMillions": 2.833742,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Edgware ",
-    "lat": "51.613684847",
-    "lng": "-00.274946709",
+    "lat": 51.613684847,
+    "lng": -00.274946709,
     "entryPlusExitInMillions": 4.776513,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Edgware Road (Bakerloo)",
-    "lat": "51.520250118",
-    "lng": "-00.170106720",
+    "lat": 51.520250118,
+    "lng": -00.170106720,
     "entryPlusExitInMillions": 4.503184,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Edgware Road (Circle, District, H & C)",
-    "lat": "51.519994068",
-    "lng": "-00.167644928",
+    "lat": 51.519994068,
+    "lng": -00.167644928,
     "entryPlusExitInMillions": 7.210074,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Elephant & Castle ",
-    "lat": "51.495847724",
-    "lng": "-00.100711857",
+    "lat": 51.495847724,
+    "lng": -00.100711857,
     "entryPlusExitInMillions": 19.088917,
     "localAuthority": "Southwark"
   },
   {
     "stationName": "Elm Park ",
-    "lat": "51.549872773",
-    "lng": "00.199159843",
+    "lat": 51.549872773,
+    "lng": 00.199159843,
     "entryPlusExitInMillions": 3.004341,
     "localAuthority": "Havering"
   },
   {
     "stationName": "Embankment ",
-    "lat": "51.507310119",
-    "lng": "-00.122340604",
+    "lat": 51.507310119,
+    "lng": -00.122340604,
     "entryPlusExitInMillions": 21.562479,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Epping ",
-    "lat": "51.693689859",
-    "lng": "00.113845981",
+    "lat": 51.693689859,
+    "lng": 00.113845981,
     "entryPlusExitInMillions": 3.330335,
     "localAuthority": "Epping Forest"
   },
   {
     "stationName": "Euston ",
-    "lat": "51.528665946",
-    "lng": "-00.133265016",
+    "lat": 51.528665946,
+    "lng": -00.133265016,
     "entryPlusExitInMillions": 42.159332,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Euston Square ",
-    "lat": "51.525626629",
-    "lng": "-00.135824263",
+    "lat": 51.525626629,
+    "lng": -00.135824263,
     "entryPlusExitInMillions": 14.878866,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Fairlop ",
-    "lat": "51.595747808",
-    "lng": "00.090921024",
+    "lat": 51.595747808,
+    "lng": 00.090921024,
     "entryPlusExitInMillions": 1.134269,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Farringdon ",
-    "lat": "51.520517640",
-    "lng": "-00.105050320",
+    "lat": 51.520517640,
+    "lng": -00.105050320,
     "entryPlusExitInMillions": 23.775738,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Finchley Central ",
-    "lat": "51.601039042",
-    "lng": "-00.192428710",
+    "lat": 51.601039042,
+    "lng": -00.192428710,
     "entryPlusExitInMillions": 5.779925,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Finchley Road ",
-    "lat": "51.547132085",
-    "lng": "-00.180473820",
+    "lat": 51.547132085,
+    "lng": -00.180473820,
     "entryPlusExitInMillions": 9.951123,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Finsbury Park ",
-    "lat": "51.564470950",
-    "lng": "-00.106495674",
+    "lat": 51.564470950,
+    "lng": -00.106495674,
     "entryPlusExitInMillions": 28.847088,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Fulham Broadway ",
-    "lat": "51.480598681",
-    "lng": "-00.194937978",
+    "lat": 51.480598681,
+    "lng": -00.194937978,
     "entryPlusExitInMillions": 10.714422,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Gants Hill ",
-    "lat": "51.576557097",
-    "lng": "00.066103646",
+    "lat": 51.576557097,
+    "lng": 00.066103646,
     "entryPlusExitInMillions": 6.588251,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Gloucester Road ",
-    "lat": "51.494312745",
-    "lng": "-00.182960687",
+    "lat": 51.494312745,
+    "lng": -00.182960687,
     "entryPlusExitInMillions": 14.203922,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Golders Green ",
-    "lat": "51.572285858",
-    "lng": "-00.193965660",
+    "lat": 51.572285858,
+    "lng": -00.193965660,
     "entryPlusExitInMillions": 8.700123,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Goldhawk Road ",
-    "lat": "51.502026467",
-    "lng": "-00.226720989",
+    "lat": 51.502026467,
+    "lng": -00.226720989,
     "entryPlusExitInMillions": 2.088026,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Goodge Street ",
-    "lat": "51.520499085",
-    "lng": "-00.134642741",
+    "lat": 51.520499085,
+    "lng": -00.134642741,
     "entryPlusExitInMillions": 8.841266,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Grange Hill ",
-    "lat": "51.613409710",
-    "lng": "00.092132915",
+    "lat": 51.613409710,
+    "lng": 00.092132915,
     "entryPlusExitInMillions": 0.657661,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Great Portland Street ",
-    "lat": "51.523789348",
-    "lng": "-00.143930250",
+    "lat": 51.523789348,
+    "lng": -00.143930250,
     "entryPlusExitInMillions": 8.343311,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Green Park ",
-    "lat": "51.506918921",
-    "lng": "-00.142899998",
+    "lat": 51.506918921,
+    "lng": -00.142899998,
     "entryPlusExitInMillions": 39.552887,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Greenford ",
-    "lat": "51.542361624",
-    "lng": "-00.346412020",
+    "lat": 51.542361624,
+    "lng": -00.346412020,
     "entryPlusExitInMillions": 4.716521,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Gunnersbury ",
-    "lat": "51.491867355",
-    "lng": "-00.275147144",
+    "lat": 51.491867355,
+    "lng": -00.275147144,
     "entryPlusExitInMillions": 5.410585,
     "localAuthority": "Hounslow"
   },
   {
     "stationName": "Hainault ",
-    "lat": "51.603792541",
-    "lng": "00.093105998",
+    "lat": 51.603792541,
+    "lng": 00.093105998,
     "entryPlusExitInMillions": 3.607791,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Hammersmith  (Circle)",
-    "lat": "51.492639704",
-    "lng": "-00.222367633",
+    "lat": 51.492639704,
+    "lng": -00.222367633,
     "entryPlusExitInMillions": 28.834401,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Hammersmith  (District & Piccadilly)",
-    "lat": "51.493572715",
-    "lng": "-00.224892685",
+    "lat": 51.493572715,
+    "lng": -00.224892685,
     "entryPlusExitInMillions": 10.703965,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Hampstead ",
-    "lat": "51.556754839",
-    "lng": "-00.178202920",
+    "lat": 51.556754839,
+    "lng": -00.178202920,
     "entryPlusExitInMillions": 4.557566,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Hanger Lane ",
-    "lat": "51.530072876",
-    "lng": "-00.292973103",
+    "lat": 51.530072876,
+    "lng": -00.292973103,
     "entryPlusExitInMillions": 3.949461,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Harlesden ",
-    "lat": "51.536255187",
-    "lng": "-00.257476566",
+    "lat": 51.536255187,
+    "lng": -00.257476566,
     "entryPlusExitInMillions": 3.007807,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Harrow & Wealdstone ",
-    "lat": "51.592263678",
-    "lng": "-00.335193509",
+    "lat": 51.592263678,
+    "lng": -00.335193509,
     "entryPlusExitInMillions": 5.002877,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "Harrow On The Hill ",
-    "lat": "51.579392732",
-    "lng": "-00.336973212",
+    "lat": 51.579392732,
+    "lng": -00.336973212,
     "entryPlusExitInMillions": 10.259516,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "Hatton Cross ",
-    "lat": "51.466685423",
-    "lng": "-00.423356896",
+    "lat": 51.466685423,
+    "lng": -00.423356896,
     "entryPlusExitInMillions": 3.199955,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Heathrow Airport Terminal 1, 2 & 3",
-    "lat": "51.458624169",
-    "lng": "-00.446006279",
+    "lat": 51.458624169,
+    "lng": -00.446006279,
     "entryPlusExitInMillions": 2.347501,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Heathrow Terminal 4",
-    "lat": "51.471290175",
-    "lng": "-00.452385526",
+    "lat": 51.471290175,
+    "lng": -00.452385526,
     "entryPlusExitInMillions": 3.902026,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Heathrow Terminal 5",
-    "lat": "51.471593893",
-    "lng": "-00.487913971",
+    "lat": 51.471593893,
+    "lng": -00.487913971,
     "entryPlusExitInMillions": 7.489313,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Hendon Central ",
-    "lat": "51.583358035",
-    "lng": "-00.226465843",
+    "lat": 51.583358035,
+    "lng": -00.226465843,
     "entryPlusExitInMillions": 7.970028,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "High Barnet ",
-    "lat": "51.650657954",
-    "lng": "-00.194737478",
+    "lat": 51.650657954,
+    "lng": -00.194737478,
     "entryPlusExitInMillions": 3.648827,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "High Street Kensington ",
-    "lat": "51.500745724",
-    "lng": "-00.192480691",
+    "lat": 51.500745724,
+    "lng": -00.192480691,
     "entryPlusExitInMillions": 13.36254,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Highbury & Islington ",
-    "lat": "51.546300742",
-    "lng": "-00.103948483",
+    "lat": 51.546300742,
+    "lng": -00.103948483,
     "entryPlusExitInMillions": 18.443978,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Highgate ",
-    "lat": "51.577658850",
-    "lng": "-00.146618543",
+    "lat": 51.577658850,
+    "lng": -00.146618543,
     "entryPlusExitInMillions": 5.482772,
     "localAuthority": "Haringey"
   },
   {
     "stationName": "Hillingdon ",
-    "lat": "51.553780278",
-    "lng": "-00.449881290",
+    "lat": 51.553780278,
+    "lng": -00.449881290,
     "entryPlusExitInMillions": 1.856117,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Holborn ",
-    "lat": "51.517506300",
-    "lng": "-00.119995446",
+    "lat": 51.517506300,
+    "lng": -00.119995446,
     "entryPlusExitInMillions": 40.530196,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Holland Park ",
-    "lat": "51.507404594",
-    "lng": "-00.205705089",
+    "lat": 51.507404594,
+    "lng": -00.205705089,
     "entryPlusExitInMillions": 3.366174,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Holloway Road ",
-    "lat": "51.552821168",
-    "lng": "-00.112913541",
+    "lat": 51.552821168,
+    "lng": -00.112913541,
     "entryPlusExitInMillions": 6.728651,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Hornchurch ",
-    "lat": "51.554072870",
-    "lng": "00.218999452",
+    "lat": 51.554072870,
+    "lng": 00.218999452,
     "entryPlusExitInMillions": 2.023958,
     "localAuthority": "Havering"
   },
   {
     "stationName": "Hounslow Central ",
-    "lat": "51.471152208",
-    "lng": "-00.366881823",
+    "lat": 51.471152208,
+    "lng": -00.366881823,
     "entryPlusExitInMillions": 4.010773,
     "localAuthority": "Hounslow"
   },
   {
     "stationName": "Hounslow East ",
-    "lat": "51.473241130",
-    "lng": "-00.356648626",
+    "lat": 51.473241130,
+    "lng": -00.356648626,
     "entryPlusExitInMillions": 4.515142,
     "localAuthority": "Hounslow"
   },
   {
     "stationName": "Hounslow West ",
-    "lat": "51.473106027",
-    "lng": "-00.385684911",
+    "lat": 51.473106027,
+    "lng": -00.385684911,
     "entryPlusExitInMillions": 3.545552,
     "localAuthority": "Hounslow"
   },
   {
     "stationName": "Hyde Park Corner ",
-    "lat": "51.502828707",
-    "lng": "-00.152730468",
+    "lat": 51.502828707,
+    "lng": -00.152730468,
     "entryPlusExitInMillions": 7.436827,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Ickenham ",
-    "lat": "51.562046398",
-    "lng": "-00.441975598",
+    "lat": 51.562046398,
+    "lng": -00.441975598,
     "entryPlusExitInMillions": 1.190362,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Kennington ",
-    "lat": "51.488193706",
-    "lng": "-00.105475190",
+    "lat": 51.488193706,
+    "lng": -00.105475190,
     "entryPlusExitInMillions": 5.529121,
     "localAuthority": "Southwark"
   },
   {
     "stationName": "Kensal Green ",
-    "lat": "51.530526498",
-    "lng": "-00.224683208",
+    "lat": 51.530526498,
+    "lng": -00.224683208,
     "entryPlusExitInMillions": 2.563193,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Kensington ( Olympia ) ",
-    "lat": "51.497883187",
-    "lng": "-00.210355325",
+    "lat": 51.497883187,
+    "lng": -00.210355325,
     "entryPlusExitInMillions": 2.008711,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Kentish Town ",
-    "lat": "51.550367969",
-    "lng": "-00.140452418",
+    "lat": 51.550367969,
+    "lng": -00.140452418,
     "entryPlusExitInMillions": 10.493555,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Kenton ",
-    "lat": "51.581846365",
-    "lng": "-00.317125399",
+    "lat": 51.581846365,
+    "lng": -00.317125399,
     "entryPlusExitInMillions": 2.116417,
     "localAuthority": "Brent Harrow"
   },
   {
     "stationName": "Kew Gardens ",
-    "lat": "51.477097778",
-    "lng": "-00.285212918",
+    "lat": 51.477097778,
+    "lng": -00.285212918,
     "entryPlusExitInMillions": 3.549683,
     "localAuthority": "Richmond"
   },
   {
     "stationName": "Kilburn ",
-    "lat": "51.546943685",
-    "lng": "-00.204612104",
+    "lat": 51.546943685,
+    "lng": -00.204612104,
     "entryPlusExitInMillions": 8.269438,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Kilburn Park ",
-    "lat": "51.535139924",
-    "lng": "-00.193943923",
+    "lat": 51.535139924,
+    "lng": -00.193943923,
     "entryPlusExitInMillions": 3.417148,
     "localAuthority": "Brent"
   },
   {
     "stationName": "King's Cross St Pancras",
-    "lat": "51.530467020",
-    "lng": "-00.123838556",
+    "lat": 51.530467020,
+    "lng": -00.123838556,
     "entryPlusExitInMillions": 93.413018,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Kingsbury ",
-    "lat": "51.584818808",
-    "lng": "-00.278758866",
+    "lat": 51.584818808,
+    "lng": -00.278758866,
     "entryPlusExitInMillions": 4.968747,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Knightsbridge ",
-    "lat": "51.501619530",
-    "lng": "-00.160476448",
+    "lat": 51.501619530,
+    "lng": -00.160476448,
     "entryPlusExitInMillions": 20.296928,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Ladbroke Grove ",
-    "lat": "51.517255223",
-    "lng": "-00.210833786",
+    "lat": 51.517255223,
+    "lng": -00.210833786,
     "entryPlusExitInMillions": 5.813508,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Lambeth North ",
-    "lat": "51.499131086",
-    "lng": "-00.111745717",
+    "lat": 51.499131086,
+    "lng": -00.111745717,
     "entryPlusExitInMillions": 3.285854,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Lancaster Gate ",
-    "lat": "51.511894768",
-    "lng": "-00.175400817",
+    "lat": 51.511894768,
+    "lng": -00.175400817,
     "entryPlusExitInMillions": 6.293475,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Latimer Road ",
-    "lat": "51.513609630",
-    "lng": "-00.217746133",
+    "lat": 51.513609630,
+    "lng": -00.217746133,
     "entryPlusExitInMillions": 2.572535,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Leicester Square ",
-    "lat": "51.511290786",
-    "lng": "-00.128222550",
+    "lat": 51.511290786,
+    "lng": -00.128222550,
     "entryPlusExitInMillions": 43.745951,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Leyton ",
-    "lat": "51.556503397",
-    "lng": "-00.005618740",
+    "lat": 51.556503397,
+    "lng": -00.005618740,
     "entryPlusExitInMillions": 14.406501,
     "localAuthority": "Waltham Forest"
   },
   {
     "stationName": "Leytonstone ",
-    "lat": "51.568254279",
-    "lng": "00.008223901",
+    "lat": 51.568254279,
+    "lng": 00.008223901,
     "entryPlusExitInMillions": 11.244737,
     "localAuthority": "Waltham Forest"
   },
   {
     "stationName": "Liverpool Street ",
-    "lat": "51.517421127",
-    "lng": "-00.082958757",
+    "lat": 51.517421127,
+    "lng": -00.082958757,
     "entryPlusExitInMillions": 73.257321,
     "localAuthority": "City of London"
   },
   {
     "stationName": "London Bridge ",
-    "lat": "51.505572080",
-    "lng": "-00.086907553",
+    "lat": 51.505572080,
+    "lng": -00.086907553,
     "entryPlusExitInMillions": 71.964428,
     "localAuthority": "Southwark"
   },
   {
     "stationName": "Loughton ",
-    "lat": "51.641570622",
-    "lng": "00.055302636",
+    "lat": 51.641570622,
+    "lng": 00.055302636,
     "entryPlusExitInMillions": 3.272688,
     "localAuthority": "Epping Forest"
   },
   {
     "stationName": "Maida Vale ",
-    "lat": "51.529828870",
-    "lng": "-00.185609035",
+    "lat": 51.529828870,
+    "lng": -00.185609035,
     "entryPlusExitInMillions": 3.382758,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Manor House ",
-    "lat": "51.570821904",
-    "lng": "-00.095699338",
+    "lat": 51.570821904,
+    "lng": -00.095699338,
     "entryPlusExitInMillions": 9.275642,
     "localAuthority": "Hackney Haringey"
   },
   {
     "stationName": "Mansion House ",
-    "lat": "51.512094100",
-    "lng": "-00.094171678",
+    "lat": 51.512094100,
+    "lng": -00.094171678,
     "entryPlusExitInMillions": 5.561213,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Marble Arch ",
-    "lat": "51.513610410",
-    "lng": "-00.158415035",
+    "lat": 51.513610410,
+    "lng": -00.158415035,
     "entryPlusExitInMillions": 15.442682,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Marylebone ",
-    "lat": "51.522296752",
-    "lng": "-00.163080891",
+    "lat": 51.522296752,
+    "lng": -00.163080891,
     "entryPlusExitInMillions": 12.525312,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Mile End ",
-    "lat": "51.525162272",
-    "lng": "-00.033400538",
+    "lat": 51.525162272,
+    "lng": -00.033400538,
     "entryPlusExitInMillions": 16.310716,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Mill Hill East ",
-    "lat": "51.608322331",
-    "lng": "-00.209873024",
+    "lat": 51.608322331,
+    "lng": -00.209873024,
     "entryPlusExitInMillions": 1.318158,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Moor Park ",
-    "lat": "51.629790112",
-    "lng": "-00.432617492",
+    "lat": 51.629790112,
+    "lng": -00.432617492,
     "entryPlusExitInMillions": 0.88639,
     "localAuthority": "Three Rivers"
   },
   {
     "stationName": "Moorgate ",
-    "lat": "51.518434153",
-    "lng": "-00.088988842",
+    "lat": 51.518434153,
+    "lng": -00.088988842,
     "entryPlusExitInMillions": 26.06263,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Morden ",
-    "lat": "51.402413117",
-    "lng": "-00.194767862",
+    "lat": 51.402413117,
+    "lng": -00.194767862,
     "entryPlusExitInMillions": 9.275569,
     "localAuthority": "Merton"
   },
   {
     "stationName": "Mornington Crescent ",
-    "lat": "51.534278448",
-    "lng": "-00.138821617",
+    "lat": 51.534278448,
+    "lng": -00.138821617,
     "entryPlusExitInMillions": 4.531089,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Neasden ",
-    "lat": "51.554031104",
-    "lng": "-00.249760238",
+    "lat": 51.554031104,
+    "lng": -00.249760238,
     "entryPlusExitInMillions": 3.67247,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Newbury Park ",
-    "lat": "51.575639509",
-    "lng": "00.090329654",
+    "lat": 51.575639509,
+    "lng": 00.090329654,
     "entryPlusExitInMillions": 4.327727,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "North Acton ",
-    "lat": "51.523436048",
-    "lng": "-00.259700310",
+    "lat": 51.523436048,
+    "lng": -00.259700310,
     "entryPlusExitInMillions": 6.106253,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "North Ealing ",
-    "lat": "51.517624754",
-    "lng": "-00.288970664",
+    "lat": 51.517624754,
+    "lng": -00.288970664,
     "entryPlusExitInMillions": 0.892594,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "North Greenwich ",
-    "lat": "51.500253938",
-    "lng": "00.003617380",
+    "lat": 51.500253938,
+    "lng": 00.003617380,
     "entryPlusExitInMillions": 26.377071,
     "localAuthority": "Greenwich"
   },
   {
     "stationName": "North Harrow ",
-    "lat": "51.584853438",
-    "lng": "-00.362187319",
+    "lat": 51.584853438,
+    "lng": -00.362187319,
     "entryPlusExitInMillions": 1.937838,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "North Wembley ",
-    "lat": "51.562548968",
-    "lng": "-00.304116057",
+    "lat": 51.562548968,
+    "lng": -00.304116057,
     "entryPlusExitInMillions": 1.836732,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Northfields ",
-    "lat": "51.499341967",
-    "lng": "-00.314126947",
+    "lat": 51.499341967,
+    "lng": -00.314126947,
     "entryPlusExitInMillions": 4.080122,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Northolt ",
-    "lat": "51.548215120",
-    "lng": "-00.368420431",
+    "lat": 51.548215120,
+    "lng": -00.368420431,
     "entryPlusExitInMillions": 5.026,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Northwick Park ",
-    "lat": "51.578651178",
-    "lng": "-00.318174443",
+    "lat": 51.578651178,
+    "lng": -00.318174443,
     "entryPlusExitInMillions": 4.588128,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Northwood ",
-    "lat": "51.611217965",
-    "lng": "-00.423813419",
+    "lat": 51.611217965,
+    "lng": -00.423813419,
     "entryPlusExitInMillions": 2.475743,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Northwood Hills ",
-    "lat": "51.600549275",
-    "lng": "-00.409262774",
+    "lat": 51.600549275,
+    "lng": -00.409262774,
     "entryPlusExitInMillions": 1.720439,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Notting Hill Gate ",
-    "lat": "51.509135067",
-    "lng": "-00.196517879",
+    "lat": 51.509135067,
+    "lng": -00.196517879,
     "entryPlusExitInMillions": 16.683962,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Oakwood ",
-    "lat": "51.647643252",
-    "lng": "-00.131828432",
+    "lat": 51.647643252,
+    "lng": -00.131828432,
     "entryPlusExitInMillions": 2.842657,
     "localAuthority": "Enfield"
   },
   {
     "stationName": "Old Street ",
-    "lat": "51.525673036",
-    "lng": "-00.087540958",
+    "lat": 51.525673036,
+    "lng": -00.087540958,
     "entryPlusExitInMillions": 25.14351,
     "localAuthority": "Islington Hackney"
   },
   {
     "stationName": "Osterley ",
-    "lat": "51.481001483",
-    "lng": "-00.351955627",
+    "lat": 51.481001483,
+    "lng": -00.351955627,
     "entryPlusExitInMillions": 2.350196,
     "localAuthority": "Hounslow"
   },
   {
     "stationName": "Oval ",
-    "lat": "51.482175453",
-    "lng": "-00.112872504",
+    "lat": 51.482175453,
+    "lng": -00.112872504,
     "entryPlusExitInMillions": 6.968322,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Oxford Circus ",
-    "lat": "51.515198326",
-    "lng": "-00.141753096",
+    "lat": 51.515198326,
+    "lng": -00.141753096,
     "entryPlusExitInMillions": 92.355623,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Paddington ",
-    "lat": "51.515378873",
-    "lng": "-00.175365294",
+    "lat": 51.515378873,
+    "lng": -00.175365294,
     "entryPlusExitInMillions": 49.637302,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Park Royal ",
-    "lat": "51.526964839",
-    "lng": "-00.284197489",
+    "lat": 51.526964839,
+    "lng": -00.284197489,
     "entryPlusExitInMillions": 2.019382,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Parsons Green ",
-    "lat": "51.475172662",
-    "lng": "-00.201208748",
+    "lat": 51.475172662,
+    "lng": -00.201208748,
     "entryPlusExitInMillions": 6.822161,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Perivale ",
-    "lat": "51.536659128",
-    "lng": "-00.323817282",
+    "lat": 51.536659128,
+    "lng": -00.323817282,
     "entryPlusExitInMillions": 2.405584,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "Piccadilly Circus ",
-    "lat": "51.510101282",
-    "lng": "-00.133994054",
+    "lat": 51.510101282,
+    "lng": -00.133994054,
     "entryPlusExitInMillions": 42.796831,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Pimlico ",
-    "lat": "51.489267016",
-    "lng": "-00.133715860",
+    "lat": 51.489267016,
+    "lng": -00.133715860,
     "entryPlusExitInMillions": 11.264698,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Pinner ",
-    "lat": "51.592920216",
-    "lng": "-00.380877555",
+    "lat": 51.592920216,
+    "lng": -00.380877555,
     "entryPlusExitInMillions": 3.084213,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "Plaistow ",
-    "lat": "51.531286207",
-    "lng": "00.017807961",
+    "lat": 51.531286207,
+    "lng": 00.017807961,
     "entryPlusExitInMillions": 7.063495,
     "localAuthority": "Newham"
   },
   {
     "stationName": "Preston Road ",
-    "lat": "51.572097704",
-    "lng": "-00.295226402",
+    "lat": 51.572097704,
+    "lng": -00.295226402,
     "entryPlusExitInMillions": 3.427709,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Putney Bridge ",
-    "lat": "51.467978221",
-    "lng": "-00.208948328",
+    "lat": 51.467978221,
+    "lng": -00.208948328,
     "entryPlusExitInMillions": 5.75691,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Queens Park ",
-    "lat": "51.534167072",
-    "lng": "-00.204675391",
+    "lat": 51.534167072,
+    "lng": -00.204675391,
     "entryPlusExitInMillions": 5.771615,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Queensbury ",
-    "lat": "51.594408067",
-    "lng": "-00.285756688",
+    "lat": 51.594408067,
+    "lng": -00.285756688,
     "entryPlusExitInMillions": 4.525278,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Queensway ",
-    "lat": "51.510453171",
-    "lng": "-00.187402539",
+    "lat": 51.510453171,
+    "lng": -00.187402539,
     "entryPlusExitInMillions": 7.656619,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Ravenscourt Park ",
-    "lat": "51.494211265",
-    "lng": "-00.236225664",
+    "lat": 51.494211265,
+    "lng": -00.236225664,
     "entryPlusExitInMillions": 3.189008,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Rayners Lane ",
-    "lat": "51.575039739",
-    "lng": "-00.370959601",
+    "lat": 51.575039739,
+    "lng": -00.370959601,
     "entryPlusExitInMillions": 4.512905,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "Redbridge ",
-    "lat": "51.576368336",
-    "lng": "00.045413423",
+    "lat": 51.576368336,
+    "lng": 00.045413423,
     "entryPlusExitInMillions": 2.934539,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Regent's Park ",
-    "lat": "51.523573745",
-    "lng": "-00.146845189",
+    "lat": 51.523573745,
+    "lng": -00.146845189,
     "entryPlusExitInMillions": 3.541481,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Richmond ",
-    "lat": "51.463232128",
-    "lng": "-00.301717924",
+    "lat": 51.463232128,
+    "lng": -00.301717924,
     "entryPlusExitInMillions": 8.661325,
     "localAuthority": "Richmond"
   },
   {
     "stationName": "Rickmansworth ",
-    "lat": "51.640327496",
-    "lng": "-00.473664594",
+    "lat": 51.640327496,
+    "lng": -00.473664594,
     "entryPlusExitInMillions": 2.442771,
     "localAuthority": "Three Rivers"
   },
   {
     "stationName": "Roding Valley ",
-    "lat": "51.617179945",
-    "lng": "00.043856090",
+    "lat": 51.617179945,
+    "lng": 00.043856090,
     "entryPlusExitInMillions": 0.260651,
     "localAuthority": "Epping Forest Redbridge"
   },
   {
     "stationName": "Royal Oak ",
-    "lat": "51.519090535",
-    "lng": "-00.188212572",
+    "lat": 51.519090535,
+    "lng": -00.188212572,
     "entryPlusExitInMillions": 2.491199,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Ruislip ",
-    "lat": "51.571511893",
-    "lng": "-00.421416905",
+    "lat": 51.571511893,
+    "lng": -00.421416905,
     "entryPlusExitInMillions": 1.903105,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Ruislip Gardens ",
-    "lat": "51.560651409",
-    "lng": "-00.410993312",
+    "lat": 51.560651409,
+    "lng": -00.410993312,
     "entryPlusExitInMillions": 1.112623,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Ruislip Manor ",
-    "lat": "51.573246766",
-    "lng": "-00.412305976",
+    "lat": 51.573246766,
+    "lng": -00.412305976,
     "entryPlusExitInMillions": 2.005867,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Russell Square ",
-    "lat": "51.522981488",
-    "lng": "-00.124290511",
+    "lat": 51.522981488,
+    "lng": -00.124290511,
     "entryPlusExitInMillions": 13.328942,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Seven Sisters ",
-    "lat": "51.583414085",
-    "lng": "-00.072478320",
+    "lat": 51.583414085,
+    "lng": -00.072478320,
     "entryPlusExitInMillions": 17.522713,
     "localAuthority": "Haringey"
   },
   {
     "stationName": "Shepherd's Bush ",
-    "lat": "51.504520582",
-    "lng": "-00.218739321",
+    "lat": 51.504520582,
+    "lng": -00.218739321,
     "entryPlusExitInMillions": 22.257246,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Shepherd's Bush Market",
-    "lat": "51.505626762",
-    "lng": "-00.226281420",
+    "lat": 51.505626762,
+    "lng": -00.226281420,
     "entryPlusExitInMillions": 3.41259,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Sloane Square ",
-    "lat": "51.492361608",
-    "lng": "-00.156471428",
+    "lat": 51.492361608,
+    "lng": -00.156471428,
     "entryPlusExitInMillions": 17.197513,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "Snaresbrook ",
-    "lat": "51.580893551",
-    "lng": "00.021492179",
+    "lat": 51.580893551,
+    "lng": 00.021492179,
     "entryPlusExitInMillions": 2.674477,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "South Ealing ",
-    "lat": "51.501439579",
-    "lng": "-00.306982297",
+    "lat": 51.501439579,
+    "lng": -00.306982297,
     "entryPlusExitInMillions": 3.699819,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "South Harrow ",
-    "lat": "51.564742755",
-    "lng": "-00.352171569",
+    "lat": 51.564742755,
+    "lng": -00.352171569,
     "entryPlusExitInMillions": 2.583973,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "South Kensington ",
-    "lat": "51.494072248",
-    "lng": "-00.173903021",
+    "lat": 51.494072248,
+    "lng": -00.173903021,
     "entryPlusExitInMillions": 33.869744,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "South Kenton ",
-    "lat": "51.570231405",
-    "lng": "-00.308554798",
+    "lat": 51.570231405,
+    "lng": -00.308554798,
     "entryPlusExitInMillions": 0.957195,
     "localAuthority": "Brent"
   },
   {
     "stationName": "South Ruislip ",
-    "lat": "51.556575808",
-    "lng": "-00.398609938",
+    "lat": 51.556575808,
+    "lng": -00.398609938,
     "entryPlusExitInMillions": 1.718085,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "South Wimbledon ",
-    "lat": "51.415358688",
-    "lng": "-00.191946864",
+    "lat": 51.415358688,
+    "lng": -00.191946864,
     "entryPlusExitInMillions": 4.57044,
     "localAuthority": "Merton"
   },
   {
     "stationName": "South Woodford ",
-    "lat": "51.591793443",
-    "lng": "00.027321779",
+    "lat": 51.591793443,
+    "lng": 00.027321779,
     "entryPlusExitInMillions": 5.148679,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Southfields ",
-    "lat": "51.445005910",
-    "lng": "-00.206514155",
+    "lat": 51.445005910,
+    "lng": -00.206514155,
     "entryPlusExitInMillions": 6.173897,
     "localAuthority": "Wandsworth"
   },
   {
     "stationName": "Southgate ",
-    "lat": "51.632375610",
-    "lng": "-00.127741029",
+    "lat": 51.632375610,
+    "lng": -00.127741029,
     "entryPlusExitInMillions": 5.555527,
     "localAuthority": "Enfield"
   },
   {
     "stationName": "Southwark ",
-    "lat": "51.503912041",
-    "lng": "-00.105079612",
+    "lat": 51.503912041,
+    "lng": -00.105079612,
     "entryPlusExitInMillions": 17.937654,
     "localAuthority": "Southwark"
   },
   {
     "stationName": "St James's Park ",
-    "lat": "51.499417081",
-    "lng": "-00.134167037",
+    "lat": 51.499417081,
+    "lng": -00.134167037,
     "entryPlusExitInMillions": 15.698186,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "St John's Wood ",
-    "lat": "51.534629498",
-    "lng": "-00.174155402",
+    "lat": 51.534629498,
+    "lng": -00.174155402,
     "entryPlusExitInMillions": 7.879484,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "St Pauls' ",
-    "lat": "51.514875732",
-    "lng": "-00.097559304",
+    "lat": 51.514875732,
+    "lng": -00.097559304,
     "entryPlusExitInMillions": 17.371372,
     "localAuthority": "City of London"
   },
   {
     "stationName": "Stamford Brook ",
-    "lat": "51.494865328",
-    "lng": "-00.245421899",
+    "lat": 51.494865328,
+    "lng": -00.245421899,
     "entryPlusExitInMillions": 2.695977,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Stanmore ",
-    "lat": "51.619673212",
-    "lng": "-00.303078406",
+    "lat": 51.619673212,
+    "lng": -00.303078406,
     "entryPlusExitInMillions": 3.973686,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "Stepney Green ",
-    "lat": "51.521979324",
-    "lng": "-00.046455251",
+    "lat": 51.521979324,
+    "lng": -00.046455251,
     "entryPlusExitInMillions": 5.846372,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Stockwell ",
-    "lat": "51.472241139",
-    "lng": "-00.122895213",
+    "lat": 51.472241139,
+    "lng": -00.122895213,
     "entryPlusExitInMillions": 11.082161,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Stonebridge Park ",
-    "lat": "51.543989547",
-    "lng": "-00.275371113",
+    "lat": 51.543989547,
+    "lng": -00.275371113,
     "entryPlusExitInMillions": 2.67489,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Stratford ",
-    "lat": "51.541377658",
-    "lng": "-00.003185389",
+    "lat": 51.541377658,
+    "lng": -00.003185389,
     "entryPlusExitInMillions": 61.44263,
     "localAuthority": "Newham"
   },
   {
     "stationName": "Sudbury Hill ",
-    "lat": "51.557060075",
-    "lng": "-00.336185424",
+    "lat": 51.557060075,
+    "lng": -00.336185424,
     "entryPlusExitInMillions": 2.217946,
     "localAuthority": "Ealing Harrow"
   },
   {
     "stationName": "Sudbury Town ",
-    "lat": "51.550846283",
-    "lng": "-00.315443563",
+    "lat": 51.550846283,
+    "lng": -00.315443563,
     "entryPlusExitInMillions": 2.179203,
     "localAuthority": "Brent Ealing"
   },
   {
     "stationName": "Swiss Cottage ",
-    "lat": "51.543382980",
-    "lng": "-00.174736507",
+    "lat": 51.543382980,
+    "lng": -00.174736507,
     "entryPlusExitInMillions": 7.71083,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Temple ",
-    "lat": "51.511041845",
-    "lng": "-00.113692896",
+    "lat": 51.511041845,
+    "lng": -00.113692896,
     "entryPlusExitInMillions": 8.595799,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Theydon Bois ",
-    "lat": "51.671773226",
-    "lng": "00.103118143",
+    "lat": 51.671773226,
+    "lng": 00.103118143,
     "entryPlusExitInMillions": 0.854702,
     "localAuthority": "Epping Forest"
   },
   {
     "stationName": "Tooting Bec ",
-    "lat": "51.435836121",
-    "lng": "-00.159677894",
+    "lat": 51.435836121,
+    "lng": -00.159677894,
     "entryPlusExitInMillions": 7.933544,
     "localAuthority": "Wandsworth"
   },
   {
     "stationName": "Tooting Broadway ",
-    "lat": "51.427516012",
-    "lng": "-00.167954323",
+    "lat": 51.427516012,
+    "lng": -00.167954323,
     "entryPlusExitInMillions": 15.737978,
     "localAuthority": "Wandsworth"
   },
   {
     "stationName": "Tottenham Court Road ",
-    "lat": "51.516276082",
-    "lng": "-00.130856050",
+    "lat": 51.516276082,
+    "lng": -00.130856050,
     "entryPlusExitInMillions": 16.2498,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Tottenham Hale ",
-    "lat": "51.588112841",
-    "lng": "-00.060276117",
+    "lat": 51.588112841,
+    "lng": -00.060276117,
     "entryPlusExitInMillions": 11.954313,
     "localAuthority": "Haringey"
   },
   {
     "stationName": "Totteridge ",
-    "lat": "51.630265127",
-    "lng": "-00.179247175",
+    "lat": 51.630265127,
+    "lng": -00.179247175,
     "entryPlusExitInMillions": 2.33448,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "Tower Hill ",
-    "lat": "51.510139104",
-    "lng": "-00.076335576",
+    "lat": 51.510139104,
+    "lng": -00.076335576,
     "entryPlusExitInMillions": 22.176713,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Tufnell Park ",
-    "lat": "51.556736692",
-    "lng": "-00.137907511",
+    "lat": 51.556736692,
+    "lng": -00.137907511,
     "entryPlusExitInMillions": 0,
     "localAuthority": "Islington"
   },
   {
     "stationName": "Turnham Green ",
-    "lat": "51.495185091",
-    "lng": "-00.254500038",
+    "lat": 51.495185091,
+    "lng": -00.254500038,
     "entryPlusExitInMillions": 6.445923,
     "localAuthority": "Hounslow"
   },
   {
     "stationName": "Turnpike Lane ",
-    "lat": "51.590364168",
-    "lng": "-00.102786628",
+    "lat": 51.590364168,
+    "lng": -00.102786628,
     "entryPlusExitInMillions": 10.790301,
     "localAuthority": "Haringey"
   },
   {
     "stationName": "Upminster ",
-    "lat": "51.558959400",
-    "lng": "00.251068748",
+    "lat": 51.558959400,
+    "lng": 00.251068748,
     "entryPlusExitInMillions": 5.140645,
     "localAuthority": "Havering"
   },
   {
     "stationName": "Upminster Bridge ",
-    "lat": "51.558822332",
-    "lng": "00.235751225",
+    "lat": 51.558822332,
+    "lng": 00.235751225,
     "entryPlusExitInMillions": 1.146772,
     "localAuthority": "Havering"
   },
   {
     "stationName": "Upney ",
-    "lat": "51.538404215",
-    "lng": "00.101558788",
+    "lat": 51.538404215,
+    "lng": 00.101558788,
     "entryPlusExitInMillions": 2.684747,
     "localAuthority": "Barking and Dagenham"
   },
   {
     "stationName": "Upton Park ",
-    "lat": "51.535300668",
-    "lng": "00.035269676",
+    "lat": 51.535300668,
+    "lng": 00.035269676,
     "entryPlusExitInMillions": 11.413623,
     "localAuthority": "Newham"
   },
   {
     "stationName": "Uxbridge ",
-    "lat": "51.546558503",
-    "lng": "-00.478086633",
+    "lat": 51.546558503,
+    "lng": -00.478086633,
     "entryPlusExitInMillions": 8.341531,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Vauxhall ",
-    "lat": "51.485802837",
-    "lng": "-00.123728675",
+    "lat": 51.485802837,
+    "lng": -00.123728675,
     "entryPlusExitInMillions": 26.834959,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Victoria ",
-    "lat": "51.496415738",
-    "lng": "-00.143828518",
+    "lat": 51.496415738,
+    "lng": -00.143828518,
     "entryPlusExitInMillions": 82.88556,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Walthamstow Central ",
-    "lat": "51.583022656",
-    "lng": "-00.019910230",
+    "lat": 51.583022656,
+    "lng": -00.019910230,
     "entryPlusExitInMillions": 18.333582,
     "localAuthority": "Waltham Forest"
   },
   {
     "stationName": "Wanstead ",
-    "lat": "51.575586046",
-    "lng": "00.028739769",
+    "lat": 51.575586046,
+    "lng": 00.028739769,
     "entryPlusExitInMillions": 2.90356,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Warren Street ",
-    "lat": "51.524582490",
-    "lng": "-00.138254185",
+    "lat": 51.524582490,
+    "lng": -00.138254185,
     "entryPlusExitInMillions": 19.917362,
     "localAuthority": "Camden"
   },
   {
     "stationName": "Warwick Avenue ",
-    "lat": "51.523345437",
-    "lng": "-00.183649798",
+    "lat": 51.523345437,
+    "lng": -00.183649798,
     "entryPlusExitInMillions": 4.501822,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Waterloo ",
-    "lat": "51.503576438",
-    "lng": "-00.114051784",
+    "lat": 51.503576438,
+    "lng": -00.114051784,
     "entryPlusExitInMillions": 95.138374,
     "localAuthority": "Lambeth"
   },
   {
     "stationName": "Watford ",
-    "lat": "51.657472766",
-    "lng": "-00.417233505",
+    "lat": 51.657472766,
+    "lng": -00.417233505,
     "entryPlusExitInMillions": 1.845823,
     "localAuthority": "Watford"
   },
   {
     "stationName": "Wembley Central ",
-    "lat": "51.552393189",
-    "lng": "-00.296820887",
+    "lat": 51.552393189,
+    "lng": -00.296820887,
     "entryPlusExitInMillions": 5.789849,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Wembley Park ",
-    "lat": "51.563321392",
-    "lng": "-00.279220664",
+    "lat": 51.563321392,
+    "lng": -00.279220664,
     "entryPlusExitInMillions": 14.542576,
     "localAuthority": "Brent"
   },
   {
     "stationName": "West Acton ",
-    "lat": "51.517928534",
-    "lng": "-00.280959813",
+    "lat": 51.517928534,
+    "lng": -00.280959813,
     "entryPlusExitInMillions": 1.736847,
     "localAuthority": "Ealing"
   },
   {
     "stationName": "West Brompton ",
-    "lat": "51.487326810",
-    "lng": "-00.195513643",
+    "lat": 51.487326810,
+    "lng": -00.195513643,
     "entryPlusExitInMillions": 5.168452,
     "localAuthority": "Kensington and Chelsea"
   },
   {
     "stationName": "West Finchley ",
-    "lat": "51.609549070",
-    "lng": "-00.188445598",
+    "lat": 51.609549070,
+    "lng": -00.188445598,
     "entryPlusExitInMillions": 1.613941,
     "localAuthority": "Barnet"
   },
   {
     "stationName": "West Ham ",
-    "lat": "51.528257231",
-    "lng": "00.005040569",
+    "lat": 51.528257231,
+    "lng": 00.005040569,
     "entryPlusExitInMillions": 3.814553,
     "localAuthority": "Newham"
   },
   {
     "stationName": "West Hampstead ",
-    "lat": "51.546770903",
-    "lng": "-00.190729830",
+    "lat": 51.546770903,
+    "lng": -00.190729830,
     "entryPlusExitInMillions": 11.160117,
     "localAuthority": "Camden"
   },
   {
     "stationName": "West Harrow ",
-    "lat": "51.579833961",
-    "lng": "-00.352886823",
+    "lat": 51.579833961,
+    "lng": -00.352886823,
     "entryPlusExitInMillions": 1.329655,
     "localAuthority": "Harrow"
   },
   {
     "stationName": "West Kensington ",
-    "lat": "51.490565630",
-    "lng": "-00.206454516",
+    "lat": 51.490565630,
+    "lng": -00.206454516,
     "entryPlusExitInMillions": 5.321523,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "West Ruislip ",
-    "lat": "51.569591648",
-    "lng": "-00.437840503",
+    "lat": 51.569591648,
+    "lng": -00.437840503,
     "entryPlusExitInMillions": 1.564634,
     "localAuthority": "Hillingdon"
   },
   {
     "stationName": "Westbourne Park ",
-    "lat": "51.520991060",
-    "lng": "-00.200858000",
+    "lat": 51.520991060,
+    "lng": -00.200858000,
     "entryPlusExitInMillions": 3.79496,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "Westminster ",
-    "lat": "51.501156967",
-    "lng": "-00.124793827",
+    "lat": 51.501156967,
+    "lng": -00.124793827,
     "entryPlusExitInMillions": 25.614455,
     "localAuthority": "City of Westminster"
   },
   {
     "stationName": "White City ",
-    "lat": "51.512044211",
-    "lng": "-00.224221914",
+    "lat": 51.512044211,
+    "lng": -00.224221914,
     "entryPlusExitInMillions": 7.704418,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Whitechapel ",
-    "lat": "51.519529261",
-    "lng": "-00.059968492",
+    "lat": 51.519529261,
+    "lng": -00.059968492,
     "entryPlusExitInMillions": 11.702345,
     "localAuthority": "Tower Hamlets"
   },
   {
     "stationName": "Willesden Green ",
-    "lat": "51.549376909",
-    "lng": "-00.222378339",
+    "lat": 51.549376909,
+    "lng": -00.222378339,
     "entryPlusExitInMillions": 8.960771,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Willesden Junction ",
-    "lat": "51.532259837",
-    "lng": "-00.244259053",
+    "lat": 51.532259837,
+    "lng": -00.244259053,
     "entryPlusExitInMillions": 4.597796,
     "localAuthority": "Brent"
   },
   {
     "stationName": "Wimbledon ",
-    "lat": "51.421464866",
-    "lng": "-00.206353858",
+    "lat": 51.421464866,
+    "lng": -00.206353858,
     "entryPlusExitInMillions": 15.631389,
     "localAuthority": "Merton"
   },
   {
     "stationName": "Wimbledon Park ",
-    "lat": "51.434538960",
-    "lng": "-00.199572031",
+    "lat": 51.434538960,
+    "lng": -00.199572031,
     "entryPlusExitInMillions": 1.821025,
     "localAuthority": "Merton"
   },
   {
     "stationName": "Wood Green ",
-    "lat": "51.597536265",
-    "lng": "-00.109617731",
+    "lat": 51.597536265,
+    "lng": -00.109617731,
     "entryPlusExitInMillions": 13.18919,
     "localAuthority": "Haringey"
   },
   {
     "stationName": "Wood Lane",
-    "lat": "51.509958279",
-    "lng": "-00.224245427",
+    "lat": 51.509958279,
+    "lng": -00.224245427,
     "entryPlusExitInMillions": 3.698414,
     "localAuthority": "Hammersmith and Fulham"
   },
   {
     "stationName": "Woodford ",
-    "lat": "51.607093559",
-    "lng": "00.034027185",
+    "lat": 51.607093559,
+    "lng": 00.034027185,
     "entryPlusExitInMillions": 6.034086,
     "localAuthority": "Redbridge"
   },
   {
     "stationName": "Woodside Park ",
-    "lat": "51.617872781",
-    "lng": "-00.185394277",
+    "lat": 51.617872781,
+    "lng": -00.185394277,
     "entryPlusExitInMillions": 2.816775,
     "localAuthority": "Barnet"
   }
