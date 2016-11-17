@@ -8,6 +8,7 @@ import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 export default class Header extends React.Component {
   static propTypes = {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
+    token: React.PropTypes.string,
     handlers: React.PropTypes.object
   }
 
@@ -26,6 +27,10 @@ export default class Header extends React.Component {
       handleSubmit : this.props.handlers.handleJoinSimulation
     }
 
+    const loginButtonHandlers = {
+      handleTokenChange : this.props.handlers.handleTokenChange
+    }
+
     return (
       <nav className="navbar navbar-dark bg-primary">
         <a className="navbar-brand" href="#">SAVN</a>
@@ -40,7 +45,10 @@ export default class Header extends React.Component {
               />
             </li>
             <li className="nav-item">
-              <LoginButton />
+              <LoginDropdown 
+                token    = {this.props.token}
+                handlers = {loginButtonHandlers}
+              />
             </li>
           </ul>
           <JoinSimulationForm 
