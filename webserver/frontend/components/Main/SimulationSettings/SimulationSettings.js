@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 import UtilFunctions from '../../Utils/UtilFunctions.js';
 import CustomPropTypes from '../../Utils/CustomPropTypes.js';
 import JourneySettings from './JourneySettings/JourneySettings.js';
@@ -89,22 +89,18 @@ export default class SimulationSettings extends React.Component {
     e.preventDefault();
     const socket = this.props.socket;
     
-    const simID = this.props.activeSimulationId;
+    const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";  
 
     if (!hasSimulationStarted) {
       console.error("Tried to update a simulation that hasn't started");
       return
     }
-    
     const type = "request-simulation-benchmark";
     const content = {
       simulationID: simID
     }
-    
-    console.log('oi');
     UtilFunctions.sendSocketMessage(socket, type, content);
-    console.log('oi');
   }
 
   handleJourneysSubmit(journeys) {
@@ -131,6 +127,7 @@ export default class SimulationSettings extends React.Component {
     const bounds = selectedCity ? selectedCity.bounds : null;
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const benchmarkValue = this.props.benchmarkValue;
 
     const journeySettingsHandlers = {
       handleJourneysSelect: ::this.handleJourneysSubmit,
@@ -168,6 +165,7 @@ export default class SimulationSettings extends React.Component {
           />
 
           <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this._handleBenchmarkRequest(e) }>Request benchmark</button>
+          <p hidden={!benchmarkValue}>{benchmarkValue} is the average speed to destination in s/m</p>
         </div>
       </div>
     )
