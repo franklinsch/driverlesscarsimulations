@@ -85,6 +85,28 @@ export default class SimulationSettings extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  _handleBenchmarkRequest(e) {
+    e.preventDefault();
+    const socket = this.props.socket;
+    
+    const simID = this.props.activeSimulationId;
+    const hasSimulationStarted = simID !== "0";  
+
+    if (!hasSimulationStarted) {
+      console.error("Tried to update a simulation that hasn't started");
+      return
+    }
+    
+    const type = "request-simulation-benchmark";
+    const content = {
+      simulationID: simID
+    }
+    
+    console.log('oi');
+    UtilFunctions.sendSocketMessage(socket, type, content);
+    console.log('oi');
+  }
+
   handleJourneysSubmit(journeys) {
     this.setState({
       journeys: this.state.journeys.concat(journeys)
@@ -145,6 +167,7 @@ export default class SimulationSettings extends React.Component {
             handlers={speedSettingHandlers}
           />
 
+          <button className="btn btn-primary" hidden={!hasSimulationStarted} onClick={ (e) => this._handleBenchmarkRequest(e) }>Request benchmark</button>
         </div>
       </div>
     )
