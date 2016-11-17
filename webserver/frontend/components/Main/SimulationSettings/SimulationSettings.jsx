@@ -63,6 +63,8 @@ export default class SimulationSettings extends React.Component {
     const journeys = this.state.journeys || [];
     const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
 
+    const benchmarkValue = this.props.benchmarkValue;
+
     const journeySettingsHandlers = {
       handleJourneysFileImport : ::this.handleJourneysSubmit,
       handlePositionAdd        : this.props.handlers.handlePositionSelect,
@@ -120,6 +122,7 @@ export default class SimulationSettings extends React.Component {
           >
             Request benchmark
           </button>
+          <p hidden={!benchmarkValue}>{benchmarkValue} is the average speed to destination in s/m</p>
         </div>
       </div>
     )

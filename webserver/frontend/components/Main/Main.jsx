@@ -108,6 +108,11 @@ export default class Main extends React.Component {
       this.setState({
         objectKindInfo: messageData.content
       })
+    } else if (messageData.type === "simulation-benchmark") {
+      const benchmarkValue = messageData.content.value;
+      this.setState({
+        benchmarkValue: benchmarkValue
+      })
     }
   }
 
@@ -365,6 +370,7 @@ export default class Main extends React.Component {
                 mapSelectedJourneys = {mapSelectedJourneys}
                 objectTypes         = {this.state.objectTypes}
                 objectKindInfo      = {this.state.objectKindInfo}
+                benchmarkValue      = {this.state.benchmarkValue}
                 handlers            = {simulationSettingsHandlers}
               />
             </div>
