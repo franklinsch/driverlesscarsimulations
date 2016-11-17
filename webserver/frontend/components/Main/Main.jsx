@@ -155,7 +155,7 @@ export default class Main extends React.Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: journey
+      body: JSON.stringify(journey)
     })
       .then((response) => {
       })
