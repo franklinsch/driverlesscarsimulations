@@ -1,0 +1,22 @@
+ { "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [51.4941, 0.1739]},
+        "properties": {
+          "name": "South Kensington underground station"
+          "normalLevel": 6
+					"timePeriodLevels": [
+            {"startTime": "8:00:00", "endTime": "9:00:00", "level": 9}
+            {"startTime": "17:00:00", "endTime": "18:30:00", "level": 9}
+            ]
+        }
+      },
+      { "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [51.4847, 0.1825]},
+        "properties": {
+          "name": "Westminster and Chelsea hospital"
+          "normalLevel": 2
+        }
+      },
+   ]
+}
