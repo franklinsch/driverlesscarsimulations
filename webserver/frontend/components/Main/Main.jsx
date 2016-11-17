@@ -95,7 +95,6 @@ export default class Main extends React.Component {
       this.setState({
         simulationJourneys: messageData.content.journeys
       });
-      console.log(messageData.content);
     } else if (messageData.type === "simulation-state") {
       const simulationState = messageData.content.state;
       if (messageData.content.latestTimestamp) {
