@@ -32,7 +32,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationCommunication(self, data):
     translateDataToSensors(data)
 
-  def handleSimulationStop(self):
+  def handleSimulationStop(self, info):
     pass
 
 def postParams(initialParameters):

@@ -1,13 +1,13 @@
 import React from 'react';
 import Modal from 'react-bootstrap-modal';
-import CustomPropTypes from '../../../../Utils/CustomPropTypes.js';
+import CustomPropTypes from '../../../../Utils/CustomPropTypes.jsx';
 
 export default class ObjectSettings extends React.Component {
 
   static propTypes = {
-    handleSave: React.PropTypes.func.isRequired,
     objects: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
-    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo)
+    objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
+    handlers: React.PropTypes.object
   }
 
   constructor(props) {
@@ -39,7 +39,7 @@ export default class ObjectSettings extends React.Component {
       parameters: this.state.settings
     }
 
-    this.props.handleSave(typeInfo);
+    this.props.handlers.handleSave(typeInfo);
 
     this._handleModalHide();
   }
@@ -180,52 +180,50 @@ export default class ObjectSettings extends React.Component {
         <button className="btn btn-secondary" onClick={::this._toggleShow}>Show Objects</button>
         {
           this.state.showSettings &&
-            <div>
-              <ul>
-                {
-                  objects.map((object, index) => {
-                    const parameters = object.parameters || [];
-                    const title = object.kindName + ":\n" + Object.keys(parameters).map((key) => {
-                      if (parameters.hasOwnProperty(key)) {
-                        return key + ": " + parameters[key];
-                      }
+          <div>
+            <ul>
+              {
+                objects.map((object, index) => {
+                  const parameters = object.parameters || [];
+                  const title = object.kindName + ":\n" + Object.keys(parameters).map((key) => {
+                    if (parameters.hasOwnProperty(key)) {
+                      return key + ": " + parameters[key];
+                    }
 
-                      return "";
-                    }).join("\n");
+                    return "";
+                  }).join("\n");
 
-                    return <li title={title} key={index}> {object.name} </li>
-                  })
-                }
-              </ul>
-              <button type='button' className="btn" onClick={::this._toggleShowAdd}>Add Object Type</button>
+                  return <li title={title} key={index}> {object.name} </li>
+                })
+              }
+            </ul>
+            <button type='button' className="btn" onClick={::this._toggleShowAdd}>Add Object Type</button>
 
-              <Modal
-                show={this.state.showAddObject}
-                onHide={::this._handleModalHide}
-                aria-labelledby="ModalHeader"
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title id='ModalHeader'>Add Object Type</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  {this._renderTypeNameInput()}
-                  <div className="form-group">
-                    <label htmlFor="kind">Kind</label>
-                    {this._renderKindDropdown()}
-                  </div>
+            <Modal
+              show            = {this.state.showAddObject}
+              onHide          = {::this._handleModalHide}
+              aria-labelledby = "ModalHeader"
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id='ModalHeader'>Add Object Type</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {this._renderTypeNameInput()}
+                <div className="form-group">
+                  <label htmlFor="kind">Kind</label>
+                  {this._renderKindDropdown()}
+                </div>
 
-                  {this._renderSettings()}
-
-                </Modal.Body>
-                <Modal.Footer>
-                  <Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
-
-                  <button className='btn btn-primary' onClick={::this._handleFormSave}>
-                    Save
-                  </button>
-                </Modal.Footer>
-              </Modal>
-            </div>
+                {this._renderSettings()}
+              </Modal.Body>
+              <Modal.Footer>
+                <Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
+                <button className='btn btn-primary' onClick={::this._handleFormSave}>
+                  Save
+                </button>
+              </Modal.Footer>
+            </Modal>
+          </div>
         }
       </div>
     )

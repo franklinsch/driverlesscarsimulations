@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './frontend/components/App';
+import App from './frontend/components/App.jsx';
 
 
 window.onload = () => {

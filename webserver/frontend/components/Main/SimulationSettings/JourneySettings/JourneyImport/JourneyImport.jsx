@@ -1,12 +1,12 @@
 import React from 'react';
-import CustomPropTypes from '../../../../Utils/CustomPropTypes.js';
+import CustomPropTypes from '../../../../Utils/CustomPropTypes.jsx';
 import { Validator } from 'jsonschema';
 
 export default class JourneyImport extends React.Component {
 
   static propTypes = {
-    handleJourneysSubmit: React.PropTypes.func.isRequired,
-    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
+    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    handlers: React.PropTypes.object
   }
 
   constructor(props) {
@@ -53,7 +53,7 @@ export default class JourneyImport extends React.Component {
 
     reader.onloadend = () => {
       const journeys = this._toJourneys(reader.result);
-      this.props.handleJourneysSubmit(journeys);
+      this.props.handlers.handleJourneysSubmit(journeys);
     }
 
     reader.readAsText(file);
@@ -93,10 +93,10 @@ export default class JourneyImport extends React.Component {
             <form>
               <div className="form-group">
                 <label htmlFor="inputFile">Journey import</label>
-                <input id="inputFile" className="form-control input-sm" type="file" accept="application/json" onChange={(e) => this._handleFileChange(e)}/>
+                <input id="inputFile" className="form-control input-sm" type="file" accept="application/json" onChange={::this._handleFileChange}/>
               </div>
             </form>
-            <button className="btn btn-sm btn-info" onClick={() => this._handleExportClick()}>Export</button>
+            <button className="btn btn-sm btn-info" onClick={::this._handleExportClick}>Export</button>
           </div>
         }
       </div>
