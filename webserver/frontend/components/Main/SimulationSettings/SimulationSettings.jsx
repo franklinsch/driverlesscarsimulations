@@ -122,7 +122,9 @@ export default class SimulationSettings extends React.Component {
           >
             Request benchmark
           </button>
-          <p hidden={!benchmarkValue}>{benchmarkValue} is the average speed to destination in s/m</p>
+          <p hidden={benchmarkValue == undefined}>
+          {benchmarkValue} is the average speed to destination in km/s
+          </p>
         </div>
       </div>
     )

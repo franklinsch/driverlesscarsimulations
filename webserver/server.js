@@ -23,6 +23,52 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
   console.log("Initial check successful");
 });
 
+function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+function averageSpeedToDestination(journeys, states) {
+  let carsOnTheRoad = {};
+  let totalTime = 0;
+  let totalDistance = 0;
+  for (let state of states) {
+    for (let obj of state.objects) {
+      if (obj.id in carsOnTheRoad) {
+ 				const journey = journeys[obj.id];
+				console.log(journey);
+				dest = journey.destination;
+				pos = obj.position;
+        if (pos.lat == dest.lat && pos.lng == dest.lng) {
+          totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
+					totalDistance += getDistanceLatLonInKm(journey.origin.lat
+ 																								,journey.origin.lng
+																								,journey.destination.lat
+																								,journey.destination.lng);
+      	} 
+			} else {
+        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}    
+      }
+    }
+  }
+	if (totalTime == 0) {
+		totalTime++;
+	}
+	return totalDistance / totalTime;
+}
+
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
@@ -282,7 +328,6 @@ frontendSocketServer.on('request', function(request) {
   }
   
   function _handleRequestSimulationBenchmark(message) {
-    console.log('Message received');
     Simulation.findById(message.content.simulationID, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
@@ -294,6 +339,14 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + message.content.simulationID);
         return
       }
+    	benchmarkValue = averageSpeedToDestination(simulation.journeys
+                                          		  ,simulation.simulationStates); 
+      connection.send(JSON.stringify({
+        type: "simulation-benchmark",
+        content: {
+          value: benchmarkValue
+        }
+      }))
     });
   }
 
