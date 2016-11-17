@@ -6,7 +6,6 @@ export default class SpeedSetting extends React.Component {
 
   static propTypes = {
     hidden: React.PropTypes.bool,
-    socket: React.PropTypes.object,
     handlers: React.PropTypes.object
   }
 

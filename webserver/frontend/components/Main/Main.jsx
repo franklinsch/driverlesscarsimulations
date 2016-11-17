@@ -251,12 +251,56 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  handleSimulationClose() {
+    const socket = this.state.socket;
+    const simID = this.state.simulationInfo.id;
+    const type = "request-simulation-close";
+    const content = {
+      simulationID: simID
+    }
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
+  handleSimulationStart(allJourneys) {
+    const socket = this.state.socket;
+    const selectedCity = this._cityWithID(this.state.selectedCityID);
+
+    const type = "request-simulation-start";
+    const content = {
+      selectedCity: selectedCity,
+      journeys: allJourneys
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
+  handleSimulationUpdate(allJourneys) {
+    const socket = this.state.socket;
+    const selectedCity = this._cityWithID(this.state.selectedCityID);
+
+    const simID = this.state.simulationInfo.id;
+    const hasSimulationStarted = simID !== "0";
+
+    if (!hasSimulationStarted) {
+      console.error("Tried to update a simulation that hasn't started");
+      return
+    }
+
+    const type = "request-simulation-update";
+    const content = {
+      simulationID: simID,
+      journeys: allJourneys
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
+
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
-    const socket = this.state.socket;
     const simulationID = this.state.simulationInfo.id;
 
     const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
@@ -272,6 +316,9 @@ export default class Main extends React.Component {
     }
 
     const simulationSettingsHandlers = {
+      handleSimulationStart  : ::this.handleSimulationStart,
+      handleSimulationUpdate : ::this.handleSimulationUpdate,
+      handleSimulationClose  : ::this.handleSimulationClose,
       handlePositionSelect   : ::this.handlePositionPreview,
       handleObjectTypeCreate : ::this.handleObjectTypeCreate,
       handleSpeedChange      : ::this.handleSpeedChange
@@ -287,7 +334,6 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
-          socket          = {socket}
           availableCities = {availableCities}
           handlers        = {headerHandlers}
         />
@@ -295,7 +341,6 @@ export default class Main extends React.Component {
           <div className="container">
             <div className="col-md-4 text-center" id="simulation-settings">
               <SimulationSettings
-                socket              = {socket}
                 activeSimulationID  = {simulationID}
                 selectedCity        = {selectedCity}
                 mapSelectedJourneys = {mapSelectedJourneys}

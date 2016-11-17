@@ -6,7 +6,6 @@ import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 
 export default class Header extends React.Component {
   static propTypes = {
-    socket: React.PropTypes.object,
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     handlers: React.PropTypes.object
   }
