@@ -74,7 +74,8 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
-      this.postInitialJourneys(messageData.content.id);
+      const journeys = this.state.journeys; //TODO: Check if simulation settings journeys are also added
+      this.postPendingJourneys(messageData.content.id, journeys);
       this.setState({
         simulationInfo: messageData.content
       });
@@ -117,10 +118,6 @@ export default class Main extends React.Component {
   }
 
   handleAddJourney(journey) {
-    const simID = this.state.simulationInfo.id;
-    if (simID != "0") {
-      this.postJourney(journey, simID);
-    }
     const journeys = this.state.mapSelectedJourneys.concat([journey]);
     this.setState({mapSelectedJourneys: journeys});
   }
@@ -194,9 +191,7 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
   }
 
-  postInitialJourneys(simID) {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+  postPendingJourneys(simID, allJourneys) {
     for (const journey of allJourneys) {
       this.postJourney(journey, simID);
     }
@@ -290,6 +285,8 @@ export default class Main extends React.Component {
       console.error("Tried to update a simulation that hasn't started");
       return
     }
+
+    this.postPendingJourneys(simID, allJourneys);
 
     const type = "request-simulation-update";
     const content = {
