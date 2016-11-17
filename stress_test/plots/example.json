@@ -1,0 +1,1031 @@
+[{
+  "numCars": 2,
+  "timestamp": 0,
+  "networkTime": 1477944294157.1255,
+  "dbTime": 16
+},{
+  "numCars": 2,
+  "timestamp": 1,
+  "networkTime": 1477944295160.1228,
+  "dbTime": 10
+},{
+  "numCars": 2,
+  "timestamp": 2,
+  "networkTime": 1477944296160.121,
+  "dbTime": 10
+},{
+  "numCars": 2,
+  "timestamp": 3,
+  "networkTime": 1477944297163.117,
+  "dbTime": 12
+},{
+  "numCars": 2,
+  "timestamp": 4,
+  "networkTime": 1477944298166.1133,
+  "dbTime": 17
+},{
+  "numCars": 2,
+  "timestamp": 5,
+  "networkTime": 1477944299167.1116,
+  "dbTime": 11
+},{
+  "numCars": 2,
+  "timestamp": 6,
+  "networkTime": 1477944300170.1072,
+  "dbTime": 12
+},{
+  "numCars": 2,
+  "timestamp": 7,
+  "networkTime": 1477944301171.1055,
+  "dbTime": 11
+},{
+  "numCars": 2,
+  "timestamp": 8,
+  "networkTime": 1477944302170.1047,
+  "dbTime": 11
+},{
+  "numCars": 2,
+  "timestamp": 9,
+  "networkTime": 1477944303172.1016,
+  "dbTime": 17
+},{
+  "numCars": 2,
+  "timestamp": 10,
+  "networkTime": 1477944304173.1,
+  "dbTime": 11
+},{
+  "numCars": 2,
+  "timestamp": 11,
+  "networkTime": 1477944305174.0989,
+  "dbTime": 10
+},{
+  "numCars": 2,
+  "timestamp": 12,
+  "networkTime": 1477944306177.094,
+  "dbTime": 11
+},{
+  "numCars": 2,
+  "timestamp": 13,
+  "networkTime": 1477944307181.0896,
+  "dbTime": 12
+},{
+  "numCars": 2,
+  "timestamp": 14,
+  "networkTime": 1477944308182.0874,
+  "dbTime": 12
+},{
+  "numCars": 2,
+  "timestamp": 15,
+  "networkTime": 1477944309183.085,
+  "dbTime": 19
+},{
+  "numCars": 2,
+  "timestamp": 16,
+  "networkTime": 1477944310184.083,
+  "dbTime": 17
+},{
+  "numCars": 2,
+  "timestamp": 17,
+  "networkTime": 1477944311188.0789,
+  "dbTime": 13
+},{
+  "numCars": 2,
+  "timestamp": 18,
+  "networkTime": 1477944312191.0747,
+  "dbTime": 23
+},{
+  "numCars": 2,
+  "timestamp": 19,
+  "networkTime": 1477944313195.0693,
+  "dbTime": 15
+},{
+  "numCars": 2,
+  "timestamp": 20,
+  "networkTime": 1477944314200.065,
+  "dbTime": 12
+},{
+  "numCars": 2,
+  "timestamp": 21,
+  "networkTime": 1477944315202.0605,
+  "dbTime": 11
+},{
+  "numCars": 2,
+  "timestamp": 22,
+  "networkTime": 1477944316205.057,
+  "dbTime": 16
+},{
+  "numCars": 2,
+  "timestamp": 23,
+  "networkTime": 1477944317205.056,
+  "dbTime": 11
+},{
+  "numCars": 2,
+  "timestamp": 24,
+  "networkTime": 1477944318207.0525,
+  "dbTime": 14
+},{
+  "numCars": 2,
+  "timestamp": 25,
+  "networkTime": 1477944319210.0488,
+  "dbTime": 13
+},{
+  "numCars": 2,
+  "timestamp": 26,
+  "networkTime": 1477944320210.048,
+  "dbTime": 13
+},{
+  "numCars": 2,
+  "timestamp": 27,
+  "networkTime": 1477944321209.047,
+  "dbTime": 17
+},{
+  "numCars": 2,
+  "timestamp": 28,
+  "networkTime": 1477944322209.0464,
+  "dbTime": 22
+},{
+  "numCars": 2,
+  "timestamp": 29,
+  "networkTime": 1477944323214.0408,
+  "dbTime": 26
+},{
+  "numCars": 2,
+  "timestamp": 30,
+  "networkTime": 1477944324215.0393,
+  "dbTime": 44
+},{
+  "numCars": 2,
+  "timestamp": 31,
+  "networkTime": 1477944325214.0383,
+  "dbTime": 22
+},{
+  "numCars": 2,
+  "timestamp": 32,
+  "networkTime": 1477944326218.033,
+  "dbTime": 25
+},{
+  "numCars": 2,
+  "timestamp": 33,
+  "networkTime": 1477944327223.0273,
+  "dbTime": 21
+},{
+  "numCars": 2,
+  "timestamp": 34,
+  "networkTime": 1477944328223.0264,
+  "dbTime": 28
+},{
+  "numCars": 2,
+  "timestamp": 35,
+  "networkTime": 1477944329222.026,
+  "dbTime": 45
+},{
+  "numCars": 2,
+  "timestamp": 36,
+  "networkTime": 1477944330227.0205,
+  "dbTime": 25
+},{
+  "numCars": 2,
+  "timestamp": 37,
+  "networkTime": 1477944331227.0195,
+  "dbTime": 27
+},{
+  "numCars": 2,
+  "timestamp": 38,
+  "networkTime": 1477944332228.0183,
+  "dbTime": 27
+},{
+  "numCars": 2,
+  "timestamp": 39,
+  "networkTime": 1477944333232.0127,
+  "dbTime": 25
+},{
+  "numCars": 2,
+  "timestamp": 40,
+  "networkTime": 1477944334231.012,
+  "dbTime": 27
+},{
+  "numCars": 2,
+  "timestamp": 41,
+  "networkTime": 1477944335236.0063,
+  "dbTime": 26
+},{
+  "numCars": 2,
+  "timestamp": 42,
+  "networkTime": 1477944336240.0017,
+  "dbTime": 26
+},{
+  "numCars": 2,
+  "timestamp": 43,
+  "networkTime": 1477944337243.996,
+  "dbTime": 19
+},{
+  "numCars": 2,
+  "timestamp": 44,
+  "networkTime": 1477944338243.995,
+  "dbTime": 17
+},{
+  "numCars": 2,
+  "timestamp": 45,
+  "networkTime": 1477944339244.993,
+  "dbTime": 64
+},{
+  "numCars": 2,
+  "timestamp": 46,
+  "networkTime": 1477944340245.9905,
+  "dbTime": 32
+},{
+  "numCars": 2,
+  "timestamp": 47,
+  "networkTime": 1477944341248.9873,
+  "dbTime": 21
+},{
+  "numCars": 2,
+  "timestamp": 48,
+  "networkTime": 1477944342251.9832,
+  "dbTime": 21
+},{
+  "numCars": 2,
+  "timestamp": 49,
+  "networkTime": 1477944343256.9775,
+  "dbTime": 28
+},{
+  "numCars": 2,
+  "timestamp": 50,
+  "networkTime": 1477944344255.977,
+  "dbTime": 37
+},{
+  "numCars": 2,
+  "timestamp": 51,
+  "networkTime": 1477944345260.9714,
+  "dbTime": 30
+},{
+  "numCars": 2,
+  "timestamp": 52,
+  "networkTime": 1477944346265.966,
+  "dbTime": 21
+},{
+  "numCars": 2,
+  "timestamp": 53,
+  "networkTime": 1477944347264.9653,
+  "dbTime": 18
+},{
+  "numCars": 2,
+  "timestamp": 54,
+  "networkTime": 1477944348268.9602,
+  "dbTime": 21
+},{
+  "numCars": 2,
+  "timestamp": 55,
+  "networkTime": 1477944349273.9543,
+  "dbTime": 19
+},{
+  "numCars": 2,
+  "timestamp": 56,
+  "networkTime": 1477944350275.9517,
+  "dbTime": 30
+},{
+  "numCars": 2,
+  "timestamp": 57,
+  "networkTime": 1477944351277.949,
+  "dbTime": 19
+},{
+  "numCars": 2,
+  "timestamp": 58,
+  "networkTime": 1477944352277.9478,
+  "dbTime": 22
+},{
+  "numCars": 2,
+  "timestamp": 59,
+  "networkTime": 1477944353281.9421,
+  "dbTime": 23
+},{
+  "numCars": 2,
+  "timestamp": 60,
+  "networkTime": 1477944354282.9404,
+  "dbTime": 32
+},{
+  "numCars": 2,
+  "timestamp": 61,
+  "networkTime": 1477944355284.9375,
+  "dbTime": 25
+},{
+  "numCars": 2,
+  "timestamp": 62,
+  "networkTime": 1477944356289.932,
+  "dbTime": 27
+},{
+  "numCars": 2,
+  "timestamp": 63,
+  "networkTime": 1477944357291.9297,
+  "dbTime": 45
+},{
+  "numCars": 2,
+  "timestamp": 64,
+  "networkTime": 1477944358294.9246,
+  "dbTime": 37
+},{
+  "numCars": 2,
+  "timestamp": 65,
+  "networkTime": 1477944359293.924,
+  "dbTime": 50
+},{
+  "numCars": 2,
+  "timestamp": 66,
+  "networkTime": 1477944360297.9192,
+  "dbTime": 34
+},{
+  "numCars": 2,
+  "timestamp": 67,
+  "networkTime": 1477944361298.918,
+  "dbTime": 41
+},{
+  "numCars": 2,
+  "timestamp": 68,
+  "networkTime": 1477944362302.9126,
+  "dbTime": 36
+},{
+  "numCars": 2,
+  "timestamp": 69,
+  "networkTime": 1477944363306.908,
+  "dbTime": 41
+},{
+  "numCars": 2,
+  "timestamp": 70,
+  "networkTime": 1477944364310.9026,
+  "dbTime": 38
+},{
+  "numCars": 2,
+  "timestamp": 71,
+  "networkTime": 1477944365315.897,
+  "dbTime": 31
+},{
+  "numCars": 2,
+  "timestamp": 72,
+  "networkTime": 1477944366319.891,
+  "dbTime": 28
+},{
+  "numCars": 2,
+  "timestamp": 73,
+  "networkTime": 1477944367320.8894,
+  "dbTime": 26
+},{
+  "numCars": 2,
+  "timestamp": 74,
+  "networkTime": 1477944368321.8877,
+  "dbTime": 29
+},{
+  "numCars": 2,
+  "timestamp": 75,
+  "networkTime": 1477944369322.8853,
+  "dbTime": 32
+},{
+  "numCars": 2,
+  "timestamp": 76,
+  "networkTime": 1477944370321.8848,
+  "dbTime": 70
+},{
+  "numCars": 2,
+  "timestamp": 77,
+  "networkTime": 1477944371324.8813,
+  "dbTime": 31
+},{
+  "numCars": 2,
+  "timestamp": 78,
+  "networkTime": 1477944372326.8782,
+  "dbTime": 24
+},{
+  "numCars": 2,
+  "timestamp": 79,
+  "networkTime": 1477944373328.877,
+  "dbTime": 96
+},{
+  "numCars": 2,
+  "timestamp": 80,
+  "networkTime": 1477944374330.872,
+  "dbTime": 33
+},{
+  "numCars": 2,
+  "timestamp": 81,
+  "networkTime": 1477944375335.8665,
+  "dbTime": 38
+},{
+  "numCars": 2,
+  "timestamp": 82,
+  "networkTime": 1477944376334.8657,
+  "dbTime": 28
+},{
+  "numCars": 2,
+  "timestamp": 83,
+  "networkTime": 1477944377339.8604,
+  "dbTime": 28
+},{
+  "numCars": 2,
+  "timestamp": 84,
+  "networkTime": 1477944378340.8582,
+  "dbTime": 34
+},{
+  "numCars": 2,
+  "timestamp": 85,
+  "networkTime": 1477944379344.853,
+  "dbTime": 30
+},{
+  "numCars": 2,
+  "timestamp": 86,
+  "networkTime": 1477944380347.8499,
+  "dbTime": 36
+},{
+  "numCars": 2,
+  "timestamp": 87,
+  "networkTime": 1477944381346.849,
+  "dbTime": 24
+},{
+  "numCars": 2,
+  "timestamp": 88,
+  "networkTime": 1477944382347.848,
+  "dbTime": 27
+},{
+  "numCars": 2,
+  "timestamp": 89,
+  "networkTime": 1477944383351.8425,
+  "dbTime": 45
+},{
+  "numCars": 2,
+  "timestamp": 90,
+  "networkTime": 1477944384354.8386,
+  "dbTime": 31
+},{
+  "numCars": 2,
+  "timestamp": 91,
+  "networkTime": 1477944385354.8374,
+  "dbTime": 45
+},{
+  "numCars": 2,
+  "timestamp": 92,
+  "networkTime": 1477944386354.8364,
+  "dbTime": 39
+},{
+  "numCars": 2,
+  "timestamp": 93,
+  "networkTime": 1477944387357.832,
+  "dbTime": 28
+},{
+  "numCars": 2,
+  "timestamp": 94,
+  "networkTime": 1477944388361.8281,
+  "dbTime": 25
+},{
+  "numCars": 2,
+  "timestamp": 95,
+  "networkTime": 1477944389361.8267,
+  "dbTime": 38
+},{
+  "numCars": 2,
+  "timestamp": 96,
+  "networkTime": 1477944390360.826,
+  "dbTime": 26
+},{
+  "numCars": 2,
+  "timestamp": 97,
+  "networkTime": 1477944391365.8203,
+  "dbTime": 36
+},{
+  "numCars": 2,
+  "timestamp": 98,
+  "networkTime": 1477944392369.815,
+  "dbTime": 29
+},{
+  "numCars": 2,
+  "timestamp": 99,
+  "networkTime": 1477944393369.8142,
+  "dbTime": 41
+},{
+  "numCars": 2,
+  "timestamp": 100,
+  "networkTime": 1477944394370.812,
+  "dbTime": 153
+},{
+  "numCars": 2,
+  "timestamp": 101,
+  "networkTime": 1477944395372.811,
+  "dbTime": 41
+},{
+  "numCars": 2,
+  "timestamp": 102,
+  "networkTime": 1477944396374.807,
+  "dbTime": 68
+},{
+  "numCars": 2,
+  "timestamp": 103,
+  "networkTime": 1477944397378.8013,
+  "dbTime": 45
+},{
+  "numCars": 2,
+  "timestamp": 104,
+  "networkTime": 1477944398380.7988,
+  "dbTime": 39
+},{
+  "numCars": 2,
+  "timestamp": 105,
+  "networkTime": 1477944399382.7952,
+  "dbTime": 36
+},{
+  "numCars": 2,
+  "timestamp": 106,
+  "networkTime": 1477944400386.7905,
+  "dbTime": 100
+},{
+  "numCars": 2,
+  "timestamp": 107,
+  "networkTime": 1477944401390.785,
+  "dbTime": 30
+},{
+  "numCars": 2,
+  "timestamp": 108,
+  "networkTime": 1477944402394.78,
+  "dbTime": 43
+},{
+  "numCars": 2,
+  "timestamp": 109,
+  "networkTime": 1477944403395.778,
+  "dbTime": 45
+},{
+  "numCars": 2,
+  "timestamp": 110,
+  "networkTime": 1477944404398.7756,
+  "dbTime": 53
+},{
+  "numCars": 2,
+  "timestamp": 111,
+  "networkTime": 1477944405400.771,
+  "dbTime": 40
+},{
+  "numCars": 2,
+  "timestamp": 112,
+  "networkTime": 1477944406405.7656,
+  "dbTime": 147
+},{
+  "numCars": 2,
+  "timestamp": 113,
+  "networkTime": 1477944407408.7615,
+  "dbTime": 34
+},{
+  "numCars": 2,
+  "timestamp": 114,
+  "networkTime": 1477944408412.756,
+  "dbTime": 45
+},{
+  "numCars": 2,
+  "timestamp": 115,
+  "networkTime": 1477944409417.7505,
+  "dbTime": 29
+},{
+  "numCars": 2,
+  "timestamp": 116,
+  "networkTime": 1477944410421.7449,
+  "dbTime": 42
+},{
+  "numCars": 2,
+  "timestamp": 117,
+  "networkTime": 1477944411426.7412,
+  "dbTime": 39
+},{
+  "numCars": 2,
+  "timestamp": 118,
+  "networkTime": 1477944412429.7354,
+  "dbTime": 56
+},{
+  "numCars": 2,
+  "timestamp": 119,
+  "networkTime": 1477944413433.7327,
+  "dbTime": 59
+},{
+  "numCars": 2,
+  "timestamp": 120,
+  "networkTime": 1477944414436.727,
+  "dbTime": 44
+},{
+  "numCars": 2,
+  "timestamp": 121,
+  "networkTime": 1477944415438.7246,
+  "dbTime": 34
+},{
+  "numCars": 2,
+  "timestamp": 122,
+  "networkTime": 1477944416436.7239,
+  "dbTime": 41
+},{
+  "numCars": 2,
+  "timestamp": 123,
+  "networkTime": 1477944417441.7183,
+  "dbTime": 31
+},{
+  "numCars": 2,
+  "timestamp": 124,
+  "networkTime": 1477944418443.7146,
+  "dbTime": 48
+},{
+  "numCars": 2,
+  "timestamp": 125,
+  "networkTime": 1477944419446.712,
+  "dbTime": 59
+},{
+  "numCars": 2,
+  "timestamp": 126,
+  "networkTime": 1477944420448.7107,
+  "dbTime": 42
+},{
+  "numCars": 2,
+  "timestamp": 127,
+  "networkTime": 1477944421448.7063,
+  "dbTime": 78
+},{
+  "numCars": 2,
+  "timestamp": 128,
+  "networkTime": 1477944422454.701,
+  "dbTime": 52
+},{
+  "numCars": 2,
+  "timestamp": 129,
+  "networkTime": 1477944423456.698,
+  "dbTime": 49
+},{
+  "numCars": 2,
+  "timestamp": 130,
+  "networkTime": 1477944424455.6973,
+  "dbTime": 61
+},{
+  "numCars": 2,
+  "timestamp": 131,
+  "networkTime": 1477944425460.6917,
+  "dbTime": 41
+},{
+  "numCars": 2,
+  "timestamp": 132,
+  "networkTime": 1477944426462.6897,
+  "dbTime": 49
+},{
+  "numCars": 2,
+  "timestamp": 133,
+  "networkTime": 1477944427463.6865,
+  "dbTime": 49
+},{
+  "numCars": 2,
+  "timestamp": 134,
+  "networkTime": 1477944428468.681,
+  "dbTime": 47
+},{
+  "numCars": 2,
+  "timestamp": 135,
+  "networkTime": 1477944429470.6775,
+  "dbTime": 66
+},{
+  "numCars": 2,
+  "timestamp": 136,
+  "networkTime": 1477944430472.674,
+  "dbTime": 144
+},{
+  "numCars": 2,
+  "timestamp": 137,
+  "networkTime": 1477944431473.6719,
+  "dbTime": 63
+},{
+  "numCars": 2,
+  "timestamp": 138,
+  "networkTime": 1477944432478.6663,
+  "dbTime": 38
+},{
+  "numCars": 2,
+  "timestamp": 139,
+  "networkTime": 1477944433479.6648,
+  "dbTime": 47
+},{
+  "numCars": 2,
+  "timestamp": 140,
+  "networkTime": 1477944434479.6636,
+  "dbTime": 47
+},{
+  "numCars": 2,
+  "timestamp": 141,
+  "networkTime": 1477944435483.6587,
+  "dbTime": 35
+},{
+  "numCars": 2,
+  "timestamp": 142,
+  "networkTime": 1477944436482.6582,
+  "dbTime": 58
+},{
+  "numCars": 2,
+  "timestamp": 143,
+  "networkTime": 1477944437483.6562,
+  "dbTime": 64
+},{
+  "numCars": 2,
+  "timestamp": 144,
+  "networkTime": 1477944438488.651,
+  "dbTime": 51
+},{
+  "numCars": 2,
+  "timestamp": 145,
+  "networkTime": 1477944439490.6477,
+  "dbTime": 47
+},{
+  "numCars": 2,
+  "timestamp": 146,
+  "networkTime": 1477944440490.646,
+  "dbTime": 51
+},{
+  "numCars": 2,
+  "timestamp": 147,
+  "networkTime": 1477944441490.6448,
+  "dbTime": 37
+},{
+  "numCars": 2,
+  "timestamp": 148,
+  "networkTime": 1477944442495.6392,
+  "dbTime": 57
+},{
+  "numCars": 2,
+  "timestamp": 149,
+  "networkTime": 1477944443498.6362,
+  "dbTime": 69
+},{
+  "numCars": 2,
+  "timestamp": 150,
+  "networkTime": 1477944444497.6355,
+  "dbTime": 55
+},{
+  "numCars": 2,
+  "timestamp": 151,
+  "networkTime": 1477944445499.6335,
+  "dbTime": 326
+},{
+  "numCars": 2,
+  "timestamp": 152,
+  "networkTime": 1477944446499.6313,
+  "dbTime": 42
+},{
+  "numCars": 2,
+  "timestamp": 153,
+  "networkTime": 1477944447499.63,
+  "dbTime": 50
+},{
+  "numCars": 2,
+  "timestamp": 154,
+  "networkTime": 1477944448504.6243,
+  "dbTime": 53
+},{
+  "numCars": 2,
+  "timestamp": 155,
+  "networkTime": 1477944449507.6206,
+  "dbTime": 44
+},{
+  "numCars": 2,
+  "timestamp": 156,
+  "networkTime": 1477944450511.6157,
+  "dbTime": 72
+},{
+  "numCars": 2,
+  "timestamp": 157,
+  "networkTime": 1477944451512.615,
+  "dbTime": 71
+},{
+  "numCars": 2,
+  "timestamp": 158,
+  "networkTime": 1477944452512.613,
+  "dbTime": 55
+},{
+  "numCars": 2,
+  "timestamp": 159,
+  "networkTime": 1477944453514.6096,
+  "dbTime": 58
+},{
+  "numCars": 2,
+  "timestamp": 160,
+  "networkTime": 1477944454518.6045,
+  "dbTime": 44
+},{
+  "numCars": 2,
+  "timestamp": 161,
+  "networkTime": 1477944455518.6033,
+  "dbTime": 53
+},{
+  "numCars": 2,
+  "timestamp": 162,
+  "networkTime": 1477944456521.5996,
+  "dbTime": 74
+},{
+  "numCars": 2,
+  "timestamp": 163,
+  "networkTime": 1477944457523.596,
+  "dbTime": 75
+},{
+  "numCars": 2,
+  "timestamp": 164,
+  "networkTime": 1477944458524.5947,
+  "dbTime": 72
+},{
+  "numCars": 2,
+  "timestamp": 165,
+  "networkTime": 1477944459523.594,
+  "dbTime": 42
+},{
+  "numCars": 2,
+  "timestamp": 166,
+  "networkTime": 1477944460525.5908,
+  "dbTime": 185
+},{
+  "numCars": 2,
+  "timestamp": 167,
+  "networkTime": 1477944461529.586,
+  "dbTime": 75
+},{
+  "numCars": 2,
+  "timestamp": 168,
+  "networkTime": 1477944462530.584,
+  "dbTime": 110
+},{
+  "numCars": 2,
+  "timestamp": 169,
+  "networkTime": 1477944463529.5837,
+  "dbTime": 69
+},{
+  "numCars": 2,
+  "timestamp": 170,
+  "networkTime": 1477944464532.581,
+  "dbTime": 81
+},{
+  "numCars": 2,
+  "timestamp": 171,
+  "networkTime": 1477944465532.5793,
+  "dbTime": 64
+},{
+  "numCars": 2,
+  "timestamp": 172,
+  "networkTime": 1477944466533.5771,
+  "dbTime": 75
+},{
+  "numCars": 2,
+  "timestamp": 173,
+  "networkTime": 1477944467534.5752,
+  "dbTime": 58
+},{
+  "numCars": 2,
+  "timestamp": 174,
+  "networkTime": 1477944468538.5703,
+  "dbTime": 64
+},{
+  "numCars": 2,
+  "timestamp": 175,
+  "networkTime": 1477944469542.5657,
+  "dbTime": 71
+},{
+  "numCars": 2,
+  "timestamp": 176,
+  "networkTime": 1477944470543.5632,
+  "dbTime": 66
+},{
+  "numCars": 2,
+  "timestamp": 177,
+  "networkTime": 1477944471543.5627,
+  "dbTime": 44
+},{
+  "numCars": 2,
+  "timestamp": 178,
+  "networkTime": 1477944472544.5603,
+  "dbTime": 63
+},{
+  "numCars": 2,
+  "timestamp": 179,
+  "networkTime": 1477944473549.5547,
+  "dbTime": 56
+},{
+  "numCars": 2,
+  "timestamp": 180,
+  "networkTime": 1477944474549.554,
+  "dbTime": 75
+},{
+  "numCars": 2,
+  "timestamp": 181,
+  "networkTime": 1477944475553.5483,
+  "dbTime": 78
+},{
+  "numCars": 2,
+  "timestamp": 182,
+  "networkTime": 1477944476555.5457,
+  "dbTime": 55
+},{
+  "numCars": 2,
+  "timestamp": 183,
+  "networkTime": 1477944477555.545,
+  "dbTime": 59
+},{
+  "numCars": 2,
+  "timestamp": 184,
+  "networkTime": 1477944478557.541,
+  "dbTime": 62
+},{
+  "numCars": 2,
+  "timestamp": 185,
+  "networkTime": 1477944479562.5354,
+  "dbTime": 48
+},{
+  "numCars": 2,
+  "timestamp": 186,
+  "networkTime": 1477944480562.5347,
+  "dbTime": 75
+},{
+  "numCars": 2,
+  "timestamp": 187,
+  "networkTime": 1477944481566.5295,
+  "dbTime": 82
+},{
+  "numCars": 2,
+  "timestamp": 188,
+  "networkTime": 1477944482566.5283,
+  "dbTime": 89
+},{
+  "numCars": 2,
+  "timestamp": 189,
+  "networkTime": 1477944483571.5227,
+  "dbTime": 46
+},{
+  "numCars": 2,
+  "timestamp": 190,
+  "networkTime": 1477944484572.52,
+  "dbTime": 57
+},{
+  "numCars": 2,
+  "timestamp": 191,
+  "networkTime": 1477944485576.5154,
+  "dbTime": 66
+},{
+  "numCars": 2,
+  "timestamp": 192,
+  "networkTime": 1477944486576.5142,
+  "dbTime": 69
+},{
+  "numCars": 2,
+  "timestamp": 193,
+  "networkTime": 1477944487581.5085,
+  "dbTime": 86
+},{
+  "numCars": 2,
+  "timestamp": 194,
+  "networkTime": 1477944488581.5076,
+  "dbTime": 87
+},{
+  "numCars": 2,
+  "timestamp": 195,
+  "networkTime": 1477944489585.5027,
+  "dbTime": 65
+},{
+  "numCars": 2,
+  "timestamp": 196,
+  "networkTime": 1477944490586.5017,
+  "dbTime": 240
+},{
+  "numCars": 2,
+  "timestamp": 197,
+  "networkTime": 1477944491589.4963,
+  "dbTime": 59
+},{
+  "numCars": 2,
+  "timestamp": 198,
+  "networkTime": 1477944492591.494,
+  "dbTime": 68
+},{
+  "numCars": 2,
+  "timestamp": 199,
+  "networkTime": 1477944493594.4897,
+  "dbTime": 81
+},{
+  "numCars": 2,
+  "timestamp": 200,
+  "networkTime": 1477944494597.4854,
+  "dbTime": 73
+},{
+  "numCars": 2,
+  "timestamp": 201,
+  "networkTime": 1477944495602.4797,
+  "dbTime": 78
+},{
+  "numCars": 2,
+  "timestamp": 202,
+  "networkTime": 1477944496604.4766,
+  "dbTime": 66
+},{
+  "numCars": 2,
+  "timestamp": 203,
+  "networkTime": 1477944497605.4739,
+  "dbTime": 66
+},{
+  "numCars": 2,
+  "timestamp": 204,
+  "networkTime": 1477944498607.471,
+  "dbTime": 63
+},{
+  "numCars": 2,
+  "timestamp": 205,
+  "networkTime": 1477944499609.468,
+  "dbTime": 85
+}]
