@@ -83,7 +83,7 @@ def runSimulation(savn, initialParameters):
 
   while savn.alive:
     #useApi()
-    savn.updateCarStates(timestamp, translate(state))
+    savn.updateState(timestamp, translate(state))
     state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
     time.sleep(SLEEP_TIME)
@@ -196,7 +196,7 @@ def moveCar(car):
   start = car['route'][0]
   end = car['route'][1]
 
-  if (not switchNodeLock(car, start, end) or 
+  if (not switchNodeLock(car, start, end) or
       ('cameraData' in car['sensorData'] and len(car['sensorData']['cameraData']) > 0)):
     car['speed'] = 0
     return

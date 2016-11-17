@@ -18,7 +18,7 @@ class SAVNConnectionAssistant:
     self.messageQueue = asyncio.Queue()
     self.frameworkID = 0
 
-  def updateCarStates(self, timestamp, state):
+  def updateState(self, timestamp, state):
     packet = {'type': 'simulation-state',
               'content':
                 {'simulationID': self.simulationID,
