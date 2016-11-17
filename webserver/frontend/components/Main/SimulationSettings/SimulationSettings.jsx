@@ -31,7 +31,6 @@ export default class SimulationSettings extends React.Component {
     } else {
       const pendingJourneys = this.props.pendingJourneys || [];
 
-      console.log(pendingJourneys);
       this.props.handlers.handleSimulationStart(pendingJourneys);
       this.props.handlers.handlePendingJourneysClear();
     }
@@ -41,6 +40,7 @@ export default class SimulationSettings extends React.Component {
     const pendingJourneys = this.props.pendingJourneys || [];
 
     this.props.handlers.handleSimulationUpdate(pendingJourneys);
+    this.props.handlers.handlePendingJourneysClear();
   }
 
   _handleBenchmarkRequest(e) {
