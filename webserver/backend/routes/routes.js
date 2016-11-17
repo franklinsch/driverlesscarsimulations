@@ -51,6 +51,15 @@ router.route('/simulations/:simulationID/journeys')
         upsert: true,
         returnNewDocument: true
       };
+      Simulation.findOneAndUpdate({
+        _id: id
+      }, updateInfo, options)
+        .then((result) => {
+          res.send(result);
+        })
+        .catch((err) => {
+          res.send(err);
+        });
     });
   });
 

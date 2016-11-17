@@ -87,8 +87,6 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
-      const journeys = this.state.pendingJourneys; //TODO: Check if simulation settings journeys are also added
-      this.postPendingJourneys(messageData.content.id, journeys);
       this.setState({
         simulationInfo: messageData.content.simulationInfo,
         simulationJourneys: messageData.content.journeys
@@ -153,23 +151,6 @@ export default class Main extends React.Component {
     socket.send(message);
   }
 
-  postJourney(journey, simID) {
-    const fetchUrl = "/simulations/" + simID + "/journeys";
-    fetch(fetchUrl, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(journey)
-    })
-      .then((response) => {
-      })
-      .catch((err) => {
-        console.log("New journey was not saved due to: " + err);
-      });
-  }
-
   _cityWithID(id) {
     const availableCities = this.state.availableCities;
     if (availableCities) {
@@ -204,12 +185,6 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
   }
 
-  postPendingJourneys(simID, allJourneys) {
-    for (const journey of allJourneys) {
-      this.postJourney(journey, simID);
-    }
-  }
-    
   handleObjectTypeCreate(typeInfo) {
     const objectTypes = this.state.objectTypes || [];
     this.setState({
@@ -298,8 +273,6 @@ export default class Main extends React.Component {
       console.error("Tried to update a simulation that hasn't started");
       return
     }
-
-    this.postPendingJourneys(simID, allJourneys);
 
     const type = "request-simulation-update";
     const content = {
