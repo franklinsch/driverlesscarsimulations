@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Journey = require('./Journey');
+const Frontend = require('./Frontend');
 const Framework = require('./Framework');
 
 const simulationSchema = mongoose.Schema({
@@ -18,7 +19,7 @@ const simulationSchema = mongoose.Schema({
   },
   timeslice: Number,
   journeys: [Journey.schema],
-  frontendConnectionIndices: [Number],
+  frontends: [Frontend.schema],
   frameworks: [Framework.schema],
   simulationStates: [{
     id: String,
