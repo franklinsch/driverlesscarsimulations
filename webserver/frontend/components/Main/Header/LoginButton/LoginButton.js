@@ -13,7 +13,7 @@ export default class LoginButton extends React.Component {
 
     this.handleUserChange = this.handleUserChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   handleUserChange(event) {
@@ -23,9 +23,11 @@ export default class LoginButton extends React.Component {
       this.setState({password: event.target.value});
     }
 
-  handleSubmit(event) {
+  handleFormSubmit(event) {
  event.preventDefault();
- fetch('/login', {
+ const action = event.target.value;
+ const url = "/" + action;
+ fetch(url, {
    method: 'POST',
    headers: {
      'Accept': 'application/json',
@@ -60,8 +62,8 @@ export default class LoginButton extends React.Component {
       <a className="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {this.state.token ? 'Logged in' : 'Login'}
       </a>
-      <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <form onSubmit={this.handleSubmit}>
+      <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <form>
               <div className="form-group">
                 <label>Username</label>
                 <input type="username" value={this.state.username} onChange={this.handleUserChange} className="form-control" placeholder="Username" />
@@ -70,7 +72,8 @@ export default class LoginButton extends React.Component {
                 <label>Password</label>
                 <input type="password" value={this.state.password} onChange={this.handlePasswordChange}  className="form-control" placeholder="Password" />
               </div>
-              <button type="submit" onClick={this.onSubmit} className="btn btn-default">Submit</button>
+              <button type="submit" value="login" onClick={this.handleFormSubmit} className="btn btn-default">Login</button>
+              <button type="submit" value="register" onClick={this.handleFormSubmit} className="btn btn-default">Register</button>
             </form>
       </div>
       </div>
