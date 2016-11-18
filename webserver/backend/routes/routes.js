@@ -2,12 +2,52 @@ const express = require('express');
 const router = express.Router();
 const async = require('async');
 const path = require('path');
-const jwt = require('express-jwt');
 const passport = require('passport');
 const Simulation = require('../models/Simulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
+const config = require('../config');
+const auth = require('../authenticate');
 
+router.get('/protected', auth);
+
+router.route('/simulations')
+  .get(auth, (req, res) => {
+    const userId = res._headers.token._id;
+    User.findOne({
+        _id: userId
+      })
+      .then((result) => {
+        res.json(result.simulations);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  })
+  .post(auth, (req, res) => {
+    const userID = res._headers.token._id;
+    const simulationID = req.body.simulationID;
+    console.log(simulationID);
+    const updateInfo = {
+      $push: {
+        simulations: simulationID
+      }
+    };
+    const options = {
+      upsert: true,
+      returnNewDocument: true
+    };
+    User.findOneAndUpdate({
+        _id: userID
+      }, updateInfo, options)
+      .then((result) => {
+        console.log(result);
+        res.send(result);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  })
 
 router.get('/simulations/:simulationid', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
@@ -99,6 +139,7 @@ router.route('/login')
       if (user) {
         const token = user.generateJwt();
         res.status(200);
+        res.setHeader('token', token);
         res.json({
           "token": token
         });
@@ -110,7 +151,7 @@ router.route('/login')
   });
 
 
-router.get('*', (req, res) => {
+router.get('*', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 

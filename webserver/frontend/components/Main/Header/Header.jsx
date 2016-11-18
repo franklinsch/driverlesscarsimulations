@@ -2,11 +2,13 @@ import React from 'react';
 import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
 import Dropdown from './Dropdown/Dropdown.jsx';
 import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.jsx';
+import LoginButton from './LoginButton/LoginButton.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 
 export default class Header extends React.Component {
   static propTypes = {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
+    token: React.PropTypes.string,
     handlers: React.PropTypes.object
   }
 
@@ -25,6 +27,10 @@ export default class Header extends React.Component {
       handleSubmit : this.props.handlers.handleJoinSimulation
     }
 
+    const loginButtonHandlers = {
+      handleTokenChange : this.props.handlers.handleTokenChange
+    }
+
     return (
       <nav className="navbar navbar-dark bg-primary">
         <a className="navbar-brand" href="#">SAVN</a>
@@ -38,8 +44,13 @@ export default class Header extends React.Component {
                 handlers = {dropdownHandlers}
               />
             </li>
+            <li className="nav-item">
+              <LoginButton 
+                token    = {this.props.token}
+                handlers = {loginButtonHandlers}
+              />
+            </li>
           </ul>
-        
           <JoinSimulationForm 
             handlers = {joinSimulationFormHandlers} 
           />
