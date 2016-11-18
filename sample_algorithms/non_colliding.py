@@ -113,7 +113,7 @@ def addToState(journeys, state):
     end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
     newRoute = R.getRoute(INP_FILE, start, end)['path']
     preprocess(newRoute)
-    state.append(createNewCar(len(state), baseRoute=newRoute))
+    state.append(createNewCar(len(state), journey['id'], baseRoute=newRoute))
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
@@ -235,8 +235,8 @@ def executeGlobalAlgorithm(state):
     executeLocalAlgorithm(car)
   return state
 
-def createNewCar(i, baseRoute):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
+def createNewCar(i, journeyID, baseRoute):
+  car = {'id': i, 'journeyID': journeyID, type': 'car', 'position': None, 'speed': 0, 'direction': 0,
       'route': None, 'sensorData': {}, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
