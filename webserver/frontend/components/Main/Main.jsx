@@ -248,20 +248,22 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  handleSimulationStart(allJourneys) {
+  handleSimulationStart() {
+    const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
 
     const type = "request-simulation-start";
     const content = {
       selectedCity: selectedCity,
-      journeys: allJourneys
+      journeys: pendingJourneys
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  handleSimulationUpdate(allJourneys) {
+  handleSimulationUpdate() {
+    const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
 
@@ -276,7 +278,7 @@ export default class Main extends React.Component {
     const type = "request-simulation-update";
     const content = {
       simulationID: simID,
-      journeys: allJourneys
+      journeys: pendingJourneys
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
