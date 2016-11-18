@@ -31,8 +31,6 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 
   def handleSimulationCommunication(self, data):
     analyseData(data)
-    global await
-    await = False
 
   def handleSimulationStop(self, info):
     pass
@@ -84,15 +82,11 @@ def runSimulation(savn, initialParameters):
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
-  global await
-  await = False
   while savn.alive:
-    while (await):
-      time.sleep(SLEEP_TIME)
     savn.updateState(timestamp, translate(state))
     state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
-    await = True
+    savn.await(SLEEP_TIME)
   #useApiToEnd()
 
 def analyseData(data):

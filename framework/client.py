@@ -17,6 +17,7 @@ class SAVNConnectionAssistant:
     self.simulationID = simulationID
     self.messageQueue = asyncio.Queue()
     self.frameworkID = 0
+    self.await = False
 
   def updateState(self, timestamp, state):
     packet = {'type': 'simulation-state',
@@ -116,7 +117,12 @@ class SAVNConnectionAssistant:
       self.handleSimulationDataUpdate(packet["content"])
     elif isCommunication():
       self.handleSimulationCommunication(packet["content"])
+      self.await = False
 
+  def await(sleepTime):
+    self.await = True
+    while (self.await):
+      time.sleep(sleepTime)
 
   def initSession(self, timeslice):
     async def coro():
