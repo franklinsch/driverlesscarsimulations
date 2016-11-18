@@ -15,8 +15,6 @@ export default class LoginButton extends React.Component {
       password: '',
       token: this.props.token
     };
-    this._handleUserChange = this._handleUserChange.bind(this);
-    this._handlePasswordChange = this._handlePasswordChange.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
   }
 
