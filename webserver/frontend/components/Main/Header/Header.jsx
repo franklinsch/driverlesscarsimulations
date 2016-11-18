@@ -45,7 +45,7 @@ export default class Header extends React.Component {
               />
             </li>
             <li className="nav-item">
-              <LoginDropdown 
+              <LoginButton 
                 token    = {this.props.token}
                 handlers = {loginButtonHandlers}
               />
