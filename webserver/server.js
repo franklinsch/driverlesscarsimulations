@@ -44,22 +44,25 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-function averageSpeedToDestination(journeys, states) {
+function averageSpeedToDestination(journeys, simulationStates) {
   let carsOnTheRoad = {};
   let totalTime = 0;
   let totalDistance = 0;
-  for (let state of states) {
-    for (let obj of state.objects) {
-      if (obj.id in carsOnTheRoad) {
-        const journey = journeys[obj.id];
-        dest = journey.destination;
-        pos = obj.position;
-        if (pos.lat == dest.lat && pos.lng == dest.lng) {
-          totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-					totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
-      	}
-      } else {
-        carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
+
+  for (const frameworkStates of simulationStates) {
+    for (const state of frameworkStates) {
+      for (const obj of state.objects) {
+        if (obj['id'] in carsOnTheRoad) {
+          const journey = journeys[obj['id']];
+          dest = journey.destination;
+          pos = obj.position;
+          if (pos.lat == dest.lat && pos.lng == dest.lng) {
+            totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
+            totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
+          }
+        } else {
+          carsOnTheRoad[obj['id']] = {departure: state.timestamp, origin: obj.position}
+        }
       }
     }
   }
@@ -370,6 +373,7 @@ frontendSocketServer.on('request', function(request) {
 
       simulationData = {
         city: data.selectedCity,
+        latestTimestamp: 0,
         hotspots: hotspots,
         journeys: journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
@@ -409,7 +413,6 @@ frontendSocketServer.on('request', function(request) {
     });
 
     callback(null, simulation._id, simulationData.city._id, simulation.journeys);
-
   }
 
   function _handleRequestSimulationStart(message, callback) {
@@ -419,6 +422,7 @@ frontendSocketServer.on('request', function(request) {
     } else {
       const simulationData = {
         city: data.selectedCity,
+        latestTimestamp: 0,
         journeys: data.journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
         frameworks: [],
@@ -652,7 +656,6 @@ frameworkSocketServer.on('request', function(request) {
     Simulation.findByIdAndUpdate(simulationID, {
       $set: {
         timeslice: message.content.timeslice,
-        simulationStates: []
       },
       $push: {
         frameworks: {
@@ -677,16 +680,22 @@ frameworkSocketServer.on('request', function(request) {
 
       frameworkConnections.push({connection: connection, simulationID: simulation._id});
 
-      for (const frontend of simulation.frontends) {
-        frontendConnections[frontend.connectionIndex]['timestamp'] = 0;
-      }
+      //for (const frontend of simulation.frontends) {
+      //  frontendConnections[frontend.connectionIndex]['timestamp'] = 0;
+      //}
+
+      const latestTimestamp = simulation.latestTimestamp || 0;
+      const numStates = simulation.simulationStates.length;
+      const state = (numStates > 0) ? simulation.simulationStates[numStates - 1] : [];
 
       connection.send(JSON.stringify({
         type: "simulation-start-parameters",
         content: {
           frameworkID: frameworkID,
           city: simulation.city,
-          journeys: simulation.journeys
+          journeys: simulation.journeys,
+          timestamp: latestTimestamp,
+          state: state
         }
       }));
     })
@@ -717,7 +726,8 @@ frameworkSocketServer.on('request', function(request) {
     const simulationID = message.content.simulationID;
     const frameworkID = message.content.frameworkID;
 
-    const newState = _filterState(message.content, frameworkID);
+    //const newState = _filterState(message.content, frameworkID); TODO: Check if works
+    const newState = message.content;
 
     Simulation.findByIdAndUpdate(simulationID, { $push: { simulationStates: newState } }, { new: true }, function (error, simulation) {
       if (error || !simulation) {

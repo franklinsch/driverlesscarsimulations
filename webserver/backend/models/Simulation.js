@@ -20,25 +20,28 @@ const simulationSchema = mongoose.Schema({
   },
   timeslice: Number,
   hotspots: [Hotspot.schema],
+  latestTimestamp: Number,
   journeys: [Journey.schema],
   frontends: [Frontend.schema],
   frameworks: [Framework.schema],
   simulationStates: [{
-    id: String,
-    formattedTimestamp: String,
     timestamp: Number,
-    objects: [{
-      id: String,
+    formattedTimestamp: String,
+    id: String,
+    frameworkStates: [{
       frameworkID: String,
-      journeyID: String,
-      objectType: String,
-      speed: Number,
-      direction: Number,
-      route: [{}],
-      position: {
-        lat: Number,
-        lng: Number
-      }
+      objects: [{
+        id: String,
+        journeyID: String,
+        objectType: String,
+        speed: Number,
+        direction: Number,
+        route: [{}],
+        position: {
+          lat: Number,
+          lng: Number
+        }
+      }]
     }]
   }]
 });
