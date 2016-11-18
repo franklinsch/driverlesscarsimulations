@@ -23,13 +23,11 @@ export default class SimulationSettings extends React.Component {
       this.props.handlers.handleSimulationClose();
     } else {
       this.props.handlers.handleSimulationStart();
-      this.props.handlers.handlePendingJourneysClear();
     }
   }
 
   _handleSimulationUpdate(e) {
     this.props.handlers.handleSimulationUpdate();
-    this.props.handlers.handlePendingJourneysClear();
   }
 
   _handleBenchmarkRequest(e) {

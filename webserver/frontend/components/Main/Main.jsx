@@ -69,12 +69,6 @@ export default class Main extends React.Component {
     })
   }
 
-  handlePendingJourneysClear() {
-    this.setState({
-      pendingJourneys: []
-    })
-  }
-
   handleMessageReceive(message) {
     const messageData = JSON.parse(message.data);
 
@@ -260,6 +254,8 @@ export default class Main extends React.Component {
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
+
+    this.clearPendingJourneys();
   }
 
   handleSimulationUpdate() {
@@ -302,6 +298,12 @@ export default class Main extends React.Component {
 
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
+  
+  clearPendingJourneys() {
+    this.setState({
+      pendingJourneys: []
+    })
+  }
 
   render() {
     const cities = this.state.availableCities;
@@ -331,7 +333,6 @@ export default class Main extends React.Component {
       handlePositionSelect       : ::this.handlePositionPreview,
       handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
       handleSpeedChange          : ::this.handleSpeedChange,
-      handlePendingJourneysClear : ::this.handlePendingJourneysClear,
       handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
     }
 
