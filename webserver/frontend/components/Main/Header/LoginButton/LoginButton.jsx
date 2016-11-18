@@ -15,7 +15,6 @@ export default class LoginButton extends React.Component {
       password: '',
       token: this.props.token
     };
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
   }
 
   _handleUserChange(e) {
@@ -86,8 +85,20 @@ export default class LoginButton extends React.Component {
                 placeholder = "Password"
               />
             </div>
-            <button type="submit" value="login" onClick={this._handleFormSubmit} className="btn btn-default">Login</button>
-            <button type="submit" value="register" onClick={this._handleFormSubmit} className="btn btn-default">Register</button>
+            <button
+              type="submit"
+              value="login"
+              onClick={::this._handleFormSubmit}
+              className="btn btn-default">
+              Login
+            </button>
+            <button
+              type="submit"
+              value="register"
+              onClick={::this._handleFormSubmit}
+              className="btn btn-default">
+              Register
+            </button>
           </form>
         </div>
       </div>
