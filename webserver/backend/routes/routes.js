@@ -24,6 +24,30 @@ router.route('/simulations')
         res.send(err);
       });
   })
+  .post(auth, (req, res) => {
+    const userID = res._headers.token._id;
+    const simulationID = req.body.simulationID;
+    console.log(simulationID);
+    const updateInfo = {
+      $push: {
+        simulations: simulationID
+      }
+    };
+    const options = {
+      upsert: true,
+      returnNewDocument: true
+    };
+    User.findOneAndUpdate({
+        _id: userID
+      }, updateInfo, options)
+      .then((result) => {
+        console.log(result);
+        res.send(result);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  })
 
 router.get('/simulations/:simulationid', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
@@ -80,44 +104,6 @@ router.route('/simulations/:simulationID/journeys')
         });
     });
   });
-
-
-router.route('/users/:userID/simulations')
-  .get((req, res) => {
-    User.findOne({
-        _id: req.params.userID
-      })
-      .then((result) => {
-        res.json(result.simulations);
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-  })
-  .post((req, res) => {
-    const id = req.params.userID;
-    const simulationID = req.body;
-      const updateInfo = {
-        $push: {
-          simulations: simulationID
-        }
-      };
-      const options = {
-        upsert: true,
-        returnNewDocument: true
-      };
-      User.findOneAndUpdate({
-          _id: id
-        }, updateInfo, options)
-        .then((result) => {
-          console.log(result);
-          res.send(result);
-        })
-        .catch((err) => {
-          res.send(err);
-        });
-    });
-
 
 router.route('/register')
   .post((req, res) => {
