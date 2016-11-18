@@ -30,7 +30,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     addToState(update['journeys'], state)
 
   def handleSimulationCommunication(self, data):
-    translateDataToSensors(data)
+    analyseData(data)
 
   def handleSimulationStop(self, info):
     pass
@@ -237,7 +237,7 @@ def executeGlobalAlgorithm(state):
 
 def createNewCar(i, journeyID, baseRoute):
   car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
-      'route': None, 'sensorData': {}, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
+      'route': None, 'sensorData': {}, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
 
