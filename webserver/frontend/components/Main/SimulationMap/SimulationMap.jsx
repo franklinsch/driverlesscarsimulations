@@ -237,9 +237,9 @@ export default class SimulationMap extends React.Component {
     }
 
     const carIcon = L.icon({
-      iconUrl: "/car-icon.png",
-      iconSize: [35, 35],
-    })
+      iconUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Circle_-_black_simple.svg/20px-Circle_-_black_simple.svg.png",
+      iconSize: [20, 20]
+    });
 
     const originMarkerIcon = L.icon({
       iconUrl: "http://image.flaticon.com/icons/svg/220/220283.svg",
@@ -287,7 +287,7 @@ export default class SimulationMap extends React.Component {
                 position      = {car.position} 
                 key           = {key}
                 icon          = {carIcon}
-                rotationAngle = {car.direction}
+                rotationAngle = {0}
                 handleClick   = {(e) => this.handleCarMarkerClick(car, e)}
               >
                 <Popup>
