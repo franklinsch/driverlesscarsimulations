@@ -1,47 +1,38 @@
 import sys
 import math
+import random
+
 sys.path.append('../framework')
 
 import client
 import route as R
-import geojson
-import os.path
 
-from copy import deepcopy
-
+worldState = {}
 state = []
-locked_nodes = []
+nextEventTime = None
 
+WALKING_SPEED_KM_H = 6
+WALKING_SPEED = WALKING_SPEED_KM_H * 1000 / 3600
 SLEEP_TIME = 1
 TIMESLICE = 1
-INP_FILE = 'map.geojson'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationStart(self, initialParameters):
-    try: #TODO: Users should not need to try-except their code to get error messages
+    try:
       runSimulation(self, initialParameters)
-      #testInitialisation(initialParameters)
     except Exception as err:
       print(err)
 
   def handleSimulationDataUpdate(self, update):
-    addToState(update['journeys'], state)
+    pass
 
   def handleSimulationCommunication(self, data):
-    translateDataToSensors(data)
+    analyseData(data)
 
   def handleSimulationStop(self, info):
     pass
 
 def runSimulation(savn, initialParameters):
-  south = initialParameters['city']['bounds']['southWest']['lat']
-  west = initialParameters['city']['bounds']['southWest']['lng']
-  north = initialParameters['city']['bounds']['northEast']['lat']
-  east = initialParameters['city']['bounds']['northEast']['lng']
-  print('Initialising geographical data')
-  R.saveGeojson(south, west, north, east, INP_FILE)
-  print('\t\t\t... Done')
-
   print('Starting simulation:')
   timestamp = 0
 
@@ -50,14 +41,13 @@ def runSimulation(savn, initialParameters):
   while savn.alive:
     #useApi()
     savn.updateState(timestamp, translate(state))
-    state = executePedestrianAlgorithm(state)
+    state = executePedestrianAlgorithm(state, timestamp)
     timestamp += TIMESLICE
     time.sleep(SLEEP_TIME)
   #useApiToEnd()
 
 def analyseData(data):
-  #for car in state:
-  #  car['sensorData'] = translateDataToSensor(car, data)
+  worldState[data['frameworkID']] = data['objects']
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
@@ -83,18 +73,12 @@ def get_direction(start, end):
   return (math.degrees(math.atan2(y, x))+270)%360
 
 def preprocess(route):
-  for i in range(len(route)-1):
-    start = route[i]
-    end = route[i+1]
+  start = route[0]
+  end = route[1]
 
-    props = R.getProperties(INP_FILE, start, end)
-    maxSpeed_km_h = MAX_SPEED_KM_H
-    if 'maxspeed' in props:
-      maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
-
-    dist = get_distance(start, end)
-    time = dist/(maxSpeed_km_h*1000/3600)
-    end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed_km_h})
+  dist = get_distance(start, end)
+  time = dist/WALKING_SPEED
+  end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': WALKING_SPEED_KM_H})
 
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
@@ -105,79 +89,112 @@ def sub(v1, v2):
 def scale(v, s):
   return [s*v[0], s*v[1]]
 
+def within_box(p, v1, v2):
+  min_x = min(v1[0], v2[0])
+  max_x = max(v1[0], v2[0])
+  min_y = min(v1[1], v2[1])
+  max_y = max(v1[1], v2[1])
+  px = p[0]
+  py = p[1]
+
+  return px >= min_x and px <= max_x and py >= min_y and py <= max_y
+
+def interpolate(s, e, sc):
+  return add(s, scale(sub(e, s), sc))
+
+def to_unit_circle(angle):
+  return [math.cos(math.radians(angle)), math.sin(math.radians(angle))]
+
+def pickCar(cars):
+  index = int(random.random() * len(cars))
+
+  MIN_DISTANCE = 60 #TODO: Extract generalisable data
+
+  car = cars[index]
+  if (get_distance(car['position'], car['route'][-1][1]) < MIN_DISTANCE):
+    return pickCar(cars)
+  return car
+
 def scheduleNewPedestrian():
-  return
-
-def isEqualNodes(node1, node2):
-  return node1[0] == node2[0] and node1[1] == node2[1]
-
-def isNodeLocked(node):
-  for car in state:
-    if isEqualNodes(car['lockedNode'], node):
-      return True
-  return False
-
-def switchNodeLock(car, start, end):
-  if (isEqualNodes(car['lockedNode'], start)):
-    if (isNodeLocked(end)):
-      return False
-
-    car['lockedNode'] = end
-  return True
-
-def movePedestrian(pedestrian):
-  timeLeft = TIMESLICE
-  start = car['route'][0]
-  end = car['route'][1]
-
-  if (not switchNodeLock(car, start, end) or
-      ('cameraData' in car['sensorData'] and len(car['sensorData']['cameraData']) > 0)):
-    car['speed'] = 0
-    return
-
-  car['speed'] = end[2]['maxSpeed']
-  while(timeLeft > 0):
-    if(end[2]['timeLeft'] <= timeLeft):
-      timeLeft -= end[2]['timeLeft']
-      end[2]['timeLeft'] = 0
-      del car['route'][0]
-      if(len(car['route']) == 1):
-        timeLeft = 0
-        car['route'] = None
-      else:
-        start = end
-        end = car['route'][1]
-        car['speed'] = end[2]['maxSpeed']
-        car['direction'] = get_direction(start, end)
-
-        if (not switchNodeLock(car, start, end)):
-          car['speed'] = 0
-          break
-    else:
-      end[2]['timeLeft'] -= timeLeft
-      timeLeft = 0
-  if(car['route'] == None):
-    car['position'] = end
-    scheduleNewRoute(car)
-  else:
-    timeLeft = end[2]['timeLeft']
-    totalTime = end[2]['totalTime']
-    car['position'] = add(end, scale(sub(start, end), timeLeft/totalTime))
-
-def executePedestrianAlgorithm(state):
-  for pedestrian in state:
-    movePedestrian(pedestrian)
-  return state
+  if (len(worldState) > 0):
+    car = pickCar(worldState)
+    newPedestrian = createNewPedestrianForCar(len(state), car)
+    newPedestrian['route'] = newPedestrian['baseRoute']
+    state.append(newPedestrian)
 
 def createNewPedestrianForCar(i, car):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
-      'route': None, 'sensorData': {}, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
-  return car
+  MU_DISTANCE = 100
+  SIGMA_DISTANCE = 15
+
+  intersectionPoint = car['position']
+  numPaths = len(car['route'])
+  for i in range(numPaths - 1):
+    start = car['route'][i]
+    end = car['route'][i+1] #TODO: Doesn't work for cars going the other way
+    if (within_box(intersectionPoint, start, end)):
+      break
+
+  intersectionDistance = random.gauss(MU_DISTANCE, SIGMA_DISTANCE)
+  while intersectionDistance != 0 and i < numPaths:
+    end = route[i]
+    dist_node = get_distance(intersectionPoint, end)
+    if (dist_node > intersectionDistance or i == numPaths - 1):
+      intersectionPoint = interpolate(intersectionPoint, end, intersectionDistance/dist_node)
+    else:
+      intersectionDistance -= dist_node
+      intersectionPoint = end
+    i += 1
+
+  carDirection = car['direction']
+
+  MU_THETA = 0
+  SIGMA_THETA = 15
+  speedRatio = WALKING_SPEED_KM_H / car['speed']
+  startDistance = random.gauss(MU_DISTANCE, SIGMA_DISTANCE) * speedRatio
+  startAngle = carDirection + 90 + random.gauss(MU_THETA, SIGMA_THETA)
+
+  start = add(intersectionPoint, scale(to_unit_circle(startAngle), startDistance))
+  end = interpolate(start, intersectionPoint, 2)
+  if (random.random() < 0.5):
+    start, end = end, start
+  baseRoute = [start, end]
+  direction = get_direction(start, end)
+  preprocess(baseRoute)
+
+  pedestrian = {'id': i, 'type': 'car', 'position': start, 'speed': 0, 'direction': direction, 'route': None, 'sensorData': {}, 'baseRoute': baseRoute}
+  return pedestrian
+
+def generateEventTime():
+  LAMBDA = 1/5
+  return random.expovariate(LAMBDA)
+
+def executePedestrianAlgorithm(state, timestamp):
+  while (timestamp >= nextEventTime):
+    time_d = timestamp - nextEventTime
+    scheduleNewPedestrian()
+    movePedestrian(state[-1], timeLeft=time_d)
+    nextEventTime += generateEventTime()
+
+  for i, pedestrian in enumerate(state):
+    if movePedestrian(pedestrian):
+      del state[i]
+  return state
+
+def movePedestrian(pedestrian, timeLeft=TIMESLICE):
+  start = pedestrian['start']
+  end = pedestrian['end']
+
+  if (end['timeLeft'] <= timeLeft):
+    return True
+
+  end['timeLeft'] -= timeLeft
+  pedestrian['position'] = interpolate(end, start, end['timeLeft']/end['totalTime'])
+  return False
 
 def translate(state):
   res = []
-  for car in state:
-    res += [{'id': str(car['id']), 'objectType': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
+  for pedestrian in state:
+    res.append({'id': str(pedestrian['id']), 'objectType': pedestrian['type'], 'speed': pedestrian['speed'], 'direction': pedestrian['direction'], 'position': {'lat': pedestrian['position'][1], 'lng': pedestrain['position'][0]}, 'route': [pedestrian['start'], pedestrian['end']]})
   return res
 
 if(len(sys.argv) != 2):
