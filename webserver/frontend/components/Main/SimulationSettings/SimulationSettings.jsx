@@ -9,17 +9,11 @@ export default class SimulationSettings extends React.Component {
   static propTypes = {
     activeSimulationID: React.PropTypes.string,
     selectedCity: CustomPropTypes.city,
-    mapSelectedJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
     handlers: React.PropTypes.object
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      journeys: []
-    }
   }
 
   _handleSimulationButton(e, started) {
@@ -28,18 +22,12 @@ export default class SimulationSettings extends React.Component {
     if (started) {
       this.props.handlers.handleSimulationClose();
     } else {
-      const journeys = this.state.journeys || [];
-      const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
-
-      this.props.handlers.handleSimulationStart(allJourneys);
+      this.props.handlers.handleSimulationStart();
     }
   }
 
   _handleSimulationUpdate(e) {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
-
-    this.props.handlers.handleSimulationUpdate(allJourneys);
+    this.props.handlers.handleSimulationUpdate();
   }
 
   _handleBenchmarkRequest(e) {
@@ -49,9 +37,9 @@ export default class SimulationSettings extends React.Component {
   }
 
   handleJourneysSubmit(journeys) {
-    this.setState({
-      journeys: this.state.journeys.concat(journeys)
-    })
+    for (const journey of journeys) {
+      this.props.handlers.handlePendingJourneyAdd(journey);
+    }
   }
 
   render() {
@@ -60,8 +48,8 @@ export default class SimulationSettings extends React.Component {
 
     const selectedCity = this.props.selectedCity;
     const bounds = selectedCity ? selectedCity.bounds : null;
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const simulationJourneys = this.props.simulationJourneys || [];
+    const pendingJourneys = this.props.pendingJourneys || [];
 
     const benchmarkValue = this.props.benchmarkValue;
 
@@ -78,14 +66,16 @@ export default class SimulationSettings extends React.Component {
     return (
       <div className="container">
         <JourneyList 
-          journeys = {allJourneys}
+          pendingJourneys = {pendingJourneys}
+          simulationJourneys = {simulationJourneys}
         />
         <JourneySettings 
-          bounds         = {bounds}
-          journeys       = {allJourneys}
-          objectTypes    = {this.props.objectTypes}
-          objectKindInfo = {this.props.objectKindInfo}
-          handlers       = {journeySettingsHandlers}
+          bounds              = {bounds}
+          simulationJourneys  = {simulationJourneys}
+          pendingJourneys     = {pendingJourneys}
+          objectTypes         = {this.props.objectTypes}
+          objectKindInfo      = {this.props.objectKindInfo}
+          handlers            = {journeySettingsHandlers}
         />
         <div className="row">
           <button 

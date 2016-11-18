@@ -58,8 +58,15 @@ export default class Main extends React.Component {
         formattedTimestamp: "00:00:00",
         objects: []
       },
-      mapSelectedJourneys: []
+      pendingJourneys: []
     }
+  }
+
+  handlePendingJourneyAdd(pendingJourney) {
+    const pendingJourneys = this.state.pendingJourneys || [];
+    this.setState({
+      pendingJourneys: pendingJourneys.concat([pendingJourney])
+    })
   }
 
   handleMessageReceive(message) {
@@ -74,9 +81,13 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
-      this.postInitialJourneys(messageData.content.id);
       this.setState({
-        simulationInfo: messageData.content
+        simulationInfo: messageData.content.simulationInfo,
+        simulationJourneys: messageData.content.journeys
+      });
+    } else if (messageData.type === "simulation-journeys-update") {
+      this.setState({
+        simulationJourneys: messageData.content.journeys
       });
     } else if (messageData.type === "simulation-state") {
       const simulationState = messageData.content.state;
@@ -116,15 +127,6 @@ export default class Main extends React.Component {
     }
   }
 
-  handleAddJourney(journey) {
-    const simID = this.state.simulationInfo.id;
-    if (simID != "0") {
-      this.postJourney(journey, simID);
-    }
-    const journeys = this.state.mapSelectedJourneys.concat([journey]);
-    this.setState({mapSelectedJourneys: journeys});
-  }
-
   handleJoinSimulation(simulationID) {
     const socket = this.state.socket;
 
@@ -140,23 +142,6 @@ export default class Main extends React.Component {
     })
 
     socket.send(message);
-  }
-
-  postJourney(journey, simID) {
-    const fetchUrl = "/simulations/" + simID + "/journeys";
-    fetch(fetchUrl, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: journey
-    })
-      .then((response) => {
-      })
-      .catch((err) => {
-        console.log("New journey was not saved due to: " + err);
-      });
   }
 
   _cityWithID(id) {
@@ -183,25 +168,16 @@ export default class Main extends React.Component {
   }
 
   _startInitialSimulation(cityId) {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const journeys = this.state.pendingJourneys || [];
     const type = "request-simulation-start";
     const initialSettings = {
       selectedCity: cityId,
-      journeys: allJourneys
+      journeys: journeys
     }
     const socket = this.state.socket;
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
   }
 
-  postInitialJourneys(simID) {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
-    for (const journey of allJourneys) {
-      this.postJourney(journey, simID);
-    }
-  }
-    
   handleObjectTypeCreate(typeInfo) {
     const objectTypes = this.state.objectTypes || [];
     this.setState({
@@ -266,20 +242,23 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  handleSimulationStart(allJourneys) {
+  handleSimulationStart() {
+    const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
 
     const type = "request-simulation-start";
     const content = {
       selectedCity: selectedCity,
-      journeys: allJourneys
+      journeys: pendingJourneys
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
+    this.clearPendingJourneys();
   }
 
-  handleSimulationUpdate(allJourneys) {
+  handleSimulationUpdate() {
+    const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
 
@@ -294,10 +273,11 @@ export default class Main extends React.Component {
     const type = "request-simulation-update";
     const content = {
       simulationID: simID,
-      journeys: allJourneys
+      journeys: pendingJourneys
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
+    this.clearPendingJourneys();
   }
 
   handleBenchmarkRequest() {
@@ -318,6 +298,12 @@ export default class Main extends React.Component {
 
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
+  
+  clearPendingJourneys() {
+    this.setState({
+      pendingJourneys: []
+    })
+  }
 
   render() {
     const cities = this.state.availableCities;
@@ -326,7 +312,8 @@ export default class Main extends React.Component {
     const availableCities = this.state.availableCities;
     const simulationID = this.state.simulationInfo.id;
 
-    const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
+    const pendingJourneys = this.state.pendingJourneys || [];
+    const simulationJourneys = this.state.simulationJourneys || [];
 
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
@@ -339,17 +326,18 @@ export default class Main extends React.Component {
     }
 
     const simulationSettingsHandlers = {
-      handleBenchmarkRequest : ::this.handleBenchmarkRequest,
-      handleSimulationStart  : ::this.handleSimulationStart,
-      handleSimulationUpdate : ::this.handleSimulationUpdate,
-      handleSimulationClose  : ::this.handleSimulationClose,
-      handlePositionSelect   : ::this.handlePositionPreview,
-      handleObjectTypeCreate : ::this.handleObjectTypeCreate,
-      handleSpeedChange      : ::this.handleSpeedChange
+      handleBenchmarkRequest     : ::this.handleBenchmarkRequest,
+      handleSimulationStart      : ::this.handleSimulationStart,
+      handleSimulationUpdate     : ::this.handleSimulationUpdate,
+      handleSimulationClose      : ::this.handleSimulationClose,
+      handlePositionSelect       : ::this.handlePositionPreview,
+      handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
+      handleSpeedChange          : ::this.handleSpeedChange,
+      handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
     }
 
     const simulationMapHandlers = {
-      handleAddJourney : ::this.handleAddJourney,
+      handleAddJourney : ::this.handlePendingJourneyAdd,
       handlePause      : ::this.handlePause,
       handleResume     : ::this.handleResume,
       handleScrub      : ::this.handleScrub
@@ -367,7 +355,8 @@ export default class Main extends React.Component {
               <SimulationSettings
                 activeSimulationID  = {simulationID}
                 selectedCity        = {selectedCity}
-                mapSelectedJourneys = {mapSelectedJourneys}
+                pendingJourneys     = {pendingJourneys}
+                simulationJourneys  = {simulationJourneys}
                 objectTypes         = {this.state.objectTypes}
                 objectKindInfo      = {this.state.objectKindInfo}
                 benchmarkValue      = {this.state.benchmarkValue}

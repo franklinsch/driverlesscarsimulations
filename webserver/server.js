@@ -202,7 +202,7 @@ frontendSocketServer.on('request', function(request) {
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
 
-    callback(null, simulation._id, data.selectedCity._id);
+    callback(null, simulation._id, data.selectedCity._id, data.journeys);
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -242,8 +242,13 @@ frontendSocketServer.on('request', function(request) {
     })
   }
 
-  function _handleRequestEventUpdate(message) {
-    Simulation.findById(message.content.simulationID, function (error, simulation) {
+  function _handleRequestEventUpdate(message, callback) {
+    const simulationID = message.content.simulationID;
+    Simulation.findByIdAndUpdate(simulationID, {
+      $push: {
+        journeys: { $each: message.content.journeys }
+      }
+    }, {new: true}, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -252,8 +257,11 @@ frontendSocketServer.on('request', function(request) {
           }
         }));
         console.log("Could not find simulation with ID " + message.content.simulationID);
+        console.error(error);
         return
       }
+
+      console.log(simulation)
 
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
@@ -261,6 +269,8 @@ frontendSocketServer.on('request', function(request) {
           content: message.content
         }));
       }
+
+      callback(simulation.journeys);
     });
   }
 
@@ -365,12 +375,15 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestObjectKinds();
         break;
       case "request-simulation-start":
-        _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
+        _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
           connection.send(JSON.stringify({
             type: "simulation-id",
             content: {
-              id: simID,
-              cityID: cityID
+              simulationInfo: {
+                id: simID,
+                cityID: cityID
+              },
+              journeys: journeys
             }
           }));
         });
@@ -379,7 +392,14 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestSimulationJoin(messageData);
         break;
       case "request-simulation-update":
-        _handleRequestEventUpdate(messageData);
+        _handleRequestEventUpdate(messageData, (journeys) => {
+          connection.send(JSON.stringify({
+            type: "simulation-journeys-update",
+            content: {
+              journeys: journeys
+            }
+          }));
+        });
         break;
       case "request-simulation-speed-change":
         _handleRequestSimulationSpeedChange(messageData);
