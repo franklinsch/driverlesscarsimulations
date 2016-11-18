@@ -330,7 +330,7 @@ export default class Main extends React.Component {
       handleSimulationClose      : ::this.handleSimulationClose,
       handlePositionSelect       : ::this.handlePositionPreview,
       handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
-      handleSpeedChange          : ::this.handleSpeedChange
+      handleSpeedChange          : ::this.handleSpeedChange,
       handlePendingJourneysClear : ::this.handlePendingJourneysClear,
       handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
     }
