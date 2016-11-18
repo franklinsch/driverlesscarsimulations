@@ -8,7 +8,7 @@ sys.path.append('../framework')
 import client
 import route as R
 
-worldState = {}
+worldState = []
 state = []
 nextEventTime = None
 
@@ -49,7 +49,10 @@ def runSimulation(savn, initialParameters):
   #useApiToEnd()
 
 def analyseData(data):
-  worldState[data['frameworkID']] = data['objects']
+  global worldState
+  worldState = []
+  for frameworkState in data:
+    worldState += frameworkState['objects']
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])

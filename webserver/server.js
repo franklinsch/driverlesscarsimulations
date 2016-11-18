@@ -722,6 +722,7 @@ frameworkSocketServer.on('request', function(request) {
     }
 
     console.log("Received simulation-update from framework");
+    console.log(message);
 
     const simulationID = message.content.simulationID;
     const frameworkID = message.content.frameworkID;
@@ -743,6 +744,9 @@ frameworkSocketServer.on('request', function(request) {
 
       simulation.latestTimestamp = message.content.timestamp;
       const simulationStateIndex = Math.floor(message.content.timestamp / simulation.timeslice);
+      if (simulation.simulationStates.length == simulationStateIndex) {
+        simulation.simulationStates.push({timestamp: message.content.timestamp, formattedTimestamp: message.content.formattedTimestamp, id: message.content.id, frameworkstates: []});
+      }
       simulation.simulationStates[simulationStateIndex].frameworkStates.push(newState);
 
       simulation.save((error, simulation) => {
