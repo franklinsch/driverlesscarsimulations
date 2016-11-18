@@ -9,6 +9,7 @@ export default class SimulationSettings extends React.Component {
   static propTypes = {
     activeSimulationID: React.PropTypes.string,
     selectedCity: CustomPropTypes.city,
+    simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
