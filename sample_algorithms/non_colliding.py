@@ -71,13 +71,14 @@ def runSimulation(savn, initialParameters):
 
   print('Creating initial state')
   global state
+  state = initialParameters['state']
 
   print('Preprocessing routes')
   addToState(initialParameters['journeys'], state)
   print('\t\t\t... Done')
 
   print('Starting simulation:')
-  timestamp = 0
+  timestamp = initialParameters['timestamp']
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
