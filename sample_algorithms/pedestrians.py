@@ -1,6 +1,7 @@
 import sys
 import math
 import random
+import time
 
 sys.path.append('../framework')
 
@@ -34,10 +35,11 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 
 def runSimulation(savn, initialParameters):
   print('Starting simulation:')
+  global state, nextEventTime
   timestamp = 0
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
-
+  nextEventTime = generateEventTime()
   while savn.alive:
     #useApi()
     savn.updateState(timestamp, translate(state))
@@ -169,6 +171,7 @@ def generateEventTime():
   return random.expovariate(LAMBDA)
 
 def executePedestrianAlgorithm(state, timestamp):
+  global nextEventTime
   while (timestamp >= nextEventTime):
     time_d = timestamp - nextEventTime
     scheduleNewPedestrian()

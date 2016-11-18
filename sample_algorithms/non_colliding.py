@@ -100,7 +100,7 @@ def translateDataToCameraData(car, data):
   cameraSensorRadius = 30.0
   cameraSensorFOVAngle = 100.0
   cameraData = []
-  for obj in data:
+  for obj in data['objects']:
     distance = get_distance(car['position'], obj['position'])
     direction = get_direction(car['position'], obj['position'])
     if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
