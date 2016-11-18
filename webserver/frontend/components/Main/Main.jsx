@@ -129,6 +129,11 @@ export default class Main extends React.Component {
       } else {
         simulationState['latestTimestamp'] = this.state.simulationState['latestTimestamp'];
       }
+
+      const frameworkStates = simulationState.frameworkStates;
+      const objects = frameworkStates.map((fState) => { return fState.objects }).reduce((acc, fObjects) => {acc.concat(fObjects)})
+      simulationState.objects = objects;
+
       this.setState({
         simulationState: simulationState
       });
