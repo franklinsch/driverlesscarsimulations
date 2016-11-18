@@ -1,9 +1,9 @@
 import React from 'react';
-import SimulationMap from './SimulationMap/SimulationMap.js';
-import SimulationSettings from './SimulationSettings/SimulationSettings.js';
-import CustomPropTypes from '../Utils/CustomPropTypes.js';
-import UtilFunctions from '../Utils/UtilFunctions.js';
-import Header from './Header/Header.js';
+import SimulationMap from './SimulationMap/SimulationMap.jsx';
+import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
+import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
+import UtilFunctions from '../Utils/UtilFunctions.jsx';
+import Header from './Header/Header.jsx';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
@@ -59,8 +59,15 @@ export default class Main extends React.Component {
         formattedTimestamp: "00:00:00",
         objects: []
       },
-      mapSelectedJourneys: []
+      pendingJourneys: []
     }
+  }
+
+  handlePendingJourneyAdd(pendingJourney) {
+    const pendingJourneys = this.state.pendingJourneys || [];
+    this.setState({
+      pendingJourneys: pendingJourneys.concat([pendingJourney])
+    })
   }
 
   handleMessageReceive(message) {
@@ -75,9 +82,13 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
-      this.postInitialJourneys(messageData.content.id);
       this.setState({
-        simulationInfo: messageData.content
+        simulationInfo: messageData.content.simulationInfo,
+        simulationJourneys: messageData.content.journeys
+      });
+    } else if (messageData.type === "simulation-journeys-update") {
+      this.setState({
+        simulationJourneys: messageData.content.journeys
       });
     } else if (messageData.type === "simulation-state") {
       const simulationState = messageData.content.state;
@@ -109,16 +120,12 @@ export default class Main extends React.Component {
       this.setState({
         objectKindInfo: messageData.content
       })
+    } else if (messageData.type === "simulation-benchmark") {
+      const benchmarkValue = messageData.content.value;
+      this.setState({
+        benchmarkValue: benchmarkValue
+      })
     }
-  }
-
-  handleAddJourney(journey) {
-    const simID = this.state.simulationInfo.id;
-    if (simID != "0") {
-      this.postJourney(journey, simID);
-    }
-    const journeys = this.state.mapSelectedJourneys.concat([journey]);
-    this.setState({mapSelectedJourneys: journeys});
   }
 
   handleJoinSimulation(simulationID) {
@@ -138,23 +145,6 @@ export default class Main extends React.Component {
     socket.send(message);
   }
 
-  postJourney(journey, simID) {
-    const fetchUrl = "/simulations/" + simID + "/journeys";
-    fetch(fetchUrl, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: journey
-    })
-      .then((response) => {
-      })
-      .catch((err) => {
-        console.log("New journey was not saved due to: " + err);
-      });
-  }
-
   _cityWithID(id) {
     const availableCities = this.state.availableCities;
     if (availableCities) {
@@ -166,13 +156,14 @@ export default class Main extends React.Component {
     }
   }
 
-  _handleCityChange(newCityId) {
+  handleCityChange(newCityId) {
     this.setState({
       selectedCityID: newCityId
     })
   }
 
-  _handleTokenChange(newToken) {
+
+  handleTokenChange(newToken) {
     this.setState({
       token: newToken
     });
@@ -185,23 +176,14 @@ export default class Main extends React.Component {
   }
 
   _startInitialSimulation(cityId) {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
+    const journeys = this.state.pendingJourneys || [];
     const type = "request-simulation-start";
     const initialSettings = {
       selectedCity: cityId,
-      journeys: allJourneys
+      journeys: journeys
     }
     const socket = this.state.socket;
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
-  }
-
-  postInitialJourneys(simID) {
-    const journeys = this.state.journeys || [];
-    const allJourneys = journeys.concat(this.props.mapSelectedJourneys);
-    for (const journey of allJourneys) {
-      this.postJourney(journey, simID);
-    }
   }
 
   handleObjectTypeCreate(typeInfo) {
@@ -258,29 +240,114 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  handleSimulationClose() {
+    const socket = this.state.socket;
+    const simID = this.state.simulationInfo.id;
+    const type = "request-simulation-close";
+    const content = {
+      simulationID: simID
+    }
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
+  handleSimulationStart() {
+    const pendingJourneys = this.state.pendingJourneys || [];
+    const socket = this.state.socket;
+    const selectedCity = this._cityWithID(this.state.selectedCityID);
+
+    const type = "request-simulation-start";
+    const content = {
+      selectedCity: selectedCity,
+      journeys: pendingJourneys
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+    this.clearPendingJourneys();
+  }
+
+  handleSimulationUpdate() {
+    const pendingJourneys = this.state.pendingJourneys || [];
+    const socket = this.state.socket;
+    const selectedCity = this._cityWithID(this.state.selectedCityID);
+
+    const simID = this.state.simulationInfo.id;
+    const hasSimulationStarted = simID !== "0";
+
+    if (!hasSimulationStarted) {
+      console.error("Tried to update a simulation that hasn't started");
+      return
+    }
+
+    const type = "request-simulation-update";
+    const content = {
+      simulationID: simID,
+      journeys: pendingJourneys
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+    this.clearPendingJourneys();
+  }
+
+  handleBenchmarkRequest() {
+    const socket = this.state.socket;
+
+    const simID = this.state.simulationInfo.id;
+    const hasSimulationStarted = simID !== "0";
+
+    if (!hasSimulationStarted) {
+      console.error("Tried to benchmark a simulation that hasn't started");
+      return
+    }
+
+    const type = "request-simulation-benchmark";
+    const content = {
+      simulationID: simID,
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
+  clearPendingJourneys() {
+    this.setState({
+      pendingJourneys: []
+    })
+  }
+
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
-    const socket = this.state.socket;
     const simulationID = this.state.simulationInfo.id;
     const token = this.state.token || '';
 
-    const mapSelectedJourneys = this.state.mapSelectedJourneys || [];
+    const pendingJourneys = this.state.pendingJourneys || [];
+    const simulationJourneys = this.state.simulationJourneys || [];
 
     const previewMarkerPosition = this.state.previewMarkerPosition;
 
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const bounds = selectedCity ? selectedCity.bounds : null;
 
-    const simulationSettingsHandlers = {
-      handlePositionPreview  : ::this.handlePositionPreview,
-      handleObjectTypeCreate : ::this.handleObjectTypeCreate,
-      handleSpeedChange      : ::this.handleSpeedChange
+    const headerHandlers = {
+      handleJoinSimulation : ::this.handleJoinSimulation,
+      handleCityChange     : ::this.handleCityChange,
+      handleTokenChange    : ::this.handleTokenChange
     }
+
+    const simulationSettingsHandlers = {
+      handleBenchmarkRequest     : ::this.handleBenchmarkRequest,
+      handleSimulationStart      : ::this.handleSimulationStart,
+      handleSimulationUpdate     : ::this.handleSimulationUpdate,
+      handleSimulationClose      : ::this.handleSimulationClose,
+      handlePositionSelect       : ::this.handlePositionPreview,
+      handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
+      handleSpeedChange          : ::this.handleSpeedChange,
+      handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
+    }
+
     const simulationMapHandlers = {
-      handleAddJourney : ::this.handleAddJourney,
+      handleAddJourney : ::this.handlePendingJourneyAdd,
       handlePause      : ::this.handlePause,
       handleResume     : ::this.handleResume,
       handleScrub      : ::this.handleScrub
@@ -289,36 +356,33 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
-          socket={socket}
-          token={token}
-          availableCities={availableCities}
-          handleCityChange={(newCityId => {this._handleCityChange(newCityId)})}
-          handleTokenChange={(newToken => {this._handleTokenChange(newToken)})}
-          handleJoinSimulation={(simulationId => {this.handleJoinSimulation(simulationId)})}
+          availableCities = {availableCities}
+          token           = {token}
+          handlers        = {headerHandlers}
         />
-         <div className="jumbotron">
+        <div className="jumbotron">
           <div className="container">
             <div className="col-md-4 text-center" id="simulation-settings">
               <SimulationSettings
-                socket={socket}
-                activeSimulationID={simulationID}
-                selectedCity={selectedCity}
-                mapSelectedJourneys={mapSelectedJourneys}
-                objectTypes={this.state.objectTypes}
-                objectKindInfo={this.state.objectKindInfo}
-                handlers={simulationSettingsHandlers}
+                activeSimulationID  = {simulationID}
+                selectedCity        = {selectedCity}
+                pendingJourneys     = {pendingJourneys}
+                simulationJourneys  = {simulationJourneys}
+                objectTypes         = {this.state.objectTypes}
+                objectKindInfo      = {this.state.objectKindInfo}
+                benchmarkValue      = {this.state.benchmarkValue}
+                handlers            = {simulationSettingsHandlers}
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">
               <SimulationMap
-                width={ 680 + 'px' }
-                height={ 600 + 'px' }
-                bounds={ bounds }
-                simulationState= { simulationState }
-                previewMarkerPosition={previewMarkerPosition}
-                clearPreviewMarkerPosition={() => { this._handlePreviewMarkerPositionClear() }}
-                objectTypes={this.state.objectTypes}
-                handlers={simulationMapHandlers}
+                width                      = {680 + 'px'}
+                height                     = {600 + 'px'}
+                bounds                     = {bounds}
+                simulationState            = {simulationState}
+                previewMarkerPosition      = {previewMarkerPosition}
+                objectTypes                = {this.state.objectTypes}
+                handlers                   = {simulationMapHandlers}
               />
             </div>
           </div>

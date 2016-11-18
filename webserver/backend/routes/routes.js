@@ -73,7 +73,6 @@ router.route('/simulations/:simulationID/journeys')
       const newJourney = new Journey(journey);
       newJourney.save()
         .then((savedJourney) => {
-          console.log("Saved: " + savedJourney);
           savedJourneys.push(savedJourney);
           callback(null);
         })
@@ -93,10 +92,9 @@ router.route('/simulations/:simulationID/journeys')
         returnNewDocument: true
       };
       Simulation.findOneAndUpdate({
-          _id: id
-        }, updateInfo, options)
+        _id: id
+      }, updateInfo, options)
         .then((result) => {
-          console.log(result);
           res.send(result);
         })
         .catch((err) => {

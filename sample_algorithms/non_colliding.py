@@ -20,8 +20,8 @@ INP_FILE = 'map.geojson'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationStart(self, initialParameters):
-    try:
-      simulation(self, initialParameters)
+    try: #TODO: Users should not need to try-except their code to get error messages
+      runSimulation(self, initialParameters)
       #testInitialisation(initialParameters)
     except Exception as err:
       print(err)
@@ -32,7 +32,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationCommunication(self, data):
     translateDataToSensors(data)
 
-  def handleSimulationStop(self):
+  def handleSimulationStop(self, info):
     pass
 
 def postParams(initialParameters):
@@ -60,7 +60,7 @@ def testInitialisation(initialParameters):
     print('Iteration ' + str(i) + ': ' + str(t) + ' seconds')
   print('Average time: ' + str(ts / n))
 
-def simulation(savn, initialParameters):
+def runSimulation(savn, initialParameters):
   south = initialParameters['city']['bounds']['southWest']['lat']
   west = initialParameters['city']['bounds']['southWest']['lng']
   north = initialParameters['city']['bounds']['northEast']['lat']
@@ -84,22 +84,28 @@ def simulation(savn, initialParameters):
   while savn.alive:
     #useApi()
     savn.updateCarStates(timestamp, translate(state))
-    state = algo(state)
+    state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
     time.sleep(SLEEP_TIME)
   #useApiToEnd()
 
-def translateDataToSensor(data):
-  for obj in data:
-    for car in state:
-      car['sensorData'] = translateObjectToSensor(car, obj)
+def analyseData(data):
+  for car in state:
+    car['sensorData'] = translateDataToSensor(car, data)
 
-def translateObjectToSensor(car, obj):
+def translateDataToSensor(car, data):
+  return {'cameraData': translateDataToCameraData(car, data)}
+
+def translateDataToCameraData(car, data):
   cameraSensorRadius = 30.0
+  cameraSensorFOVAngle = 100.0
   cameraData = []
-  if 'position' in obj and get_distance(car['position'], obj['position']) <= cameraSensorRadius:
-    cameraData.append(obj)
-  return {'cameraData': cameraData}
+  for obj in data:
+    distance = get_distance(car['position'], obj['position'])
+    direction = get_direction(car['position'], obj['position'])
+    if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
+      cameraData.append(obj)
+  return cameraData
 
 def addToState(journeys, state):
   for journey in journeys:
@@ -107,7 +113,7 @@ def addToState(journeys, state):
     end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
     newRoute = R.getRoute(INP_FILE, start, end)['path']
     preprocess(newRoute)
-    state.append(newCar(len(state), baseRoute=newRoute))
+    state.append(createNewCar(len(state), baseRoute=newRoute))
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
@@ -140,7 +146,7 @@ def preprocess(route):
     props = R.getProperties(INP_FILE, start, end)
     maxSpeed_km_h = MAX_SPEED_KM_H
     if 'maxspeed' in props:
-      maxSpeed_km_h = int(props['maxspeed']) #Will break with mph or any suffix
+      maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
 
     dist = get_distance(start, end)
     time = dist/(maxSpeed_km_h*1000/3600)
@@ -182,12 +188,16 @@ def switchNodeLock(car, start, end):
     car['lockedNode'] = end
   return True
 
+def executeLocalAlgorithm(car):
+  moveCar(car)
+
 def moveCar(car):
   timeLeft = TIMESLICE
   start = car['route'][0]
   end = car['route'][1]
 
-  if (not switchNodeLock(car, start, end)):
+  if (not switchNodeLock(car, start, end) or 
+      ('cameraData' in car['sensorData'] and len(car['sensorData']['cameraData']) > 0)):
     car['speed'] = 0
     return
 
@@ -220,21 +230,16 @@ def moveCar(car):
     totalTime = end[2]['totalTime']
     car['position'] = add(end, scale(sub(start, end), timeLeft/totalTime))
 
-def algo(state):
+def executeGlobalAlgorithm(state):
   for car in state:
-    moveCar(car)
+    executeLocalAlgorithm(car)
   return state
 
-def newCar(i, baseRoute):
-  car = {'id': i, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0, 'route': None, 'sensorData': None, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
+def createNewCar(i, baseRoute):
+  car = {'id': i, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
+      'route': None, 'sensorData': {}, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
-
-def setupCars(numCars, baseRoute):
-  cars = []
-  for i in range(numCars):
-    cars.append(newCar(i, baseRoute))
-  return cars
 
 def translate(state):
   res = []

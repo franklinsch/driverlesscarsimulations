@@ -23,6 +23,51 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
   console.log("Initial check successful");
 });
 
+function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+function averageSpeedToDestination(journeys, states) {
+  let carsOnTheRoad = {};
+  let totalTime = 0;
+  let totalDistance = 0;
+  for (let state of states) {
+    for (let obj of state.objects) {
+      if (obj.id in carsOnTheRoad) {
+ 				const journey = journeys[obj.id];
+				dest = journey.destination;
+				pos = obj.position;
+        if (pos.lat == dest.lat && pos.lng == dest.lng) {
+          totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
+					totalDistance += getDistanceLatLonInKm(journey.origin.lat
+ 																								,journey.origin.lng
+																								,journey.destination.lat
+																								,journey.destination.lng);
+      	} 
+			} else {
+        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}    
+      }
+    }
+  }
+	if (totalTime == 0) {
+		totalTime++;
+	}
+	return totalDistance / totalTime;
+}
+
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
@@ -157,7 +202,7 @@ frontendSocketServer.on('request', function(request) {
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
 
-    callback(null, simulation._id, data.selectedCity._id);
+    callback(null, simulation._id, data.selectedCity._id, data.journeys);
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -197,8 +242,13 @@ frontendSocketServer.on('request', function(request) {
     })
   }
 
-  function _handleRequestEventUpdate(message) {
-    Simulation.findById(message.content.simulationID, function (error, simulation) {
+  function _handleRequestEventUpdate(message, callback) {
+    const simulationID = message.content.simulationID;
+    Simulation.findByIdAndUpdate(simulationID, {
+      $push: {
+        journeys: { $each: message.content.journeys }
+      }
+    }, {new: true}, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -207,8 +257,11 @@ frontendSocketServer.on('request', function(request) {
           }
         }));
         console.log("Could not find simulation with ID " + message.content.simulationID);
+        console.error(error);
         return
       }
+
+      console.log(simulation)
 
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
@@ -216,6 +269,8 @@ frontendSocketServer.on('request', function(request) {
           content: message.content
         }));
       }
+
+      callback(simulation.journeys);
     });
   }
 
@@ -280,6 +335,29 @@ frontendSocketServer.on('request', function(request) {
       }
     });
   }
+  
+  function _handleRequestSimulationBenchmark(message) {
+    Simulation.findById(message.content.simulationID, function (error, simulation) {
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.content.simulationID
+          }
+        }));
+        console.log("Could not find simulation with ID " + message.content.simulationID);
+        return
+      }
+    	benchmarkValue = averageSpeedToDestination(simulation.journeys
+                                          		  ,simulation.simulationStates); 
+      connection.send(JSON.stringify({
+        type: "simulation-benchmark",
+        content: {
+          value: benchmarkValue
+        }
+      }))
+    });
+  }
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
@@ -297,12 +375,15 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestObjectKinds();
         break;
       case "request-simulation-start":
-        _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
+        _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
           connection.send(JSON.stringify({
             type: "simulation-id",
             content: {
-              id: simID,
-              cityID: cityID
+              simulationInfo: {
+                id: simID,
+                cityID: cityID
+              },
+              journeys: journeys
             }
           }));
         });
@@ -311,7 +392,14 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestSimulationJoin(messageData);
         break;
       case "request-simulation-update":
-        _handleRequestEventUpdate(messageData);
+        _handleRequestEventUpdate(messageData, (journeys) => {
+          connection.send(JSON.stringify({
+            type: "simulation-journeys-update",
+            content: {
+              journeys: journeys
+            }
+          }));
+        });
         break;
       case "request-simulation-speed-change":
         _handleRequestSimulationSpeedChange(messageData);
@@ -321,6 +409,9 @@ frontendSocketServer.on('request', function(request) {
         break;
       case "request-simulation-close":
         _handleRequestSimulationClose(messageData);
+        break;
+      case "request-simulation-benchmark":
+        _handleRequestSimulationBenchmark(messageData);
         break;
       }
     }

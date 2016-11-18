@@ -1,19 +1,17 @@
 import React from 'react';
 import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
-import CustomPropTypes from '../../Utils/CustomPropTypes.js'
-import RotatableMarker from './RotatableMarker/RotatableMarker'
-import ScrubTimer from './ScrubTimer/ScrubTimer'
+import CustomPropTypes from '../../Utils/CustomPropTypes.jsx'
+import RotatableMarker from './RotatableMarker/RotatableMarker.jsx'
+import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
 
 export default class SimulationMap extends React.Component {
-
   static propTypes = {
     width: React.PropTypes.string,
     height: React.PropTypes.string,
     bounds: CustomPropTypes.bounds,
     simulationState: CustomPropTypes.simulationState.isRequired,
     previewMarkerPosition: CustomPropTypes.position,
-    clearPreviewMarkerPosition: React.PropTypes.func,
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     handlers: React.PropTypes.object
   }
@@ -175,7 +173,7 @@ export default class SimulationMap extends React.Component {
 
   }
 
-  _handleCarMarkerClick(car, e) {
+  handleCarMarkerClick(car, e) {
     this.setState({
       clickedCar: car
     });
@@ -239,9 +237,9 @@ export default class SimulationMap extends React.Component {
     }
 
     const carIcon = L.icon({
-      iconUrl: "/car-icon.png",
-      iconSize: [35, 35],
-    })
+      iconUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Circle_-_black_simple.svg/20px-Circle_-_black_simple.svg.png",
+      iconSize: [20, 20]
+    });
 
     const originMarkerIcon = L.icon({
       iconUrl: "http://image.flaticon.com/icons/svg/220/220283.svg",
@@ -262,34 +260,35 @@ export default class SimulationMap extends React.Component {
     return (
       <div>
       <ScrubTimer 
-        timestamp={this.props.simulationState.timestamp}
-        formattedTimestamp={this.props.simulationState.formattedTimestamp}
-        latestTimestamp={this.props.simulationState.latestTimestamp}
-        handlers={scrubHandlers}
+        timestamp          = {this.props.simulationState.timestamp}
+        formattedTimestamp = {this.props.simulationState.formattedTimestamp}
+        latestTimestamp    = {this.props.simulationState.latestTimestamp}
+        handlers           = {scrubHandlers}
       />
       <Map 
-        style={style} 
-        onClick={(e) => { this._handleMapClick(e) }}
-        ref='map'
-        closePopupOnClick={false}
+        style             = {style}
+        onClick           = {::this._handleMapClick}
+        ref               = 'map'
+        closePopupOnClick = {false}
       >
         { this._renderGeoJson() }
 
         <TileLayer
-        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url         = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
 
         {
           cars &&
           cars.map((car, index) => {
-            const key = car.id
+            const key = car.id;
             return (
-              <RotatableMarker position={car.position} 
-                key={key}
-                icon={carIcon}
-                rotationAngle={car.direction}
-                handleClick={(e) => this._handleCarMarkerClick(car, e) }
+              <RotatableMarker 
+                position      = {car.position} 
+                key           = {key}
+                icon          = {carIcon}
+                rotationAngle = {0}
+                handleClick   = {(e) => this.handleCarMarkerClick(car, e)}
               >
                 <Popup>
                   <div>
@@ -311,14 +310,14 @@ export default class SimulationMap extends React.Component {
       { 
         origin && 
         < Marker 
-          position= { origin } 
           draggable
-          onDragend={() => this._updateOriginMarkerPosition()}
-          icon={originMarkerIcon}
-          ref={(originMarker) => { this.originMarker = originMarker } }
+          position  = {origin}
+          onDragend = {::this._updateOriginMarkerPosition}
+          icon      = {originMarkerIcon}
+          ref       = {(originMarker) => {this.originMarker = originMarker}}
         >
           <Popup>
-            <button onClick={() => {this._clearOriginMarker()}}>
+            <button onClick = {::this._clearOriginMarker}>
               Clear destination
             </button>
           </Popup>
@@ -333,11 +332,11 @@ export default class SimulationMap extends React.Component {
       { 
         destination &&
           <Marker 
-            position= { destination }
             draggable
-            onDragend={() => {this._updateDestinationMarkerPosition()}}
-            icon={destinationMarkerIcon}
-            ref={(destinationMarker) => { this.destinationMarker = destinationMarker }}
+            position  = {destination}
+            onDragend = {::this._updateDestinationMarkerPosition}
+            icon      = {destinationMarkerIcon}
+            ref       = {(destinationMarker) => {this.destinationMarker = destinationMarker}}
           >
           {this._renderPopup()}
           </Marker>

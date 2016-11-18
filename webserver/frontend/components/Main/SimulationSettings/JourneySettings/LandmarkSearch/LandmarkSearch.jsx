@@ -1,13 +1,13 @@
 import React from 'react';
 import $ from 'jquery';
-import CustomPropTypes from '../../../../Utils/CustomPropTypes.js';
-import LandmarkSearchResults from './LandmarkSearchResults.js';
+import CustomPropTypes from '../../../../Utils/CustomPropTypes.jsx';
+import LandmarkSearchResults from './LandmarkSearchResults/LandmarkSearchResults.jsx';
 
 export default class LandmarkSearch extends React.Component {
 
   static propTypes = {
-    handlePositionAdd: React.PropTypes.func,
-    boundLimit: CustomPropTypes.bounds
+    boundLimit: CustomPropTypes.bounds,
+    handlers: React.PropTypes.object
   }
 
   constructor(props) {
@@ -19,12 +19,12 @@ export default class LandmarkSearch extends React.Component {
     }
   }
 
-  handleChange(e) {
+  _handleChange(e) {
     const input = e.target.value;
     this.setState({inputValue: input});
   }
 
-  handleSubmit(e) {
+  _handleSubmit(e) {
     const input = this.state.inputValue;
 
     this.search(input, () => {});
@@ -53,12 +53,12 @@ export default class LandmarkSearch extends React.Component {
     }
   }
 
-  _handleResultSelect(result) {
-    this.props.handlePositionAdd(result.position);
+  handleResultSelect(result) {
+    console.log(result);
+    this.props.handlers.handlePositionAdd(result.position);
   }
 
   search(query, callback) {
-
     const bounds = this.props.boundLimit;
     let viewBox = "";
 
@@ -85,22 +85,28 @@ export default class LandmarkSearch extends React.Component {
   }
 
   render() {
+    const landmarkSearchResultsHandlers = {
+      handleResultSelect : ::this.handleResultSelect
+    }
+
     return (
       <div className="container">
 				<div className="row">
 					<input
-						type='text'
-						className="form-control"
-            id="landmark-search"
-            placeholder='Search name or address'
-						value={this.state.inputValue}
-						onChange={ (e) => { this.handleChange(e) }}
-						onKeyPress={ (e) => { this.handleSubmit(e) }}
-						/>
-					<LandmarkSearchResults results={this.state.searchResults} handleResultSelect={(result) => { this._handleResultSelect(result) }}/>
+						type        = 'text'
+						className   = "form-control"
+            id          = "landmark-search"
+            placeholder = 'Search name or address'
+						value       = {this.state.inputValue}
+						onChange    = {::this._handleChange}
+						onKeyPress  = {::this._handleSubmit}
+          />
+					<LandmarkSearchResults 
+            results  = {this.state.searchResults}
+            handlers = {landmarkSearchResultsHandlers}
+          />
 				</div>
       </div>
     )
   }
-
 }
