@@ -254,7 +254,6 @@ export default class Main extends React.Component {
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
-
     this.clearPendingJourneys();
   }
 
@@ -278,6 +277,7 @@ export default class Main extends React.Component {
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
+    this.clearPendingJourneys();
   }
 
   handleBenchmarkRequest() {
