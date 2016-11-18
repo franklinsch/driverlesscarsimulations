@@ -21,7 +21,7 @@ function drawGraphs() {
 function drawDbTimeAgainstCarNumbers(experimentData) {
   
   var data = new google.visualization.DataTable();
-  data.addColumn('number', 'X');
+  data.addColumn('number', 'Car Numbers');
   data.addColumn('number', 'dbTime');
 
 
@@ -50,7 +50,7 @@ function drawDbTimeAgainstTimestamp(experimentData) {
 
 
   var data = new google.visualization.DataTable();
-  data.addColumn('number', 'X');
+  data.addColumn('number', 'timestamp');
   data.addColumn('number', 'dbTime');
 
 
@@ -77,7 +77,7 @@ function drawDbTimeAgainstTimestamp(experimentData) {
 function drawNetworkTimeAgainstCarNumbers(experimentData) {
 
   var data = new google.visualization.DataTable();
-  data.addColumn('number', 'X');
+  data.addColumn('number', 'Car Numbers');
   data.addColumn('number', 'networkTime');
 
 
@@ -105,7 +105,7 @@ function drawNetworkTimeAgainstTimestamp(experimentData) {
 
 
   var data = new google.visualization.DataTable();
-  data.addColumn('number', 'X');
+  data.addColumn('number', 'Timestamp');
   data.addColumn('number', 'networkTime');
 
 
