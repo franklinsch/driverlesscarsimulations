@@ -119,7 +119,7 @@ class SAVNConnectionAssistant:
       self.handleSimulationCommunication(packet["content"])
       self.shouldAwait = False
 
-  def await(sleepTime):
+  def await(self, sleepTime):
     self.shouldAwait = True
     while (self.shouldAwait):
       time.sleep(sleepTime)
