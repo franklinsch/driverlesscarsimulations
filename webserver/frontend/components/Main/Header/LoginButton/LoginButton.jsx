@@ -22,12 +22,14 @@ export default class LoginButton extends React.Component {
   }
 
   _handlePasswordChange(e) {
-      this.setState({password: e.target.value});
+    this.setState({password: e.target.value});
   }
 
-  _handleSubmit(e) {
+  _handleFormSubmit(e) {
     e.preventDefault();
-    fetch('/login', {
+    const action = e.target.value;
+    const url = "/" + action;
+    fetch(url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -47,7 +49,7 @@ export default class LoginButton extends React.Component {
       // Examine the text in the response
       response.json().then((data) => {
         this.setState({ token: data.token });
-        this.props.onTokenChange(data.token);
+        this.props.handlers.handleTokenChange(data.token);
       });
     })
     .catch((err) => {
@@ -61,8 +63,8 @@ export default class LoginButton extends React.Component {
         <a className="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {this.state.token ? 'Logged in' : 'Login'}
         </a>
-        <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <form onSubmit={this.handleSubmit}>
+        <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <form>
             <div className="form-group">
               <label>Username</label>
               <input 
@@ -75,15 +77,16 @@ export default class LoginButton extends React.Component {
             </div>
             <div className="form-group">
               <label>Password</label>
-                <input 
-                  type        = "password"
-                  value       = {this.state.password}
-                  onChange    = {::this._handlePasswordChange}
-                  className   = "form-control"
-                  placeholder = "Password"
-                />
+              <input 
+                type        = "password"
+                value       = {this.state.password}
+                onChange    = {::this._handlePasswordChange}
+                className   = "form-control"
+                placeholder = "Password"
+              />
             </div>
-            <button type="submit" onClick={this.onSubmit} className="btn btn-default">Submit</button>
+            <button type="submit" value="login" onClick={this.handleFormSubmit} className="btn btn-default">Login</button>
+            <button type="submit" value="register" onClick={this.handleFormSubmit} className="btn btn-default">Register</button>
           </form>
         </div>
       </div>

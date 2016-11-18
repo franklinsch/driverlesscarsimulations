@@ -17,3 +17,11 @@
 #journeys-import {
   padding-bottom: 20px;
 }
+
+.navbar-nav .nav-item {
+    padding-left: 1em;
+}
+
+#auth-dropdown button {
+  margin: 0.5em;
+}
