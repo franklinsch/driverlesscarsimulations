@@ -28,6 +28,7 @@ const simulationSchema = mongoose.Schema({
     objects: [{
       id: String,
       frameworkID: String,
+      journeyID: String,
       objectType: String,
       speed: Number,
       direction: Number,

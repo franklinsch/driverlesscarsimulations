@@ -40,6 +40,7 @@ export default class CustomPropTypes {
 
   static _simulationObject = {
     id: React.PropTypes.string.isRequired,
+    journeyID: React.PropTypes.string, /* TODO: maybe move this to type object specific to cars? */
     objectType: React.PropTypes.string.isRequired,
     position: CustomPropTypes.position.isRequired,
     typeInfo: CustomPropTypes.typeInfo
