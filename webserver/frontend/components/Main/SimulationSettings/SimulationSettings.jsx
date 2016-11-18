@@ -16,14 +16,6 @@ export default class SimulationSettings extends React.Component {
     handlers: React.PropTypes.object
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      simulationJourneys: [],
-      pendingJourneys: []
-    }
-  }
-
   _handleSimulationButton(e, started) {
     e.preventDefault();
 
