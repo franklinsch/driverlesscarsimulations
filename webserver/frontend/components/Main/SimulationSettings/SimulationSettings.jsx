@@ -24,11 +24,9 @@ export default class SimulationSettings extends React.Component {
     }
   }
 
-  _handleRealDataCheckboxChange(e, started) {
-    if (started) {
-      e.preventDefault();
-    } else if (this.refs.checkbox.checked) {
-        this.props.handlers.handleHotspotGeneration();
+  _handleRealDataCheckboxChange(e) {
+    if (this.refs.checkbox.checked) {
+      this.props.handlers.handleHotspotGeneration();
     }
   }
 
@@ -99,6 +97,7 @@ export default class SimulationSettings extends React.Component {
               type = "checkbox"
               name = "realdata"
               ref  = "checkbox"
+              disabled = {hasSimulationStarted}
               onChange = {(e) => this._handleRealDataCheckboxChange(e, hasSimulationStarted)}
             />
               Use real world data
