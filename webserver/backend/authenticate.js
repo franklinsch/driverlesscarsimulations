@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const config = require('./config');
@@ -6,8 +7,10 @@ const config = require('./config');
 
 module.exports = (req, res, next) => {
 
+  const cookies = cookie.parse(req.headers.cookie || '');
+
   // check header or url parameters or post parameters for token
-  const token = req.body.token || req.query.token || req.headers['token'];
+  const token = cookies.token || req.body.token || req.query.token || req.headers['token'];
 
   // decode token
   if (token) {

@@ -5,14 +5,10 @@ export default class SimulationList extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      simulations: []
-    }
   }
 
   render() {
-    const simulations = this.state.simulations;
+    const simulations = this.props.simulations || [];
     return (
       <div>
         <a className="nav-link" href="#" id="SimulationListDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

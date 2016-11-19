@@ -325,7 +325,8 @@ export default class Main extends React.Component {
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
     const simulationID = this.state.simulationInfo.id;
-    const token = this.state.token || '';
+    const token = this.state.token;
+    const userID = this.state.userID;
 
     const pendingJourneys = this.state.pendingJourneys || [];
     const simulationJourneys = this.state.simulationJourneys || [];
@@ -364,6 +365,7 @@ export default class Main extends React.Component {
         <Header
           availableCities = {availableCities}
           token           = {token}
+          userID           = {userID}
           handlers        = {headerHandlers}
         />
         <div className="jumbotron">

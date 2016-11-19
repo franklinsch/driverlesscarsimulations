@@ -1,4 +1,5 @@
 import React from 'react';
+import cookie from 'react-cookie';
 import 'whatwg-fetch';
 
 export default class LoginButton extends React.Component {
@@ -49,6 +50,7 @@ export default class LoginButton extends React.Component {
 
       // Examine the text in the response
       response.json().then((data) => {
+        cookie.save('token', data.token, { path: '/' });
         this.setState({ token: data.token });
         this.props.handlers.handleTokenChange(data.token, data.userID);
       });
