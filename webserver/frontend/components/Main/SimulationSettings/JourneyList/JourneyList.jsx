@@ -23,7 +23,11 @@ export default class JourneyList extends React.Component {
           {
             simulationJourneys.map((journey, index) => {
               return (
-                <li key={index} mouseOver={::this.props.handlers.handleJourneyMouseOver} mouseOut={::this.props.handlers.handleJourneyMouseOut}>
+                <li
+                  key={index}
+                  mouseOver={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
+                  mouseOut={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
+                >
                   { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } 
                 </li>
               )

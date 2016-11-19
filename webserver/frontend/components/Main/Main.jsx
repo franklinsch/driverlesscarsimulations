@@ -51,6 +51,7 @@ export default class Main extends React.Component {
       userID: '',
       activeUser: '',
       selectedCityID: 0,
+      selectedJourneyID: 0,
       socket: socket,
       simulationInfo: {
         id: simID,
@@ -344,6 +345,18 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  handleJourneyListItemMouseOver(journey, e) {
+    this.setState({
+      selectedJourneyID: journey.id
+    })
+  }
+
+  handleJourneyListItemMouseOut(journey, e) {
+    this.setState({
+      selectedJourneyID: 0
+    })
+  }
+
   clearPendingJourneys() {
     this.setState({
       pendingJourneys: []
@@ -386,14 +399,16 @@ export default class Main extends React.Component {
     }
 
     const simulationSettingsHandlers = {
-      handleBenchmarkRequest     : ::this.handleBenchmarkRequest,
-      handleSimulationStart      : ::this.handleSimulationStart,
-      handleSimulationUpdate     : ::this.handleSimulationUpdate,
-      handleSimulationClose      : ::this.handleSimulationClose,
-      handlePositionSelect       : ::this.handlePositionPreview,
-      handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
-      handleSpeedChange          : ::this.handleSpeedChange,
-      handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
+      handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
+      handleSimulationStart           : ::this.handleSimulationStart,
+      handleSimulationUpdate          : ::this.handleSimulationUpdate,
+      handleSimulationClose           : ::this.handleSimulationClose,
+      handlePositionSelect            : ::this.handlePositionPreview,
+      handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
+      handleSpeedChange               : ::this.handleSpeedChange,
+      handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
+      handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
+      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut
     }
 
     const simulationMapHandlers = {

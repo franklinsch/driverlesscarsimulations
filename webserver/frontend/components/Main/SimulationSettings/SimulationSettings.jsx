@@ -53,6 +53,11 @@ export default class SimulationSettings extends React.Component {
 
     const benchmarkValue = this.props.benchmarkValue;
 
+    const journeyListHandlers = {
+      handleJourneyMouseOver : this.props.handlers.handleJourneyListItemMouseOver,
+      handleJourneyMouseOut  : this.props.handlers.handleJourneyListItemMouseOut
+    }
+
     const journeySettingsHandlers = {
       handleJourneysFileImport : ::this.handleJourneysSubmit,
       handlePositionAdd        : this.props.handlers.handlePositionSelect,
@@ -65,9 +70,10 @@ export default class SimulationSettings extends React.Component {
 
     return (
       <div className="container">
-        <JourneyList
-          pendingJourneys = {pendingJourneys}
-          simulationJourneys = {simulationJourneys}
+        <JourneyList 
+          pendingJourneys     = {pendingJourneys}
+          simulationJourneys  = {simulationJourneys}
+          handlers            = {journeyListHandlers}
         />
         <JourneySettings
           bounds              = {bounds}
