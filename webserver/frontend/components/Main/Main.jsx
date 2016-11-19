@@ -378,7 +378,6 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
