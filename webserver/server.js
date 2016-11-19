@@ -208,32 +208,38 @@ frontendSocketServer.on('request', function(request) {
           }
         ]
       },
-      {
-        name: "Creature",
-        parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["unicorn", "dog"]
-          }
-        ]
-      },
-      {
-        name: "Road Hazard",
-        parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
-          },
-          {
-            name: "Slowdown factor",
-            kind: "text"
-          }
-        ]
-      }]
+        {
+          name: "Creature",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["unicorn", "dog"]
+            }
+          ]
+        },
+        {
+          name: "Road Hazard",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+            },
+            {
+              name: "Slowdown factor",
+              kind: "text"
+            }
+          ]
+        }]
     }))
   }
+
+  function _handleRequestHotspotGeneration(message) {
+    const city = message.content;
+
+  }
+
 
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
@@ -314,7 +320,7 @@ frontendSocketServer.on('request', function(request) {
           }
         }));
       })
-      
+
     })
   }
 
@@ -409,26 +415,27 @@ frontendSocketServer.on('request', function(request) {
       const messageData = JSON.parse(message.utf8Data);
 
       switch (messageData.type) {
-      case "request-available-cities":
-        _handleRequestAvailableCities();
-        break;
-      case "request-default-object-types":
-        _handleRequestDefaultObjectTypes();
-        break;
-      case "request-object-kind-info":
-        _handleRequestObjectKinds();
-        break;
-      case "request-simulation-start":
-        _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-id",
-            content: {
-              simulationInfo: {
+        case "request-available-cities":
+          _handleRequestAvailableCities();
+          break;
+        case "request-default-object-types":
+          _handleRequestDefaultObjectTypes();
+          break;
+        case "request-object-kind-info":
+          _handleRequestObjectKinds();
+          break;
+        case "request-hotspot-generation":
+          _handleRequestHotspotGeneration(messageData);
+          break;
+        case "request-simulation-start":
+          _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
+            connection.send(JSON.stringify({
+              type: "simulation-id",
+              content: {
                 id: simID,
                 cityID: cityID
               },
               journeys: journeys
-            }
           }));
         });
         break;
@@ -639,15 +646,15 @@ frameworkSocketServer.on('request', function(request) {
       const messageData = JSON.parse(message.utf8Data);
 
       switch(messageData.type) {
-      case "simulation-start":
-        _handleSimulationStart(messageData);
-        break;
-      case "simulation-state":
-        _handleSimulationStateUpdate(messageData);
-        break;
-      case "simulation-close":
-        _handleSimulationClose(messageData);
-        break;
+        case "simulation-start":
+          _handleSimulationStart(messageData);
+          break;
+        case "simulation-state":
+          _handleSimulationStateUpdate(messageData);
+          break;
+        case "simulation-close":
+          _handleSimulationClose(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {

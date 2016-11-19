@@ -27,9 +27,8 @@ export default class SimulationSettings extends React.Component {
   _handleRealDataCheckboxChange(e, started) {
     if (started) {
       e.preventDefault();
-
-    } else {
-      console.log("need to calculate hotspot gen")
+    } else if (this.refs.checkbox.checked) {
+        this.props.handlers.handleHotspotGeneration();
     }
   }
 
