@@ -250,6 +250,13 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+
+  handleHotspotGeneration() {
+    const socket = this.state.socket;
+    const city = this._cityWithID(this.state.selectedCityID);
+    const type = "request-hotspot-generation";
+    UtilFunctions.sendSocketMessage(socket, type, city)
+  }
   handleSimulationStart() {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
@@ -335,14 +342,16 @@ export default class Main extends React.Component {
     }
 
     const simulationSettingsHandlers = {
-      handleBenchmarkRequest     : ::this.handleBenchmarkRequest,
-      handleSimulationStart      : ::this.handleSimulationStart,
-      handleSimulationUpdate     : ::this.handleSimulationUpdate,
-      handleSimulationClose      : ::this.handleSimulationClose,
-      handlePositionSelect       : ::this.handlePositionPreview,
-      handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
-      handleSpeedChange          : ::this.handleSpeedChange,
-      handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
+
+      handleBenchmarkRequest : ::this.handleBenchmarkRequest,
+      handleHotspotGeneration: ::this.handleHotspotGeneration,
+      handleSimulationStart  : ::this.handleSimulationStart,
+      handleSimulationUpdate : ::this.handleSimulationUpdate,
+      handleSimulationClose  : ::this.handleSimulationClose,
+      handlePositionSelect   : ::this.handlePositionPreview,
+      handleObjectTypeCreate : ::this.handleObjectTypeCreate,
+      handleSpeedChange      : ::this.handleSpeedChange
+
     }
 
     const simulationMapHandlers = {

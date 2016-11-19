@@ -116,7 +116,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestDefaultObjectTypes() {
     // TODO Store defaults in db
-    
+
     connection.send(JSON.stringify({
       type: "default-object-types",
       content: [{
@@ -134,7 +134,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestObjectKinds() {
     // TODO Store this in the db
-    
+
     connection.send(JSON.stringify({
       type: "object-kind-info",
       content: [{
@@ -158,32 +158,38 @@ frontendSocketServer.on('request', function(request) {
           }
         ]
       },
-      {
-        name: "Creature",
-        parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["unicorn", "dog"]
-          }
-        ]
-      },
-      {
-        name: "Road Hazard",
-        parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
-          },
-          {
-            name: "Slowdown factor",
-            kind: "text"
-          }
-        ]
-      }]
+        {
+          name: "Creature",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["unicorn", "dog"]
+            }
+          ]
+        },
+        {
+          name: "Road Hazard",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+            },
+            {
+              name: "Slowdown factor",
+              kind: "text"
+            }
+          ]
+        }]
     }))
   }
+
+  function _handleRequestHotspotGeneration(message) {
+    const city = message.content;
+
+  }
+
 
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
@@ -365,54 +371,44 @@ frontendSocketServer.on('request', function(request) {
       const messageData = JSON.parse(message.utf8Data);
 
       switch (messageData.type) {
-      case "request-available-cities":
-        _handleRequestAvailableCities();
-        break;
-      case "request-default-object-types":
-        _handleRequestDefaultObjectTypes();
-        break;
-      case "request-object-kind-info":
-        _handleRequestObjectKinds();
-        break;
-      case "request-simulation-start":
-        _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-id",
-            content: {
-              simulationInfo: {
+        case "request-available-cities":
+          _handleRequestAvailableCities();
+          break;
+        case "request-default-object-types":
+          _handleRequestDefaultObjectTypes();
+          break;
+        case "request-object-kind-info":
+          _handleRequestObjectKinds();
+          break;
+        case "request-hotspot-generation":
+          _handleRequestHotspotGeneration(messageData);
+          break;
+        case "request-simulation-start":
+          _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
+            connection.send(JSON.stringify({
+              type: "simulation-id",
+              content: {
                 id: simID,
                 cityID: cityID
-              },
-              journeys: journeys
-            }
-          }));
-        });
-        break;
-      case "request-simulation-join":
-        _handleRequestSimulationJoin(messageData);
-        break;
-      case "request-simulation-update":
-        _handleRequestEventUpdate(messageData, (journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-journeys-update",
-            content: {
-              journeys: journeys
-            }
-          }));
-        });
-        break;
-      case "request-simulation-speed-change":
-        _handleRequestSimulationSpeedChange(messageData);
-        break;
-      case "request-simulation-timestamp-change":
-        _handleRequestSimulationTimestampChange(messageData);
-        break;
-      case "request-simulation-close":
-        _handleRequestSimulationClose(messageData);
-        break;
-      case "request-simulation-benchmark":
-        _handleRequestSimulationBenchmark(messageData);
-        break;
+              }
+            }));
+          });
+          break;
+        case "request-simulation-join":
+          _handleRequestSimulationJoin(messageData);
+          break;
+        case "request-simulation-update":
+          _handleRequestEventUpdate(messageData);
+          break;
+        case "request-simulation-speed-change":
+          _handleRequestSimulationSpeedChange(messageData);
+          break;
+        case "request-simulation-timestamp-change":
+          _handleRequestSimulationTimestampChange(messageData);
+          break;
+        case "request-simulation-close":
+          _handleRequestSimulationClose(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {
@@ -455,13 +451,13 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationID;
 
-    Simulation.findByIdAndUpdate(simulationID, { 
-      $set: { 
-        timeslice: message.content.timeslice, 
-        simulationStates: [] 
+    Simulation.findByIdAndUpdate(simulationID, {
+      $set: {
+        timeslice: message.content.timeslice,
+        simulationStates: []
       },
       $push: {
-        frameworks: { 
+        frameworks: {
           connectionIndex: frameworkConnections.length
         }
       }
@@ -602,15 +598,15 @@ frameworkSocketServer.on('request', function(request) {
       const messageData = JSON.parse(message.utf8Data);
 
       switch(messageData.type) {
-      case "simulation-start":
-        _handleSimulationStart(messageData);
-        break;
-      case "simulation-state":
-        _handleSimulationStateUpdate(messageData);
-        break;
-      case "simulation-close":
-        _handleSimulationClose(messageData);
-        break;
+        case "simulation-start":
+          _handleSimulationStart(messageData);
+          break;
+        case "simulation-state":
+          _handleSimulationStateUpdate(messageData);
+          break;
+        case "simulation-close":
+          _handleSimulationClose(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {
