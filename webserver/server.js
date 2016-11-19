@@ -227,7 +227,8 @@ frontendSocketServer.on('request', function(request) {
         });
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
-    callback(null, simulation._id, data.selectedCity._id, data.journeys);
+
+    callback(null, simulation._id, data.selectedCity._id, simulation.journeys);
   }
 
   function _handleRequestSimulationJoin(message) {
