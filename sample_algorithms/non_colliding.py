@@ -244,7 +244,7 @@ def createNewCar(i, journeyID, baseRoute):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': str(car['id']), 'objectType': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
+    res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
   return res
 
 if(len(sys.argv) != 2):
