@@ -287,8 +287,6 @@ frontendSocketServer.on('request', function(request) {
         return
       }
 
-      console.log(simulation)
-
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
           type: "simulation-update",
