@@ -25,8 +25,8 @@ export default class JourneyList extends React.Component {
               return (
                 <li
                   key={index}
-                  mouseOver={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
-                  mouseOut={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
+                  onMouseEnter={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
+                  onMouseLeave={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
                 >
                   { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } 
                 </li>
