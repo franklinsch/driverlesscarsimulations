@@ -3,6 +3,7 @@ import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
 import Dropdown from './Dropdown/Dropdown.jsx';
 import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.jsx';
 import LoginButton from './LoginButton/LoginButton.jsx';
+import SimulationList from './SimulationList/SimulationList.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 
 export default class Header extends React.Component {
@@ -39,20 +40,25 @@ export default class Header extends React.Component {
               <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item">
-              <Dropdown 
+              <Dropdown
                 items    = {cities}
                 handlers = {dropdownHandlers}
               />
             </li>
             <li className="nav-item">
-              <LoginButton 
+              <LoginButton
                 token    = {this.props.token}
                 handlers = {loginButtonHandlers}
               />
             </li>
+            <li className="nav-item">
+              {
+                this.props.token ? <SimulationList /> : ''
+              }
+            </li>
           </ul>
-          <JoinSimulationForm 
-            handlers = {joinSimulationFormHandlers} 
+          <JoinSimulationForm
+            handlers = {joinSimulationFormHandlers}
           />
       </nav>
     )

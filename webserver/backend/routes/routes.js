@@ -9,7 +9,6 @@ const User = require('../models/User');
 const config = require('../config');
 const auth = require('../authenticate');
 
-router.get('/protected', auth);
 
 router.route('/simulations')
   .get(auth, (req, res) => {
@@ -49,7 +48,7 @@ router.route('/simulations')
       });
   })
 
-router.get('/simulations/:simulationid', (req, res) => {
+router.get('/simulations/:simulationID', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 
@@ -120,7 +119,8 @@ router.route('/register')
       const token = user.generateJwt();
       res.status(200);
       res.json({
-        "token": token
+        "token": token,
+        "userID": user._id
       });
     });
   });
@@ -141,7 +141,8 @@ router.route('/login')
         res.status(200);
         res.setHeader('token', token);
         res.json({
-          "token": token
+          "token": token,
+          "userID": user._id
         });
       } else {
         // If user is not found

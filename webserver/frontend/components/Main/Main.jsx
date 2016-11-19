@@ -46,6 +46,7 @@ export default class Main extends React.Component {
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
     this.state = {
       token: '',
+      userID: '',
       selectedCityID: 0,
       socket: socket,
       simulationInfo: {
@@ -163,9 +164,10 @@ export default class Main extends React.Component {
   }
 
 
-  handleTokenChange(newToken) {
+  handleTokenChange(newToken, userID) {
     this.setState({
-      token: newToken
+      token: newToken,
+      userID: userID
     });
   }
 
@@ -177,10 +179,12 @@ export default class Main extends React.Component {
 
   _startInitialSimulation(cityId) {
     const journeys = this.state.pendingJourneys || [];
+    const userID = this.state.userID;
     const type = "request-simulation-start";
     const initialSettings = {
       selectedCity: cityId,
-      journeys: journeys
+      journeys: journeys,
+      userID: userID
     }
     const socket = this.state.socket;
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
@@ -254,11 +258,13 @@ export default class Main extends React.Component {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
+    const userID = this.state.userID;
 
     const type = "request-simulation-start";
     const content = {
       selectedCity: selectedCity,
-      journeys: pendingJourneys
+      journeys: pendingJourneys,
+      userID: userID
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);

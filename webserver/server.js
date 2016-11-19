@@ -15,6 +15,7 @@ const app = express();
 const db = require('./backend/db');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
+const User = require('./backend/models/User');
 
 Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, function(err, numAffected) {
   if (err) {
@@ -26,12 +27,12 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
 function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
+  var dLon = deg2rad(lon2-lon1);
+  var a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c; // Distance in km
   return d;
 }
@@ -56,9 +57,9 @@ function averageSpeedToDestination(journeys, states) {
  																								,journey.origin.lng
 																								,journey.destination.lat
 																								,journey.destination.lng);
-      	} 
+      	}
 			} else {
-        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}    
+        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
       }
     }
   }
@@ -116,7 +117,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestDefaultObjectTypes() {
     // TODO Store defaults in db
-    
+
     connection.send(JSON.stringify({
       type: "default-object-types",
       content: [{
@@ -134,7 +135,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestObjectKinds() {
     // TODO Store this in the db
-    
+
     connection.send(JSON.stringify({
       type: "object-kind-info",
       content: [{
@@ -199,9 +200,25 @@ frontendSocketServer.on('request', function(request) {
       if (error) {
         return console.error(error);
       }
+      const updateInfo = {
+        $push: {
+          simulations: simulation._id
+        }
+      };
+      const options = {
+        upsert: true
+      };
+      User.findOneAndUpdate({
+          _id: data.userID
+        }, updateInfo, options)
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
-
     callback(null, simulation._id, data.selectedCity._id, data.journeys);
   }
 
@@ -335,7 +352,7 @@ frontendSocketServer.on('request', function(request) {
       }
     });
   }
-  
+
   function _handleRequestSimulationBenchmark(message) {
     Simulation.findById(message.content.simulationID, function (error, simulation) {
       if (error || !simulation) {
@@ -349,7 +366,7 @@ frontendSocketServer.on('request', function(request) {
         return
       }
     	benchmarkValue = averageSpeedToDestination(simulation.journeys
-                                          		  ,simulation.simulationStates); 
+                                          		  ,simulation.simulationStates);
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
         content: {
@@ -455,13 +472,13 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationID;
 
-    Simulation.findByIdAndUpdate(simulationID, { 
-      $set: { 
-        timeslice: message.content.timeslice, 
-        simulationStates: [] 
+    Simulation.findByIdAndUpdate(simulationID, {
+      $set: {
+        timeslice: message.content.timeslice,
+        simulationStates: []
       },
       $push: {
-        frameworks: { 
+        frameworks: {
           connectionIndex: frameworkConnections.length
         }
       }
@@ -502,7 +519,7 @@ frameworkSocketServer.on('request', function(request) {
     function _filterState(state, frameworkID) {
       const objects = state.objects.filter((object, index) => {
         if (object.frameworkID == undefined) {
-          // If the object hasn't been set with a frameworkID, set it to the ID of 
+          // If the object hasn't been set with a frameworkID, set it to the ID of
           // the framework which sent it.
           state.objects[index] = frameworkID;
           return true;

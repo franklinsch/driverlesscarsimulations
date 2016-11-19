@@ -41,6 +41,7 @@ export default class LoginButton extends React.Component {
       })
     })
     .then((response) => {
+      this.setState({ password: '' });
       if (!response.ok) {
         console.log("error logging in");
         return;
@@ -49,7 +50,7 @@ export default class LoginButton extends React.Component {
       // Examine the text in the response
       response.json().then((data) => {
         this.setState({ token: data.token });
-        this.props.handlers.handleTokenChange(data.token);
+        this.props.handlers.handleTokenChange(data.token, data.userID);
       });
     })
     .catch((err) => {
@@ -60,10 +61,10 @@ export default class LoginButton extends React.Component {
   render() {
     return (
       <div>
-        <a className="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {this.state.token ? 'Logged in' : 'Login'}
+        <a className="nav-link" href="#" id="LoginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {this.state.token ? 'Hello ' + this.state.username + '!': 'Login'}
         </a>
-        <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="LoginDropdown">
           <form>
             <div className="form-group">
               <label>Username</label>
@@ -87,10 +88,10 @@ export default class LoginButton extends React.Component {
             </div>
             <button
               type="submit"
-              value="login"
+              value={this.state.token ? 'logout' : 'login'}
               onClick={::this._handleFormSubmit}
               className="btn btn-default">
-              Login
+              {this.state.token ? 'Log Out' : 'Log In'}
             </button>
             <button
               type="submit"
