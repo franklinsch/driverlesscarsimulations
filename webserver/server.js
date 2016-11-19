@@ -187,6 +187,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestHotspotGeneration(message) {
     const city = message.content;
+    console.log(city)
 
   }
 
