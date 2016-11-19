@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Journey = require('./Journey');
 const Frontend = require('./Frontend');
 const Framework = require('./Framework');
+const Hotspot = require('./Hotspot')
 
 const simulationSchema = mongoose.Schema({
   city: {
@@ -18,6 +19,7 @@ const simulationSchema = mongoose.Schema({
     }
   },
   timeslice: Number,
+  hotspots: [Hotspot.schema],
   journeys: [Journey.schema],
   frontends: [Frontend.schema],
   frameworks: [Framework.schema],
