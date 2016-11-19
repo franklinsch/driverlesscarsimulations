@@ -51,7 +51,7 @@ export default class Main extends React.Component {
       userID: '',
       activeUser: '',
       selectedCityID: 0,
-      selectedJourneyID: 0,
+      selectedJourneyID: "0",
       socket: socket,
       simulationInfo: {
         id: simID,
@@ -346,14 +346,16 @@ export default class Main extends React.Component {
   }
 
   handleJourneyListItemMouseOver(journey, e) {
+    console.log(journey);
     this.setState({
       selectedJourneyID: journey.id
     })
   }
 
   handleJourneyListItemMouseOut(journey, e) {
+        console.log(journey, 'out');
     this.setState({
-      selectedJourneyID: 0
+      selectedJourneyID: "0"
     })
   }
 
