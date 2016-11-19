@@ -16,6 +16,23 @@ export default class SimulationSettings extends React.Component {
     handlers: React.PropTypes.object
   }
 
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      journeys: []
+    }
+  }
+
+  _handleRealDataCheckboxChange(e, started) {
+    if (started) {
+      e.preventDefault();
+
+    } else {
+      console.log("need to calculate hotspot gen")
+    }
+  }
+
   _handleSimulationButton(e, started) {
     e.preventDefault();
 
@@ -78,6 +95,15 @@ export default class SimulationSettings extends React.Component {
           handlers            = {journeySettingsHandlers}
         />
         <div className="row">
+          <form action="">
+            <input
+              type = "checkbox"
+              name = "realdata"
+              ref  = "checkbox"
+              onChange = {(e) => this._handleRealDataCheckboxChange(e, hasSimulationStarted)}
+            />
+              Use real world data
+          </form>
           <button 
             className = "btn btn-primary" 
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
