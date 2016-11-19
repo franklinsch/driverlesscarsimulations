@@ -236,7 +236,7 @@ def executeGlobalAlgorithm(state):
   return state
 
 def createNewCar(i, journeyID, baseRoute):
-  car = {'id': i, 'journeyID': journeyID, type': 'car', 'position': None, 'speed': 0, 'direction': 0,
+  car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
       'route': None, 'sensorData': {}, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
