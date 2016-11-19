@@ -451,6 +451,7 @@ export default class Main extends React.Component {
                 simulationState            = {simulationState}
                 previewMarkerPosition      = {previewMarkerPosition}
                 objectTypes                = {this.state.objectTypes}
+                selectedJourneyID          = {this.state.selectedJourneyID}
                 handlers                   = {simulationMapHandlers}
               />
             </div>
