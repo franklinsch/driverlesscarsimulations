@@ -113,7 +113,7 @@ def addToState(journeys, state):
     end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
     newRoute = R.getRoute(INP_FILE, start, end)['path']
     preprocess(newRoute)
-    state.append(createNewCar(len(state), journey['id'], baseRoute=newRoute))
+    state.append(createNewCar(len(state), journey['_id'], baseRoute=newRoute))
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
