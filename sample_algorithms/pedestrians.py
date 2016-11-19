@@ -36,7 +36,8 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 def runSimulation(savn, initialParameters):
   print('Starting simulation:')
   global state, nextEventTime
-  timestamp = 0
+  timestamp = initialParameters['timestamp']
+  print('The time is', timestamp)
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
   nextEventTime = generateEventTime()

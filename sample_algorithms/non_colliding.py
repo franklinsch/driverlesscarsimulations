@@ -71,7 +71,7 @@ def runSimulation(savn, initialParameters):
 
   print('Creating initial state')
   global state
-  state = initialParameters['state']
+  #state = initialParameters['state']
 
   print('Preprocessing routes')
   addToState(initialParameters['journeys'], state)
@@ -152,7 +152,6 @@ def preprocess(route):
 
     dist = get_distance(start, end)
     time = dist/(maxSpeed_km_h*1000/3600)
-    print(end)
     end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed_km_h})
 
 def add(v1, v2):
