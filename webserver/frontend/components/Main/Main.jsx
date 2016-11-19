@@ -4,6 +4,7 @@ import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
 import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
 import Header from './Header/Header.jsx';
+import cookie from 'react-cookie';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
@@ -44,8 +45,9 @@ export default class Main extends React.Component {
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
+    const initialToken = cookie.load('token') || '';
     this.state = {
-      token: '',
+      token: initialToken,
       userID: '',
       selectedCityID: 0,
       socket: socket,

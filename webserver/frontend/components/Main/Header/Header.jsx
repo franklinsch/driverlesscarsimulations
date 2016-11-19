@@ -26,6 +26,7 @@ export default class Header extends React.Component {
   }
 
   componentWillReceiveProps() {
+    console.log("called");
     if (this.props.token) {
       const url = '/simulations';
       fetch(url, {

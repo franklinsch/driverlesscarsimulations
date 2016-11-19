@@ -118,6 +118,7 @@ router.route('/register')
     user.save((err) => {
       const token = user.generateJwt();
       res.status(200);
+      res.setHeader('token', token);
       res.json({
         "token": token,
         "userID": user._id

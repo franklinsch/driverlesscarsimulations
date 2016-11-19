@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const routes = require('./backend/routes/routes');
+const session = require('express-session');
 const config = require('./backend/config');
 const passwordConfig = require('./backend/passport');
 
@@ -77,6 +78,13 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
+// Use the session middleware
+app.use(session({
+  secret: config.token_secret,
+  cookie: { maxAge: 60000 },
+  resave: true,
+  saveUninitialized: true
+}));
 
 // Catch unauthorised errors
 app.use((err, req, res, next) => {

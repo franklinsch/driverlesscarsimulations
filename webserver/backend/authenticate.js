@@ -9,6 +9,8 @@ module.exports = (req, res, next) => {
 
   const cookies = cookie.parse(req.headers.cookie || '');
 
+  console.log(cookies);
+
   // check header or url parameters or post parameters for token
   const token = cookies.token || req.body.token || req.query.token || req.headers['token'];
 

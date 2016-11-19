@@ -50,7 +50,12 @@ export default class LoginButton extends React.Component {
 
       // Examine the text in the response
       response.json().then((data) => {
-        cookie.save('token', data.token, { path: '/' });
+        // save token in the cookie for 10 minutes
+        cookie.save('token', data.token, {
+          path: '/',
+          maxAge: 600,
+        });
+        window.sessionStorage.setItem('token', data.token);
         this.setState({ token: data.token });
         this.props.handlers.handleTokenChange(data.token, data.userID);
       });
