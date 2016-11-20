@@ -27,12 +27,12 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
 function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
+  var dLon = deg2rad(lon2-lon1);
+  var a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c; // Distance in km
   return d;
 }
@@ -48,25 +48,25 @@ function averageSpeedToDestination(journeys, states) {
   for (let state of states) {
     for (let obj of state.objects) {
       if (obj.id in carsOnTheRoad) {
- 				const journey = journeys[obj.id];
-				dest = journey.destination;
-				pos = obj.position;
+        const journey = journeys[obj.id];
+        dest = journey.destination;
+        pos = obj.position;
         if (pos.lat == dest.lat && pos.lng == dest.lng) {
           totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-					totalDistance += getDistanceLatLonInKm(journey.origin.lat
- 																								,journey.origin.lng
-																								,journey.destination.lat
-																								,journey.destination.lng);
-      	} 
-			} else {
-        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}    
+          totalDistance += getDistanceLatLonInKm(journey.origin.lat
+            ,journey.origin.lng
+            ,journey.destination.lat
+            ,journey.destination.lng);
+        }
+      } else {
+        carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
       }
     }
   }
-	if (totalTime == 0) {
-		totalTime++;
-	}
-	return totalDistance / totalTime;
+  if (totalTime == 0) {
+    totalTime++;
+  }
+  return totalDistance / totalTime;
 }
 
 //
@@ -186,34 +186,42 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function createSimulationWithRealData(city) {
-    console.log(city)
-    let undergroundData;
-    fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, data) {
-      if (err) throw err;
-      undergroundData = JSON.parse(data);
-    });
-    const info = {
-      popularitySum: 0,
-      hotspots:[]
+  function createSimulationWithRealData(data, callback) {
+    function readUndergroundContent(generateHotspots) {
+      fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
+        const undergroundData = (JSON.parse(json))
+        return generateHotspots(null, undergroundData)
+      });
     }
-    simulation = new Simulation({
-      city: city,
-      hotspotInfo: info,
-      journeys: [],
-      frontends: [{connectionIndex: frontendConnections.length}],
-      frameworks: [],
-      simulationStates: []
-    });
-    return simulation;
-  }
+    readUndergroundContent(function (err, undergroundData) {
+      if (err) {
+        return console.error(err);
+      }
 
-  function _handleRequestSimulationStart(message, callback) {
-    const data = message.content;
-    let simulation;
-    if (data.useRealData) {
-      simulation = createSimulationWithRealData(data.selectedCity)
-    } else {
+      let hotspots = [];
+      let popularitySum = 0;
+      for (station in undergroundData) {
+        const hotspot = {
+          name: station.stationName,
+          coordinates: {
+            lat: station.lat,
+            lng: station.lng
+          },
+          popularityLevels: [{
+            startTime: "00:00:00",
+            endTime: "24:00:00",
+            level: station.entryPlusExitInMillions,
+          }]
+        };
+        popularitySum+= station.entryPlusExitInMillions;
+        hotspots.push(hotspot);
+      }
+
+      const hotspotInfo = {
+        hotspots: hotspots,
+        popularitySum: popularitySum
+      };
+
       simulation = new Simulation({
         city: data.selectedCity,
         hotspotInfo: hotspotInfo,
@@ -222,16 +230,54 @@ frontendSocketServer.on('request', function(request) {
         frameworks: [],
         simulationStates: []
       });
+
+      simulation.save((error, simulation) => {
+        if (error) {
+          return console.error(error);
+        }
+        frontendConnections.push({
+          connection: connection,
+          simulationID: simulation._id,
+          timestamp: 0,
+          speed: null
+        });
+      });
+      callback(null, simulation._id, data.selectedCity._id, data.journeys);
+    })
+
+
+  }
+
+  function _handleRequestSimulationStart(message, callback) {
+    const data = message.content;
+    let simulation;
+    if (data.useRealData) {
+      createSimulationWithRealData(data, callback)
+    } else {
+      simulation = new Simulation({
+        city: data.selectedCity,
+        journeys: data.journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      });
+
+      simulation.save((error, simulation) => {
+        if (error) {
+          return console.error(error);
+        }
+        frontendConnections.push({
+          connection: connection,
+          simulationID: simulation._id,
+          timestamp: 0,
+          speed: null
+        });
+      });
+
+
+      callback(null, simulation._id, data.selectedCity._id, data.journeys);
+
     }
-
-    simulation.save((error, simulation) => {
-      if (error) {
-        return console.error(error);
-      }
-      frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
-    });
-
-    callback(null, simulation._id, data.selectedCity._id, data.journeys);
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -364,7 +410,7 @@ frontendSocketServer.on('request', function(request) {
       }
     });
   }
-  
+
   function _handleRequestSimulationBenchmark(message) {
     Simulation.findById(message.content.simulationID, function (error, simulation) {
       if (error || !simulation) {
@@ -377,8 +423,8 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + message.content.simulationID);
         return
       }
-    	benchmarkValue = averageSpeedToDestination(simulation.journeys
-                                          		  ,simulation.simulationStates); 
+      benchmarkValue = averageSpeedToDestination(simulation.journeys
+        ,simulation.simulationStates);
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
         content: {

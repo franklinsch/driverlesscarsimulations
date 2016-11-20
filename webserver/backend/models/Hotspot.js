@@ -7,8 +7,8 @@ const hotspotSchema = mongoose.Schema({
     lng: Number
   },
   popularityLevels: [{
-   "startTime": String,
-   "endTime": String,
+    startTime: String,
+    endTime: String, 
     level: Number
   }]
 
