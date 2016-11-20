@@ -20,14 +20,13 @@ export default class SimulationSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      useRealData: false,
       journeys: []
     }
   }
 
   _handleRealDataCheckboxChange(e) {
-    if (e.target.checked) {
-      this.props.handlers.handleHotspotGeneration();
-    }
+    this.state.useRealData = !this.state.useRealData
   }
 
   _handleSimulationButton(e, started) {
@@ -36,7 +35,8 @@ export default class SimulationSettings extends React.Component {
     if (started) {
       this.props.handlers.handleSimulationClose();
     } else {
-      this.props.handlers.handleSimulationStart();
+      this.props.handlers.handleSimulationStart(this.state.useRealData);
+
     }
   }
 

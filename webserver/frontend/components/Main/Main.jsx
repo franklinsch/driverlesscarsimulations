@@ -289,16 +289,9 @@ export default class Main extends React.Component {
     }
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
+  
+  handleSimulationStart(useRealData) {
 
-
-  handleHotspotGeneration() {
-    const socket = this.state.socket;
-    const city = this._cityWithID(this.state.selectedCityID);
-    const type = "request-hotspot-generation";
-    UtilFunctions.sendSocketMessage(socket, type, city)
-  }
-  handleSimulationStart() {
-    const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const userID = this.state.userID;
@@ -307,7 +300,9 @@ export default class Main extends React.Component {
     const content = {
       selectedCity: selectedCity,
       journeys: pendingJourneys,
-      userID: userID
+      userID: userID,
+      useRealData: useRealData
+
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
