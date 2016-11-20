@@ -6,6 +6,7 @@ const passport = require('passport');
 const routes = require('./backend/routes/routes');
 const config = require('./backend/config');
 const passwordConfig = require('./backend/passport');
+const fs = require('fs');
 
 const WebSocketServer = require('websocket').server;
 
@@ -185,22 +186,43 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function _handleRequestHotspotGeneration(message) {
-    const city = message.content;
+  function createSimulationWithRealData(city) {
     console.log(city)
-
-  }
-
-
-  function _handleRequestSimulationStart(message, callback) {
-    const data = message.content;
-    const simulation = new Simulation({
-      city: data.selectedCity,
-      journeys: data.journeys,
+    let undergroundData;
+    fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, data) {
+      if (err) throw err;
+      undergroundData = JSON.parse(data);
+    });
+    const info = {
+      popularitySum: 0,
+      hotspots:[]
+    }
+    simulation = new Simulation({
+      city: city,
+      hotspotInfo: info,
+      journeys: [],
       frontends: [{connectionIndex: frontendConnections.length}],
       frameworks: [],
       simulationStates: []
     });
+    return simulation;
+  }
+
+  function _handleRequestSimulationStart(message, callback) {
+    const data = message.content;
+    let simulation;
+    if (data.useRealData) {
+      simulation = createSimulationWithRealData(data.selectedCity)
+    } else {
+      simulation = new Simulation({
+        city: data.selectedCity,
+        hotspotInfo: hotspotInfo,
+        journeys: data.journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      });
+    }
 
     simulation.save((error, simulation) => {
       if (error) {
@@ -380,9 +402,6 @@ frontendSocketServer.on('request', function(request) {
           break;
         case "request-object-kind-info":
           _handleRequestObjectKinds();
-          break;
-        case "request-hotspot-generation":
-          _handleRequestHotspotGeneration(messageData);
           break;
         case "request-simulation-start":
           _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
