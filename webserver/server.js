@@ -250,22 +250,24 @@ frontendSocketServer.on('request', function(request) {
 
       let hotspots = [];
       let popularitySum = 0;
-      for (station in undergroundData) {
+      for (var i = 0; i < undergroundData.length; i++) {
         const hotspot = {
-          name: station.stationName,
+          name: undergroundData[i].stationName,
           coordinates: {
-            lat: station.lat,
-            lng: station.lng
+            lat: undergroundData[i].lat,
+            lng: undergroundData[i].lng
           },
           popularityLevels: [{
             startTime: "00:00:00",
             endTime: "24:00:00",
-            level: station.entryPlusExitInMillions,
+            level: undergroundData[i].entryPlusExitInMillions,
           }]
         };
-        popularitySum+= station.entryPlusExitInMillions;
+        popularitySum+= undergroundData[i].entryPlusExitInMillions;
         hotspots.push(hotspot);
       }
+
+      console.log(popularitySum)
 
       const hotspotInfo = {
         hotspots: hotspots,
@@ -383,7 +385,6 @@ frontendSocketServer.on('request', function(request) {
           }
         }));
       })
-
     })
   }
 
@@ -489,35 +490,38 @@ frontendSocketServer.on('request', function(request) {
           _handleRequestObjectKinds();
           break;
         case "request-simulation-start":
-          _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
+          _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
             connection.send(JSON.stringify({
               type: "simulation-id",
               content: {
-                id: simID,
-                cityID: cityID
-              },
-              journeys: journeys
+                simulationInfo: {
+                  id: simID,
+                  cityID: cityID
+                },
+                journeys: journeys
+              }
           }));
         });
         break;
-      case "request-simulation-join":
-        _handleRequestSimulationJoin(messageData);
-        break;
-      case "request-simulation-update":
-        _handleRequestEventUpdate(messageData);
-        break;
-      case "request-simulation-speed-change":
-        _handleRequestSimulationSpeedChange(messageData);
-        break;
-      case "request-simulation-timestamp-change":
-        _handleRequestSimulationTimestampChange(messageData);
-        break;
-      case "request-simulation-close":
-        _handleRequestSimulationClose(messageData);
-        break;
-      case "request-simulation-benchmark":
-        _handleRequestSimulationBenchmark(messageData);
-        break;
+
+        case "request-simulation-join":
+          _handleRequestSimulationJoin(messageData);
+          break;
+        case "request-simulation-update":
+          _handleRequestEventUpdate(messageData);
+          break;
+        case "request-simulation-speed-change":
+          _handleRequestSimulationSpeedChange(messageData);
+          break;
+        case "request-simulation-timestamp-change":
+          _handleRequestSimulationTimestampChange(messageData);
+          break;
+        case "request-simulation-close":
+          _handleRequestSimulationClose(messageData);
+          break;
+        case "request-simulation-benchmark":
+          _handleRequestSimulationBenchmark(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {

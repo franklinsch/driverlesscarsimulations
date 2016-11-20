@@ -114,6 +114,7 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
+      console.log(messageData.content.simulationInfo)
       this.setState({
         simulationInfo: messageData.content.simulationInfo,
         simulationJourneys: messageData.content.journeys
@@ -291,7 +292,7 @@ export default class Main extends React.Component {
   }
   
   handleSimulationStart(useRealData) {
-
+    const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const userID = this.state.userID;
