@@ -200,22 +200,24 @@ frontendSocketServer.on('request', function(request) {
 
       let hotspots = [];
       let popularitySum = 0;
-      for (station in undergroundData) {
+      for (var i = 0; i < undergroundData.length; i++) {
         const hotspot = {
-          name: station.stationName,
+          name: undergroundData[i].stationName,
           coordinates: {
-            lat: station.lat,
-            lng: station.lng
+            lat: undergroundData[i].lat,
+            lng: undergroundData[i].lng
           },
           popularityLevels: [{
             startTime: "00:00:00",
             endTime: "24:00:00",
-            level: station.entryPlusExitInMillions,
+            level: undergroundData[i].entryPlusExitInMillions,
           }]
         };
-        popularitySum+= station.entryPlusExitInMillions;
+        popularitySum+= undergroundData[i].entryPlusExitInMillions;
         hotspots.push(hotspot);
       }
+
+      console.log(popularitySum)
 
       const hotspotInfo = {
         hotspots: hotspots,
@@ -274,6 +276,9 @@ frontendSocketServer.on('request', function(request) {
         });
       });
 
+
+      console.log("Here")
+      console.log(simulation._id);
 
       callback(null, simulation._id, data.selectedCity._id, data.journeys);
 
@@ -335,8 +340,6 @@ frontendSocketServer.on('request', function(request) {
         console.error(error);
         return
       }
-
-      console.log(simulation)
 
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
@@ -450,12 +453,15 @@ frontendSocketServer.on('request', function(request) {
           _handleRequestObjectKinds();
           break;
         case "request-simulation-start":
-          _handleRequestSimulationStart(messageData, (err, simID, cityID) => {
+          _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
             connection.send(JSON.stringify({
               type: "simulation-id",
               content: {
-                id: simID,
-                cityID: cityID
+                simulationInfo: {
+                  id: simID,
+                  cityID: cityID
+                },
+                journeys: journeys
               }
             }));
           });
