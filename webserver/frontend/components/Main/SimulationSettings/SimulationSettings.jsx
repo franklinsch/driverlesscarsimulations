@@ -36,7 +36,6 @@ export default class SimulationSettings extends React.Component {
       this.props.handlers.handleSimulationClose();
     } else {
       this.props.handlers.handleSimulationStart(this.state.useRealData);
-
     }
   }
 

@@ -51,9 +51,9 @@ function averageSpeedToDestination(journeys, states) {
   for (let state of states) {
     for (let obj of state.objects) {
       if (obj.id in carsOnTheRoad) {
- 				const journey = journeys[obj.id];
-				dest = journey.destination;
-				pos = obj.position;
+        const journey = journeys[obj.id];
+        dest = journey.destination;
+        pos = obj.position;
         if (pos.lat == dest.lat && pos.lng == dest.lng) {
           totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
 					totalDistance += getDistanceLatLonInKm(journey.origin.lat
@@ -61,15 +61,15 @@ function averageSpeedToDestination(journeys, states) {
 																								,journey.destination.lat
 																								,journey.destination.lng);
       	}
-			} else {
-        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
+      } else {
+        carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
       }
     }
   }
-	if (totalTime == 0) {
-		totalTime++;
-	}
-	return totalDistance / totalTime;
+  if (totalTime == 0) {
+    totalTime++;
+  }
+  return totalDistance / totalTime;
 }
 
 //
@@ -236,34 +236,42 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function createSimulationWithRealData(city) {
-    console.log(city)
-    let undergroundData;
-    fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, data) {
-      if (err) throw err;
-      undergroundData = JSON.parse(data);
-    });
-    const info = {
-      popularitySum: 0,
-      hotspots:[]
+  function createSimulationWithRealData(data, callback) {
+    function readUndergroundContent(generateHotspots) {
+      fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
+        const undergroundData = (JSON.parse(json))
+        return generateHotspots(null, undergroundData)
+      });
     }
-    simulation = new Simulation({
-      city: city,
-      hotspotInfo: info,
-      journeys: [],
-      frontends: [{connectionIndex: frontendConnections.length}],
-      frameworks: [],
-      simulationStates: []
-    });
-    return simulation;
-  }
+    readUndergroundContent(function (err, undergroundData) {
+      if (err) {
+        return console.error(err);
+      }
 
-  function _handleRequestSimulationStart(message, callback) {
-    const data = message.content;
-    let simulation;
-    if (data.useRealData) {
-      simulation = createSimulationWithRealData(data.selectedCity)
-    } else {
+      let hotspots = [];
+      let popularitySum = 0;
+      for (station in undergroundData) {
+        const hotspot = {
+          name: station.stationName,
+          coordinates: {
+            lat: station.lat,
+            lng: station.lng
+          },
+          popularityLevels: [{
+            startTime: "00:00:00",
+            endTime: "24:00:00",
+            level: station.entryPlusExitInMillions,
+          }]
+        };
+        popularitySum+= station.entryPlusExitInMillions;
+        hotspots.push(hotspot);
+      }
+
+      const hotspotInfo = {
+        hotspots: hotspots,
+        popularitySum: popularitySum
+      };
+
       simulation = new Simulation({
         city: data.selectedCity,
         hotspotInfo: hotspotInfo,
@@ -272,7 +280,37 @@ frontendSocketServer.on('request', function(request) {
         frameworks: [],
         simulationStates: []
       });
-    }
+
+      simulation.save((error, simulation) => {
+        if (error) {
+          return console.error(error);
+        }
+        frontendConnections.push({
+          connection: connection,
+          simulationID: simulation._id,
+          timestamp: 0,
+          speed: null
+        });
+      });
+      callback(null, simulation._id, data.selectedCity._id, data.journeys);
+    })
+
+
+  }
+
+  function _handleRequestSimulationStart(message, callback) {
+    const data = message.content;
+    let simulation;
+    if (data.useRealData) {
+      createSimulationWithRealData(data, callback)
+    } else {
+      simulation = new Simulation({
+        city: data.selectedCity,
+        journeys: data.journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      });
 
     simulation.save((error, simulation) => {
       if (error) {
@@ -299,6 +337,8 @@ frontendSocketServer.on('request', function(request) {
     });
 
     callback(null, simulation._id, data.selectedCity._id, simulation.journeys);
+
+    }
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -423,7 +463,8 @@ frontendSocketServer.on('request', function(request) {
       }
     	benchmarkValue = averageSpeedToDestination(simulation.journeys
                                           		  ,simulation.simulationStates);
-      connection.send(JSON.stringify({
+
+        connection.send(JSON.stringify({
         type: "simulation-benchmark",
         content: {
           value: benchmarkValue
