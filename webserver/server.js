@@ -186,7 +186,7 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function createSimulationWithRealData(data, callback) {
+  function _createSimulationWithRealData(data, callback) {
     const bounds = data.selectedCity.bounds;
     fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
       if (err) {
@@ -241,16 +241,15 @@ frontendSocketServer.on('request', function(request) {
         });
       });
       callback(null, simulation._id, data.selectedCity._id, data.journeys);
-    })
+    });
   }
 
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
-    let simulation;
     if (data.useRealData) {
-      createSimulationWithRealData(data, callback)
+      _createSimulationWithRealData(data, callback)
     } else {
-      simulation = new Simulation({
+      const simulation = new Simulation({
         city: data.selectedCity,
         journeys: data.journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
