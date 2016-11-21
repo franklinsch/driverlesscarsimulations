@@ -82,6 +82,7 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
+      console.log(messageData.content.simulationInfo)
       this.setState({
         simulationInfo: messageData.content.simulationInfo,
         simulationJourneys: messageData.content.journeys
@@ -249,8 +250,8 @@ export default class Main extends React.Component {
     }
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
-
-  handleSimulationStart() {
+  
+  handleSimulationStart(useRealData) {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
@@ -258,7 +259,9 @@ export default class Main extends React.Component {
     const type = "request-simulation-start";
     const content = {
       selectedCity: selectedCity,
-      journeys: pendingJourneys
+      journeys: pendingJourneys,
+      useRealData: useRealData
+
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
@@ -314,7 +317,6 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
@@ -336,14 +338,14 @@ export default class Main extends React.Component {
     }
 
     const simulationSettingsHandlers = {
-      handleBenchmarkRequest     : ::this.handleBenchmarkRequest,
-      handleSimulationStart      : ::this.handleSimulationStart,
-      handleSimulationUpdate     : ::this.handleSimulationUpdate,
-      handleSimulationClose      : ::this.handleSimulationClose,
-      handlePositionSelect       : ::this.handlePositionPreview,
-      handleObjectTypeCreate     : ::this.handleObjectTypeCreate,
-      handleSpeedChange          : ::this.handleSpeedChange,
-      handlePendingJourneyAdd    : ::this.handlePendingJourneyAdd
+      handleBenchmarkRequest : ::this.handleBenchmarkRequest,
+      handleSimulationStart  : ::this.handleSimulationStart,
+      handleSimulationUpdate : ::this.handleSimulationUpdate,
+      handleSimulationClose  : ::this.handleSimulationClose,
+      handlePositionSelect   : ::this.handlePositionPreview,
+      handleObjectTypeCreate : ::this.handleObjectTypeCreate,
+      handleSpeedChange      : ::this.handleSpeedChange
+
     }
 
     const simulationMapHandlers = {

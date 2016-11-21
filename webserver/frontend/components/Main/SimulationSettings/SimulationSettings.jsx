@@ -16,13 +16,26 @@ export default class SimulationSettings extends React.Component {
     handlers: React.PropTypes.object
   }
 
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      useRealData: false,
+      journeys: []
+    }
+  }
+
+  _handleRealDataCheckboxChange(e) {
+    this.state.useRealData = !this.state.useRealData
+  }
+
   _handleSimulationButton(e, started) {
     e.preventDefault();
 
     if (started) {
       this.props.handlers.handleSimulationClose();
     } else {
-      this.props.handlers.handleSimulationStart();
+      this.props.handlers.handleSimulationStart(this.state.useRealData);
     }
   }
 
@@ -78,6 +91,15 @@ export default class SimulationSettings extends React.Component {
           handlers            = {journeySettingsHandlers}
         />
         <div className="row">
+          <form action="">
+            <input
+              type = "checkbox"
+              name = "realdata"
+              disabled = {hasSimulationStarted}
+              onChange = {(e) => this._handleRealDataCheckboxChange(e, hasSimulationStarted)}
+            />
+              Use real world data
+          </form>
           <button 
             className = "btn btn-primary" 
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}

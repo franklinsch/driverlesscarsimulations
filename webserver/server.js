@@ -6,6 +6,7 @@ const passport = require('passport');
 const routes = require('./backend/routes/routes');
 const config = require('./backend/config');
 const passwordConfig = require('./backend/passport');
+const fs = require('fs');
 
 const WebSocketServer = require('websocket').server;
 
@@ -26,12 +27,12 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
 function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
+  var dLon = deg2rad(lon2-lon1);
+  var a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c; // Distance in km
   return d;
 }
@@ -47,25 +48,25 @@ function averageSpeedToDestination(journeys, states) {
   for (let state of states) {
     for (let obj of state.objects) {
       if (obj.id in carsOnTheRoad) {
- 				const journey = journeys[obj.id];
-				dest = journey.destination;
-				pos = obj.position;
+        const journey = journeys[obj.id];
+        dest = journey.destination;
+        pos = obj.position;
         if (pos.lat == dest.lat && pos.lng == dest.lng) {
           totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-					totalDistance += getDistanceLatLonInKm(journey.origin.lat
- 																								,journey.origin.lng
-																								,journey.destination.lat
-																								,journey.destination.lng);
-      	} 
-			} else {
-        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}    
+          totalDistance += getDistanceLatLonInKm(journey.origin.lat
+            ,journey.origin.lng
+            ,journey.destination.lat
+            ,journey.destination.lng);
+        }
+      } else {
+        carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
       }
     }
   }
-	if (totalTime == 0) {
-		totalTime++;
-	}
-	return totalDistance / totalTime;
+  if (totalTime == 0) {
+    totalTime++;
+  }
+  return totalDistance / totalTime;
 }
 
 //
@@ -116,7 +117,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestDefaultObjectTypes() {
     // TODO Store defaults in db
-    
+
     connection.send(JSON.stringify({
       type: "default-object-types",
       content: [{
@@ -134,7 +135,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestObjectKinds() {
     // TODO Store this in the db
-    
+
     connection.send(JSON.stringify({
       type: "object-kind-info",
       content: [{
@@ -158,51 +159,118 @@ frontendSocketServer.on('request', function(request) {
           }
         ]
       },
-      {
-        name: "Creature",
-        parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["unicorn", "dog"]
-          }
-        ]
-      },
-      {
-        name: "Road Hazard",
-        parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
-          },
-          {
-            name: "Slowdown factor",
-            kind: "text"
-          }
-        ]
-      }]
+        {
+          name: "Creature",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["unicorn", "dog"]
+            }
+          ]
+        },
+        {
+          name: "Road Hazard",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+            },
+            {
+              name: "Slowdown factor",
+              kind: "text"
+            }
+          ]
+        }]
     }))
+  }
+
+  function _createSimulationWithRealData(data, callback) {
+    const bounds = data.selectedCity.bounds;
+    fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
+      if (err) {
+        return console.error(err);
+      }
+
+      const undergroundData = (JSON.parse(json))
+      let hotspots = [];
+      let popularitySum = 0;
+      for (var i = 0; i < undergroundData.length; i++) {
+        if (bounds.southWest.lat <= undergroundData[i].lat && undergroundData[i].lat <= bounds.northEast.lat &&
+            bounds.southWest.lng <= undergroundData[i].lng && undergroundData[i].lng <= bounds.northEast.lng) {
+          const hotspot = {
+            name: undergroundData[i].stationName,
+            coordinates: {
+              lat: undergroundData[i].lat,
+              lng: undergroundData[i].lng
+            },
+            popularityLevels: [{
+              startTime: "00:00:00",
+              endTime: "24:00:00",
+              level: undergroundData[i].entryPlusExitInMillions,
+            }]
+          };
+          popularitySum += undergroundData[i].entryPlusExitInMillions;
+          hotspots.push(hotspot);
+        }
+      }
+      const hotspotInfo = {
+        hotspots: hotspots,
+        popularitySum: popularitySum
+      };
+
+      simulation = new Simulation({
+        city: data.selectedCity,
+        hotspotInfo: hotspotInfo,
+        journeys: data.journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      });
+
+      simulation.save((error, simulation) => {
+        if (error) {
+          return console.error(error);
+        }
+        frontendConnections.push({
+          connection: connection,
+          simulationID: simulation._id,
+          timestamp: 0,
+          speed: null
+        });
+      });
+      callback(null, simulation._id, data.selectedCity._id, data.journeys);
+    });
   }
 
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
-    const simulation = new Simulation({
-      city: data.selectedCity,
-      journeys: data.journeys,
-      frontends: [{connectionIndex: frontendConnections.length}],
-      frameworks: [],
-      simulationStates: []
-    });
+    if (data.useRealData) {
+      _createSimulationWithRealData(data, callback)
+    } else {
+      const simulation = new Simulation({
+        city: data.selectedCity,
+        journeys: data.journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      });
 
-    simulation.save((error, simulation) => {
-      if (error) {
-        return console.error(error);
-      }
-      frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
-    });
+      simulation.save((error, simulation) => {
+        if (error) {
+          return console.error(error);
+        }
+        frontendConnections.push({
+          connection: connection,
+          simulationID: simulation._id,
+          timestamp: 0,
+          speed: null
+        });
+      });
 
-    callback(null, simulation._id, data.selectedCity._id, data.journeys);
+      callback(null, simulation._id, data.selectedCity._id, data.journeys);
+    }
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -260,8 +328,6 @@ frontendSocketServer.on('request', function(request) {
         console.error(error);
         return
       }
-
-      console.log(simulation)
 
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
@@ -335,7 +401,7 @@ frontendSocketServer.on('request', function(request) {
       }
     });
   }
-  
+
   function _handleRequestSimulationBenchmark(message) {
     Simulation.findById(message.content.simulationID, function (error, simulation) {
       if (error || !simulation) {
@@ -348,8 +414,8 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + message.content.simulationID);
         return
       }
-    	benchmarkValue = averageSpeedToDestination(simulation.journeys
-                                          		  ,simulation.simulationStates); 
+      benchmarkValue = averageSpeedToDestination(simulation.journeys
+        ,simulation.simulationStates);
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
         content: {
@@ -365,54 +431,44 @@ frontendSocketServer.on('request', function(request) {
       const messageData = JSON.parse(message.utf8Data);
 
       switch (messageData.type) {
-      case "request-available-cities":
-        _handleRequestAvailableCities();
-        break;
-      case "request-default-object-types":
-        _handleRequestDefaultObjectTypes();
-        break;
-      case "request-object-kind-info":
-        _handleRequestObjectKinds();
-        break;
-      case "request-simulation-start":
-        _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-id",
-            content: {
-              simulationInfo: {
-                id: simID,
-                cityID: cityID
-              },
-              journeys: journeys
-            }
-          }));
-        });
-        break;
-      case "request-simulation-join":
-        _handleRequestSimulationJoin(messageData);
-        break;
-      case "request-simulation-update":
-        _handleRequestEventUpdate(messageData, (journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-journeys-update",
-            content: {
-              journeys: journeys
-            }
-          }));
-        });
-        break;
-      case "request-simulation-speed-change":
-        _handleRequestSimulationSpeedChange(messageData);
-        break;
-      case "request-simulation-timestamp-change":
-        _handleRequestSimulationTimestampChange(messageData);
-        break;
-      case "request-simulation-close":
-        _handleRequestSimulationClose(messageData);
-        break;
-      case "request-simulation-benchmark":
-        _handleRequestSimulationBenchmark(messageData);
-        break;
+        case "request-available-cities":
+          _handleRequestAvailableCities();
+          break;
+        case "request-default-object-types":
+          _handleRequestDefaultObjectTypes();
+          break;
+        case "request-object-kind-info":
+          _handleRequestObjectKinds();
+          break;
+        case "request-simulation-start":
+          _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
+            connection.send(JSON.stringify({
+              type: "simulation-id",
+              content: {
+                simulationInfo: {
+                  id: simID,
+                  cityID: cityID
+                },
+                journeys: journeys
+              }
+            }));
+          });
+          break;
+        case "request-simulation-join":
+          _handleRequestSimulationJoin(messageData);
+          break;
+        case "request-simulation-update":
+          _handleRequestEventUpdate(messageData);
+          break;
+        case "request-simulation-speed-change":
+          _handleRequestSimulationSpeedChange(messageData);
+          break;
+        case "request-simulation-timestamp-change":
+          _handleRequestSimulationTimestampChange(messageData);
+          break;
+        case "request-simulation-close":
+          _handleRequestSimulationClose(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {
@@ -455,13 +511,13 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.content.simulationID;
 
-    Simulation.findByIdAndUpdate(simulationID, { 
-      $set: { 
-        timeslice: message.content.timeslice, 
-        simulationStates: [] 
+    Simulation.findByIdAndUpdate(simulationID, {
+      $set: {
+        timeslice: message.content.timeslice,
+        simulationStates: []
       },
       $push: {
-        frameworks: { 
+        frameworks: {
           connectionIndex: frameworkConnections.length
         }
       }
@@ -602,15 +658,15 @@ frameworkSocketServer.on('request', function(request) {
       const messageData = JSON.parse(message.utf8Data);
 
       switch(messageData.type) {
-      case "simulation-start":
-        _handleSimulationStart(messageData);
-        break;
-      case "simulation-state":
-        _handleSimulationStateUpdate(messageData);
-        break;
-      case "simulation-close":
-        _handleSimulationClose(messageData);
-        break;
+        case "simulation-start":
+          _handleSimulationStart(messageData);
+          break;
+        case "simulation-state":
+          _handleSimulationStateUpdate(messageData);
+          break;
+        case "simulation-close":
+          _handleSimulationClose(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {
