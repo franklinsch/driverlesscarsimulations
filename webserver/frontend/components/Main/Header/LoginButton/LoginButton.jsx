@@ -29,6 +29,13 @@ export default class LoginButton extends React.Component {
   _handleFormSubmit(e) {
     e.preventDefault();
     const action = e.target.value;
+    if (action === 'logout') {
+      cookie.remove('token', { path: '/' });
+      window.sessionStorage.removeItem('token');
+      this.setState({ token: '' });
+      this.props.handlers.handleTokenChange('', '');
+      return;
+    }
     const url = "/" + action;
     fetch(url, {
       method: 'POST',
