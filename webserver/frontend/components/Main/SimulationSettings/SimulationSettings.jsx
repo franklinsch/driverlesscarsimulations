@@ -32,7 +32,7 @@ export default class SimulationSettings extends React.Component {
 
   _handleRealWorldJourneyNumChange(e) {
     console.log(e.target.value)
-    this.state.realWorldJourneyNum = e.target.value;
+    this.setState({realWorldJourneyNum: e.target.value});
   }
 
   _handleSimulationButton(e, started) {
@@ -41,7 +41,7 @@ export default class SimulationSettings extends React.Component {
     if (started) {
       this.props.handlers.handleSimulationClose();
     } else {
-      this.props.handlers.handleSimulationStart(this.state.useRealData);
+      this.props.handlers.handleSimulationStart(this.state.useRealData, this.state.realWorldJourneyNum);
     }
   }
 
