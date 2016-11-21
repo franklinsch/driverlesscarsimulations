@@ -121,7 +121,8 @@ router.route('/register')
       res.setHeader('token', token);
       res.json({
         "token": token,
-        "userID": user._id
+        "userID": user._id,
+        "username": user.username
       });
     });
   });
@@ -143,7 +144,8 @@ router.route('/login')
         res.setHeader('token', token);
         res.json({
           "token": token,
-          "userID": user._id
+          "userID": user._id,
+          "username": user.username
         });
       } else {
         // If user is not found

@@ -14,7 +14,8 @@ export default class LoginButton extends React.Component {
     this.state = {
       username: '',
       password: '',
-      token: this.props.token
+      token: this.props.token,
+      loggedInUsername: ''
     };
   }
 
@@ -63,7 +64,10 @@ export default class LoginButton extends React.Component {
           maxAge: 600,
         });
         window.sessionStorage.setItem('token', data.token);
-        this.setState({ token: data.token });
+        this.setState({
+          token: data.token,
+          loggedInUsername: data.username
+         });
         this.props.handlers.handleTokenChange(data.token, data.userID);
       });
     })
@@ -76,7 +80,7 @@ export default class LoginButton extends React.Component {
     return (
       <div>
         <a className="nav-link" href="#" id="LoginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {this.state.token ? 'Hello ' + this.state.username + '!': 'Login'}
+          {this.state.token ? 'Hello ' + this.state.loggedInUsername + '!': 'Login'}
         </a>
         <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="LoginDropdown">
           <form>
