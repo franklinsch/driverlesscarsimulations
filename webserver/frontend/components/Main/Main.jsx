@@ -73,8 +73,8 @@ export default class Main extends React.Component {
       const url = '/simulations';
       const reqHeaders = new Headers({
         "Accept": "application/json",
-        "token": this.props.token,
-        "Set-Cookie": "token=" + this.props.token,
+        "token": this.state.token,
+        "Set-Cookie": "token=" + this.state.token,
       });
       fetch(url, {
         method: 'GET',
@@ -85,6 +85,9 @@ export default class Main extends React.Component {
           console.log("data: " + data);
           this.setState({ userSimulations: data.simulations });
         });
+      })
+      .catch(err => {
+        console.log("error fetching user simulations");
       })
     }
   }

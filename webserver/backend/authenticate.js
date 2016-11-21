@@ -32,7 +32,6 @@ module.exports = (req, res, next) => {
           .exec(function(err, user) {
             res.user = user;
           });
-        console.log("All good");
         next();
       }
     });

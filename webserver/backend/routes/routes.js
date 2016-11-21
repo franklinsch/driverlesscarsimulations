@@ -17,7 +17,9 @@ router.route('/simulations')
         _id: userId
       })
       .then((result) => {
-        res.json(result.simulations);
+        res.json({
+          simulations: result.simulations
+        });
       })
       .catch((err) => {
         res.send(err);
