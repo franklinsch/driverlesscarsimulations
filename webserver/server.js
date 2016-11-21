@@ -186,8 +186,9 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function _createSimulationWithRealData(data, callback) {
+  function createSimulationWithRealData(data, callback) {
     const bounds = data.selectedCity.bounds;
+    const journeyNum = data.realWorldJourneyNum;
     fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
       if (err) {
         return console.error(err);
@@ -247,7 +248,7 @@ frontendSocketServer.on('request', function(request) {
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
     if (data.useRealData) {
-      _createSimulationWithRealData(data, callback)
+      createSimulationWithRealData(data, callback)
     } else {
       const simulation = new Simulation({
         city: data.selectedCity,

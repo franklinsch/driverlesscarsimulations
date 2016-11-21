@@ -251,7 +251,7 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
   
-  handleSimulationStart(useRealData) {
+  handleSimulationStart(useRealData, realWorldJourneyNum) {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
@@ -260,8 +260,8 @@ export default class Main extends React.Component {
     const content = {
       selectedCity: selectedCity,
       journeys: pendingJourneys,
-      useRealData: useRealData
-
+      useRealData: useRealData,
+      realWorldJourneyNum: realWorldJourneyNum
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
