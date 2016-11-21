@@ -187,38 +187,34 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function createSimulationWithRealData(data, callback) {
-    function readUndergroundContent(generateHotspots) {
-      fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
-        const undergroundData = (JSON.parse(json))
-        return generateHotspots(null, undergroundData)
-      });
-    }
-    readUndergroundContent(function (err, undergroundData) {
+    const bounds = data.selectedCity.bounds;
+    fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
       if (err) {
         return console.error(err);
       }
 
+      const undergroundData = (JSON.parse(json))
       let hotspots = [];
       let popularitySum = 0;
       for (var i = 0; i < undergroundData.length; i++) {
-        const hotspot = {
-          name: undergroundData[i].stationName,
-          coordinates: {
-            lat: undergroundData[i].lat,
-            lng: undergroundData[i].lng
-          },
-          popularityLevels: [{
-            startTime: "00:00:00",
-            endTime: "24:00:00",
-            level: undergroundData[i].entryPlusExitInMillions,
-          }]
-        };
-        popularitySum+= undergroundData[i].entryPlusExitInMillions;
-        hotspots.push(hotspot);
+        if (bounds.southWest.lat <= undergroundData[i].lat && undergroundData[i].lat <= bounds.northEast.lat &&
+            bounds.southWest.lng <= undergroundData[i].lng && undergroundData[i].lng <= bounds.northEast.lng) {
+          const hotspot = {
+            name: undergroundData[i].stationName,
+            coordinates: {
+              lat: undergroundData[i].lat,
+              lng: undergroundData[i].lng
+            },
+            popularityLevels: [{
+              startTime: "00:00:00",
+              endTime: "24:00:00",
+              level: undergroundData[i].entryPlusExitInMillions,
+            }]
+          };
+          popularitySum += undergroundData[i].entryPlusExitInMillions;
+          hotspots.push(hotspot);
+        }
       }
-
-      console.log(popularitySum)
-
       const hotspotInfo = {
         hotspots: hotspots,
         popularitySum: popularitySum
@@ -246,8 +242,6 @@ frontendSocketServer.on('request', function(request) {
       });
       callback(null, simulation._id, data.selectedCity._id, data.journeys);
     })
-
-
   }
 
   function _handleRequestSimulationStart(message, callback) {
@@ -276,12 +270,7 @@ frontendSocketServer.on('request', function(request) {
         });
       });
 
-
-      console.log("Here")
-      console.log(simulation._id);
-
       callback(null, simulation._id, data.selectedCity._id, data.journeys);
-
     }
   }
 
