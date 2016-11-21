@@ -9,11 +9,11 @@ module.exports = (req, res, next) => {
 
   const cookies = cookie.parse(req.headers.cookie || '');
 
-  console.log(cookies);
 
   // check header or url parameters or post parameters for token
   const token = cookies.token || req.body.token || req.query.token || req.headers['token'];
 
+  console.log(token);
   // decode token
   if (token) {
 
@@ -32,6 +32,7 @@ module.exports = (req, res, next) => {
           .exec(function(err, user) {
             res.user = user;
           });
+        console.log("All good");
         next();
       }
     });

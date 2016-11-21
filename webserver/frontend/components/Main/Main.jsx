@@ -64,6 +64,29 @@ export default class Main extends React.Component {
       },
       pendingJourneys: []
     }
+    this.updateUserSimulations();
+  }
+
+  updateUserSimulations() {
+    if (this.state.token) {
+      console.log("called");
+      const url = '/simulations';
+      const reqHeaders = new Headers({
+        "Accept": "application/json",
+        "token": this.props.token,
+        "Set-Cookie": "token=" + this.props.token,
+      });
+      fetch(url, {
+        method: 'GET',
+        headers: reqHeaders
+      })
+      .then((response) => {
+        response.json().then((data) => {
+          console.log("data: " + data);
+          this.setState({ userSimulations: data.simulations });
+        });
+      })
+    }
   }
 
   handlePendingJourneyAdd(pendingJourney) {
@@ -167,6 +190,7 @@ export default class Main extends React.Component {
 
 
   handleTokenChange(newToken, userID) {
+    console.log("called");
     this.setState({
       token: newToken,
       userID: userID
@@ -329,6 +353,8 @@ export default class Main extends React.Component {
     const simulationID = this.state.simulationInfo.id;
     const token = this.state.token;
     const userID = this.state.userID;
+    const userSimulations = this.state.userSimulations;
+    console.log("render: " + userSimulations);
 
     const pendingJourneys = this.state.pendingJourneys || [];
     const simulationJourneys = this.state.simulationJourneys || [];
@@ -367,7 +393,8 @@ export default class Main extends React.Component {
         <Header
           availableCities = {availableCities}
           token           = {token}
-          userID           = {userID}
+          userID          = {userID}
+          simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />
         <div className="jumbotron">

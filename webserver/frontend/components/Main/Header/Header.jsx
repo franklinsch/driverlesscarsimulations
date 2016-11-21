@@ -10,43 +10,24 @@ export default class Header extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      simulations: []
-    }
   }
   static propTypes = {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     token: React.PropTypes.string,
     userID: React.PropTypes.string,
-    handlers: React.PropTypes.object
+    handlers: React.PropTypes.object,
+    simulations: React.PropTypes.array
   }
 
   handleCityChange(city) {
     this.props.handlers.handleCityChange(city._id);
   }
 
-  componentWillReceiveProps() {
-    console.log("called");
-    if (this.props.token) {
-      const url = '/simulations';
-      fetch(url, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        }
-      })
-      .then((response) => {
-        response.json().then((data) => {
-          this.setState({ simulations: data.simulations });
-        });
-      })
-    }
-  }
-
   render() {
     const cities = this.props.availableCities || [];
 
-    const userSimulations = this.state.simulations;
+    const userSimulations = this.props.simulations;
+    console.log("from header:" + userSimulations);
 
     const dropdownHandlers = {
       handleSelect : ::this.handleCityChange
@@ -81,7 +62,10 @@ export default class Header extends React.Component {
             </li>
             <li className="nav-item">
               {
-                this.props.token ? <SimulationList simulations = { userSimulations } /> : ''
+                this.props.token ?
+                <SimulationList
+                  simulations = {userSimulations}
+                /> : ''
               }
             </li>
           </ul>
