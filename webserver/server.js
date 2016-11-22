@@ -236,7 +236,47 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function createSimulationWithRealData(data, callback) {
+  function _calculateCurrentPopularity(hotspot) {
+    const levels = hotspot.popularityLevels;
+    const date = new Date();
+
+    for (var i = 0; i < levels.length; i++) {
+      startTime = levels[i].startTime.split(':');
+      endTime = levels[i].endTime.split(':');
+
+      startDate = date;
+      startDate.setHours(startTime[0]);
+      startDate.setMinutes(startTime[1]);
+      startDate.setSeconds(startTime[2]);
+
+      endDate = date;
+      endDate.setHours(endTime[0]);
+      endDate.setMinutes(endTime[1]);
+      endDate.setSeconds(endTime[2]);
+
+      if (date >= startDate && date <= endDate) {
+        return levels[i].level;
+      }
+    }
+  }
+
+  function _createAccurateJourney(hotspotInfo) {
+    const lookupVal = Math.random() * hotspotInfo.popularitySum;
+    const hotspots = hotspotInfo.hotspots;
+
+    let rollingSum = 0;
+    let startHotspot;
+    for (var i = 0; i < hotspots.length; i++) {
+      rollingSum += _calculateCurrentPopularity(hotspots[i]);
+      if (rollingSum >= lookupVal) {
+        console.log(rollingSum)
+        startHotspot = hotspots[i];
+        break;
+      }
+    }
+  }
+
+  function _createSimulationWithRealData(data, callback) {
     const bounds = data.selectedCity.bounds;
     const journeyNum = data.realWorldJourneyNum;
     fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
@@ -244,7 +284,7 @@ frontendSocketServer.on('request', function(request) {
         return console.error(err);
       }
 
-      const undergroundData = (JSON.parse(json))
+      const undergroundData = (JSON.parse(json));
       let hotspots = [];
       let popularitySum = 0;
       for (var i = 0; i < undergroundData.length; i++) {
@@ -258,7 +298,7 @@ frontendSocketServer.on('request', function(request) {
             },
             popularityLevels: [{
               startTime: "00:00:00",
-              endTime: "24:00:00",
+              endTime: "23:59:59",
               level: undergroundData[i].entryPlusExitInMillions,
             }]
           };
@@ -270,6 +310,12 @@ frontendSocketServer.on('request', function(request) {
         hotspots: hotspots,
         popularitySum: popularitySum
       };
+
+
+      var journeys = [];
+      for (var i = 0; i <journeyNum; i++) {
+        journeys.push(_createAccurateJourney(hotspotInfo))
+      }
 
       simulation = new Simulation({
         city: data.selectedCity,
@@ -298,7 +344,7 @@ frontendSocketServer.on('request', function(request) {
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
     if (data.useRealData) {
-      createSimulationWithRealData(data, callback)
+      _createSimulationWithRealData(data, callback)
     } else {
       const simulation = new Simulation({
         city: data.selectedCity,
