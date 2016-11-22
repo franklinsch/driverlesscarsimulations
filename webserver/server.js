@@ -269,7 +269,6 @@ frontendSocketServer.on('request', function(request) {
     for (var i = 0; i < hotspots.length; i++) {
       rollingSum += _calculateCurrentPopularity(hotspots[i]);
       if (rollingSum >= lookupVal) {
-        console.log(rollingSum)
         startHotspot = hotspots[i];
         break;
       }
