@@ -13,7 +13,6 @@ module.exports = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token = cookies.token || req.body.token || req.query.token || req.headers['token'];
 
-  console.log(token);
   // decode token
   if (token) {
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import cookie from 'react-cookie';
+import UtilFunctions from '../../../Utils/UtilFunctions.jsx';
 import 'whatwg-fetch';
 
 export default class LoginButton extends React.Component {
@@ -61,7 +62,7 @@ export default class LoginButton extends React.Component {
         // save token in the cookie for 10 minutes
         cookie.save('token', data.token, {
           path: '/',
-          maxAge: 600,
+          maxAge: UtilFunctions.session_length,
         });
         window.sessionStorage.setItem('token', data.token);
         this.setState({

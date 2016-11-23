@@ -11,11 +11,13 @@ export default class UtilFunctions {
         ...UtilFunctions.socketMessage(),
         type: type,
         content: content
-      }) 
+      })
 
       socket.send(message);
     } else {
       console.error("Could not send socket message because the socket is not able to send");
     }
   }
+
+  static session_length = 600; // in seconds
 }

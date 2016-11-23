@@ -350,6 +350,16 @@ export default class Main extends React.Component {
     })
   }
 
+  componentDidUpdate() {
+    const sessionToken = cookie.load('token');
+    if (sessionToken && this.state.token) {
+      cookie.save('token', sessionToken, {
+        path: '/',
+        maxAge: UtilFunctions.session_length,
+      });
+    }
+  }
+
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
