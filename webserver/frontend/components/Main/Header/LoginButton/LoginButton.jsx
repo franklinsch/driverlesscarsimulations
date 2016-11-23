@@ -6,6 +6,7 @@ export default class LoginButton extends React.Component {
 
   static propTypes = {
     token: React.PropTypes.string,
+    activeUser: React.PropTypes.string,
     handlers: React.PropTypes.object
   }
 
@@ -14,8 +15,7 @@ export default class LoginButton extends React.Component {
     this.state = {
       username: '',
       password: '',
-      token: this.props.token,
-      loggedInUsername: ''
+      token: this.props.token
     };
   }
 
@@ -68,7 +68,7 @@ export default class LoginButton extends React.Component {
           token: data.token,
           loggedInUsername: data.username
          });
-        this.props.handlers.handleTokenChange(data.token, data.userID);
+        this.props.handlers.handleTokenChange(data.token, data.userID, data.username);
       });
     })
     .catch((err) => {
@@ -80,7 +80,12 @@ export default class LoginButton extends React.Component {
     return (
       <div>
         <a className="nav-link" href="#" id="LoginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {this.state.token ? 'Hello ' + this.state.loggedInUsername + '!': 'Login'}
+          {
+            this.state.token ?
+            'Hello ' + this.props.activeUser + '!'
+            :
+            'Login'
+          }
         </a>
         <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="LoginDropdown">
           <form>
@@ -106,10 +111,20 @@ export default class LoginButton extends React.Component {
             </div>
             <button
               type="submit"
-              value={this.state.token ? 'logout' : 'login'}
+              value=
+              {
+                this.state.token ?
+                'logout'
+                :
+                'login'
+              }
               onClick={::this._handleFormSubmit}
               className="btn btn-default">
-              {this.state.token ? 'Log Out' : 'Log In'}
+              {
+                this.state.token ?
+                'Log Out'
+                :
+                'Log In'}
             </button>
             <button
               type="submit"

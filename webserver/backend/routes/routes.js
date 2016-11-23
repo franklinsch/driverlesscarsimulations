@@ -18,6 +18,7 @@ router.route('/simulations')
       })
       .then((result) => {
         res.json({
+          username: result.username,
           simulations: result.simulations
         });
       })
@@ -28,7 +29,6 @@ router.route('/simulations')
   .post(auth, (req, res) => {
     const userID = res._headers.token._id;
     const simulationID = req.body.simulationID;
-    console.log(simulationID);
     const updateInfo = {
       $push: {
         simulations: simulationID
@@ -42,7 +42,6 @@ router.route('/simulations')
         _id: userID
       }, updateInfo, options)
       .then((result) => {
-        console.log(result);
         res.send(result);
       })
       .catch((err) => {

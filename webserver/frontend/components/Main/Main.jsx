@@ -49,6 +49,7 @@ export default class Main extends React.Component {
     this.state = {
       token: initialToken,
       userID: '',
+      activeUser: '',
       selectedCityID: 0,
       socket: socket,
       simulationInfo: {
@@ -69,7 +70,6 @@ export default class Main extends React.Component {
 
   updateUserSimulations() {
     if (this.state.token) {
-      console.log("called");
       const url = '/simulations';
       const reqHeaders = new Headers({
         "Accept": "application/json",
@@ -82,8 +82,10 @@ export default class Main extends React.Component {
       })
       .then((response) => {
         response.json().then((data) => {
-          console.log("data: " + data);
-          this.setState({ userSimulations: data.simulations });
+          this.setState({
+            activeUser: data.username, 
+            userSimulations: data.simulations
+          });
         });
       })
       .catch(err => {
@@ -192,11 +194,11 @@ export default class Main extends React.Component {
   }
 
 
-  handleTokenChange(newToken, userID) {
-    console.log("called");
+  handleTokenChange(newToken, userID, username) {
     this.setState({
       token: newToken,
-      userID: userID
+      userID: userID,
+      activeUser: username
     });
   }
 
@@ -356,8 +358,8 @@ export default class Main extends React.Component {
     const simulationID = this.state.simulationInfo.id;
     const token = this.state.token;
     const userID = this.state.userID;
+    const activeUser = this.state.activeUser;
     const userSimulations = this.state.userSimulations;
-    console.log("render: " + userSimulations);
 
     const pendingJourneys = this.state.pendingJourneys || [];
     const simulationJourneys = this.state.simulationJourneys || [];
@@ -397,6 +399,7 @@ export default class Main extends React.Component {
           availableCities = {availableCities}
           token           = {token}
           userID          = {userID}
+          activeUser      = {activeUser}
           simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />

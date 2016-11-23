@@ -27,7 +27,6 @@ export default class Header extends React.Component {
     const cities = this.props.availableCities || [];
 
     const userSimulations = this.props.simulations;
-    console.log("from header:" + userSimulations);
 
     const dropdownHandlers = {
       handleSelect : ::this.handleCityChange
@@ -56,8 +55,9 @@ export default class Header extends React.Component {
             </li>
             <li className="nav-item">
               <LoginButton
-                token    = {this.props.token}
-                handlers = {loginButtonHandlers}
+                token      = {this.props.token}
+                activeUser = {this.props.activeUser}
+                handlers   = {loginButtonHandlers}
               />
             </li>
             <li className="nav-item">

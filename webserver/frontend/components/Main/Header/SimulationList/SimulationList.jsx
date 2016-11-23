@@ -15,18 +15,18 @@ export default class SimulationList extends React.Component {
           My Simulations
         </a>
         <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="SimulationListDropdown">
-          <ul className="list-group">
+          <div className="list-group">
             {
               simulations.map((simulation, index) => {
                 const link = '/simulations/' + simulation;
                 return (
-                  <li key={ index }>
+                  <div key={ index }>
                     <a href={ link } className="list-group-item list-group-item-action">{ simulation }</a>
-                  </li>
+                  </div>
                 );
               })
             }
-          </ul>
+          </div>
         </div>
       </div>
     );
