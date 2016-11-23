@@ -83,7 +83,7 @@ export default class Main extends React.Component {
       .then((response) => {
         response.json().then((data) => {
           this.setState({
-            activeUser: data.username, 
+            activeUser: data.username,
             userSimulations: data.simulations
           });
         });
@@ -421,6 +421,7 @@ export default class Main extends React.Component {
               <SimulationMap
                 width                      = {680 + 'px'}
                 height                     = {600 + 'px'}
+                simulationID               = {simulationID}
                 bounds                     = {bounds}
                 simulationState            = {simulationState}
                 previewMarkerPosition      = {previewMarkerPosition}
