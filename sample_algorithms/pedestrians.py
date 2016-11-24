@@ -46,10 +46,9 @@ def runSimulation(savn, initialParameters):
   while savn.alive:
     print("Sending", timestamp)
     savn.updateState(timestamp, translate(state))
+    print("Working on next: Sent", timestamp)
     state = executePedestrianAlgorithm(state, timestamp)
     timestamp += TIMESLICE
-    print("Awaiting for next")
-    savn.await(SLEEP_TIME)
   #useApiToEnd()
 
 def analyseData(data):
@@ -91,6 +90,14 @@ def preprocess(route):
   time = dist/WALKING_SPEED
   end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': WALKING_SPEED_KM_H})
 
+def add_distance(v, a, d):
+  LNG_SCL = 111.319e3
+  LAT_SCL = 110.574e3
+  a = math.radians(a)
+  lngDeg = d * math.cos(a)/LNG_SCL
+  latDeg = d * math.sin(a)/(LAT_SCL) #*math.cos(math.radians(v[1])))
+  return [v[0] + lngDeg, v[1] + latDeg]
+
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
 
@@ -117,27 +124,35 @@ def to_unit_circle(angle):
   return [math.cos(math.radians(angle)), math.sin(math.radians(angle))]
 
 def pickCar(cars):
-  index = int(random.random() * len(cars))
+  car = None
 
-  MIN_DISTANCE = 60 #TODO: Extract generalisable data
+  num = len(cars)
+  while (num >= 0):
+    index = int(random.random() * num)
 
-  car = cars[index]
-  if (get_distance(car['position'], car['route'][-1]) < MIN_DISTANCE):
-    return pickCar(cars)
+    if (index == 0):
+      MIN_DISTANCE = 60 #TODO: Extract generalisable data
+
+      car = cars[num-1]
+      if (get_distance(car['position'], car['route'][-1]) >= MIN_DISTANCE):
+        break
+    num -= 1
   return car
 
 def scheduleNewPedestrian():
   if (len(worldState) > 0):
     car = pickCar(worldState)
-    newPedestrian = createNewPedestrianForCar(len(state), car)
-    newPedestrian['route'] = newPedestrian['baseRoute']
-    state.append(newPedestrian)
+    if (car != None):
+      newPedestrian = createNewPedestrianForCar(len(state), car)
+      newPedestrian['route'] = newPedestrian['baseRoute']
+      state.append(newPedestrian)
 
 def createNewPedestrianForCar(i, car):
   MU_DISTANCE = 100
   SIGMA_DISTANCE = 15
 
   intersectionPoint = car['position']
+  print('Going to intersect at', intersectionPoint)
   numPaths = len(car['route'])
   for i in range(numPaths - 1): #TODO: Binary search
     start = car['route'][i]
@@ -160,11 +175,16 @@ def createNewPedestrianForCar(i, car):
 
   MU_THETA = 0
   SIGMA_THETA = 15
-  speedRatio = WALKING_SPEED_KM_H / car['speed']
+
+  carSpeed = 60
+  if (car['speed'] != 0):
+    carSpeed = car['speed']
+
+  speedRatio = WALKING_SPEED_KM_H / carSpeed
   startDistance = random.gauss(MU_DISTANCE, SIGMA_DISTANCE) * speedRatio
   startAngle = carDirection + 90 + random.gauss(MU_THETA, SIGMA_THETA)
 
-  start = add(intersectionPoint, scale(to_unit_circle(startAngle), startDistance))
+  start = add_distance(intersectionPoint, startAngle, startDistance)
   end = interpolate(start, intersectionPoint, 2)
   if (random.random() < 0.5):
     start, end = end, start
@@ -172,7 +192,7 @@ def createNewPedestrianForCar(i, car):
   direction = get_direction(start, end)
   preprocess(baseRoute)
 
-  pedestrian = {'id': i, 'type': 'car', 'position': start, 'speed': 0, 'direction': direction, 'route': None, 'sensorData': {}, 'baseRoute': baseRoute}
+  pedestrian = {'id': i, 'type': 'pedestrian', 'position': start, 'speed': 0, 'direction': direction, 'route': None, 'sensorData': {}, 'baseRoute': baseRoute}
   return pedestrian
 
 def generateEventTime():
@@ -188,6 +208,7 @@ def executePedestrianAlgorithm(state, timestamp):
     movePedestrian(state[-1], timeLeft=time_d)
     nextEventTime += generateEventTime()
 
+  print(state)
   for i, pedestrian in enumerate(state):
     if movePedestrian(pedestrian):
       print('deleting')
@@ -198,6 +219,8 @@ def movePedestrian(pedestrian, timeLeft=TIMESLICE):
   start = pedestrian['route'][0]
   end = pedestrian['route'][1]
 
+  print(start)
+  print(end)
   if (end[2]['timeLeft'] <= timeLeft):
     end[2]['timeLeft'] = 0
     pedestrian['position'] = end

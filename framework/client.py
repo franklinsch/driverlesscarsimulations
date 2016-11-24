@@ -31,6 +31,7 @@ class SAVNConnectionAssistant:
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
+    self.synchronize()
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -118,9 +119,10 @@ class SAVNConnectionAssistant:
       self.handleSimulationDataUpdate(packet["content"])
     elif isCommunication():
       self.handleSimulationCommunication(packet["content"])
+      print("\n\nReceived go-ahead at ", time.time())
       self.shouldAwait = False
 
-  def await(self, sleepTime):
+  def synchronize(self, sleepTime=1):
     self.shouldAwait = True
     while (self.shouldAwait):
       time.sleep(sleepTime)

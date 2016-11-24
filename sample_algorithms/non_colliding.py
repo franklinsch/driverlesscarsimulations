@@ -83,10 +83,11 @@ def runSimulation(savn, initialParameters):
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
   while savn.alive:
+    print("Sending", timestamp)
     savn.updateState(timestamp, translate(state))
+    print("Working on next: Sent", timestamp)
     state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
-    savn.await(SLEEP_TIME)
   #useApiToEnd()
 
 def analyseData(data):
@@ -102,6 +103,7 @@ def translateDataToCameraData(car, data):
   cameraData = []
   for frameworkState in data:
     for obj in frameworkState['objects']:
+      obj['position'] = [obj['position']['lng'], obj['position']['lat']]
       distance = get_distance(car['position'], obj['position'])
       direction = get_direction(car['position'], obj['position'])
       if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
