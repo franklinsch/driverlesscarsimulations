@@ -685,3 +685,5 @@ function lookup(objs, eqF) {
   }
   return -1;
 }
+
+fserver.listen(9000);
