@@ -31,7 +31,6 @@ export default class SimulationSettings extends React.Component {
   }
 
   _handleRealWorldJourneyNumChange(e) {
-    console.log(e.target.value)
     this.setState({realWorldJourneyNum: e.target.value});
   }
 
