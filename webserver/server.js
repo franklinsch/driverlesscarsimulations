@@ -3,6 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+exports._handleRequestEventUpdate = _handleRequestEventUpdate;
 const routes = require('./backend/routes/routes');
 const session = require('express-session');
 const config = require('./backend/config');
@@ -108,7 +109,7 @@ const frameworkConnections = []
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
-function _handleRequestEventUpdate(message) {
+function _handleRequestEventUpdate(message, callback) {
   const simulationID = message.content.simulationID;
   Simulation.findByIdAndUpdate(simulationID, {
     $push: {
@@ -124,6 +125,7 @@ function _handleRequestEventUpdate(message) {
       }));
       console.log("Could not find simulation with ID " + message.content.simulationID);
       console.error(error);
+      callback(error);
       return
     }
 
@@ -142,6 +144,8 @@ function _handleRequestEventUpdate(message) {
         }
       }))
     }
+
+    callback(null, simulation);
   });
 }
 

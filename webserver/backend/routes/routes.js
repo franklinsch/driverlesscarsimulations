@@ -10,6 +10,8 @@ const config = require('../config');
 const auth = require('../authenticate');
 
 
+const server = require('../../server.js');
+
 router.route('/simulations')
   .get(auth, (req, res) => {
     const userId = res._headers.token._id;
@@ -69,38 +71,18 @@ router.route('/simulations/:simulationID/journeys')
     const id = req.params.simulationID;
     const journeys = req.body;
     savedJourneys = [];
-    async.each(journeys, (journey, callback) => {
-      const newJourney = new Journey(journey);
-      newJourney.save()
-        .then((savedJourney) => {
-          savedJourneys.push(savedJourney);
-          callback(null);
-        })
-        .catch((err) => {
-          callback(err);
-        });
-    }, (err) => {
-      const updateInfo = {
-        $push: {
-          journeys: {
-            $each: savedJourneys
-          }
-        }
-      };
-      const options = {
-        upsert: true,
-        returnNewDocument: true
-      };
-      Simulation.findOneAndUpdate({
-        _id: id
-      }, updateInfo, options)
-        .then((result) => {
-          res.send(result);
-        })
-        .catch((err) => {
-          res.send(err);
-        });
-    });
+    server._handleRequestEventUpdate({
+      content: {
+        simulationID: id,
+        journeys: journeys
+      }
+    }, (error, simulation) => {
+      if (error || !simulation) {
+        res.send(error);
+      } else {
+        res.send(simulation);
+      }
+    })
   });
 
 router.route('/register')
