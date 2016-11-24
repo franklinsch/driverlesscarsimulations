@@ -257,14 +257,23 @@ frontendSocketServer.on('request', function(request) {
       }
       frontendConnections.push({connection: connection, simulationID: simulationID, timestamp: latestTimestamp, speed: null});
 
-      connection.send(JSON.stringify({
-        type: "simulation-start-parameters",
-        content: {
-          simID: simulationID,
-          city: simulation.city,
-          journeys: simulation.journeys
+      City.findOne({name: simulation.city.name}, (error, city) => {
+        if (error || !city) {
+          console.error("Error when trying to retrieve city ID");
+          console.error(error);
+          return;
         }
-      }));
+
+        connection.send(JSON.stringify({
+          type: "simulation-start-parameters",
+          content: {
+            simID: simulationID,
+            cityID: city._id,
+            journeys: simulation.journeys
+          }
+        }));
+      })
+      
     })
   }
 
