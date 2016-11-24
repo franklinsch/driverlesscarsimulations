@@ -40,12 +40,15 @@ def runSimulation(savn, initialParameters):
   print('The time is', timestamp)
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
-  nextEventTime = generateEventTime()
+  nextEventTime = timestamp
+  nextEventTime += generateEventTime()
 
   while savn.alive:
+    print("Sending", timestamp)
     savn.updateState(timestamp, translate(state))
     state = executePedestrianAlgorithm(state, timestamp)
     timestamp += TIMESLICE
+    print("Awaiting for next")
     savn.await(SLEEP_TIME)
   #useApiToEnd()
 
@@ -54,6 +57,8 @@ def analyseData(data):
   worldState = []
   for frameworkState in data:
     worldState += frameworkState['objects']
+  for car in worldState:
+    car['position'] = [car['position']['lng'], car['position']['lat']]
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
@@ -117,7 +122,7 @@ def pickCar(cars):
   MIN_DISTANCE = 60 #TODO: Extract generalisable data
 
   car = cars[index]
-  if (get_distance(car['position'], car['route'][-1][1]) < MIN_DISTANCE):
+  if (get_distance(car['position'], car['route'][-1]) < MIN_DISTANCE):
     return pickCar(cars)
   return car
 
@@ -134,7 +139,7 @@ def createNewPedestrianForCar(i, car):
 
   intersectionPoint = car['position']
   numPaths = len(car['route'])
-  for i in range(numPaths - 1):
+  for i in range(numPaths - 1): #TODO: Binary search
     start = car['route'][i]
     end = car['route'][i+1] #TODO: Doesn't work for cars going the other way
     if (within_box(intersectionPoint, start, end)):
@@ -142,7 +147,7 @@ def createNewPedestrianForCar(i, car):
 
   intersectionDistance = random.gauss(MU_DISTANCE, SIGMA_DISTANCE)
   while intersectionDistance != 0 and i < numPaths:
-    end = route[i]
+    end = car['route'][i]
     dist_node = get_distance(intersectionPoint, end)
     if (dist_node > intersectionDistance or i == numPaths - 1):
       intersectionPoint = interpolate(intersectionPoint, end, intersectionDistance/dist_node)
@@ -176,6 +181,7 @@ def generateEventTime():
 
 def executePedestrianAlgorithm(state, timestamp):
   global nextEventTime
+  print("Next event at", nextEventTime)
   while (timestamp >= nextEventTime):
     time_d = timestamp - nextEventTime
     scheduleNewPedestrian()
@@ -184,24 +190,27 @@ def executePedestrianAlgorithm(state, timestamp):
 
   for i, pedestrian in enumerate(state):
     if movePedestrian(pedestrian):
+      print('deleting')
       del state[i]
   return state
 
 def movePedestrian(pedestrian, timeLeft=TIMESLICE):
-  start = pedestrian['start']
-  end = pedestrian['end']
+  start = pedestrian['route'][0]
+  end = pedestrian['route'][1]
 
-  if (end['timeLeft'] <= timeLeft):
+  if (end[2]['timeLeft'] <= timeLeft):
+    end[2]['timeLeft'] = 0
+    pedestrian['position'] = end
     return True
 
-  end['timeLeft'] -= timeLeft
-  pedestrian['position'] = interpolate(end, start, end['timeLeft']/end['totalTime'])
+  end[2]['timeLeft'] -= timeLeft
+  pedestrian['position'] = interpolate(end, start, end[2]['timeLeft']/end[2]['totalTime'])
   return False
 
 def translate(state):
   res = []
   for pedestrian in state:
-    res.append({'id': str(pedestrian['id']), 'objectType': pedestrian['type'], 'speed': pedestrian['speed'], 'direction': pedestrian['direction'], 'position': {'lat': pedestrian['position'][1], 'lng': pedestrain['position'][0]}, 'route': [pedestrian['start'], pedestrian['end']]})
+    res.append({'id': str(pedestrian['id']), 'objectType': pedestrian['type'], 'speed': pedestrian['speed'], 'direction': pedestrian['direction'], 'position': {'lat': pedestrian['position'][1], 'lng': pedestrian['position'][0]}, 'route': pedestrian['baseRoute']})
   return res
 
 if(len(sys.argv) != 2):
