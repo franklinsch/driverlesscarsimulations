@@ -223,6 +223,33 @@ frontendSocketServer.on('request', function(request) {
         break;
       }
     }
+
+    //TODO: Replace this with a better method of generating the end hotspot that is dependant on the start position.
+    const endPointLookupVal = Math.random() * hotspotInfo.popularitySum;
+    rollingSum = 0;
+    let endHotspot;
+    for (var i = 0; i < hotspots.length; i++) {
+      rollingSum += _calculateCurrentPopularity(hotspots[i]);
+      if (rollingSum >= endPointLookupVal) {
+        endHotspot = hotspots[i];
+        break;
+      }
+    }
+
+    //TODO: Distribute points around hotspot rather than starting at a hotspot.
+    //const maxDistance = 0.8 //km
+    //const distanceFromHotspot = Math.Random() * maxDistance;
+
+    const journey = {
+      carID: '0',
+      origin: startHotspot.coordinates,
+      destination: endHotspot.coordinates
+    }
+
+    return journey
+
+
+
   }
 
   function _createSimulationWithRealData(data, callback) {
@@ -266,10 +293,12 @@ frontendSocketServer.on('request', function(request) {
         journeys.push(_createAccurateJourney(hotspotInfo))
       }
 
+      console.log(journeys)
+
       simulation = new Simulation({
         city: data.selectedCity,
         hotspotInfo: hotspotInfo,
-        journeys: data.journeys,
+        journeys: journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
         frameworks: [],
         simulationStates: []
