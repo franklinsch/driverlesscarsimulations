@@ -287,6 +287,9 @@ frontendSocketServer.on('request', function(request) {
         return
       }
 
+      // Reassign the result so that the journeys include their ids
+      message.content.journeys = simulation.journeys.slice(-message.content.journeys.length);
+
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
           type: "simulation-update",
