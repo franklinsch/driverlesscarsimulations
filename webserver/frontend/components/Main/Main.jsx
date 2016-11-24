@@ -131,7 +131,7 @@ export default class Main extends React.Component {
       }
 
       const frameworkStates = simulationState.frameworkStates;
-      const objects = frameworkStates.map((fState) => { return fState.objects }).reduce((acc, fObjects) => {acc.concat(fObjects)})
+      const objects = frameworkStates.map((fState) => { return fState.objects }).reduce((acc, fObjects) => {return acc.concat(fObjects)})
       simulationState.objects = objects;
 
       this.setState({
