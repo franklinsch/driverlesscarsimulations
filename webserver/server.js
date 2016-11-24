@@ -209,7 +209,7 @@ frontendSocketServer.on('request', function(request) {
     }
   }
 
-  function _generateStartPoint(hotspotCoords, maxDistance) {
+  function _generatePoint(hotspotCoords, maxDistance) {
     const lng_scale = 111.319;
     const lat_scale = 110.54
 
@@ -225,7 +225,8 @@ frontendSocketServer.on('request', function(request) {
     const point = {
       lat: hotspotCoords.lat + latChange,
       lng: hotspotCoords.lng + lngChange
-    }
+    };
+    //TODO: check point is within Bbox bounds.
     return point;
   }
 
@@ -259,10 +260,9 @@ frontendSocketServer.on('request', function(request) {
       }
     }
 
-    //TODO: Distribute points around hotspot rather than starting at a hotspot.
     const maxDistance = 0.8; //km
-    const startCoords = _generateStartPoint(startHotspot.coordinates, maxDistance);
-    const endCoords   = _generateStartPoint(endHotspot.coordinates, maxDistance);
+    const startCoords = _generatePoint(startHotspot.coordinates, maxDistance);
+    const endCoords   = _generatePoint(endHotspot.coordinates, maxDistance);
 
 
     const journey = {
