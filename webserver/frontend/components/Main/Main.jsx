@@ -131,8 +131,30 @@ export default class Main extends React.Component {
       }
 
       const frameworkStates = simulationState.frameworkStates;
-      const objects = frameworkStates.map((fState) => { return fState.objects }).reduce((acc, fObjects) => {return acc.concat(fObjects)})
+      let objects = [];
+
+      let colourIndex = 0
+      for (const fState of simulationState.frameworkStates) {
+        fState.objects.map((object) => {
+          object.colourIndex = colourIndex
+        });
+        objects.push(fState.objects);
+        colourIndex++;
+      }
+      objects = objects.reduce((acc, fObjects) => {return acc.concat(fObjects)})
+
+      //const objects = frameworkStates.map((fState) => { 
+        //const objects = fState.objects;
+        //objects.map((object) => {
+          //object.frameworkID = fState.frameworkID;
+          //return object;
+        //})
+
+        //return objects;
+      //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
       simulationState.objects = objects;
+
+      console.log(objects);
 
       this.setState({
         simulationState: simulationState

@@ -147,7 +147,7 @@ def scheduleNewPedestrian():
       newPedestrian['route'] = newPedestrian['baseRoute']
       state.append(newPedestrian)
 
-def createNewPedestrianForCar(i, car):
+def createNewPedestrianForCar(carID, car):
   MU_DISTANCE = 100
   SIGMA_DISTANCE = 15
 
@@ -192,7 +192,7 @@ def createNewPedestrianForCar(i, car):
   direction = get_direction(start, end)
   preprocess(baseRoute)
 
-  pedestrian = {'id': i, 'type': 'pedestrian', 'position': start, 'speed': 0, 'direction': direction, 'route': None, 'sensorData': {}, 'baseRoute': baseRoute}
+  pedestrian = {'id': carID, 'type': 'pedestrian', 'position': start, 'speed': 0, 'direction': direction, 'route': None, 'sensorData': {}, 'baseRoute': baseRoute}
   return pedestrian
 
 def generateEventTime():
