@@ -5,7 +5,8 @@ export default class JourneyList extends React.Component {
 
   static propTypes = {
     simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
-    pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney)
+    pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    handlers: React.PropTypes.object
   }
 
   render() {
@@ -22,7 +23,11 @@ export default class JourneyList extends React.Component {
           {
             simulationJourneys.map((journey, index) => {
               return (
-                <li key={index}>
+                <li
+                  key={index}
+                  onMouseEnter={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
+                  onMouseLeave={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
+                >
                   { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } 
                 </li>
               )

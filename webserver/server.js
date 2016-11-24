@@ -227,7 +227,8 @@ frontendSocketServer.on('request', function(request) {
         });
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
-    callback(null, simulation._id, data.selectedCity._id, data.journeys);
+
+    callback(null, simulation._id, data.selectedCity._id, simulation.journeys);
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -286,7 +287,8 @@ frontendSocketServer.on('request', function(request) {
         return
       }
 
-      console.log(simulation)
+      // Reassign the result so that the journeys include their ids
+      message.content.journeys = simulation.journeys.slice(-message.content.journeys.length);
 
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({

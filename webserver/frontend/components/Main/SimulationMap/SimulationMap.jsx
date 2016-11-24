@@ -13,6 +13,7 @@ export default class SimulationMap extends React.Component {
     simulationState: CustomPropTypes.simulationState.isRequired,
     previewMarkerPosition: CustomPropTypes.position,
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
+    selectedJourneyID: React.PropTypes.string,
     handlers: React.PropTypes.object
   }
 
@@ -27,6 +28,20 @@ export default class SimulationMap extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    if (newProps.selectedJourneyID != this.props.selectedJourneyID) {
+      if (newProps.selectedJourneyID) {
+        const associatedCar = this._getCarByJourneyID(newProps.selectedJourneyID);
+
+        this.setState({
+          clickedCar: associatedCar
+        });
+      } else {
+        this.setState({
+          clickedCar: null
+        });
+      }
+    }
+
     const position = newProps.previewMarkerPosition
     if (!position || this.oldPreviewMarkerPosition && position === this.oldPreviewMarkerPosition) {
       return
@@ -212,6 +227,18 @@ export default class SimulationMap extends React.Component {
                 }
               }
             />;
+  }
+
+  _getCarByJourneyID(journeyID) {
+    const cars = this.props.simulationState.objects;
+
+    for (let car of cars) {
+      if (car.journeyID && car.journeyID == journeyID) {
+        return car;
+      }
+    }
+
+    return null;
   }
 
   render() {
