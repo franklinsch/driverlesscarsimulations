@@ -381,11 +381,11 @@ frontendSocketServer.on('request', function(request) {
         simulationStates: []
       };
 
-      _createSimulation(simulationData, callback)
+      _createSimulation(simulationData, data.userID, callback)
     });
   }
 
-  function _createSimulation(simulationData, callback) {
+  function _createSimulation(simulationData, userID, callback) {
     simulation = new Simulation(simulationData);
     simulation.save((error, simulation) => {
       if (error) {
@@ -400,7 +400,7 @@ frontendSocketServer.on('request', function(request) {
         upsert: true
       };
       User.findOneAndUpdate({
-        _id: data.userID
+        _id: userID
       }, updateInfo, options)
         .then((result) => {
           console.log(result);
@@ -411,7 +411,7 @@ frontendSocketServer.on('request', function(request) {
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
 
-    callback(null, simulation._id, simulationData.selectedCity._id, simulation.journeys);
+    callback(null, simulation._id, simulationData.city._id, simulation.journeys);
   }
 
   function _handleRequestSimulationStart(message, callback) {
@@ -426,7 +426,7 @@ frontendSocketServer.on('request', function(request) {
         frameworks: [],
         simulationStates: []
       };
-      _createSimulation(simulationData, callback);
+      _createSimulation(simulationData, data.userID, callback);
     }
   }
 

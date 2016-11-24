@@ -406,7 +406,6 @@ export default class Main extends React.Component {
 
     const simulationSettingsHandlers = {
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
-      handleHotspotGeneration         : ::this.handleHotspotGeneration,
       handleSimulationStart           : ::this.handleSimulationStart,
       handleSimulationUpdate          : ::this.handleSimulationUpdate,
       handleSimulationClose           : ::this.handleSimulationClose,
