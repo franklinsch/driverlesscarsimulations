@@ -18,6 +18,7 @@ const simulationSchema = mongoose.Schema({
       }
     }
   },
+  createdAt: Date,
   timeslice: Number,
   hotspots: [Hotspot.schema],
   latestTimestamp: Number,

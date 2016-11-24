@@ -194,6 +194,10 @@ export default class SimulationMap extends React.Component {
     });
   }
 
+  _handleSimulationActivate(e) {
+    this.props.handlers.handleSimulationActivate(this.props.simulationID);
+  }
+
   componentDidUpdate() {
     if (this.refs.map) {
       const map = this.refs.map.leafletElement;
@@ -291,6 +295,13 @@ export default class SimulationMap extends React.Component {
     return (
       <div>
         <p>Current simulation ID: {simulationID}</p>
+          <button
+            className = "btn btn-primary"
+            hidden    = {!simulationID}
+            onClick   = {::this._handleSimulationActivate}
+          >
+            Activate simulation
+          </button>
       <ScrubTimer
         timestamp          = {this.props.simulationState.timestamp}
         formattedTimestamp = {this.props.simulationState.formattedTimestamp}

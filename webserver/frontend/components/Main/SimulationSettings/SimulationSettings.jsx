@@ -135,11 +135,6 @@ export default class SimulationSettings extends React.Component {
             }
           </button>
 
-          {
-            hasSimulationStarted &&
-            <div>Started simulation's ID: { simID }</div>
-          }
-
           <button
             className = "btn btn-primary"
             hidden    = {!hasSimulationStarted}
