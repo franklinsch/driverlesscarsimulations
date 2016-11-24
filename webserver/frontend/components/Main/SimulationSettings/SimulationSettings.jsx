@@ -102,7 +102,7 @@ export default class SimulationSettings extends React.Component {
             type = "checkbox"
             name = "real-data"
             disabled = {hasSimulationStarted}
-            onChange = {(e) => this._handleRealDataCheckboxChange(e, hasSimulationStarted)}
+            onChange = {(e) => this._handleRealDataCheckboxChange(e)}
           />
           Use real world data
           {
