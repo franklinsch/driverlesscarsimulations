@@ -331,8 +331,6 @@ frontendSocketServer.on('request', function(request) {
               level: undergroundData[i].entryPlusExitInMillions,
             }]
           };
-          console.log(hotspot)
-          console.log(_calculatePopularityAtTime(hotspot, startTime))
           popularitySum += _calculatePopularityAtTime(hotspot, startTime);
           hotspots.push(hotspot);
         }
