@@ -108,6 +108,43 @@ const frameworkConnections = []
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
+function _handleRequestEventUpdate(message) {
+  const simulationID = message.content.simulationID;
+  Simulation.findByIdAndUpdate(simulationID, {
+    $push: {
+      journeys: { $each: message.content.journeys }
+    }
+  }, {new: true}, function (error, simulation) {
+    if (error || !simulation) {
+      connection.send(JSON.stringify({
+        type: "simulation-error",
+        content: {
+          message: "Could not find simulation with ID " + message.content.simulationID
+        }
+      }));
+      console.log("Could not find simulation with ID " + message.content.simulationID);
+      console.error(error);
+      return
+    }
+
+    for (const framework of simulation.frameworks) {
+      frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
+        type: "simulation-update",
+        content: message.content
+      }));
+    }
+
+    for (const frontend of simulation.frontends) {
+      frontendConnections[frontend.connectionIndex]['connection'].send(JSON.stringify({
+        type: "simulation-journeys-update",
+        content: {
+          journeys: simulation.journeys
+        }
+      }))
+    }
+  });
+}
+
 frontendSocketServer.on('request', function(request) {
   const connection = request.accept(null, request.origin);
 
@@ -277,39 +314,6 @@ frontendSocketServer.on('request', function(request) {
     })
   }
 
-  function _handleRequestEventUpdate(message, callback) {
-    const simulationID = message.content.simulationID;
-    Simulation.findByIdAndUpdate(simulationID, {
-      $push: {
-        journeys: { $each: message.content.journeys }
-      }
-    }, {new: true}, function (error, simulation) {
-      if (error || !simulation) {
-        connection.send(JSON.stringify({
-          type: "simulation-error",
-          content: {
-            message: "Could not find simulation with ID " + message.content.simulationID
-          }
-        }));
-        console.log("Could not find simulation with ID " + message.content.simulationID);
-        console.error(error);
-        return
-      }
-
-      // Reassign the result so that the journeys include their ids
-      message.content.journeys = simulation.journeys.slice(-message.content.journeys.length);
-
-      for (const framework of simulation.frameworks) {
-        frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
-          type: "simulation-update",
-          content: message.content
-        }));
-      }
-
-      callback(simulation.journeys);
-    });
-  }
-
   function _handleRequestSimulationSpeedChange(message) {
     const index = lookup(frontendConnections, function(obj) {
       return obj['connection'] == connection;
@@ -428,14 +432,7 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestSimulationJoin(messageData);
         break;
       case "request-simulation-update":
-        _handleRequestEventUpdate(messageData, (journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-journeys-update",
-            content: {
-              journeys: journeys
-            }
-          }));
-        });
+        _handleRequestEventUpdate(messageData);
         break;
       case "request-simulation-speed-change":
         _handleRequestSimulationSpeedChange(messageData);
@@ -684,5 +681,3 @@ function lookup(objs, eqF) {
   }
   return -1;
 }
-
-fserver.listen(9000);
