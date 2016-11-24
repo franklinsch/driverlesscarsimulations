@@ -372,43 +372,21 @@ frontendSocketServer.on('request', function(request) {
       }
       journeys = journeys.concat(data.journeys)
 
-      simulation = new Simulation({
+      simulationData = {
         city: data.selectedCity,
         hotspotInfo: hotspotInfo,
         journeys: journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
         frameworks: [],
         simulationStates: []
-      });
+      };
 
-      simulation.save((error, simulation) => {
-        if (error) {
-          return console.error(error);
-        }
-        frontendConnections.push({
-          connection: connection,
-          simulationID: simulation._id,
-          timestamp: 0,
-          speed: null
-        });
-      });
-      callback(null, simulation._id, data.selectedCity._id, data.journeys);
+      _createSimulation(simulationData, callback)
     });
   }
 
-  function _handleRequestSimulationStart(message, callback) {
-    const data = message.content;
-    if (data.useRealData) {
-      _createSimulationWithRealData(data, callback)
-    } else {
-      const simulation = new Simulation({
-        city: data.selectedCity,
-        journeys: data.journeys,
-        frontends: [{connectionIndex: frontendConnections.length}],
-        frameworks: [],
-        simulationStates: []
-      });
-
+  function _createSimulation(simulationData, callback) {
+    simulation = new Simulation(simulationData);
     simulation.save((error, simulation) => {
       if (error) {
         return console.error(error);
@@ -422,8 +400,8 @@ frontendSocketServer.on('request', function(request) {
         upsert: true
       };
       User.findOneAndUpdate({
-          _id: data.userID
-        }, updateInfo, options)
+        _id: data.userID
+      }, updateInfo, options)
         .then((result) => {
           console.log(result);
         })
@@ -433,7 +411,22 @@ frontendSocketServer.on('request', function(request) {
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
 
-    callback(null, simulation._id, data.selectedCity._id, simulation.journeys);
+    callback(null, simulation._id, simulationData.selectedCity._id, simulation.journeys);
+  }
+
+  function _handleRequestSimulationStart(message, callback) {
+    const data = message.content;
+    if (data.useRealData) {
+      _createSimulationWithRealData(data, callback)
+    } else {
+      const simulationData = {
+        city: data.selectedCity,
+        journeys: data.journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      };
+      _createSimulation(simulationData, callback);
     }
   }
 
