@@ -253,12 +253,30 @@ frontendSocketServer.on('request', function(request) {
       endDate.setMinutes(endTime[1]);
       endDate.setSeconds(endTime[2]);
 
-
-
       if (date >= startDate && date <= endDate) {
         return levels[i].level;
       }
     }
+  }
+
+  function _generateStartPoint(hotspotCoords, maxDistance) {
+    const lng_scale = 111.319;
+    const lat_scale = 110.54
+
+    const distanceFromHotspot = Math.random() * maxDistance;
+    const angle = Math.random() * Math.PI * 2;
+
+    const horizontal = distanceFromHotspot * Math.cos(angle);
+    const vertical = distanceFromHotspot * Math.sin(angle);
+
+    const latChange = horizontal/lat_scale;
+    const lngChange = vertical/(lng_scale * Math.cos(hotspotCoords.lat));
+
+    const point = {
+      lat: hotspotCoords.lat + latChange,
+      lng: hotspotCoords.lng + lngChange
+    }
+    return point;
   }
 
   function _createAccurateJourney(hotspotInfo, startTime) {
@@ -292,14 +310,21 @@ frontendSocketServer.on('request', function(request) {
     }
 
     //TODO: Distribute points around hotspot rather than starting at a hotspot.
-    //const maxDistance = 0.8 //km
-    //const distanceFromHotspot = Math.Random() * maxDistance;
+    const maxDistance = 0.8; //km
+    const startCoords = _generateStartPoint(startHotspot.coordinates, maxDistance);
+    const endCoords   = _generateStartPoint(endHotspot.coordinates, maxDistance);
+
 
     const journey = {
       carID: '0',
-      origin: startHotspot.coordinates,
-      destination: endHotspot.coordinates
-    }
+      origin: startCoords,
+      destination: endCoords
+    };
+
+    console.log(startHotspot)
+    console.log(endHotspot)
+
+    console.log(journey)
 
     return journey;
   }
