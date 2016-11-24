@@ -8,7 +8,7 @@ export default class JourneySettings extends React.Component {
 
   static propTypes = {
     bounds: CustomPropTypes.bounds,
-    journeys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
+    simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
     handlers: React.PropTypes.object
@@ -101,7 +101,7 @@ export default class JourneySettings extends React.Component {
     const bounds = this.props.bounds;
     const showJourneyManualAddForm = this.state.showJourneyManualAddForm;
 
-    const journeys = this.props.journeys;
+    const journeys = this.props.simulationJourneys;
 
     const landmarkSearchHandlers = {
       handlePositionAdd : this.props.handlers.handlePositionAdd

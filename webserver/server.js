@@ -3,6 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+exports._handleRequestEventUpdate = _handleRequestEventUpdate;
 const routes = require('./backend/routes/routes');
 const session = require('express-session');
 const config = require('./backend/config');
@@ -107,6 +108,46 @@ const frontendConnections = []
 const frameworkConnections = []
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
+
+function _handleRequestEventUpdate(message, callback) {
+  const simulationID = message.content.simulationID;
+  Simulation.findByIdAndUpdate(simulationID, {
+    $push: {
+      journeys: { $each: message.content.journeys }
+    }
+  }, {new: true}, function (error, simulation) {
+    if (error || !simulation) {
+      connection.send(JSON.stringify({
+        type: "simulation-error",
+        content: {
+          message: "Could not find simulation with ID " + message.content.simulationID
+        }
+      }));
+      console.log("Could not find simulation with ID " + message.content.simulationID);
+      console.error(error);
+      callback(error);
+      return
+    }
+
+    for (const framework of simulation.frameworks) {
+      frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
+        type: "simulation-update",
+        content: message.content
+      }));
+    }
+
+    for (const frontend of simulation.frontends) {
+      frontendConnections[frontend.connectionIndex]['connection'].send(JSON.stringify({
+        type: "simulation-journeys-update",
+        content: {
+          journeys: simulation.journeys
+        }
+      }))
+    }
+
+    callback(null, simulation);
+  });
+}
 
 frontendSocketServer.on('request', function(request) {
   const connection = request.accept(null, request.origin);
@@ -257,48 +298,24 @@ frontendSocketServer.on('request', function(request) {
       }
       frontendConnections.push({connection: connection, simulationID: simulationID, timestamp: latestTimestamp, speed: null});
 
-      connection.send(JSON.stringify({
-        type: "simulation-start-parameters",
-        content: {
-          simID: simulationID,
-          city: simulation.city,
-          journeys: simulation.journeys
+      City.findOne({name: simulation.city.name}, (error, city) => {
+        if (error || !city) {
+          console.error("Error when trying to retrieve city ID");
+          console.error(error);
+          return;
         }
-      }));
-    })
-  }
 
-  function _handleRequestEventUpdate(message, callback) {
-    const simulationID = message.content.simulationID;
-    Simulation.findByIdAndUpdate(simulationID, {
-      $push: {
-        journeys: { $each: message.content.journeys }
-      }
-    }, {new: true}, function (error, simulation) {
-      if (error || !simulation) {
         connection.send(JSON.stringify({
-          type: "simulation-error",
+          type: "simulation-start-parameters",
           content: {
-            message: "Could not find simulation with ID " + message.content.simulationID
+            simID: simulationID,
+            cityID: city._id,
+            journeys: simulation.journeys
           }
         }));
-        console.log("Could not find simulation with ID " + message.content.simulationID);
-        console.error(error);
-        return
-      }
-
-      // Reassign the result so that the journeys include their ids
-      message.content.journeys = simulation.journeys.slice(-message.content.journeys.length);
-
-      for (const framework of simulation.frameworks) {
-        frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
-          type: "simulation-update",
-          content: message.content
-        }));
-      }
-
-      callback(simulation.journeys);
-    });
+      })
+      
+    })
   }
 
   function _handleRequestSimulationSpeedChange(message) {
@@ -419,14 +436,7 @@ frontendSocketServer.on('request', function(request) {
         _handleRequestSimulationJoin(messageData);
         break;
       case "request-simulation-update":
-        _handleRequestEventUpdate(messageData, (journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-journeys-update",
-            content: {
-              journeys: journeys
-            }
-          }));
-        });
+        _handleRequestEventUpdate(messageData);
         break;
       case "request-simulation-speed-change":
         _handleRequestSimulationSpeedChange(messageData);

@@ -135,8 +135,12 @@ export default class Main extends React.Component {
     } else if (messageData.type === "simulation-start-parameters") {
       const newSimulationInfo = this.state.simulationInfo;
       newSimulationInfo.id = messageData.content.simID;
+      const journeys = messageData.content.journeys;
+      const selectedCityID = messageData.content.cityID;
       this.setState({
-        simulationInfo: newSimulationInfo
+        simulationInfo: newSimulationInfo,
+        simulationJourneys: journeys,
+        selectedCityID: selectedCityID
       });
     } else if (messageData.type === "simulation-confirm-close") {
       const newSimulationInfo = this.state.simulationInfo;
