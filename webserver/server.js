@@ -212,7 +212,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _createAccurateJourney(hotspotInfo) {
     const lookupVal = Math.random() * hotspotInfo.popularitySum;
-    const hotspots = hotspotInfo.hotspots;
+    let hotspots = hotspotInfo.hotspots;
 
     let rollingSum = 0;
     let startHotspot;
@@ -220,6 +220,7 @@ frontendSocketServer.on('request', function(request) {
       rollingSum += _calculateCurrentPopularity(hotspots[i]);
       if (rollingSum >= lookupVal) {
         startHotspot = hotspots[i];
+        hotspots.splice(i, 1);
         break;
       }
     }
@@ -246,7 +247,7 @@ frontendSocketServer.on('request', function(request) {
       destination: endHotspot.coordinates
     }
 
-    return journey
+    return journey;
 
 
 
@@ -279,6 +280,7 @@ frontendSocketServer.on('request', function(request) {
             }]
           };
           popularitySum += undergroundData[i].entryPlusExitInMillions;
+          console.log(hotspot)
           hotspots.push(hotspot);
         }
       }
@@ -292,6 +294,8 @@ frontendSocketServer.on('request', function(request) {
       for (var i = 0; i <journeyNum; i++) {
         journeys.push(_createAccurateJourney(hotspotInfo))
       }
+
+      journeys = journeys.concat(data.journeys)
 
       console.log(journeys)
 
