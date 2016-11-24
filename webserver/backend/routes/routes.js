@@ -9,7 +9,6 @@ const User = require('../models/User');
 const config = require('../config');
 const auth = require('../authenticate');
 
-router.get('/protected', auth);
 
 router.route('/simulations')
   .get(auth, (req, res) => {
@@ -18,7 +17,10 @@ router.route('/simulations')
         _id: userId
       })
       .then((result) => {
-        res.json(result.simulations);
+        res.json({
+          username: result.username,
+          simulations: result.simulations
+        });
       })
       .catch((err) => {
         res.send(err);
@@ -27,7 +29,6 @@ router.route('/simulations')
   .post(auth, (req, res) => {
     const userID = res._headers.token._id;
     const simulationID = req.body.simulationID;
-    console.log(simulationID);
     const updateInfo = {
       $push: {
         simulations: simulationID
@@ -41,7 +42,6 @@ router.route('/simulations')
         _id: userID
       }, updateInfo, options)
       .then((result) => {
-        console.log(result);
         res.send(result);
       })
       .catch((err) => {
@@ -49,7 +49,7 @@ router.route('/simulations')
       });
   })
 
-router.get('/simulations/:simulationid', (req, res) => {
+router.get('/simulations/:simulationID', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 
@@ -119,8 +119,11 @@ router.route('/register')
     user.save((err) => {
       const token = user.generateJwt();
       res.status(200);
+      res.setHeader('token', token);
       res.json({
-        "token": token
+        "token": token,
+        "userID": user._id,
+        "username": user.username
       });
     });
   });
@@ -141,7 +144,9 @@ router.route('/login')
         res.status(200);
         res.setHeader('token', token);
         res.json({
-          "token": token
+          "token": token,
+          "userID": user._id,
+          "username": user.username
         });
       } else {
         // If user is not found

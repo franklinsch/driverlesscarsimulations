@@ -65,11 +65,11 @@ export default class SimulationSettings extends React.Component {
 
     return (
       <div className="container">
-        <JourneyList 
+        <JourneyList
           pendingJourneys = {pendingJourneys}
           simulationJourneys = {simulationJourneys}
         />
-        <JourneySettings 
+        <JourneySettings
           bounds              = {bounds}
           simulationJourneys  = {simulationJourneys}
           pendingJourneys     = {pendingJourneys}
@@ -77,22 +77,22 @@ export default class SimulationSettings extends React.Component {
           objectKindInfo      = {this.props.objectKindInfo}
           handlers            = {journeySettingsHandlers}
         />
-        <div className="row">
-          <button 
-            className = "btn btn-primary" 
+      <div id="simulation-buttons" className="row">
+          <button
+            className = "btn btn-primary"
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
           >
-            { hasSimulationStarted  && 
+            { hasSimulationStarted  &&
               <p>End Simulation</p> || <p>Start simulation</p>
             }
           </button>
 
           {
             hasSimulationStarted &&
-            <div>Current Simulation ID: { simID }</div>
+            <div>Started simulation's ID: { simID }</div>
           }
 
-          <button 
+          <button
             className = "btn btn-primary"
             hidden    = {!hasSimulationStarted}
             onClick   = {::this._handleSimulationUpdate}
@@ -100,14 +100,14 @@ export default class SimulationSettings extends React.Component {
             Update simulation
           </button>
 
-          <SpeedSetting 
+          <SpeedSetting
             hidden   = {!hasSimulationStarted}
             handlers = {speedSettingHandlers}
           />
 
-          <button 
-            className = "btn btn-primary" 
-            hidden    = {!hasSimulationStarted} 
+          <button
+            className = "btn btn-primary"
+            hidden    = {!hasSimulationStarted}
             onClick   = {::this._handleBenchmarkRequest}
           >
             Request benchmark

@@ -12,6 +12,8 @@
 #landmark-search {
   margin-top: 20px;
   width: 280px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #journeys-import {
@@ -24,4 +26,8 @@
 
 #auth-dropdown button {
   margin: 0.5em;
+}
+#simulation-buttons {
+  text-align: center;
+  margin-top: 1em;
 }

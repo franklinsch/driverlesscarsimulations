@@ -3,13 +3,20 @@ import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
 import Dropdown from './Dropdown/Dropdown.jsx';
 import JoinSimulationForm from './JoinSimulationForm/JoinSimulationForm.jsx';
 import LoginButton from './LoginButton/LoginButton.jsx';
+import SimulationList from './SimulationList/SimulationList.jsx';
 import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 
 export default class Header extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
   static propTypes = {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     token: React.PropTypes.string,
-    handlers: React.PropTypes.object
+    userID: React.PropTypes.string,
+    handlers: React.PropTypes.object,
+    simulations: React.PropTypes.array
   }
 
   handleCityChange(city) {
@@ -18,6 +25,8 @@ export default class Header extends React.Component {
 
   render() {
     const cities = this.props.availableCities || [];
+
+    const userSimulations = this.props.simulations;
 
     const dropdownHandlers = {
       handleSelect : ::this.handleCityChange
@@ -39,20 +48,29 @@ export default class Header extends React.Component {
               <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item">
-              <Dropdown 
+              <Dropdown
                 items    = {cities}
                 handlers = {dropdownHandlers}
               />
             </li>
             <li className="nav-item">
-              <LoginButton 
-                token    = {this.props.token}
-                handlers = {loginButtonHandlers}
+              <LoginButton
+                token      = {this.props.token}
+                activeUser = {this.props.activeUser}
+                handlers   = {loginButtonHandlers}
               />
             </li>
+            <li className="nav-item">
+              {
+                this.props.token ?
+                <SimulationList
+                  simulations = {userSimulations}
+                /> : ''
+              }
+            </li>
           </ul>
-          <JoinSimulationForm 
-            handlers = {joinSimulationFormHandlers} 
+          <JoinSimulationForm
+            handlers = {joinSimulationFormHandlers}
           />
       </nav>
     )

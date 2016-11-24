@@ -1,10 +1,13 @@
 import React from 'react';
+import cookie from 'react-cookie';
+import UtilFunctions from '../../../Utils/UtilFunctions.jsx';
 import 'whatwg-fetch';
 
 export default class LoginButton extends React.Component {
 
   static propTypes = {
     token: React.PropTypes.string,
+    activeUser: React.PropTypes.string,
     handlers: React.PropTypes.object
   }
 
@@ -28,6 +31,13 @@ export default class LoginButton extends React.Component {
   _handleFormSubmit(e) {
     e.preventDefault();
     const action = e.target.value;
+    if (action === 'logout') {
+      cookie.remove('token', { path: '/' });
+      window.sessionStorage.removeItem('token');
+      this.setState({ token: '' });
+      this.props.handlers.handleTokenChange('', '');
+      return;
+    }
     const url = "/" + action;
     fetch(url, {
       method: 'POST',
@@ -41,6 +51,7 @@ export default class LoginButton extends React.Component {
       })
     })
     .then((response) => {
+      this.setState({ password: '' });
       if (!response.ok) {
         console.log("error logging in");
         return;
@@ -48,8 +59,17 @@ export default class LoginButton extends React.Component {
 
       // Examine the text in the response
       response.json().then((data) => {
-        this.setState({ token: data.token });
-        this.props.handlers.handleTokenChange(data.token);
+        // save token in the cookie for 10 minutes
+        cookie.save('token', data.token, {
+          path: '/',
+          maxAge: UtilFunctions.session_length,
+        });
+        window.sessionStorage.setItem('token', data.token);
+        this.setState({
+          token: data.token,
+          loggedInUsername: data.username
+         });
+        this.props.handlers.handleTokenChange(data.token, data.userID, data.username);
       });
     })
     .catch((err) => {
@@ -60,10 +80,15 @@ export default class LoginButton extends React.Component {
   render() {
     return (
       <div>
-        <a className="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {this.state.token ? 'Logged in' : 'Login'}
+        <a className="nav-link" href="#" id="LoginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {
+            this.state.token ?
+            'Hello ' + this.props.activeUser + '!'
+            :
+            'Login'
+          }
         </a>
-        <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="LoginDropdown">
           <form>
             <div className="form-group">
               <label>Username</label>
@@ -87,10 +112,20 @@ export default class LoginButton extends React.Component {
             </div>
             <button
               type="submit"
-              value="login"
+              value=
+              {
+                this.state.token ?
+                'logout'
+                :
+                'login'
+              }
               onClick={::this._handleFormSubmit}
               className="btn btn-default">
-              Login
+              {
+                this.state.token ?
+                'Log Out'
+                :
+                'Log In'}
             </button>
             <button
               type="submit"

@@ -4,6 +4,7 @@ import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
 import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
 import Header from './Header/Header.jsx';
+import cookie from 'react-cookie';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
@@ -44,8 +45,11 @@ export default class Main extends React.Component {
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
+    const initialToken = cookie.load('token') || '';
     this.state = {
-      token: '',
+      token: initialToken,
+      userID: '',
+      activeUser: '',
       selectedCityID: 0,
       socket: socket,
       simulationInfo: {
@@ -60,6 +64,33 @@ export default class Main extends React.Component {
         objects: []
       },
       pendingJourneys: []
+    }
+    this.updateUserSimulations();
+  }
+
+  updateUserSimulations() {
+    if (this.state.token) {
+      const url = '/simulations';
+      const reqHeaders = new Headers({
+        "Accept": "application/json",
+        "token": this.state.token,
+        "Set-Cookie": "token=" + this.state.token,
+      });
+      fetch(url, {
+        method: 'GET',
+        headers: reqHeaders
+      })
+      .then((response) => {
+        response.json().then((data) => {
+          this.setState({
+            activeUser: data.username,
+            userSimulations: data.simulations
+          });
+        });
+      })
+      .catch(err => {
+        console.log("error fetching user simulations");
+      })
     }
   }
 
@@ -163,9 +194,11 @@ export default class Main extends React.Component {
   }
 
 
-  handleTokenChange(newToken) {
+  handleTokenChange(newToken, userID, username) {
     this.setState({
-      token: newToken
+      token: newToken,
+      userID: userID,
+      activeUser: username
     });
   }
 
@@ -177,10 +210,12 @@ export default class Main extends React.Component {
 
   _startInitialSimulation(cityId) {
     const journeys = this.state.pendingJourneys || [];
+    const userID = this.state.userID;
     const type = "request-simulation-start";
     const initialSettings = {
       selectedCity: cityId,
-      journeys: journeys
+      journeys: journeys,
+      userID: userID
     }
     const socket = this.state.socket;
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
@@ -254,11 +289,13 @@ export default class Main extends React.Component {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
+    const userID = this.state.userID;
 
     const type = "request-simulation-start";
     const content = {
       selectedCity: selectedCity,
-      journeys: pendingJourneys
+      journeys: pendingJourneys,
+      userID: userID
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
@@ -313,13 +350,26 @@ export default class Main extends React.Component {
     })
   }
 
+  componentDidUpdate() {
+    const sessionToken = cookie.load('token');
+    if (sessionToken && this.state.token) {
+      cookie.save('token', sessionToken, {
+        path: '/',
+        maxAge: UtilFunctions.session_length,
+      });
+    }
+  }
+
   render() {
     const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
     const simulationID = this.state.simulationInfo.id;
-    const token = this.state.token || '';
+    const token = this.state.token;
+    const userID = this.state.userID;
+    const activeUser = this.state.activeUser;
+    const userSimulations = this.state.userSimulations;
 
     const pendingJourneys = this.state.pendingJourneys || [];
     const simulationJourneys = this.state.simulationJourneys || [];
@@ -358,6 +408,9 @@ export default class Main extends React.Component {
         <Header
           availableCities = {availableCities}
           token           = {token}
+          userID          = {userID}
+          activeUser      = {activeUser}
+          simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />
         <div className="jumbotron">
@@ -378,6 +431,7 @@ export default class Main extends React.Component {
               <SimulationMap
                 width                      = {680 + 'px'}
                 height                     = {600 + 'px'}
+                simulationID               = {simulationID}
                 bounds                     = {bounds}
                 simulationState            = {simulationState}
                 previewMarkerPosition      = {previewMarkerPosition}

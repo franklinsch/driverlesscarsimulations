@@ -165,7 +165,7 @@ export default class SimulationMap extends React.Component {
               }
             </select>
               <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
-              <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button> 
+              <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button>
             </div>
           </span>
           </Popup>
@@ -197,7 +197,7 @@ export default class SimulationMap extends React.Component {
 
   _renderGeoJson() {
     // We use a random key so that on each change, the GeoJson is rerendered (GeoJson implementation is immutable)
-    return this.state.clickedCar && 
+    return this.state.clickedCar &&
             <GeoJson key={Math.random()} data={
                 { "type": "FeatureCollection",
                   "features": [
@@ -209,12 +209,13 @@ export default class SimulationMap extends React.Component {
                       }
                     }
                   ]
-                } 
+                }
               }
             />;
   }
 
   render() {
+    const simulationID = this.props.simulationID;
     const style = {
       height: this.props.height || 300 + 'px',
       width: this.props.width || 300 + 'px'
@@ -259,13 +260,14 @@ export default class SimulationMap extends React.Component {
 
     return (
       <div>
-      <ScrubTimer 
+        <p>Current simulation ID: {simulationID}</p>
+      <ScrubTimer
         timestamp          = {this.props.simulationState.timestamp}
         formattedTimestamp = {this.props.simulationState.formattedTimestamp}
         latestTimestamp    = {this.props.simulationState.latestTimestamp}
         handlers           = {scrubHandlers}
       />
-      <Map 
+      <Map
         style             = {style}
         onClick           = {::this._handleMapClick}
         ref               = 'map'
@@ -283,8 +285,8 @@ export default class SimulationMap extends React.Component {
           cars.map((car, index) => {
             const key = car.id;
             return (
-              <RotatableMarker 
-                position      = {car.position} 
+              <RotatableMarker
+                position      = {car.position}
                 key           = {key}
                 icon          = {carIcon}
                 rotationAngle = {0}
@@ -307,9 +309,9 @@ export default class SimulationMap extends React.Component {
           })
         }
 
-      { 
-        origin && 
-        < Marker 
+      {
+        origin &&
+        < Marker
           draggable
           position  = {origin}
           onDragend = {::this._updateOriginMarkerPosition}
@@ -324,14 +326,14 @@ export default class SimulationMap extends React.Component {
         </Marker>
       }
 
-      { 
+      {
         destination &&
         this._renderPopup()
       }
 
-      { 
+      {
         destination &&
-          <Marker 
+          <Marker
             draggable
             position  = {destination}
             onDragend = {::this._updateDestinationMarkerPosition}
