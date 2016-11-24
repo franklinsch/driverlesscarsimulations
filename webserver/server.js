@@ -213,7 +213,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _createAccurateJourney(hotspotInfo, startTime) {
     const lookupVal = Math.random() * hotspotInfo.popularitySum;
-    let hotspots = hotspotInfo.hotspots;
+    let hotspots = hotspotInfo.hotspots.slice();
 
     let rollingSum = 0;
     let startHotspot;
@@ -258,7 +258,6 @@ frontendSocketServer.on('request', function(request) {
     const bounds = data.selectedCity.bounds;
     const journeyNum = data.realWorldJourneyNum;
     const startTime = new Date();
-    console.log(startTime.getHours())
     fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
       if (err) {
         return console.error(err);
@@ -282,6 +281,8 @@ frontendSocketServer.on('request', function(request) {
               level: undergroundData[i].entryPlusExitInMillions,
             }]
           };
+          console.log(hotspot)
+          console.log(_calculatePopularityAtTime(hotspot, startTime))
           popularitySum += _calculatePopularityAtTime(hotspot, startTime);
           hotspots.push(hotspot);
         }
