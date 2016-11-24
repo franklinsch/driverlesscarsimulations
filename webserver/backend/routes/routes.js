@@ -71,6 +71,9 @@ router.route('/simulations/active')
         res.json({
           "active_simulation": user.active_simulation
         });
+      } else {
+        res.status(404).json(info);
+        return;
       }
     })(req, res);
   });
@@ -79,6 +82,7 @@ router.route('/simulations/activate')
   .post(auth, (req, res) => {
     const userID = res._headers.token._id;
     const simulationID = req.body.simulationID;
+    console.log(simulationID);
     const updateInfo = {
       active_simulation: simulationID
     };
@@ -90,6 +94,7 @@ router.route('/simulations/activate')
         _id: userID
       }, updateInfo, options)
       .then((result) => {
+        console.log(result);
         res.send(result);
       })
       .catch((err) => {

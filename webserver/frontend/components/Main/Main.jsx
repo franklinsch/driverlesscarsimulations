@@ -75,7 +75,6 @@ export default class Main extends React.Component {
       const reqHeaders = new Headers({
         "Accept": "application/json",
         "token": this.state.token,
-        "Set-Cookie": "token=" + this.state.token,
       });
       fetch(url, {
         method: 'GET',
@@ -361,16 +360,16 @@ export default class Main extends React.Component {
 
   handleSimulationActivate(simulationID) {
     const url = '/simulations/activate';
-    const postData = {
-      simulationID: simulationID
-    }
     fetch(url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        "token": this.state.token,
       },
-      body: JSON.stringify(postData)
+      body: JSON.stringify({
+        simulationID: simulationID
+      })
     })
     .then((response) => {
       if (!response.ok) {
