@@ -259,7 +259,7 @@ frontendSocketServer.on('request', function(request) {
     }
   }
 
-  function _generatePoint(hotspotCoords, maxDistance) {
+  function _generatePoint(hotspotCoords, maxDistance, bounds) {
     const lng_scale = 111.319;
     const lat_scale = 110.54
 
@@ -276,11 +276,15 @@ frontendSocketServer.on('request', function(request) {
       lat: hotspotCoords.lat + latChange,
       lng: hotspotCoords.lng + lngChange
     };
-    //TODO: check point is within Bbox bounds.
-    return point;
+    //check point in bbox
+    if (bounds.southWest.lat <= point.lat && point.lat <= bounds.northEast.lat &&
+        bounds.southWest.lng <= point.lng && point.lng <= bounds.northEast.lng) {
+      return point;
+    }
+    return _generatePoint(hotspotCoords, maxDistance, bounds);
   }
 
-  function _createAccurateJourney(hotspotInfo, startTime) {
+  function _createAccurateJourney(hotspotInfo, bounds, startTime) {
     const lookupVal = Math.random() * hotspotInfo.popularitySum;
     let hotspots = hotspotInfo.hotspots.slice();
 
@@ -311,8 +315,8 @@ frontendSocketServer.on('request', function(request) {
     }
 
     const maxDistance = 0.8; //km
-    const startCoords = _generatePoint(startHotspot.coordinates, maxDistance);
-    const endCoords   = _generatePoint(endHotspot.coordinates, maxDistance);
+    const startCoords = _generatePoint(startHotspot.coordinates, maxDistance, bounds);
+    const endCoords   = _generatePoint(endHotspot.coordinates, maxDistance, bounds);
 
 
     const journey = {
@@ -321,11 +325,6 @@ frontendSocketServer.on('request', function(request) {
       destination: endCoords
     };
 
-    console.log(startHotspot)
-    console.log(endHotspot)
-
-    console.log(journey)
-
     return journey;
   }
 
@@ -333,6 +332,8 @@ frontendSocketServer.on('request', function(request) {
     const bounds = data.selectedCity.bounds;
     const journeyNum = data.realWorldJourneyNum;
     const startTime = new Date();
+
+    //TODO: change to generic hotspot file. This step should be preprocessed.
     fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
       if (err) {
         return console.error(err);
@@ -368,9 +369,9 @@ frontendSocketServer.on('request', function(request) {
 
       var journeys = [];
       for (var i = 0; i <journeyNum; i++) {
-        journeys.push(_createAccurateJourney(hotspotInfo, startTime))
+        journeys.push(_createAccurateJourney(hotspotInfo, bounds, startTime));
       }
-      journeys = journeys.concat(data.journeys)
+      journeys = journeys.concat(data.journeys);
 
       simulationData = {
         city: data.selectedCity,
@@ -387,6 +388,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _createSimulation(simulationData, userID, callback) {
     simulation = new Simulation(simulationData);
+
     simulation.save((error, simulation) => {
       if (error) {
         return console.error(error);
@@ -399,7 +401,7 @@ frontendSocketServer.on('request', function(request) {
       const options = {
         upsert: true
       };
-      User.findOneAndUpdate({
+        User.findOneAndUpdate({
         _id: userID
       }, updateInfo, options)
         .then((result) => {
@@ -412,6 +414,7 @@ frontendSocketServer.on('request', function(request) {
     });
 
     callback(null, simulation._id, simulationData.city._id, simulation.journeys);
+
   }
 
   function _handleRequestSimulationStart(message, callback) {
@@ -426,6 +429,9 @@ frontendSocketServer.on('request', function(request) {
         frameworks: [],
         simulationStates: []
       };
+
+      console.log("--------------------------------------------------------")
+      console.log(data.userID);
       _createSimulation(simulationData, data.userID, callback);
     }
   }
@@ -590,7 +596,6 @@ frontendSocketServer.on('request', function(request) {
           }));
         });
         break;
-
         case "request-simulation-join":
           _handleRequestSimulationJoin(messageData);
           break;

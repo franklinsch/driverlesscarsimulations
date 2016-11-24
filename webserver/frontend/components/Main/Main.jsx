@@ -114,7 +114,6 @@ export default class Main extends React.Component {
         selectedCityID: messageData.content[0]._id
       });
     } else if (messageData.type === "simulation-id") {
-      console.log(messageData.content.simulationInfo)
       this.setState({
         simulationInfo: messageData.content.simulationInfo,
         simulationJourneys: messageData.content.journeys
