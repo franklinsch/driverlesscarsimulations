@@ -236,23 +236,24 @@ frontendSocketServer.on('request', function(request) {
     }))
   }
 
-  function _calculateCurrentPopularity(hotspot) {
+  function _calculatePopularityAtTime(hotspot, date) {
     const levels = hotspot.popularityLevels;
-    const date = new Date();
 
     for (var i = 0; i < levels.length; i++) {
-      startTime = levels[i].startTime.split(':');
-      endTime = levels[i].endTime.split(':');
+      const startTime = levels[i].startTime.split(':');
+      const endTime = levels[i].endTime.split(':');
 
-      startDate = date;
+      let startDate = new Date(date.getTime());
       startDate.setHours(startTime[0]);
       startDate.setMinutes(startTime[1]);
       startDate.setSeconds(startTime[2]);
 
-      endDate = date;
+      let endDate = new Date(date.getTime());
       endDate.setHours(endTime[0]);
       endDate.setMinutes(endTime[1]);
       endDate.setSeconds(endTime[2]);
+
+
 
       if (date >= startDate && date <= endDate) {
         return levels[i].level;
@@ -260,27 +261,30 @@ frontendSocketServer.on('request', function(request) {
     }
   }
 
-  function _createAccurateJourney(hotspotInfo) {
+  function _createAccurateJourney(hotspotInfo, startTime) {
     const lookupVal = Math.random() * hotspotInfo.popularitySum;
     let hotspots = hotspotInfo.hotspots;
 
     let rollingSum = 0;
     let startHotspot;
+    let remainingPopularitySum = hotspotInfo.popularitySum;
     for (var i = 0; i < hotspots.length; i++) {
-      rollingSum += _calculateCurrentPopularity(hotspots[i]);
+      const popularity = _calculatePopularityAtTime(hotspots[i], startTime);
+      rollingSum+= popularity;
       if (rollingSum >= lookupVal) {
         startHotspot = hotspots[i];
         hotspots.splice(i, 1);
+        remainingPopularitySum -= popularity;
         break;
       }
     }
 
     //TODO: Replace this with a better method of generating the end hotspot that is dependant on the start position.
-    const endPointLookupVal = Math.random() * hotspotInfo.popularitySum;
+    const endPointLookupVal = Math.random() * remainingPopularitySum;
     rollingSum = 0;
     let endHotspot;
     for (var i = 0; i < hotspots.length; i++) {
-      rollingSum += _calculateCurrentPopularity(hotspots[i]);
+      rollingSum += _calculatePopularityAtTime(hotspots[i], startTime);
       if (rollingSum >= endPointLookupVal) {
         endHotspot = hotspots[i];
         break;
@@ -298,14 +302,13 @@ frontendSocketServer.on('request', function(request) {
     }
 
     return journey;
-
-
-
   }
 
   function _createSimulationWithRealData(data, callback) {
     const bounds = data.selectedCity.bounds;
     const journeyNum = data.realWorldJourneyNum;
+    const startTime = new Date();
+    console.log(startTime.getHours())
     fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
       if (err) {
         return console.error(err);
@@ -329,8 +332,7 @@ frontendSocketServer.on('request', function(request) {
               level: undergroundData[i].entryPlusExitInMillions,
             }]
           };
-          popularitySum += undergroundData[i].entryPlusExitInMillions;
-          console.log(hotspot)
+          popularitySum += _calculatePopularityAtTime(hotspot, startTime);
           hotspots.push(hotspot);
         }
       }
@@ -342,12 +344,9 @@ frontendSocketServer.on('request', function(request) {
 
       var journeys = [];
       for (var i = 0; i <journeyNum; i++) {
-        journeys.push(_createAccurateJourney(hotspotInfo))
+        journeys.push(_createAccurateJourney(hotspotInfo, startTime))
       }
-
       journeys = journeys.concat(data.journeys)
-
-      console.log(journeys)
 
       simulation = new Simulation({
         city: data.selectedCity,
