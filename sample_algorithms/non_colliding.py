@@ -118,6 +118,7 @@ def addToState(journeys, state):
     newRoute = R.getRoute(INP_FILE, start, end)['path']
     preprocess(newRoute)
     state.append(createNewCar(len(state), journey['_id'], baseRoute=newRoute))
+    print('.')
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
@@ -150,7 +151,11 @@ def preprocess(route):
     props = R.getProperties(INP_FILE, start, end)
     maxSpeed_km_h = MAX_SPEED_KM_H
     if 'maxspeed' in props:
-      maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
+      try:
+        maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
+      except Exception as err:
+        maxSpeed_km_h = MAX_SPEED_KM_H
+        print(err)
 
     dist = get_distance(start, end)
     time = dist/(maxSpeed_km_h*1000/3600)
