@@ -55,6 +55,51 @@ router.get('/simulations/:simulationID', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 
+router.route('/simulations/active')
+  .post((req, res) => {
+    passport.authenticate('local', (err, user, info) => {
+
+      // If Passport throws/catches an error
+      if (err) {
+        res.status(404).json(err);
+        return;
+      }
+
+      // Credentials are valid
+      if (user) {
+        res.status(200);
+        res.json({
+          "active_simulation": user.active_simulation
+        });
+      } else {
+        res.status(404).json(info);
+        return;
+      }
+    })(req, res);
+  });
+
+router.route('/simulations/activate')
+  .post(auth, (req, res) => {
+    const userID = res._headers.token._id;
+    const simulationID = req.body.simulationID;
+    const updateInfo = {
+      active_simulation: simulationID
+    };
+    const options = {
+      upsert: true,
+      returnNewDocument: true
+    };
+    User.findOneAndUpdate({
+        _id: userID
+      }, updateInfo, options)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  })
+
 router.route('/simulations/:simulationID/journeys')
   .get((req, res) => {
     Simulation.findOne({

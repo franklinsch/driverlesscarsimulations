@@ -19,6 +19,7 @@ const userSchema = mongoose.Schema({
   salt: String,
   admin: Boolean,
   created_at: Date,
+  active_simulation: String,
   simulations: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Simulation'
