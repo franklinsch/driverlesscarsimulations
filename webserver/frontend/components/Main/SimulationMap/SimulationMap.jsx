@@ -264,10 +264,13 @@ export default class SimulationMap extends React.Component {
       destination: destination
     }
 
-    const carIcon = L.icon({
+    const icons = [L.icon({
       iconUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Circle_-_black_simple.svg/20px-Circle_-_black_simple.svg.png",
       iconSize: [20, 20]
-    });
+    }), L.icon({
+      iconUrl: "https://upload.wikimedia.org/wikipedia/commons/3/36/Map-icon-circle-black.png",
+      iconSize: [20, 20]
+    })]
 
     const originMarkerIcon = L.icon({
       iconUrl: "http://image.flaticon.com/icons/svg/220/220283.svg",
@@ -310,12 +313,14 @@ export default class SimulationMap extends React.Component {
         {
           cars &&
           cars.map((car, index) => {
-            const key = car.id;
+            const icon = icons[car.colourIndex];
+
+            const key = car.frameworkID + car.id;
             return (
               <RotatableMarker
                 position      = {car.position}
                 key           = {key}
-                icon          = {carIcon}
+                icon          = {icon}
                 rotationAngle = {0}
                 handleClick   = {(e) => this.handleCarMarkerClick(car, e)}
               >

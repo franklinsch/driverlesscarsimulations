@@ -3,6 +3,7 @@ import asyncio
 import websockets
 import sys
 import threading
+import time
 
 import os
 
@@ -17,8 +18,9 @@ class SAVNConnectionAssistant:
     self.simulationID = simulationID
     self.messageQueue = asyncio.Queue()
     self.frameworkID = 0
+    self.shouldAwait = False
 
-  def updateCarStates(self, timestamp, state):
+  def updateState(self, timestamp, state, sync=True):
     packet = {'type': 'simulation-state',
               'content':
                 {'simulationID': self.simulationID,
@@ -29,6 +31,8 @@ class SAVNConnectionAssistant:
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
+    if (sync):
+      self.synchronize()
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -115,8 +119,14 @@ class SAVNConnectionAssistant:
     elif isUpdate():
       self.handleSimulationDataUpdate(packet["content"])
     elif isCommunication():
+      print("\n\nReceived go-ahead at ", time.time())
       self.handleSimulationCommunication(packet["content"])
+      self.shouldAwait = False
 
+  def synchronize(self, sleepTime=1):
+    self.shouldAwait = True
+    while (self.shouldAwait):
+      time.sleep(sleepTime)
 
   def initSession(self, timeslice):
     async def coro():

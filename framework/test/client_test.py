@@ -23,7 +23,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
     self.connection.ws = Mock()
     self.loop = asyncio.get_event_loop()
 
-  def test_updateCarStates(self):
+  def test_updateState(self):
     state = {"car": 1}
     timestamp = 0
     packet = {'type': 'simulation-state',
@@ -34,7 +34,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
                  'formattedTimestamp': str(timestamp),
                  'objects': state,
                  'frameworkID': 0}}
-    self.connection.updateCarStates(timestamp, state)
+    self.connection.updateState(timestamp, state, sync=False)
     message = self.loop.run_until_complete(self.connection.fetchMessage())
     self.assertEqual(json.dumps(packet), message)
 

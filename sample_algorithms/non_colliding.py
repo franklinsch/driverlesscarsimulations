@@ -30,7 +30,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     addToState(update['journeys'], state)
 
   def handleSimulationCommunication(self, data):
-    translateDataToSensors(data)
+    analyseData(data)
 
   def handleSimulationStop(self, info):
     pass
@@ -71,22 +71,23 @@ def runSimulation(savn, initialParameters):
 
   print('Creating initial state')
   global state
+  #state = initialParameters['state']
 
   print('Preprocessing routes')
   addToState(initialParameters['journeys'], state)
   print('\t\t\t... Done')
 
   print('Starting simulation:')
-  timestamp = 0
+  timestamp = initialParameters['timestamp']
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
   while savn.alive:
-    #useApi()
-    savn.updateCarStates(timestamp, translate(state))
+    print("Sending", timestamp)
+    savn.updateState(timestamp, translate(state))
+    print("Working on next: Sent", timestamp)
     state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
-    time.sleep(SLEEP_TIME)
   #useApiToEnd()
 
 def analyseData(data):
@@ -100,11 +101,14 @@ def translateDataToCameraData(car, data):
   cameraSensorRadius = 30.0
   cameraSensorFOVAngle = 100.0
   cameraData = []
-  for obj in data:
-    distance = get_distance(car['position'], obj['position'])
-    direction = get_direction(car['position'], obj['position'])
-    if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
-      cameraData.append(obj)
+  for frameworkState in data:
+    for obj in frameworkState['objects']:
+      obj['position'] = [obj['position']['lng'], obj['position']['lat']]
+      distance = get_distance(car['position'], obj['position'])
+      direction = get_direction(car['position'], obj['position'])
+      if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
+        print(cameraData)
+        cameraData.append(obj)
   return cameraData
 
 def addToState(journeys, state):
@@ -114,6 +118,7 @@ def addToState(journeys, state):
     newRoute = R.getRoute(INP_FILE, start, end)['path']
     preprocess(newRoute)
     state.append(createNewCar(len(state), journey['_id'], baseRoute=newRoute))
+    print('.')
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
@@ -146,7 +151,11 @@ def preprocess(route):
     props = R.getProperties(INP_FILE, start, end)
     maxSpeed_km_h = MAX_SPEED_KM_H
     if 'maxspeed' in props:
-      maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
+      try:
+        maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
+      except Exception as err:
+        maxSpeed_km_h = MAX_SPEED_KM_H
+        print(err)
 
     dist = get_distance(start, end)
     time = dist/(maxSpeed_km_h*1000/3600)
@@ -196,7 +205,7 @@ def moveCar(car):
   start = car['route'][0]
   end = car['route'][1]
 
-  if (not switchNodeLock(car, start, end) or 
+  if (not switchNodeLock(car, start, end) or
       ('cameraData' in car['sensorData'] and len(car['sensorData']['cameraData']) > 0)):
     car['speed'] = 0
     return
@@ -237,7 +246,7 @@ def executeGlobalAlgorithm(state):
 
 def createNewCar(i, journeyID, baseRoute):
   car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
-      'route': None, 'sensorData': {}, 'timeOnPath': 0, 'baseRoute': baseRoute, 'lockedNode': None}
+      'route': None, 'sensorData': {}, 'baseRoute': baseRoute, 'lockedNode': None}
   scheduleNewRoute(car)
   return car
 
