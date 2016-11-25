@@ -742,7 +742,9 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      simulation.latestTimestamp = message.content.timestamp;
+      if (message.content.timestamp > simulation.latestTimestamp) {
+        simulation.latestTimestamp = message.content.timestamp;
+      }
       const simulationStateIndex = Math.floor(message.content.timestamp / simulation.timeslice);
       if (simulation.simulationStates.length == simulationStateIndex) {
         simulation.simulationStates.push({timestamp: message.content.timestamp, formattedTimestamp: message.content.formattedTimestamp, id: message.content.id, frameworkstates: []});
@@ -788,6 +790,13 @@ frameworkSocketServer.on('request', function(request) {
               }
             }))
           }
+        } else if (simulation.simulationStates[simulationStateIndex].frameworkStates.length >= simulation.frameworks.length) {
+          console.log("Error");
+          const specifiedSimulationState = simulation.simulationStates[simulationStateIndex].frameworkStates.filter((frameworkState) => frameworkState.frameworkID != newState.frameworkID);
+          connection.send(JSON.stringify({
+            type: "simulation-communicate",
+            content: specifiedSimulationState
+          }))
         }
       });
     });

@@ -118,8 +118,8 @@ class SAVNConnectionAssistant:
     elif isUpdate():
       self.handleSimulationDataUpdate(packet["content"])
     elif isCommunication():
-      self.handleSimulationCommunication(packet["content"])
       print("\n\nReceived go-ahead at ", time.time())
+      self.handleSimulationCommunication(packet["content"])
       self.shouldAwait = False
 
   def synchronize(self, sleepTime=1):
