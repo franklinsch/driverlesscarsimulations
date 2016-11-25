@@ -373,6 +373,7 @@ frontendSocketServer.on('request', function(request) {
 
       simulationData = {
         city: data.selectedCity,
+        createdAt: Date.now(),
         latestTimestamp: 0,
         hotspots: hotspots,
         journeys: journeys,
@@ -394,6 +395,9 @@ frontendSocketServer.on('request', function(request) {
       const updateInfo = {
         $push: {
           simulations: simulation._id
+        },
+        $set: {
+          active_simulation: simulation._id
         }
       };
       const options = {
@@ -422,6 +426,7 @@ frontendSocketServer.on('request', function(request) {
     } else {
       const simulationData = {
         city: data.selectedCity,
+        createdAt: Date.now(),
         latestTimestamp: 0,
         journeys: data.journeys,
         frontends: [{connectionIndex: frontendConnections.length}],

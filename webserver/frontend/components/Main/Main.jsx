@@ -75,7 +75,6 @@ export default class Main extends React.Component {
       const reqHeaders = new Headers({
         "Accept": "application/json",
         "token": this.state.token,
-        "Set-Cookie": "token=" + this.state.token,
       });
       fetch(url, {
         method: 'GET',
@@ -359,6 +358,30 @@ export default class Main extends React.Component {
     this.clearPendingJourneys();
   }
 
+  handleSimulationActivate(simulationID) {
+    const url = '/simulations/activate';
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "token": this.state.token,
+      },
+      body: JSON.stringify({
+        simulationID: simulationID
+      })
+    })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("error authenticating user");
+        return;
+      }
+    })
+    .catch(err => {
+      console.log("error updating active simulations");
+    })
+  }
+
   handleBenchmarkRequest() {
     const socket = this.state.socket;
 
@@ -445,10 +468,11 @@ export default class Main extends React.Component {
     }
 
     const simulationMapHandlers = {
-      handleAddJourney : ::this.handlePendingJourneyAdd,
-      handlePause      : ::this.handlePause,
-      handleResume     : ::this.handleResume,
-      handleScrub      : ::this.handleScrub
+      handleAddJourney         : ::this.handlePendingJourneyAdd,
+      handlePause              : ::this.handlePause,
+      handleResume             : ::this.handleResume,
+      handleScrub              : ::this.handleScrub,
+      handleSimulationActivate : ::this.handleSimulationActivate
     }
 
     return (

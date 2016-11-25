@@ -291,6 +291,18 @@ export default class SimulationMap extends React.Component {
     return (
       <div>
         <p>Current simulation ID: {simulationID}</p>
+        {
+          simulationID !== '0' ?
+          <button
+            className = "btn btn-primary"
+            hidden    = {!simulationID}
+            onClick   = {(e) => this.props.handlers.handleSimulationActivate(this.props.simulationID)}
+          >
+            Activate simulation
+          </button>
+          :
+          ''
+        }
       <ScrubTimer
         timestamp          = {this.props.simulationState.timestamp}
         formattedTimestamp = {this.props.simulationState.formattedTimestamp}
