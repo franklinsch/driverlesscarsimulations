@@ -20,7 +20,6 @@ const uuidV4 = require('uuid/v4');
 const jwt = require('jsonwebtoken');
 
 const WebSocketServer = require('websocket').server;
-const fs = require('fs');
 
 const app = express();
 
