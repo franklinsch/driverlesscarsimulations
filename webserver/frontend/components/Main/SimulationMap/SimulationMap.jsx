@@ -327,7 +327,7 @@ export default class SimulationMap extends React.Component {
           cars.map((car, index) => {
             const icon = icons[car.colourIndex];
 
-            const key = car.frameworkID + car.id;
+            const key = car.colourIndex + "" + car.id;
             return (
               <RotatableMarker
                 position      = {car.position}
