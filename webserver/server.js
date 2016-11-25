@@ -56,10 +56,7 @@ function averageSpeedToDestination(journeys, states) {
         pos = obj.position;
         if (pos.lat == dest.lat && pos.lng == dest.lng) {
           totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-					totalDistance += getDistanceLatLonInKm(journey.origin.lat
- 																								,journey.origin.lng
-																								,journey.destination.lat
-																								,journey.destination.lng);
+					totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
       	}
       } else {
         carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
@@ -209,31 +206,31 @@ frontendSocketServer.on('request', function(request) {
           }
         ]
       },
-        {
-          name: "Creature",
-          parameters: [
-            {
-              name: "Type",
-              kind: "predefined",
-              allowedValues: ["unicorn", "dog"]
-            }
-          ]
-        },
-        {
-          name: "Road Hazard",
-          parameters: [
-            {
-              name: "Type",
-              kind: "predefined",
-              allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
-            },
-            {
-              name: "Slowdown factor",
-              kind: "text"
-            }
-          ]
-        }]
-    }))
+      {
+        name: "Creature",
+        parameters: [
+          {
+            name: "Type",
+            kind: "predefined",
+            allowedValues: ["unicorn", "dog"]
+          }
+        ]
+      },
+      {
+        name: "Road Hazard",
+        parameters: [
+          {
+            name: "Type",
+            kind: "predefined",
+            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+          },
+          {
+            name: "Slowdown factor",
+            kind: "text"
+          }
+        ]
+      }]
+    }));
   }
 
   function _calculatePopularityAtTime(hotspot, date) {
@@ -253,7 +250,7 @@ frontendSocketServer.on('request', function(request) {
       endDate.setMinutes(endTime[1]);
       endDate.setSeconds(endTime[2]);
 
-      if (date >= startDate && date <= endDate) {
+      if (date >= startDate && date <= endDate) { //TODO: Sort levels by date to allow for binary search
         return levels[i].level;
       }
     }
@@ -263,7 +260,7 @@ frontendSocketServer.on('request', function(request) {
     const lng_scale = 111.319;
     const lat_scale = 110.54
 
-    const distanceFromHotspot = Math.random() * maxDistance;
+    const distanceFromHotspot = Math.random() * maxDistance; //TODO: Change from uniform distribution to more meaningful one
     const angle = Math.random() * Math.PI * 2;
 
     const horizontal = distanceFromHotspot * Math.cos(angle);
@@ -286,8 +283,8 @@ frontendSocketServer.on('request', function(request) {
 
   function _createAccurateJourney(hotspots, bounds, startTime) {
     let popularitySum = 0;
-    for(var i = 0; i < hotspots.length; i++) {
-      popularitySum+= _calculatePopularityAtTime(hotspots[i], startTime)
+    for (const hotspot of hotspots) {
+      popularitySum += _calculatePopularityAtTime(hotspot, startTime)
     }
 
     const lookupVal = Math.random() * popularitySum;
@@ -296,9 +293,9 @@ frontendSocketServer.on('request', function(request) {
     let rollingSum = 0;
     let startHotspot;
     let remainingPopularitySum = popularitySum;
-    for (var i = 0; i < hotspotsClone.length; i++) {
+    for (const i in hotspotsClone) {
       const popularity = _calculatePopularityAtTime(hotspotsClone[i], startTime);
-      rollingSum+= popularity;
+      rollingSum += popularity;
       if (rollingSum >= lookupVal) {
         startHotspot = hotspotsClone[i];
         hotspotsClone.splice(i, 1);
@@ -319,7 +316,7 @@ frontendSocketServer.on('request', function(request) {
       }
     }
 
-    const maxDistance = 0.8; //km
+    const maxDistance = 0.8; //km //TODO: Make better model
     const startCoords = _generatePoint(startHotspot.coordinates, maxDistance, bounds);
     const endCoords   = _generatePoint(endHotspot.coordinates, maxDistance, bounds);
 
@@ -336,7 +333,7 @@ frontendSocketServer.on('request', function(request) {
   function _createSimulationWithRealData(data, callback) {
     const bounds = data.selectedCity.bounds;
     const journeyNum = data.realWorldJourneyNum;
-    const startTime = new Date();
+    const startTime = new Date(); //TODO: Use epoch time instead of silly string manipulations //TODO: Base off of simulation timestamp
 
     //TODO: change to generic hotspot file. This step should be preprocessed.
     fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
@@ -365,9 +362,8 @@ frontendSocketServer.on('request', function(request) {
         }
       }
 
-
       var journeys = [];
-      for (var i = 0; i <journeyNum; i++) {
+      for (var i = 0; i < journeyNum; i++) {
         journeys.push(_createAccurateJourney(hotspots, bounds, startTime));
       }
       journeys = journeys.concat(data.journeys);
@@ -399,7 +395,8 @@ frontendSocketServer.on('request', function(request) {
       const options = {
         upsert: true
       };
-        User.findOneAndUpdate({
+
+      User.findOneAndUpdate({
         _id: userID
       }, updateInfo, options)
         .then((result) => {
@@ -417,7 +414,7 @@ frontendSocketServer.on('request', function(request) {
 
   function _handleRequestSimulationStart(message, callback) {
     const data = message.content;
-    if (data.useRealData) {
+    if (data.useRealData) { //TODO: Fix bad refactoring
       _createSimulationWithRealData(data, callback)
     } else {
       const simulationData = {
@@ -553,21 +550,19 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + message.content.simulationID);
         return
       }
-    	benchmarkValue = averageSpeedToDestination(simulation.journeys
-                                          		  ,simulation.simulationStates);
+    	benchmarkValue = averageSpeedToDestination(simulation.journeys, simulation.simulationStates);
 
-        connection.send(JSON.stringify({
+      connection.send(JSON.stringify({
         type: "simulation-benchmark",
         content: {
           value: benchmarkValue
         }
-      }))
+      }));
     });
   }
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-
       const messageData = JSON.parse(message.utf8Data);
 
       switch (messageData.type) {
