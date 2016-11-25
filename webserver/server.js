@@ -602,7 +602,7 @@ frontendSocketServer.on('request', function(request) {
           _handleRequestSimulationJoin(messageData);
           break;
         case "request-simulation-update":
-          _handleRequestEventUpdate(messageData);
+          _handleRequestEventUpdate(messageData, () => {});
           break;
         case "request-simulation-speed-change":
           _handleRequestSimulationSpeedChange(messageData);
