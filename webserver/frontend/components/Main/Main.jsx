@@ -143,7 +143,7 @@ export default class Main extends React.Component {
       }
       objects = objects.reduce((acc, fObjects) => {return acc.concat(fObjects)})
 
-      //const objects = frameworkStates.map((fState) => { 
+      //const objects = frameworkStates.map((fState) => {
         //const objects = fState.objects;
         //objects.map((object) => {
           //object.frameworkID = fState.frameworkID;
