@@ -103,34 +103,35 @@ export default class SimulationSettings extends React.Component {
           objectKindInfo      = {this.props.objectKindInfo}
           handlers            = {journeySettingsHandlers}
         />
-      <div id="simulation-buttons" className="row">
-          <form action="">
-          <input
-            type = "checkbox"
-            name = "real-data"
-            disabled = {hasSimulationStarted}
-            onChange = {(e) => this._handleRealDataCheckboxChange(e)}
-          />
-          Use real world data
-            </form>
-          {
-            usingRealData &&
-            <p>Number of real world journeys to create on simulation start.</p>
-          }
-          {
-            usingRealData &&
+        <div id="simulation-buttons" className="row">
+          <form>
             <input
-              type="number"
-              name="journey-number"
-              onChange={(e) =>this._handleRealWorldJourneyNumChange(e) }
+              type     = "checkbox"
+              name     = "real-data"
+              disabled = {hasSimulationStarted}
+              onChange = {::this._handleRealDataCheckboxChange}
             />
-          }
+            Use real world data
+            {
+              usingRealData &&
+              <p>Number of real world journeys to create on simulation start.</p>
+            }
+            {
+              usingRealData &&
+              <input
+                type     = "number"
+                name     = "journey-number"
+                disabled = {hasSimulationStarted}
+                onChange = {::this._handleRealWorldJourneyNumChange}
+              />
+            }
+          </form>
           <button
             className = "btn btn-primary"
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
           >
             { hasSimulationStarted  &&
-            <p>End Simulation</p> || <p>Start simulation</p>
+              <p>End Simulation</p> || <p>Start simulation</p>
             }
           </button>
 
