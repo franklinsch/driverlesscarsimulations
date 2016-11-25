@@ -387,7 +387,6 @@ frontendSocketServer.on('request', function(request) {
 
   function _createSimulation(simulationData, userID, callback) {
     simulation = new Simulation(simulationData);
-
     simulation.save((error, simulation) => {
       if (error) {
         return console.error(error);
@@ -403,7 +402,6 @@ frontendSocketServer.on('request', function(request) {
       const options = {
         upsert: true
       };
-
       User.findOneAndUpdate({
         _id: userID
       }, updateInfo, options)
@@ -433,9 +431,6 @@ frontendSocketServer.on('request', function(request) {
         frameworks: [],
         simulationStates: []
       };
-
-      console.log("--------------------------------------------------------")
-      console.log(data.userID);
       _createSimulation(simulationData, data.userID, callback);
     }
   }
@@ -760,7 +755,7 @@ frameworkSocketServer.on('request', function(request) {
         if (error || !simulation) {
           return console.error(error);
         }
-        
+
         console.log("Updated simulationState");
 
         const numStates = simulation.simulationStates.length;

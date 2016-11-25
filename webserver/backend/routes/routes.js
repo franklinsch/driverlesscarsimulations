@@ -20,6 +20,7 @@ router.route('/simulations')
       })
       .then((result) => {
         res.json({
+          userID: userId,
           username: result.username,
           simulations: result.simulations
         });
