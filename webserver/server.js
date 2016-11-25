@@ -284,19 +284,33 @@ frontendSocketServer.on('request', function(request) {
     return _generatePoint(hotspotCoords, maxDistance, bounds);
   }
 
-  function _createAccurateJourney(hotspotInfo, bounds, startTime) {
-    const lookupVal = Math.random() * hotspotInfo.popularitySum;
-    let hotspots = hotspotInfo.hotspots.slice();
+  function _createAccurateJourney(hotspots, bounds, startTime) {
+    /*const popularitySum = hotspots.reduce(function (a, b) {
+      return _calculatePopularityAtTime(a, startTime) +
+             _calculatePopularityAtTime(b, startTime);
+    });
+*/
+    let popularitySum = 0;
+    for(var i = 0; i < hotspots.length; i++) {
+      popularitySum+= _calculatePopularityAtTime(hotspots[i], startTime)
+    }
+
+
+    console.log("popularitySumis")
+    console.log(popularitySum)
+
+    const lookupVal = Math.random() * popularitySum;
+    let hotspotsClone = hotspots.slice();
 
     let rollingSum = 0;
     let startHotspot;
-    let remainingPopularitySum = hotspotInfo.popularitySum;
-    for (var i = 0; i < hotspots.length; i++) {
-      const popularity = _calculatePopularityAtTime(hotspots[i], startTime);
+    let remainingPopularitySum = popularitySum;
+    for (var i = 0; i < hotspotsClone.length; i++) {
+      const popularity = _calculatePopularityAtTime(hotspotsClone[i], startTime);
       rollingSum+= popularity;
       if (rollingSum >= lookupVal) {
-        startHotspot = hotspots[i];
-        hotspots.splice(i, 1);
+        startHotspot = hotspotsClone[i];
+        hotspotsClone.splice(i, 1);
         remainingPopularitySum -= popularity;
         break;
       }
@@ -306,10 +320,10 @@ frontendSocketServer.on('request', function(request) {
     const endPointLookupVal = Math.random() * remainingPopularitySum;
     rollingSum = 0;
     let endHotspot;
-    for (var i = 0; i < hotspots.length; i++) {
-      rollingSum += _calculatePopularityAtTime(hotspots[i], startTime);
+    for (var i = 0; i < hotspotsClone.length; i++) {
+      rollingSum += _calculatePopularityAtTime(hotspotsClone[i], startTime);
       if (rollingSum >= endPointLookupVal) {
-        endHotspot = hotspots[i];
+        endHotspot = hotspotsClone[i];
         break;
       }
     }
@@ -341,7 +355,6 @@ frontendSocketServer.on('request', function(request) {
 
       const undergroundData = (JSON.parse(json));
       let hotspots = [];
-      let popularitySum = 0;
       for (var i = 0; i < undergroundData.length; i++) {
         if (bounds.southWest.lat <= undergroundData[i].lat && undergroundData[i].lat <= bounds.northEast.lat &&
             bounds.southWest.lng <= undergroundData[i].lng && undergroundData[i].lng <= bounds.northEast.lng) {
@@ -357,31 +370,25 @@ frontendSocketServer.on('request', function(request) {
               level: undergroundData[i].entryPlusExitInMillions,
             }]
           };
-          popularitySum += _calculatePopularityAtTime(hotspot, startTime);
           hotspots.push(hotspot);
         }
       }
-      const hotspotInfo = {
-        hotspots: hotspots,
-        popularitySum: popularitySum
-      };
 
 
       var journeys = [];
       for (var i = 0; i <journeyNum; i++) {
-        journeys.push(_createAccurateJourney(hotspotInfo, bounds, startTime));
+        journeys.push(_createAccurateJourney(hotspots, bounds, startTime));
       }
       journeys = journeys.concat(data.journeys);
 
       simulationData = {
         city: data.selectedCity,
-        hotspotInfo: hotspotInfo,
+        hotspots: hotspots,
         journeys: journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
         frameworks: [],
         simulationStates: []
       };
-
       _createSimulation(simulationData, data.userID, callback)
     });
   }

@@ -19,10 +19,7 @@ const simulationSchema = mongoose.Schema({
     }
   },
   timeslice: Number,
-  hotspotInfo: {
-    popularitySum: Number,
-    hotspots: [Hotspot.schema],
-  },
+  hotspots: [Hotspot.schema],
   journeys: [Journey.schema],
   frontends: [Frontend.schema],
   frameworks: [Framework.schema],
