@@ -33,7 +33,6 @@ export default class JourneySettings extends React.Component {
     const originLng = this.state.originLng;
     const destinationLat = this.state.destinationLat;
     const destinationLng = this.state.destinationLng;
-
     const handleJourneySelect = this.props.handlers.handleJourneysSelect;
 
     const journey = {

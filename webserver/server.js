@@ -8,6 +8,7 @@ const routes = require('./backend/routes/routes');
 const session = require('express-session');
 const config = require('./backend/config');
 const passwordConfig = require('./backend/passport');
+const fs = require('fs');
 
 const WebSocketServer = require('websocket').server;
 
@@ -50,25 +51,22 @@ function averageSpeedToDestination(journeys, states) {
   for (let state of states) {
     for (let obj of state.objects) {
       if (obj.id in carsOnTheRoad) {
- 				const journey = journeys[obj.id];
-				dest = journey.destination;
-				pos = obj.position;
+        const journey = journeys[obj.id];
+        dest = journey.destination;
+        pos = obj.position;
         if (pos.lat == dest.lat && pos.lng == dest.lng) {
           totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-					totalDistance += getDistanceLatLonInKm(journey.origin.lat
- 																								,journey.origin.lng
-																								,journey.destination.lat
-																								,journey.destination.lng);
+					totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
       	}
-			} else {
-        	carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
+      } else {
+        carsOnTheRoad[obj.id] = { departure: state.timestamp, origin: obj.position}
       }
     }
   }
-	if (totalTime == 0) {
-		totalTime++;
-	}
-	return totalDistance / totalTime;
+  if (totalTime == 0) {
+    totalTime++;
+  }
+  return totalDistance / totalTime;
 }
 
 //
@@ -232,18 +230,158 @@ frontendSocketServer.on('request', function(request) {
           }
         ]
       }]
-    }))
+    }));
   }
 
-  function _handleRequestSimulationStart(message, callback) {
-    const data = message.content;
-    const simulation = new Simulation({
-      city: data.selectedCity,
-      journeys: data.journeys,
-      frontends: [{connectionIndex: frontendConnections.length}],
-      frameworks: [],
-      simulationStates: []
+  function _calculatePopularityAtTime(hotspot, date) {
+    const levels = hotspot.popularityLevels;
+
+    for (var i = 0; i < levels.length; i++) {
+      const startTime = levels[i].startTime.split(':');
+      const endTime = levels[i].endTime.split(':');
+
+      let startDate = new Date(date.getTime());
+      startDate.setHours(startTime[0]);
+      startDate.setMinutes(startTime[1]);
+      startDate.setSeconds(startTime[2]);
+
+      let endDate = new Date(date.getTime());
+      endDate.setHours(endTime[0]);
+      endDate.setMinutes(endTime[1]);
+      endDate.setSeconds(endTime[2]);
+
+      if (date >= startDate && date <= endDate) { //TODO: Sort levels by date to allow for binary search
+        return levels[i].level;
+      }
+    }
+  }
+
+  function _generatePoint(hotspotCoords, maxDistance, bounds) {
+    const lng_scale = 111.319;
+    const lat_scale = 110.54
+
+    const distanceFromHotspot = Math.random() * maxDistance; //TODO: Change from uniform distribution to more meaningful one
+    const angle = Math.random() * Math.PI * 2;
+
+    const horizontal = distanceFromHotspot * Math.cos(angle);
+    const vertical = distanceFromHotspot * Math.sin(angle);
+
+    const latChange = horizontal/lat_scale;
+    const lngChange = vertical/(lng_scale * Math.cos(hotspotCoords.lat));
+
+    const point = {
+      lat: hotspotCoords.lat + latChange,
+      lng: hotspotCoords.lng + lngChange
+    };
+    //check point in bbox
+    if (bounds.southWest.lat <= point.lat && point.lat <= bounds.northEast.lat &&
+        bounds.southWest.lng <= point.lng && point.lng <= bounds.northEast.lng) {
+      return point;
+    }
+    return _generatePoint(hotspotCoords, maxDistance, bounds);
+  }
+
+  function _createAccurateJourney(hotspots, bounds, startTime) {
+    let popularitySum = 0;
+    for (const hotspot of hotspots) {
+      popularitySum += _calculatePopularityAtTime(hotspot, startTime)
+    }
+
+    const lookupVal = Math.random() * popularitySum;
+    let hotspotsClone = hotspots.slice();
+
+    let rollingSum = 0;
+    let startHotspot;
+    let remainingPopularitySum = popularitySum;
+    for (const i in hotspotsClone) {
+      const popularity = _calculatePopularityAtTime(hotspotsClone[i], startTime);
+      rollingSum += popularity;
+      if (rollingSum >= lookupVal) {
+        startHotspot = hotspotsClone[i];
+        hotspotsClone.splice(i, 1);
+        remainingPopularitySum -= popularity;
+        break;
+      }
+    }
+
+    //TODO: Replace this with a better method of generating the end hotspot that is dependant on the start position.
+    const endPointLookupVal = Math.random() * remainingPopularitySum;
+    rollingSum = 0;
+    let endHotspot;
+    for (var i = 0; i < hotspotsClone.length; i++) {
+      rollingSum += _calculatePopularityAtTime(hotspotsClone[i], startTime);
+      if (rollingSum >= endPointLookupVal) {
+        endHotspot = hotspotsClone[i];
+        break;
+      }
+    }
+
+    const maxDistance = 0.8; //km //TODO: Make better model
+    const startCoords = _generatePoint(startHotspot.coordinates, maxDistance, bounds);
+    const endCoords   = _generatePoint(endHotspot.coordinates, maxDistance, bounds);
+
+
+    const journey = {
+      carID: '0',
+      origin: startCoords,
+      destination: endCoords
+    };
+
+    return journey;
+  }
+
+  function _createSimulationWithRealData(data, callback) {
+    const bounds = data.selectedCity.bounds;
+    const journeyNum = data.realWorldJourneyNum;
+    const startTime = new Date(); //TODO: Use epoch time instead of silly string manipulations //TODO: Base off of simulation timestamp
+
+    //TODO: change to generic hotspot file. This step should be preprocessed.
+    fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
+      if (err) {
+        return console.error(err);
+      }
+
+      const undergroundData = (JSON.parse(json));
+      let hotspots = [];
+      for (var i = 0; i < undergroundData.length; i++) {
+        if (bounds.southWest.lat <= undergroundData[i].lat && undergroundData[i].lat <= bounds.northEast.lat &&
+            bounds.southWest.lng <= undergroundData[i].lng && undergroundData[i].lng <= bounds.northEast.lng) {
+          const hotspot = {
+            name: undergroundData[i].stationName,
+            coordinates: {
+              lat: undergroundData[i].lat,
+              lng: undergroundData[i].lng
+            },
+            popularityLevels: [{
+              startTime: "00:00:00",
+              endTime: "23:59:59",
+              level: undergroundData[i].entryPlusExitInMillions,
+            }]
+          };
+          hotspots.push(hotspot);
+        }
+      }
+
+      var journeys = [];
+      for (var i = 0; i < journeyNum; i++) {
+        journeys.push(_createAccurateJourney(hotspots, bounds, startTime));
+      }
+      journeys = journeys.concat(data.journeys);
+
+      simulationData = {
+        city: data.selectedCity,
+        hotspots: hotspots,
+        journeys: journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      };
+      _createSimulation(simulationData, data.userID, callback)
     });
+  }
+
+  function _createSimulation(simulationData, userID, callback) {
+    simulation = new Simulation(simulationData);
 
     simulation.save((error, simulation) => {
       if (error) {
@@ -257,9 +395,10 @@ frontendSocketServer.on('request', function(request) {
       const options = {
         upsert: true
       };
+
       User.findOneAndUpdate({
-          _id: data.userID
-        }, updateInfo, options)
+        _id: userID
+      }, updateInfo, options)
         .then((result) => {
           console.log(result);
         })
@@ -269,7 +408,27 @@ frontendSocketServer.on('request', function(request) {
       frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
     });
 
-    callback(null, simulation._id, data.selectedCity._id, simulation.journeys);
+    callback(null, simulation._id, simulationData.city._id, simulation.journeys);
+
+  }
+
+  function _handleRequestSimulationStart(message, callback) {
+    const data = message.content;
+    if (data.useRealData) { //TODO: Fix bad refactoring
+      _createSimulationWithRealData(data, callback)
+    } else {
+      const simulationData = {
+        city: data.selectedCity,
+        journeys: data.journeys,
+        frontends: [{connectionIndex: frontendConnections.length}],
+        frameworks: [],
+        simulationStates: []
+      };
+
+      console.log("--------------------------------------------------------")
+      console.log(data.userID);
+      _createSimulation(simulationData, data.userID, callback);
+    }
   }
 
   function _handleRequestSimulationJoin(message) {
@@ -314,7 +473,6 @@ frontendSocketServer.on('request', function(request) {
           }
         }));
       })
-      
     })
   }
 
@@ -392,64 +550,63 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + message.content.simulationID);
         return
       }
-    	benchmarkValue = averageSpeedToDestination(simulation.journeys
-                                          		  ,simulation.simulationStates);
+    	benchmarkValue = averageSpeedToDestination(simulation.journeys, simulation.simulationStates);
+
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
         content: {
           value: benchmarkValue
         }
-      }))
+      }));
     });
   }
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
-
       const messageData = JSON.parse(message.utf8Data);
 
       switch (messageData.type) {
-      case "request-available-cities":
-        _handleRequestAvailableCities();
-        break;
-      case "request-default-object-types":
-        _handleRequestDefaultObjectTypes();
-        break;
-      case "request-object-kind-info":
-        _handleRequestObjectKinds();
-        break;
-      case "request-simulation-start":
-        _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
-          connection.send(JSON.stringify({
-            type: "simulation-id",
-            content: {
-              simulationInfo: {
-                id: simID,
-                cityID: cityID
-              },
-              journeys: journeys
-            }
+        case "request-available-cities":
+          _handleRequestAvailableCities();
+          break;
+        case "request-default-object-types":
+          _handleRequestDefaultObjectTypes();
+          break;
+        case "request-object-kind-info":
+          _handleRequestObjectKinds();
+          break;
+        case "request-simulation-start":
+          _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
+            connection.send(JSON.stringify({
+              type: "simulation-id",
+              content: {
+                simulationInfo: {
+                  id: simID,
+                  cityID: cityID
+                },
+                journeys: journeys
+              }
           }));
         });
         break;
-      case "request-simulation-join":
-        _handleRequestSimulationJoin(messageData);
-        break;
-      case "request-simulation-update":
-        _handleRequestEventUpdate(messageData);
-        break;
-      case "request-simulation-speed-change":
-        _handleRequestSimulationSpeedChange(messageData);
-        break;
-      case "request-simulation-timestamp-change":
-        _handleRequestSimulationTimestampChange(messageData);
-        break;
-      case "request-simulation-close":
-        _handleRequestSimulationClose(messageData);
-        break;
-      case "request-simulation-benchmark":
-        _handleRequestSimulationBenchmark(messageData);
-        break;
+        case "request-simulation-join":
+          _handleRequestSimulationJoin(messageData);
+          break;
+        case "request-simulation-update":
+          _handleRequestEventUpdate(messageData);
+          break;
+        case "request-simulation-speed-change":
+          _handleRequestSimulationSpeedChange(messageData);
+          break;
+        case "request-simulation-timestamp-change":
+          _handleRequestSimulationTimestampChange(messageData);
+          break;
+        case "request-simulation-close":
+          _handleRequestSimulationClose(messageData);
+          break;
+        case "request-simulation-benchmark":
+          _handleRequestSimulationBenchmark(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {
@@ -639,15 +796,15 @@ frameworkSocketServer.on('request', function(request) {
       const messageData = JSON.parse(message.utf8Data);
 
       switch(messageData.type) {
-      case "simulation-start":
-        _handleSimulationStart(messageData);
-        break;
-      case "simulation-state":
-        _handleSimulationStateUpdate(messageData);
-        break;
-      case "simulation-close":
-        _handleSimulationClose(messageData);
-        break;
+        case "simulation-start":
+          _handleSimulationStart(messageData);
+          break;
+        case "simulation-state":
+          _handleSimulationStateUpdate(messageData);
+          break;
+        case "simulation-close":
+          _handleSimulationClose(messageData);
+          break;
       }
     }
     else if (message.type === 'binary') {

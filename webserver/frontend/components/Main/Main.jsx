@@ -289,8 +289,8 @@ export default class Main extends React.Component {
     }
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
-
-  handleSimulationStart() {
+  
+  handleSimulationStart(useRealData, realWorldJourneyNum) {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
@@ -300,7 +300,9 @@ export default class Main extends React.Component {
     const content = {
       selectedCity: selectedCity,
       journeys: pendingJourneys,
-      userID: userID
+      userID: userID,
+      useRealData: useRealData,
+      realWorldJourneyNum: realWorldJourneyNum
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
@@ -378,7 +380,6 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const cities = this.state.availableCities;
     const simulationInfo = this.state.simulationInfo;
     const simulationState = this.state.simulationState;
     const availableCities = this.state.availableCities;
@@ -413,6 +414,7 @@ export default class Main extends React.Component {
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
       handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
       handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut
+
     }
 
     const simulationMapHandlers = {

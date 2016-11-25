@@ -16,13 +16,31 @@ export default class SimulationSettings extends React.Component {
     handlers: React.PropTypes.object
   }
 
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      useRealData: false,
+      realWorldJourneyNum: 0,
+      journeys: []
+    }
+  }
+
+  _handleRealDataCheckboxChange(e) {
+    this.setState({useRealData: !this.state.useRealData});
+  }
+
+  _handleRealWorldJourneyNumChange(e) {
+    this.setState({realWorldJourneyNum: e.target.value});
+  }
+
   _handleSimulationButton(e, started) {
     e.preventDefault();
 
     if (started) {
       this.props.handlers.handleSimulationClose();
     } else {
-      this.props.handlers.handleSimulationStart();
+      this.props.handlers.handleSimulationStart(this.state.useRealData, this.state.realWorldJourneyNum);
     }
   }
 
@@ -56,24 +74,26 @@ export default class SimulationSettings extends React.Component {
     const journeyListHandlers = {
       handleJourneyMouseOver : this.props.handlers.handleJourneyListItemMouseOver,
       handleJourneyMouseOut  : this.props.handlers.handleJourneyListItemMouseOut
-    }
+    };
+    const usingRealData = this.state.useRealData;
 
     const journeySettingsHandlers = {
       handleJourneysFileImport : ::this.handleJourneysSubmit,
       handlePositionAdd        : this.props.handlers.handlePositionSelect,
       handleObjectCreate       : this.props.handlers.handleObjectTypeCreate
-    }
+    };
 
     const speedSettingHandlers = {
       handleSpeedChange : this.props.handlers.handleSpeedChange
-    }
+    };
 
     return (
       <div className="container">
-        <JourneyList 
+        <JourneyList
           pendingJourneys     = {pendingJourneys}
           simulationJourneys  = {simulationJourneys}
           handlers            = {journeyListHandlers}
+
         />
         <JourneySettings
           bounds              = {bounds}
@@ -83,7 +103,29 @@ export default class SimulationSettings extends React.Component {
           objectKindInfo      = {this.props.objectKindInfo}
           handlers            = {journeySettingsHandlers}
         />
-      <div id="simulation-buttons" className="row">
+        <div id="simulation-buttons" className="row">
+          <form>
+            <input
+              type     = "checkbox"
+              name     = "real-data"
+              disabled = {hasSimulationStarted}
+              onChange = {::this._handleRealDataCheckboxChange}
+            />
+            Use real world data
+            {
+              usingRealData &&
+              <p>Number of real world journeys to create on simulation start.</p>
+            }
+            {
+              usingRealData &&
+              <input
+                type     = "number"
+                name     = "journey-number"
+                disabled = {hasSimulationStarted}
+                onChange = {::this._handleRealWorldJourneyNumChange}
+              />
+            }
+          </form>
           <button
             className = "btn btn-primary"
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
@@ -119,7 +161,7 @@ export default class SimulationSettings extends React.Component {
             Request benchmark
           </button>
           <p hidden={benchmarkValue == undefined}>
-          {benchmarkValue} is the average speed to destination in km/s
+            {benchmarkValue} is the average speed to destination in km/s
           </p>
         </div>
       </div>
