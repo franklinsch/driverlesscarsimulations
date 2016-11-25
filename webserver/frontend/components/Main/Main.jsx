@@ -83,6 +83,7 @@ export default class Main extends React.Component {
       .then((response) => {
         response.json().then((data) => {
           this.setState({
+            userID: data.userID,
             activeUser: data.username,
             userSimulations: data.simulations
           });
@@ -152,8 +153,6 @@ export default class Main extends React.Component {
         //return objects;
       //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
       simulationState.objects = objects;
-
-      console.log(objects);
 
       this.setState({
         simulationState: simulationState
@@ -250,6 +249,7 @@ export default class Main extends React.Component {
     }
     const socket = this.state.socket;
     UtilFunctions.sendSocketMessage(socket, type, initialSettings);
+    this.updateUserSimulations();
   }
 
   handleObjectTypeCreate(typeInfo) {
@@ -315,7 +315,7 @@ export default class Main extends React.Component {
     }
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
-  
+
   handleSimulationStart(useRealData, realWorldJourneyNum) {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
@@ -330,8 +330,8 @@ export default class Main extends React.Component {
       useRealData: useRealData,
       realWorldJourneyNum: realWorldJourneyNum
     }
-
     UtilFunctions.sendSocketMessage(socket, type, content);
+    this.updateUserSimulations();
     this.clearPendingJourneys();
   }
 
