@@ -90,7 +90,7 @@ export default class Main extends React.Component {
         });
       })
       .catch(err => {
-        console.("error fetching user simulations");
+        console.log("error fetching user simulations");
       })
     }
   }
@@ -153,8 +153,6 @@ export default class Main extends React.Component {
         //return objects;
       //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
       simulationState.objects = objects;
-
-      console.(objects);
 
       this.setState({
         simulationState: simulationState
