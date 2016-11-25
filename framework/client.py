@@ -20,7 +20,7 @@ class SAVNConnectionAssistant:
     self.frameworkID = 0
     self.shouldAwait = False
 
-  def updateState(self, timestamp, state):
+  def updateState(self, timestamp, state, sync=True):
     packet = {'type': 'simulation-state',
               'content':
                 {'simulationID': self.simulationID,
@@ -31,7 +31,8 @@ class SAVNConnectionAssistant:
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
-    self.synchronize()
+    if (sync):
+      self.synchronize()
 
   def handleSimulationStart(self, initialParameters):
     pass
