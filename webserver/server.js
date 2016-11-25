@@ -396,7 +396,9 @@ frontendSocketServer.on('request', function(request) {
         $push: {
           simulations: simulation._id
         },
-        active_simulation: simulation._id
+        $set: {
+          active_simulation: simulation._id
+        }
       };
       const options = {
         upsert: true

@@ -194,10 +194,6 @@ export default class SimulationMap extends React.Component {
     });
   }
 
-  _handleSimulationActivate(e) {
-    this.props.handlers.handleSimulationActivate(this.props.simulationID);
-  }
-
   componentDidUpdate() {
     if (this.refs.map) {
       const map = this.refs.map.leafletElement;
@@ -300,7 +296,7 @@ export default class SimulationMap extends React.Component {
           <button
             className = "btn btn-primary"
             hidden    = {!simulationID}
-            onClick   = {::this._handleSimulationActivate}
+            onClick   = {(e) => this.props.handlers.handleSimulationActivate(this.props.simulationID)}
           >
             Activate simulation
           </button>
