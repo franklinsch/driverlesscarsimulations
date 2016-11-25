@@ -285,19 +285,10 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function _createAccurateJourney(hotspots, bounds, startTime) {
-    /*const popularitySum = hotspots.reduce(function (a, b) {
-      return _calculatePopularityAtTime(a, startTime) +
-             _calculatePopularityAtTime(b, startTime);
-    });
-*/
     let popularitySum = 0;
     for(var i = 0; i < hotspots.length; i++) {
       popularitySum+= _calculatePopularityAtTime(hotspots[i], startTime)
     }
-
-
-    console.log("popularitySumis")
-    console.log(popularitySum)
 
     const lookupVal = Math.random() * popularitySum;
     let hotspotsClone = hotspots.slice();
