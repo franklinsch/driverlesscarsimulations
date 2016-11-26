@@ -1,7 +1,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="chart.js"></script>
-
+<script>
+  function handleSubmit() {
+    reloadCharts(document.getElementById("simID").value);
+    return false;
+  }
+</script>
+<form id="simForm" class="simForm" onSubmit="return handleSubmit()">
+  <input id="simID" type="text">
+</form>
 <div id="dbtime_car_chart_div"></div>
 <div id="dbtime_timestamp_chart_div"></div>
 <div id="network-time_car_chart_div"></div>
