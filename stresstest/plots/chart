@@ -1,0 +1,9 @@
+#!/bin/bash
+
+SIM_ID=$1
+cp ../logs/stress_test_$SIM_ID.log tmp.json
+
+
+mkdir -p charts/chart$SIM_ID
+cp chart.html charts/chart$SIM_ID/chart+$SIM_ID.html
+mv tmp.json charts/chart$SIM_ID/data.json
