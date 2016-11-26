@@ -4,7 +4,7 @@ google.charts.setOnLoadCallback(drawGraphs);
 function drawGraphs() {
   var experimentData;
   $.ajax({
-    url:'example.json',
+    url:'data.json',
     dataType: 'json',
     async: false,
     success: function(data) {
