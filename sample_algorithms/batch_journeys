@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mongo < reset_simulation.mongo
+mongo < reset_all_journeys.mongo
 node journeys.js $2
 curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST http://localhost:3000/simulations/$1/journeys -d @new_journeys.json
 echo

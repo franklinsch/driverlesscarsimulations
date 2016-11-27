@@ -1,0 +1,2 @@
+use carSimulationApp
+db.simulations.update({}, {$set: {simulationStates: [], latestTimestamp: 0, frameworks: []}}, {multi: true})
