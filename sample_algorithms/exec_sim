@@ -1,0 +1,4 @@
+#!/bin/bash
+
+./batch_journeys $1 $2
+python3 non_colliding.py $1

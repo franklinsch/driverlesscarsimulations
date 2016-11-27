@@ -93,3 +93,5 @@ log
 
 #vim gunk
 *.swp*
+
+stresstest
