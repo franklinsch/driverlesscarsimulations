@@ -1,9 +1,22 @@
 #!/bin/bash
 
 SIM_ID=$1
-cp ../logs/stress_test_$SIM_ID.log tmp.json
+
+DATA_ORIG_NAME=../logs/stress_test_$SIM_ID.log
+DATA_DEST_NAME=data.json
+
+CHART_DIR=charts/chart$SIM_ID
+OLD_HTML_NAME=chart
+NEW_HTML_NAME=$OLD_HTML_NAME+$SIM_ID
+JS_FILE=chart.js
 
 
-mkdir -p charts/chart$SIM_ID
-cp chart.html charts/chart$SIM_ID/chart+$SIM_ID.html
-mv tmp.json charts/chart$SIM_ID/data.json
+echo "[" > tmp.json
+tail -n +2 $DATA_ORIG_NAME >> tmp.json
+echo "]" >> tmp.json
+
+mkdir -p $CHART_DIR
+cp $OLD_HTML_NAME.html $CHART_DIR/$NEW_HTML_NAME.html
+cp $JS_FILE $CHART_DIR/$JS_FILE
+mv tmp.json $CHART_DIR/$DATA_DEST_NAME
+open $CHART_DIR/$NEW_HTML_NAME.html
