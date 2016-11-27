@@ -1,0 +1,9 @@
+#!/bin/bash
+
+mongo < reset_all_simulations.mongo
+
+if [ $2 ]; then
+  ./batch_journeys $1 $2
+fi
+
+python3 non_colliding.py $1
