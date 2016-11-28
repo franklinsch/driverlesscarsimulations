@@ -4,11 +4,11 @@ const async = require('async');
 const path = require('path');
 const passport = require('passport');
 const Simulation = require('../models/Simulation');
+const FilteredSimulation = require('../models/FilteredSimulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
 const config = require('../config');
 const auth = require('../authenticate');
-
 
 const server = require('../../server.js');
 
@@ -107,10 +107,13 @@ router.route('/simulations/:simulationID/download')
         _id: req.params.simulationID
       })
       .then((simulation) => {
-        const filteredSimulation = new FilteredSimulation(simulation);
+        console.log('tset');
 
+        const filteredSimulation = new FilteredSimulation(simulation);
+console.log('tset');
         if (req.query.json) {
-          // Print JSON
+  console.log('tset');
+        // Print JSON
           res.json(filteredSimulation.get());
         } else {
           // Download JSON
