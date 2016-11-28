@@ -117,12 +117,10 @@ router.route('/simulations/:simulationID/download')
           const filename = 'simulation.json';
 
           // Download JSON
-          res.writeHead(200, {
-            'Content-Type': 'application/force-download',
-            'Content-disposition': 'attachment; filename='+filename
-          });
+          res.set('Content-Type', 'application/json');
+          res.set('Content-disposition', 'attachment; filename='+filename);
 
-          res.end(simulationJSON);
+          res.send(simulationJSON);
         }
       })
       .catch((err) => {
