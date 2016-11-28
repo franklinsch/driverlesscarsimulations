@@ -107,7 +107,7 @@ router.route('/simulations/:simulationID/download')
         _id: req.params.simulationID
       })
       .then((simulation) => {
-        res.json(result);
+        res.json(simulation);
       })
       .catch((err) => {
         res.send(err);
