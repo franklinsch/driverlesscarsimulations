@@ -27,6 +27,10 @@ export default class SimulationSettings extends React.Component {
     }
   }
 
+  _handleFileUpload(e) {
+    console.log(e.target);
+  }
+
   _handleRealDataCheckboxChange(e) {
     this.setState({useRealData: !this.state.useRealData});
   }
@@ -115,34 +119,41 @@ export default class SimulationSettings extends React.Component {
           activeSimulationID  = {simID}
         />
         <div id="simulation-buttons" className="row">
-          <form>
+          <input
+            type     = "checkbox"
+            name     = "real-data"
+            disabled = {hasSimulationStarted}
+            onChange = {::this._handleRealDataCheckboxChange}
+          />
+          Use real world data
+          {
+            usingRealData &&
+            <p>Number of real world journeys to create on simulation start.</p>
+          }
+          {
+            usingRealData &&
             <input
-              type     = "checkbox"
-              name     = "real-data"
+              type     = "number"
+              name     = "journey-number"
               disabled = {hasSimulationStarted}
-              onChange = {::this._handleRealDataCheckboxChange}
+              onChange = {::this._handleRealWorldJourneyNumChange}
             />
-            Use real world data
-            {
-              usingRealData &&
-              <p>Number of real world journeys to create on simulation start.</p>
-            }
-            {
-              usingRealData &&
-              <input
-                type     = "number"
-                name     = "journey-number"
-                disabled = {hasSimulationStarted}
-                onChange = {::this._handleRealWorldJourneyNumChange}
-              />
-            }
-          </form>
+          }
+          {
+            usingRealData &&
+            <input
+              type="file"
+              name="hotspots"
+              accept=".json"
+              onChange= {(e) => this._handleFileUpload(e)}
+            />
+          }
           <button
             className = "btn btn-primary"
             disabled  = {!allowSimulationStart}
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
           >
-            { !allowSimulationStart && 
+            { !allowSimulationStart &&
                 <p>Simulation Ended</p> || hasSimulationStarted  &&
                 <p>End Simulation</p> || <p>Start simulation</p>
             }
