@@ -107,17 +107,22 @@ router.route('/simulations/:simulationID/download')
         _id: req.params.simulationID
       })
       .then((simulation) => {
-        console.log('tset');
-
         const filteredSimulation = new FilteredSimulation(simulation);
-console.log('tset');
-        if (req.query.json) {
-  console.log('tset');
-        // Print JSON
-          res.json(filteredSimulation.get());
-        } else {
-          // Download JSON
+        const simulationJSON = filteredSimulation.get();
 
+        if (req.query.json) {
+          // Print JSON
+          res.json(simulationJSON);
+        } else {
+          const filename = 'simulation.json';
+
+          // Download JSON
+          res.writeHead(200, {
+            'Content-Type': 'application/force-download',
+            'Content-disposition': 'attachment; filename='+filename
+          });
+
+          res.end(simulationJSON);
         }
       })
       .catch((err) => {
