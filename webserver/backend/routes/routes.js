@@ -101,6 +101,19 @@ router.route('/simulations/activate')
       });
   })
 
+router.route('/simulations/:simulationID/download')
+  .get((req, res) => {
+    Simulation.findOne({
+        _id: req.params.simulationID
+      })
+      .then((result) => {
+        res.json(result.journeys);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  });
+
 router.route('/simulations/:simulationID/journeys')
   .get((req, res) => {
     Simulation.findOne({
