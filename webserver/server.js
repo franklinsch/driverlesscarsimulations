@@ -125,7 +125,7 @@ function _handleRequestEventUpdate(message, callback) {
   
   Simulation.findByIdAndUpdate(simulationID, {
     $push: {
-      journeys: { $each: message.content.journeys }
+      journeys: { $each: newJourneys }
     }
   }, {new: true}, function (error, simulation) {
     if (error || !simulation) {
