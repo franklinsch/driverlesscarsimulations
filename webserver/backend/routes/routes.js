@@ -107,7 +107,15 @@ router.route('/simulations/:simulationID/download')
         _id: req.params.simulationID
       })
       .then((simulation) => {
-        res.json(simulation);
+        const filteredSimulation = new FilteredSimulation(simulation);
+
+        if (req.query.json) {
+          // Print JSON
+          res.json(filteredSimulation.get());
+        } else {
+          // Download JSON
+
+        }
       })
       .catch((err) => {
         res.send(err);
