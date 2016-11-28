@@ -114,19 +114,6 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 function _handleRequestEventUpdate(message, callback) {
   const simulationID = message.content.simulationID;
   const newJourneys = [];
-  console.log(message.content.journeys);
-  for (let journey of message.content.journeys) {
-    /*newJourneys.push(new Journey({
-      origin: journey.origin,
-      destination: journey.destination
-    }));*/
-    newJourneys.push({
-      origin: journey.origin,
-      destination: journey.destination
-    });
-    console.log('pushed journey');
-  }
-  console.log('journeys', newJourneys);
   
   Simulation.findByIdAndUpdate(simulationID, {
     $push: {
