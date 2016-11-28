@@ -106,8 +106,8 @@ router.route('/simulations/:simulationID/download')
     Simulation.findOne({
         _id: req.params.simulationID
       })
-      .then((result) => {
-        res.json(result.journeys);
+      .then((simulation) => {
+        res.json(result);
       })
       .catch((err) => {
         res.send(err);
