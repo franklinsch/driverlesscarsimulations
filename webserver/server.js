@@ -113,7 +113,15 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 function _handleRequestEventUpdate(message, callback) {
   const simulationID = message.content.simulationID;
+
+  // We need to create Journey models so that the ids will be correctly assigned by mongoose
   const newJourneys = [];
+  for (let journey of message.content.journeys) {
+    newJourneys.push(new Journey({
+      origin: journey.origin,
+      destination: journey.destination
+    }));
+  }
   
   Simulation.findByIdAndUpdate(simulationID, {
     $push: {
