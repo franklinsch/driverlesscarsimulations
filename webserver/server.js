@@ -16,6 +16,7 @@ const app = express();
 
 
 const db = require('./backend/db');
+const Journey = require('./backend/models/Journey');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
 const User = require('./backend/models/User');
@@ -112,9 +113,19 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 function _handleRequestEventUpdate(message, callback) {
   const simulationID = message.content.simulationID;
+
+  // We need to create Journey models so that the ids will be correctly assigned by mongoose
+  const newJourneys = [];
+  for (let journey of message.content.journeys) {
+    newJourneys.push(new Journey({
+      origin: journey.origin,
+      destination: journey.destination
+    }));
+  }
+  
   Simulation.findByIdAndUpdate(simulationID, {
     $push: {
-      journeys: { $each: message.content.journeys }
+      journeys: { $each: newJourneys }
     }
   }, {new: true}, function (error, simulation) {
     if (error || !simulation) {
@@ -129,6 +140,9 @@ function _handleRequestEventUpdate(message, callback) {
       callback(error);
       return
     }
+
+    // Reassign the result so that the journeys include their ids
+    message.content.journeys = newJourneys;
 
     for (const framework of simulation.frameworks) {
       frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
