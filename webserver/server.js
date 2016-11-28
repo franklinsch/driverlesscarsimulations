@@ -16,6 +16,7 @@ const app = express();
 
 
 const db = require('./backend/db');
+const Journey = require('./backend/models/Journey');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
 const User = require('./backend/models/User');
@@ -112,6 +113,21 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 function _handleRequestEventUpdate(message, callback) {
   const simulationID = message.content.simulationID;
+  const newJourneys = [];
+  console.log(message.content.journeys);
+  for (let journey of message.content.journeys) {
+    /*newJourneys.push(new Journey({
+      origin: journey.origin,
+      destination: journey.destination
+    }));*/
+    newJourneys.push({
+      origin: journey.origin,
+      destination: journey.destination
+    });
+    console.log('pushed journey');
+  }
+  console.log('journeys', newJourneys);
+  
   Simulation.findByIdAndUpdate(simulationID, {
     $push: {
       journeys: { $each: message.content.journeys }
@@ -129,6 +145,9 @@ function _handleRequestEventUpdate(message, callback) {
       callback(error);
       return
     }
+
+    // Reassign the result so that the journeys include their ids
+    message.content.journeys = newJourneys;
 
     for (const framework of simulation.frameworks) {
       frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
