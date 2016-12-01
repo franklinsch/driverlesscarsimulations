@@ -5,10 +5,35 @@ const FilteredSimulation = class FilteredSimulation {
 
   _filterSimulation(simulation) {
     return {
-      city: simulation.city,
-      journeys: simulation.journeys,
+      city: this._filterCity(simulation.city),
+      journeys: this._filterJourneys(simulation.journeys),
       simulationStates: this._filterSimulationStates(simulation.simulationStates)
     };
+  }
+
+  _filterCity(city) {
+    return {
+      name: city.name,
+      bounds: city.bounds
+    };
+  }
+
+  _filterJourneys(journeys) {
+    const filteredJourneys = [];
+
+    for (let journey of journeys) {
+      filteredJourneys.push(this._filterJourney(journey));
+    }
+
+    return filteredJourneys;
+  }
+
+  _filterJourney(journey) {
+      return {
+        carID: journey.carID,
+        origin: journey.origin,
+        destination: journey.destination
+      };
   }
 
   _filterSimulationStates(simulationStates) {
