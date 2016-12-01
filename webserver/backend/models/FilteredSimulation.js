@@ -14,7 +14,7 @@ const FilteredSimulation = class FilteredSimulation {
   _filterSimulationStates(simulationStates) {
     const filteredSimulationStates = [];
 
-    for (let simulationState in simulationStates) {
+    for (let simulationState of simulationStates) {
       filteredSimulationStates.push(this._filterSimulationState(simulationState));
     }
 
@@ -31,7 +31,7 @@ const FilteredSimulation = class FilteredSimulation {
   _filterFrameworkStates(frameworkStates) {
     const filteredFrameworkStates = [];
 
-    for (let frameworkState in frameworkStates) {
+    for (let frameworkState of frameworkStates) {
       filteredFrameworkStates.push(this._filterFrameworkState(frameworkState));
     }
 
@@ -47,7 +47,7 @@ const FilteredSimulation = class FilteredSimulation {
   _filterSimulationObjects(simulationObjects) {
     const filteredSimulationObjects = [];
 
-    for (let simulationObject in simulationObjects) {
+    for (let simulationObject of simulationObjects) {
       filteredSimulationObjects.push(this._filterSimulationObject(simulationObject));
     }
 
