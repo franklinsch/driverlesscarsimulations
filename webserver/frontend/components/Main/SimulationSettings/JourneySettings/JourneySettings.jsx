@@ -126,6 +126,9 @@ export default class JourneySettings extends React.Component {
           journeys = {journeys}
           handlers = {journeyImportHandlers}
         />
+        
+        <button className="btn btn-secondary" onClick={::this._downloadSimulation}>Download Simulation Data</button>
+
         <form>
           <div className="form-group">
             <button 
