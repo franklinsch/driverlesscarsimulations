@@ -102,6 +102,7 @@ export default class SimulationSettings extends React.Component {
           objectTypes         = {this.props.objectTypes}
           objectKindInfo      = {this.props.objectKindInfo}
           handlers            = {journeySettingsHandlers}
+          activeSimulationID  = {simID}
         />
         <div id="simulation-buttons" className="row">
           <form>

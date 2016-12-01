@@ -4,11 +4,11 @@ const async = require('async');
 const path = require('path');
 const passport = require('passport');
 const Simulation = require('../models/Simulation');
+const FilteredSimulation = require('../models/FilteredSimulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
 const config = require('../config');
 const auth = require('../authenticate');
-
 
 const server = require('../../server.js');
 
@@ -100,6 +100,33 @@ router.route('/simulations/activate')
         res.send(err);
       });
   })
+
+router.route('/simulations/:simulationID/download')
+  .get((req, res) => {
+    Simulation.findOne({
+        _id: req.params.simulationID
+      })
+      .then((simulation) => {
+        const filteredSimulation = new FilteredSimulation(simulation);
+        const simulationJSON = filteredSimulation.get();
+
+        if (req.query.json) {
+          // Print JSON
+          res.json(simulationJSON);
+        } else {
+          const filename = 'simulation_'+simulation._id+'.json';
+
+          // Download JSON
+          res.set('Content-Type', 'application/json');
+          res.set('Content-disposition', 'attachment; filename='+filename);
+
+          res.send(simulationJSON);
+        }
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  });
 
 router.route('/simulations/:simulationID/journeys')
   .get((req, res) => {
