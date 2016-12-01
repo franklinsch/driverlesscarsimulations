@@ -11,7 +11,8 @@ export default class JourneySettings extends React.Component {
     simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
-    handlers: React.PropTypes.object
+    handlers: React.PropTypes.object,
+    activeSimulationID: React.PropTypes.string
   }
 
   constructor(props) {
@@ -89,6 +90,12 @@ export default class JourneySettings extends React.Component {
     this.setState({
       showJourneyManualAddForm: !this.state.showJourneyManualAddForm
     })
+  }
+
+  _downloadSimulation() {
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', 'simulations/'+this.props.activeSimulationID+'/download');
+    linkElement.click();
   }
 
   render() {
