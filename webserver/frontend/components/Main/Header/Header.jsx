@@ -8,9 +8,6 @@ import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 
 export default class Header extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
   static propTypes = {
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     token: React.PropTypes.string,
