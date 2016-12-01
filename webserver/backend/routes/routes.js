@@ -213,13 +213,13 @@ router.route('/login')
 
 router.route('/uploads')
   .post((req, res) => {
-    /*fs.writeFile('public/data/hotspots.json', req.body, function(err) {
+    fs.writeFile('public/data/hotspots.json', JSON.stringify(req.body), function(err) {
       console.log("HELLO");
       if (err) {
         console.log(err);
       }
-    });*/
-    res.status(200).send('success');
+      res.status(200).send('success');
+    });
   });
 
 router.get('*', auth, (req, res) => {
