@@ -3,6 +3,7 @@ import UtilFunctions from '../../../Utils/UtilFunctions.jsx';
 
 export default class Dropdown extends React.Component {
   static propTypes = {
+    enabled: React.PropTypes.bool,
     items: React.PropTypes.array,
     handlers: React.PropTypes.object
   }
@@ -21,7 +22,7 @@ export default class Dropdown extends React.Component {
 
     return (
 			<div className="row">
-        <select 
+        <select disabled={!this.props.enabled}
           className="form-control"
           onChange={::this._onSelect}
         >

@@ -219,7 +219,8 @@ export default class Main extends React.Component {
 
   handleCityChange(newCityId) {
     this.setState({
-      selectedCityID: newCityId
+      selectedCityID: newCityId,
+      pendingJourneys: []
     })
   }
 
@@ -230,12 +231,6 @@ export default class Main extends React.Component {
       userID: userID,
       activeUser: username
     });
-  }
-
-  handleCityChange() {
-    this.setState({
-      pendingJourneys: []
-    })
   }
 
   handlePositionPreview(position) {
@@ -458,8 +453,7 @@ export default class Main extends React.Component {
     const headerHandlers = {
       handleJoinSimulation : ::this.handleJoinSimulation,
       handleCityChange     : ::this.handleCityChange,
-      handleTokenChange    : ::this.handleTokenChange,
-      handleChangeCity     : ::this.handleChangeCity
+      handleTokenChange    : ::this.handleTokenChange
     }
 
     const simulationSettingsHandlers = {
