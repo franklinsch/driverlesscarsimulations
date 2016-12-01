@@ -219,9 +219,14 @@ export default class Main extends React.Component {
 
   handleCityChange(newCityId) {
     this.setState({
-      selectedCityID: newCityId,
-      pendingJourneys: []
+      selectedCityID: newCityId
     })
+    
+    if (!this.state.simulationInfo.id) {
+      this.setState({
+        pendingJourneys: []
+      })
+    }
   }
 
 
