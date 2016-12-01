@@ -232,6 +232,12 @@ export default class Main extends React.Component {
     });
   }
 
+  handleCityChange() {
+    this.setState({
+      pendingJourneys: []
+    })
+  }
+
   handlePositionPreview(position) {
     this.setState({
       previewMarkerPosition: position
@@ -447,10 +453,13 @@ export default class Main extends React.Component {
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const bounds = selectedCity ? selectedCity.bounds : null;
 
+    const simulationRunning = simulationID != undefined;
+
     const headerHandlers = {
       handleJoinSimulation : ::this.handleJoinSimulation,
       handleCityChange     : ::this.handleCityChange,
-      handleTokenChange    : ::this.handleTokenChange
+      handleTokenChange    : ::this.handleTokenChange,
+      handleChangeCity     : ::this.handleChangeCity
     }
 
     const simulationSettingsHandlers = {
@@ -478,6 +487,7 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
+          enable          = {simulationRunning}
           availableCities = {availableCities}
           token           = {token}
           userID          = {userID}
