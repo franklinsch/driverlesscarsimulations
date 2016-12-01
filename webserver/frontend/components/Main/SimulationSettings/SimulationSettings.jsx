@@ -23,12 +23,18 @@ export default class SimulationSettings extends React.Component {
       useRealData: false,
       realWorldJourneyNum: 0,
       journeys: [],
-      allowSimulationStart: true
+      allowSimulationStart: true,
+      hotspotFile: null,
     }
   }
 
   _handleFileUpload(e) {
-    console.log(e.target);
+
+    const fr = new FileReader();
+    fr.readAsArrayBuffer(e.target.files[0]);
+    fr.addEventListener("loadend", () => {
+      this.setState({hotspotFile: new DataView(fr.result)});
+    })
   }
 
   _handleRealDataCheckboxChange(e) {
@@ -52,7 +58,7 @@ export default class SimulationSettings extends React.Component {
         })
       }
     } else {
-      this.props.handlers.handleSimulationStart(this.state.useRealData, this.state.realWorldJourneyNum);
+      this.props.handlers.handleSimulationStart(this.state.useRealData, this.state.realWorldJourneyNum, this.state.hotspotFile);
     }
   }
 

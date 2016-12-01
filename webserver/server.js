@@ -379,6 +379,8 @@ frontendSocketServer.on('request', function(request) {
         }
       }
 
+      console.log("---------------------------------------------------------")
+
       var journeys = [];
       for (var i = 0; i < journeyNum; i++) {
         journeys.push(_createAccurateJourney(hotspots, bounds, startTime));
@@ -432,6 +434,7 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function _handleRequestSimulationStart(message, callback) {
+    console.log("HERE");
     const data = message.content;
     if (data.useRealData) { //TODO: Fix bad refactoring
       _createSimulationWithRealData(data, callback)
@@ -447,6 +450,7 @@ frontendSocketServer.on('request', function(request) {
       };
       _createSimulation(simulationData, data.userID, callback);
     }
+    console.log("---------------------------------------------------------")
   }
 
   function _handleRequestSimulationJoin(message) {
