@@ -130,7 +130,8 @@ export default class SimulationMap extends React.Component {
 
   _clearOriginMarker() {
     this.setState({
-      origin: null
+      origin: null,
+      destination: null
     })
   }
 
@@ -364,7 +365,7 @@ export default class SimulationMap extends React.Component {
         >
           <Popup>
             <button onClick = {::this._clearOriginMarker}>
-              Clear destination
+              Clear
             </button>
           </Popup>
         </Marker>
