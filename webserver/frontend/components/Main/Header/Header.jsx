@@ -8,10 +8,8 @@ import UtilFunctions from '../../Utils/UtilFunctions.jsx';
 
 export default class Header extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
   static propTypes = {
+    enabled: React.PropTypes.bool,
     availableCities: React.PropTypes.arrayOf(CustomPropTypes.city),
     token: React.PropTypes.string,
     userID: React.PropTypes.string,
@@ -49,6 +47,7 @@ export default class Header extends React.Component {
             </li>
             <li className="nav-item">
               <Dropdown
+                enabled  = {this.props.enabled}
                 items    = {cities}
                 handlers = {dropdownHandlers}
               />

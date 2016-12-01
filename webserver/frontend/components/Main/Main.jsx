@@ -221,6 +221,12 @@ export default class Main extends React.Component {
     this.setState({
       selectedCityID: newCityId
     })
+    
+    if (this.state.simulationInfo.id == "0") {
+      this.setState({
+        pendingJourneys: []
+      })
+    }
   }
 
 
@@ -447,6 +453,8 @@ export default class Main extends React.Component {
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const bounds = selectedCity ? selectedCity.bounds : null;
 
+    const simulationRunning = simulationID != undefined && simulationID != 0;
+
     const headerHandlers = {
       handleJoinSimulation : ::this.handleJoinSimulation,
       handleCityChange     : ::this.handleCityChange,
@@ -478,6 +486,7 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
+          enabled         = {!simulationRunning}
           availableCities = {availableCities}
           token           = {token}
           userID          = {userID}
