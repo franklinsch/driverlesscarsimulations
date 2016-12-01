@@ -114,7 +114,7 @@ router.route('/simulations/:simulationID/download')
           // Print JSON
           res.json(simulationJSON);
         } else {
-          const filename = 'simulation.json';
+          const filename = 'simulation_'+simulation._id+'.json';
 
           // Download JSON
           res.set('Content-Type', 'application/json');
