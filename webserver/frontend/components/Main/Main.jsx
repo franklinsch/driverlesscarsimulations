@@ -222,7 +222,7 @@ export default class Main extends React.Component {
       selectedCityID: newCityId
     })
     
-    if (this.state.simulationInfo.id == 0) {
+    if (this.state.simulationInfo.id == "0") {
       this.setState({
         pendingJourneys: []
       })
