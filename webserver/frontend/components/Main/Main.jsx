@@ -448,7 +448,7 @@ export default class Main extends React.Component {
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const bounds = selectedCity ? selectedCity.bounds : null;
 
-    const simulationRunning = simulationID != undefined;
+    const simulationRunning = simulationID != undefined && simulationID != 0;
 
     const headerHandlers = {
       handleJoinSimulation : ::this.handleJoinSimulation,
@@ -481,7 +481,7 @@ export default class Main extends React.Component {
     return (
       <div>
         <Header
-          enable          = {simulationRunning}
+          enabled         = {!simulationRunning}
           availableCities = {availableCities}
           token           = {token}
           userID          = {userID}
