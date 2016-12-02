@@ -378,9 +378,7 @@ frontendSocketServer.on('request', function(request) {
           hotspots.push(hotspot);
         }
       }
-
-      console.log("---------------------------------------------------------")
-
+      
       var journeys = [];
       for (var i = 0; i < journeyNum; i++) {
         journeys.push(_createAccurateJourney(hotspots, bounds, startTime));
