@@ -169,14 +169,10 @@ export default class Main extends React.Component {
       });
     } else if (messageData.type === "simulation-confirm-close") {
       const newSimulationInfo = this.state.simulationInfo;
-      const path = window.location.pathname;
-
-      if (!/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
-        newSimulationInfo.id = "0";
-        this.setState({
-          simulationInfo: newSimulationInfo
-        });
-      }
+      newSimulationInfo.id = "0";
+      this.setState({
+        simulationInfo: newSimulationInfo
+      });
     } else if (messageData.type === "default-object-types") {
       this.setState({
         objectTypes: messageData.content
