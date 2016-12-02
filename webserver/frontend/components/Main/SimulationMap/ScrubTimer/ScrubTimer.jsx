@@ -2,6 +2,9 @@ import React, { PropTypes } from 'react';
 import CustomPropTypes from '../../../Utils/CustomPropTypes.jsx'
 
 export default class ScrubTimer extends React.Component {
+  _timeoutValue = 200;
+  _latestScrub = undefined;
+
   static propTypes = {
     timestamp: React.PropTypes.number,
     latestTimestamp: React.PropTypes.number,
@@ -26,12 +29,23 @@ export default class ScrubTimer extends React.Component {
     });
   }
 
+  _checkScrub() {
+    if (this._latestScrub != undefined) {
+      this._scrubToTime(this._latestScrub); 
+      setTimeout(::this._checkScrub, this._timeoutValue);
+    }
+  }
+
   _handlePause(e) {
     this.setState({
       dragging: true,
       storedMax: this.props.latestTimestamp
     });
     this.props.handlers.handlePause();
+
+    const scrubTime = parseInt(e.target.value);
+    this._latestScrub = scrubTime;
+    this._checkScrub();
   }
 
   _handleResume(e) {
@@ -39,15 +53,24 @@ export default class ScrubTimer extends React.Component {
       dragging: false,
       storedMax: null
     });
+
+    this._latestScrub = undefined;
+    const scrubTime = parseInt(e.target.value);
+    this._scrubToTime(scrubTime);
     this.props.handlers.handleResume();
   }
 
   _handleScrubTimeChange(e) {
     const scrubTime = parseInt(e.target.value);
+    this._latestScrub = scrubTime;
+  }
+
+  _scrubToTime(scrubTime) {
     this.setState({
       scrubTime: scrubTime
     });
     this.props.handlers.handleScrub(scrubTime);
+
   }
 
   render() {
