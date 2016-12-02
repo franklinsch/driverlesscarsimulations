@@ -22,7 +22,8 @@ export default class SimulationSettings extends React.Component {
     this.state = {
       useRealData: false,
       realWorldJourneyNum: 0,
-      journeys: []
+      journeys: [],
+      allowSimulationStart: true
     }
   }
 
@@ -39,6 +40,13 @@ export default class SimulationSettings extends React.Component {
 
     if (started) {
       this.props.handlers.handleSimulationClose();
+
+      const path = window.location.pathname;
+      if (/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
+        this.setState({
+          allowSimulationStart: false
+        })
+      }
     } else {
       this.props.handlers.handleSimulationStart(this.state.useRealData, this.state.realWorldJourneyNum);
     }
@@ -70,6 +78,8 @@ export default class SimulationSettings extends React.Component {
     const pendingJourneys = this.props.pendingJourneys || [];
 
     const benchmarkValue = this.props.benchmarkValue;
+
+    const allowSimulationStart = this.state.allowSimulationStart;
 
     const journeyListHandlers = {
       handleJourneyMouseOver : this.props.handlers.handleJourneyListItemMouseOver,
@@ -129,10 +139,12 @@ export default class SimulationSettings extends React.Component {
           </form>
           <button
             className = "btn btn-primary"
+            disabled  = {!allowSimulationStart}
             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
           >
-            { hasSimulationStarted  &&
-              <p>End Simulation</p> || <p>Start simulation</p>
+            { !allowSimulationStart && 
+                <p>Simulation Ended</p> || hasSimulationStarted  &&
+                <p>End Simulation</p> || <p>Start simulation</p>
             }
           </button>
 
@@ -152,7 +164,7 @@ export default class SimulationSettings extends React.Component {
 
           <button
             className = "btn btn-primary"
-            hidden    = {!hasSimulationStarted}
+            hidden    = {!hasSimulationStarted && allowSimulationStart}
             onClick   = {::this._handleBenchmarkRequest}
           >
             Request benchmark
