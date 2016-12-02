@@ -16,6 +16,7 @@ for i in range(len(data)):
       'popularityLevels': [{
         'startTime': '00:00:00',
         'endTime'  : '23:59:59',
+        'level': data[i]['entryPlusExitInMillions']
         }]
       }
   hotspots.append(hotspot)
