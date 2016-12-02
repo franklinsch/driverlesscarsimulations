@@ -353,29 +353,18 @@ frontendSocketServer.on('request', function(request) {
     const startTime = new Date(); //TODO: Use epoch time instead of silly string manipulations //TODO: Base off of simulation timestamp
 
     //TODO: change to generic hotspot file. This step should be preprocessed.
-    fs.readFile('./public/data/LondonUndergroundInfo.json', 'utf8', function (err, json) {
+    fs.readFile('./public/data/LondonHotspots.json', 'utf8', function (err, json) {
       if (err) {
         return console.error(err);
       }
 
-      const undergroundData = (JSON.parse(json));
+      const hotspotData = (JSON.parse(json));
       let hotspots = [];
       for (var i = 0; i < undergroundData.length; i++) {
-        if (bounds.southWest.lat <= undergroundData[i].lat && undergroundData[i].lat <= bounds.northEast.lat &&
-            bounds.southWest.lng <= undergroundData[i].lng && undergroundData[i].lng <= bounds.northEast.lng) {
-          const hotspot = {
-            name: undergroundData[i].stationName,
-            coordinates: {
-              lat: undergroundData[i].lat,
-              lng: undergroundData[i].lng
-            },
-            popularityLevels: [{
-              startTime: "00:00:00",
-              endTime: "23:59:59",
-              level: undergroundData[i].entryPlusExitInMillions,
-            }]
-          };
-          hotspots.push(hotspot);
+        if (bounds.southWest.lat <= hotspotData[i].coordinates.lat && hotspotData[i].coordinates.lat <= bounds.northEast.lat &&
+            bounds.southWest.lng <= hotspotData[i].coordinates.lng && hotspotData[i].coordinates.lng <= bounds.northEast.lng) {
+          console.log(hotspotsData[i]);
+          hotspots.push(hotspotData[i]);
         }
       }
       
