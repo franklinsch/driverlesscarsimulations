@@ -50,11 +50,12 @@ function averageSpeedToDestination(journeys, simulationStates) {
   let totalTime = 0;
   let totalDistance = 0;
 
-  for (const frameworkStates of simulationStates) {
-    for (const state of frameworkStates) {
-      for (const obj of state.objects) {
+  for (const simulationState of simulationStates) {
+    for (const frameworkState of simulationState.frameworkStates) {
+      for (const obj of frameworkState.objects) {
+        obj['id'] += frameworkState.frameworkID;
         if (obj['id'] in carsOnTheRoad) {
-          const journey = journeys[obj['id']];
+          const journey = journeys[obj['journeyID']];
           dest = journey.destination;
           pos = obj.position;
           if (pos.lat == dest.lat && pos.lng == dest.lng) {
@@ -62,7 +63,7 @@ function averageSpeedToDestination(journeys, simulationStates) {
             totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
           }
         } else {
-          carsOnTheRoad[obj['id']] = {departure: state.timestamp, origin: obj.position}
+          carsOnTheRoad[obj['id']] = {departure: simulationState.timestamp, origin: obj.position}
         }
       }
     }
@@ -568,7 +569,11 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + message.content.simulationID);
         return
       }
-    	benchmarkValue = averageSpeedToDestination(simulation.journeys, simulation.simulationStates);
+      const journeys = {};
+      for (const journey of simulation.journeys) {
+        journeys[journey._id] = journey;
+      }
+    	benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
 
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
@@ -843,6 +848,10 @@ frameworkSocketServer.on('request', function(request) {
     });
   }
 
+  function _handleJourneyComplete(message) {
+
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
@@ -857,6 +866,8 @@ frameworkSocketServer.on('request', function(request) {
         case "simulation-close":
           _handleSimulationClose(messageData);
           break;
+        case "journey-complete":
+          _handleJourneyComplete(messageData);
       }
     }
     else if (message.type === 'binary') {
