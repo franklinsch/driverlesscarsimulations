@@ -866,7 +866,7 @@ frameworkSocketServer.on('request', function(request) {
         case "simulation-close":
           _handleSimulationClose(messageData);
           break;
-        case "journey-complete":
+        case "simulation-journey-complete":
           _handleJourneyComplete(messageData);
       }
     }
