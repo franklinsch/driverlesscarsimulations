@@ -213,8 +213,7 @@ router.route('/login')
 
 router.route('/uploads')
   .post((req, res) => {
-    fs.writeFile('public/data/hotspots.json', JSON.stringify(req.body), function(err) {
-      console.log("HELLO");
+    fs.writeFile('../uploads/hotspots.json', JSON.stringify(req.body, null, 2), function(err) {
       if (err) {
         console.log(err);
       }

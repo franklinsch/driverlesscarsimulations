@@ -29,12 +29,7 @@ export default class SimulationSettings extends React.Component {
   }
 
   _handleFileUpload(e) {
-
-    const fr = new FileReader();
-    fr.readAsArrayBuffer(e.target.files[0]);
-    fr.addEventListener("loadend", () => {
-      this.setState({hotspotFile: new DataView(fr.result)});
-    })
+      this.setState({hotspotFile: e.target.files[0]});
   }
 
   _handleRealDataCheckboxChange(e) {

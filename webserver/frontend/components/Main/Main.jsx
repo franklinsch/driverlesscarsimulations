@@ -327,11 +327,10 @@ export default class Main extends React.Component {
   }
 
   handleSimulationStart(useRealData, realWorldJourneyNum, hotspotFile) {
-    let xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', '/uploads', true);
     xhr.onload = () => {
       if (xhr.status === 200) {
-        console.log("here");
         const pendingJourneys = this.state.pendingJourneys || [];
         const socket = this.state.socket;
         const selectedCity = this._cityWithID(this.state.selectedCityID);

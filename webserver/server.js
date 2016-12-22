@@ -353,21 +353,22 @@ frontendSocketServer.on('request', function(request) {
     const startTime = new Date(); //TODO: Use epoch time instead of silly string manipulations //TODO: Base off of simulation timestamp
 
     //TODO: change to generic hotspot file. This step should be preprocessed.
-    fs.readFile('./public/data/LondonHotspots.json', 'utf8', function (err, json) {
+    fs.readFile('../uploads/hotspots.json', 'utf8', function (err, json) {
       if (err) {
         return console.error(err);
       }
 
       const hotspotData = (JSON.parse(json));
       let hotspots = [];
-      for (var i = 0; i < undergroundData.length; i++) {
+
+      for (var i = 0; i < hotspotData.length; i++) {
         if (bounds.southWest.lat <= hotspotData[i].coordinates.lat && hotspotData[i].coordinates.lat <= bounds.northEast.lat &&
             bounds.southWest.lng <= hotspotData[i].coordinates.lng && hotspotData[i].coordinates.lng <= bounds.northEast.lng) {
-          console.log(hotspotsData[i]);
+
           hotspots.push(hotspotData[i]);
         }
       }
-      
+
       var journeys = [];
       for (var i = 0; i < journeyNum; i++) {
         journeys.push(_createAccurateJourney(hotspots, bounds, startTime));
@@ -421,7 +422,6 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function _handleRequestSimulationStart(message, callback) {
-    console.log("HERE");
     const data = message.content;
     if (data.useRealData) { //TODO: Fix bad refactoring
       _createSimulationWithRealData(data, callback)
@@ -437,7 +437,6 @@ frontendSocketServer.on('request', function(request) {
       };
       _createSimulation(simulationData, data.userID, callback);
     }
-    console.log("---------------------------------------------------------")
   }
 
   function _handleRequestSimulationJoin(message) {

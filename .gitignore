@@ -95,3 +95,6 @@ log
 *.swp*
 
 stresstest/plots/charts
+
+#file uploads
+uploads/*
