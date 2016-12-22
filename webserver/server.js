@@ -88,7 +88,7 @@ function averageSpeedToDestination(journeys, completionLogs) {
   if (totalTime == 0) {
     totalTime++;
   }
-  return totalDistance / totalTime;
+  return totalDistance / totalTime * 60 * 60;
 }
 
 //
