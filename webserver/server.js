@@ -728,30 +728,48 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      const frameworkIndex = simulation.frameworks.length - 1;
-      const frameworkID = simulation.frameworks[frameworkIndex]._id;
+      const callback = function() {
+        const frameworkIndex = simulation.frameworks.length - 1;
+        const frameworkID = simulation.frameworks[frameworkIndex]._id;
 
-      frameworkConnections.push({connection: connection, simulationID: simulation._id});
+        frameworkConnections.push({connection: connection, simulationID: simulation._id});
 
-      //for (const frontend of simulation.frontends) {
-      //  frontendConnections[frontend.connectionIndex]['timestamp'] = 0;
-      //}
+        const latestTimestamp = simulation.latestTimestamp || 0;
+        const numStates = simulation.simulationStates.length;
+        const state = (numStates > 0) ? simulation.simulationStates[numStates - 1] : [];
 
-      const latestTimestamp = simulation.latestTimestamp || 0;
-      const numStates = simulation.simulationStates.length;
-      const state = (numStates > 0) ? simulation.simulationStates[numStates - 1] : [];
+        connection.send(JSON.stringify({
+          type: "simulation-start-parameters",
+          content: {
+            frameworkID: frameworkID,
+            city: simulation.city,
+            journeys: simulation.journeys,
+            timestamp: latestTimestamp,
+            state: state
+          }
+        }));
+      };
 
-      connection.send(JSON.stringify({
-        type: "simulation-start-parameters",
-        content: {
-          frameworkID: frameworkID,
-          city: simulation.city,
-          journeys: simulation.journeys,
-          timestamp: latestTimestamp,
-          state: state
+      if (message.content.timeslice < simulation.timeslice) {
+        const newSimulationStates = [];
+        let newTimestamp = 0;
+        for (const i = 0; i < simulation.simulationStates.length; i++) {
+          while (newTimestamp < i * (simulation.timeslice + 1)) {
+            newSimulationStates.push(simulation.simulationStates[i]);
+            newTimestamp += message.content.timeslice;
+          }
         }
-      }));
-
+        simulation.timeslice = message.content.timeslice;
+        simulation.simulationStates = newSimulationStates;
+        simulation.save((error, simulation) => {
+          if (error || !simulation) {
+            return console.error(error);
+          }
+          callback();
+        });
+      } else {
+        callback();
+      }
       sendFrameworkList(simulation);
     })
   }
