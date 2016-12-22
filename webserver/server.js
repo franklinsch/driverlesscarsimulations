@@ -361,10 +361,9 @@ frontendSocketServer.on('request', function(request) {
       const hotspotData = (JSON.parse(json));
       let hotspots = [];
 
-      for (var i = 0; i < hotspotData.length; i++) {
+      for (const i in hotspotData) {
         if (bounds.southWest.lat <= hotspotData[i].coordinates.lat && hotspotData[i].coordinates.lat <= bounds.northEast.lat &&
             bounds.southWest.lng <= hotspotData[i].coordinates.lng && hotspotData[i].coordinates.lng <= bounds.northEast.lng) {
-
           hotspots.push(hotspotData[i]);
         }
       }
