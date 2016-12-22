@@ -70,7 +70,8 @@ def runSimulation(savn, initialParameters):
   print('\t\t\t... Done')
 
   print('Creating initial state')
-  global state
+  global state, timestamp
+  timestamp = initialParameters['timestamp']
   #state = initialParameters['state']
 
   print('Preprocessing routes')
@@ -78,7 +79,6 @@ def runSimulation(savn, initialParameters):
   print('\t\t\t... Done')
 
   print('Starting simulation:')
-  timestamp = initialParameters['timestamp']
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
@@ -174,6 +174,7 @@ def scheduleNewRoute(car):
   start = car['baseRoute'][0]
   if (isNodeLocked(start)):
     return False
+  car['journeyStart'] = timestamp
   car['route'] = deepcopy(car['baseRoute'])
   car['position'] = car['baseRoute'][0]
   car['direction'] = get_direction(car['route'][0], car['route'][1])
@@ -233,6 +234,7 @@ def moveCar(car):
       timeLeft = 0
   if(car['route'] == None):
     car['position'] = end
+    savn.completeObjectJourney(timestamp, car['journeyStart'], car['journeyID'])
     scheduleNewRoute(car)
   else:
     timeLeft = end[2]['timeLeft']
@@ -246,7 +248,7 @@ def executeGlobalAlgorithm(state):
 
 def createNewCar(i, journeyID, baseRoute):
   car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
-      'route': None, 'sensorData': {}, 'baseRoute': baseRoute, 'lockedNode': None}
+      'route': None, 'sensorData': {}, 'baseRoute': baseRoute, 'lockedNode': None, 'journeyStart': None}
   scheduleNewRoute(car)
   return car
 

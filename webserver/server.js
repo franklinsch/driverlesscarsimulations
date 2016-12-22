@@ -45,28 +45,45 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-function averageSpeedToDestination(journeys, simulationStates) {
-  let carsOnTheRoad = {};
+//function averageSpeedToDestination(journeys, simulationStates) {
+  //let carsOnTheRoad = {};
+  //let totalTime = 0;
+  //let totalDistance = 0;
+
+  //for (const simulationState of simulationStates) {
+    //for (const frameworkState of simulationState.frameworkStates) {
+      //for (const obj of frameworkState.objects) {
+        //obj['id'] += frameworkState.frameworkID;
+        //if (obj['id'] in carsOnTheRoad) {
+          //const journey = journeys[obj['journeyID']];
+          //dest = journey.destination;
+          //pos = obj.position;
+          //if (pos.lat == dest.lat && pos.lng == dest.lng) {
+            //totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
+            //totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
+          //}
+        //} else {
+          //carsOnTheRoad[obj['id']] = {departure: simulationState.timestamp, origin: obj.position}
+        //}
+      //}
+    //}
+  //}
+  //if (totalTime == 0) {
+    //totalTime++;
+  //}
+  //return totalDistance / totalTime;
+//}
+
+function averageSpeedToDestination(journeys, completionLogs) {
   let totalTime = 0;
   let totalDistance = 0;
 
-  for (const simulationState of simulationStates) {
-    for (const frameworkState of simulationState.frameworkStates) {
-      for (const obj of frameworkState.objects) {
-        obj['id'] += frameworkState.frameworkID;
-        if (obj['id'] in carsOnTheRoad) {
-          const journey = journeys[obj['journeyID']];
-          dest = journey.destination;
-          pos = obj.position;
-          if (pos.lat == dest.lat && pos.lng == dest.lng) {
-            totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-            totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
-          }
-        } else {
-          carsOnTheRoad[obj['id']] = {departure: simulationState.timestamp, origin: obj.position}
-        }
-      }
-    }
+  for (const log of completionLogs) {
+    console.log(log);
+    totalTime += log.duration;
+
+    const journey = journeys[log['journeyID']];
+    totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
   }
   if (totalTime == 0) {
     totalTime++;
@@ -113,11 +130,11 @@ const frameworkConnections = []
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 function _handleRequestEventUpdate(message, callback) {
-  const simulationID = message.content.simulationID;
+  const simulationID = message.simulationID;
 
   // We need to create Journey models so that the ids will be correctly assigned by mongoose
   const newJourneys = [];
-  for (let journey of message.content.journeys) {
+  for (let journey of message.journeys) {
     newJourneys.push(new Journey({
       origin: journey.origin,
       destination: journey.destination
@@ -133,22 +150,22 @@ function _handleRequestEventUpdate(message, callback) {
       connection.send(JSON.stringify({
         type: "simulation-error",
         content: {
-          message: "Could not find simulation with ID " + message.content.simulationID
+          message: "Could not find simulation with ID " + message.simulationID
         }
       }));
-      console.log("Could not find simulation with ID " + message.content.simulationID);
+      console.log("Could not find simulation with ID " + message.simulationID);
       console.error(error);
       callback(error);
       return
     }
 
     // Reassign the result so that the journeys include their ids
-    message.content.journeys = newJourneys;
+    message.journeys = newJourneys;
 
     for (const framework of simulation.frameworks) {
       frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
         type: "simulation-update",
-        content: message.content
+        content: message
       }));
     }
 
@@ -393,6 +410,7 @@ frontendSocketServer.on('request', function(request) {
         hotspots: hotspots,
         journeys: journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
+        completionLogs: [],
         frameworks: [],
         simulationStates: []
       };
@@ -433,25 +451,25 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function _handleRequestSimulationStart(message, callback) {
-    const data = message.content;
-    if (data.useRealData) { //TODO: Fix bad refactoring
-      _createSimulationWithRealData(data, callback)
+    if (message.useRealData) { //TODO: Fix bad refactoring
+      _createSimulationWithRealData(message, callback)
     } else {
       const simulationData = {
-        city: data.selectedCity,
+        city: message.selectedCity,
         createdAt: Date.now(),
         latestTimestamp: 0,
-        journeys: data.journeys,
+        journeys: message.journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
+        completionLogs: [],
         frameworks: [],
         simulationStates: []
       };
-      _createSimulation(simulationData, data.userID, callback);
+      _createSimulation(simulationData, message.userID, callback);
     }
   }
 
   function _handleRequestSimulationJoin(message) {
-    const simulationID = message.content.simulationID;
+    const simulationID = message.simulationID;
     Simulation.findByIdAndUpdate(simulationID, {
       $push: {
         frontends: {
@@ -501,7 +519,7 @@ frontendSocketServer.on('request', function(request) {
     });
 
     if (index >= 0) {
-      frontendConnections[index]['speed'] = message.content.simulationSpeed;
+      frontendConnections[index]['speed'] = message.simulationSpeed;
     }
   }
 
@@ -511,19 +529,19 @@ frontendSocketServer.on('request', function(request) {
     });
 
     if (index >= 0) {
-      Simulation.findById(message.content.simulationID, function (error, simulation) {
+      Simulation.findById(message.simulationID, function (error, simulation) {
         if (error || !simulation) {
           connection.send(JSON.stringify({
             type: "simulation-error",
             content: {
-              message: "Could not find simulation with ID " + message.content.simulationID
+              message: "Could not find simulation with ID " + message.simulationID
             }
           }));
-          console.log("Could not find simulation with ID " + message.content.simulationID);
+          console.log("Could not find simulation with ID " + message.simulationID);
           return
         }
 
-        frontendConnections[index]['timestamp'] = message.content.timestamp;
+        frontendConnections[index]['timestamp'] = message.timestamp;
         const stateIndex = Math.floor(frontendConnections[index]['timestamp'] / simulation.timeslice);
         frontendConnections[index]['connection'].send(JSON.stringify({
           type: "simulation-state",
@@ -536,44 +554,47 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function _handleRequestSimulationClose(message) {
-    Simulation.findById(message.content.simulationID, function (error, simulation) {
+    Simulation.findById(message.simulationID, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
           content: {
-            message: "Could not find simulation with ID " + message.content.simulationID
+            message: "Could not find simulation with ID " + message.simulationID
           }
         }));
-        console.log("Could not find simulation with ID " + message.content.simulationID);
+        console.log("Could not find simulation with ID " + message.simulationID);
         return
       }
 
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
           type: "simulation-close",
-          content: message.content
+          content: message
         }));
       }
     });
   }
 
   function _handleRequestSimulationBenchmark(message) {
-    Simulation.findById(message.content.simulationID, function (error, simulation) {
+    console.log("Request benchmark");
+    Simulation.findById(message.simulationID, function (error, simulation) {
+      console.log("found simulation");
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
           content: {
-            message: "Could not find simulation with ID " + message.content.simulationID
+            message: "Could not find simulation with ID " + message.simulationID
           }
         }));
-        console.log("Could not find simulation with ID " + message.content.simulationID);
+        console.log("Could not find simulation with ID " + message.simulationID);
         return
       }
       const journeys = {};
       for (const journey of simulation.journeys) {
         journeys[journey._id] = journey;
       }
-    	benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
+    	//benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
+    	benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
 
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
@@ -587,6 +608,7 @@ frontendSocketServer.on('request', function(request) {
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
+      const messageContent = messageData.content;
 
       switch (messageData.type) {
         case "request-available-cities":
@@ -599,7 +621,7 @@ frontendSocketServer.on('request', function(request) {
           _handleRequestObjectKinds();
           break;
         case "request-simulation-start":
-          _handleRequestSimulationStart(messageData, (err, simID, cityID, journeys) => {
+          _handleRequestSimulationStart(messageContent, (err, simID, cityID, journeys) => {
             connection.send(JSON.stringify({
               type: "simulation-id",
               content: {
@@ -613,22 +635,22 @@ frontendSocketServer.on('request', function(request) {
         });
         break;
         case "request-simulation-join":
-          _handleRequestSimulationJoin(messageData);
+          _handleRequestSimulationJoin(messageContent);
           break;
         case "request-simulation-update":
-          _handleRequestEventUpdate(messageData, () => {});
+          _handleRequestEventUpdate(messageContent, () => {});
           break;
         case "request-simulation-speed-change":
-          _handleRequestSimulationSpeedChange(messageData);
+          _handleRequestSimulationSpeedChange(messageContent);
           break;
         case "request-simulation-timestamp-change":
-          _handleRequestSimulationTimestampChange(messageData);
+          _handleRequestSimulationTimestampChange(messageContent);
           break;
         case "request-simulation-close":
-          _handleRequestSimulationClose(messageData);
+          _handleRequestSimulationClose(messageContent);
           break;
         case "request-simulation-benchmark":
-          _handleRequestSimulationBenchmark(messageData);
+          _handleRequestSimulationBenchmark(messageContent);
           break;
       }
     }
@@ -670,11 +692,11 @@ frameworkSocketServer.on('request', function(request) {
   function _handleSimulationStart(message) {
     console.log("Received simulation-start from framework");
 
-    const simulationID = message.content.simulationID;
+    const simulationID = message.simulationID;
 
     Simulation.findByIdAndUpdate(simulationID, {
       $set: {
-        timeslice: message.content.timeslice,
+        timeslice: message.timeslice,
       },
       $push: {
         frameworks: {
@@ -741,13 +763,13 @@ frameworkSocketServer.on('request', function(request) {
     }
 
     console.log("Received simulation-update from framework");
-    console.log(message);
+    //console.log(message);
 
-    const simulationID = message.content.simulationID;
-    const frameworkID = message.content.frameworkID;
+    const simulationID = message.simulationID;
+    const frameworkID = message.frameworkID;
 
     //const newState = _filterState(message.content, frameworkID); TODO: Check if works
-    const newState = message.content;
+    const newState = message;
 
     Simulation.findById(simulationID, function(error, simulation) {
       if (error || !simulation) {
@@ -761,12 +783,12 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      if (message.content.timestamp > simulation.latestTimestamp) {
-        simulation.latestTimestamp = message.content.timestamp;
+      if (message.timestamp > simulation.latestTimestamp) {
+        simulation.latestTimestamp = message.timestamp;
       }
-      const simulationStateIndex = Math.floor(message.content.timestamp / simulation.timeslice);
+      const simulationStateIndex = Math.floor(message.timestamp / simulation.timeslice);
       if (simulation.simulationStates.length == simulationStateIndex) {
-        simulation.simulationStates.push({timestamp: message.content.timestamp, formattedTimestamp: message.content.formattedTimestamp, id: message.content.id, frameworkstates: []});
+        simulation.simulationStates.push({timestamp: message.timestamp, formattedTimestamp: message.formattedTimestamp, id: message.id, frameworkstates: []});
       }
       simulation.simulationStates[simulationStateIndex].frameworkStates.push(newState);
 
@@ -793,11 +815,11 @@ frameworkSocketServer.on('request', function(request) {
             const index = frontend.connectionIndex;
             if (frontendConnections[index]['speed'] != undefined) {
               frontendConnections[index]['timestamp'] += frontendConnections[index]['speed']
-              if (frontendConnections[index]['timestamp'] > message.content.timestamp) {
-                frontendConnections[index]['timestamp'] = message.content.timestamp;
+              if (frontendConnections[index]['timestamp'] > message.timestamp) {
+                frontendConnections[index]['timestamp'] = message.timestamp;
               }
             } else {
-              frontendConnections[index]['timestamp'] = message.content.timestamp;
+              frontendConnections[index]['timestamp'] = message.timestamp;
             }
             const stateIndex = Math.floor(frontendConnections[index]['timestamp'] / simulation.timeslice);
             const state = simulation.simulationStates[stateIndex];
@@ -805,7 +827,7 @@ frameworkSocketServer.on('request', function(request) {
               type: "simulation-state",
               content: {
                 state: state,
-                latestTimestamp: message.content.timestamp
+                latestTimestamp: message.timestamp
               }
             }))
           }
@@ -824,7 +846,7 @@ frameworkSocketServer.on('request', function(request) {
   function _handleSimulationClose(message) {
     console.log("Received close confirmation from framework");
 
-    const simulationID = message.content.simulationID;
+    const simulationID = message.simulationID;
 
     Simulation.findOne({
       _id: simulationID
@@ -849,25 +871,37 @@ frameworkSocketServer.on('request', function(request) {
   }
 
   function _handleJourneyComplete(message) {
-
+    const log = {
+      duration: message.timestamp - message.journeyStart, 
+      journeyID: message.journeyID
+    };
+    console.log(message);
+    console.log("Logging " + message.simulationID);
+    Simulation.update({_id: message.simulationID}, { $push: { completionLogs: log}}, function (error, numAffected) {
+      if (error || !numAffected) {
+        console.log("Could not find corresponding simulation for connection");
+        return
+      }
+    });
   }
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
+      const messageContent = messageData.content;
 
       switch(messageData.type) {
         case "simulation-start":
-          _handleSimulationStart(messageData);
+          _handleSimulationStart(messageContent);
           break;
         case "simulation-state":
-          _handleSimulationStateUpdate(messageData);
+          _handleSimulationStateUpdate(messageContent);
           break;
         case "simulation-close":
-          _handleSimulationClose(messageData);
+          _handleSimulationClose(messageContent);
           break;
         case "simulation-journey-complete":
-          _handleJourneyComplete(messageData);
+          _handleJourneyComplete(messageContent);
       }
     }
     else if (message.type === 'binary') {

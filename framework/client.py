@@ -34,14 +34,13 @@ class SAVNConnectionAssistant:
     if (sync):
       self.synchronize()
 
-  def completeObjectJourney(self, timestamp, obj):
+  def completeObjectJourney(self, timestamp, journeyStart, journeyID):
     packet = {'type': 'simulation-journey-complete',
               'content':
                 {'simulationID': self.simulationID,
-                 'id': str(timestamp),
                  'timestamp': timestamp,
-                 'formattedTimestamp': str(timestamp),
-                 'object': obj,
+                 'journeyStart': journeyStart,
+                 'journeyID': journeyID,
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
