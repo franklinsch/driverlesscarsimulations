@@ -705,17 +705,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.simulationID;
 
-    Simulation.findByIdAndUpdate(simulationID, {
-      $set: {
-        timeslice: message.timeslice,
-      },
-      $push: {
-        frameworks: {
-          connectionIndex: frameworkConnections.length,
-          name: message.name
-        }
-      }
-    }, { new: true }, function (error, simulation) {
+    Simulation.findById(simulationID, function(error, simulation) {
       if (error || !simulation) {
         console.error(error);
         connection.send(JSON.stringify({
@@ -728,15 +718,54 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      const callback = function() {
+      if (message.timeslice < simulation.timeslice) {
+        const newSimulationStates = [];
+        const expectedTimestamp = simulation.latestTimestamp + simulation.timeslice;
+        let newTimestamp = 0;
+        for (const i = 0; i < simulation.simulationStates.length && newTimestamp < expectedTimestamp; i++) {
+          while (newTimestamp < (i + 1) * simulation.timeslice) {
+            newSimulationStates.push(simulation.simulationStates[i]);
+            newTimestamp += message.timeslice;
+          }
+        }
+        simulation.timeslice = message.timeslice;
+        simulation.simulationStates = newSimulationStates;
+
+        const nextIndex = Math.ceil(expectedTimestamp / message.timeslice);
+        if (nextIndex * simulation.timeslice != newTimestamp) {
+          console.log('\t\tError');
+          console.log('\t\tError');
+          console.log('\t\tError');
+          console.log('\t\tError');
+          console.log('\t\tError');
+          console.log('\t\tError');
+          console.log('\t\tError');
+          console.log('\t\tError');
+        }
+        simulation.latestTimestamp = newTimestamp - simulation.timeslice; //TODO: Not coherent tracking of information
+      }
+
+      simulation.frameworks.push({
+        connectionIndex: frameworkConnections.length,
+        timeslice: message.timeslice,
+        nextIndex: Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice)
+      });
+
+      simulation.save((error, simulation) => {
+        if (error || !simulation) {
+          return console.error(error);
+        }
+
         const frameworkIndex = simulation.frameworks.length - 1;
         const frameworkID = simulation.frameworks[frameworkIndex]._id;
 
         frameworkConnections.push({connection: connection, simulationID: simulation._id});
 
-        const latestTimestamp = simulation.latestTimestamp || 0;
         const numStates = simulation.simulationStates.length;
-        const state = (numStates > 0) ? simulation.simulationStates[numStates - 1] : [];
+        const currIndex = Math.floor(simulation.latestTimestamp / simulation.timeslice);
+        const state = (numStates > 0) ? simulation.simulationStates[currIndex] : [];
+
+        const startTimestamp = simulation.frameworks[frameworkIndex].nextIndex * simulation.timeslice;
 
         connection.send(JSON.stringify({
           type: "simulation-start-parameters",
@@ -744,33 +773,12 @@ frameworkSocketServer.on('request', function(request) {
             frameworkID: frameworkID,
             city: simulation.city,
             journeys: simulation.journeys,
-            timestamp: latestTimestamp,
+            timestamp: startTimestamp,
             state: state
           }
         }));
-      };
-
-      if (message.content.timeslice < simulation.timeslice) {
-        const newSimulationStates = [];
-        let newTimestamp = 0;
-        for (const i = 0; i < simulation.simulationStates.length; i++) {
-          while (newTimestamp < i * (simulation.timeslice + 1)) {
-            newSimulationStates.push(simulation.simulationStates[i]);
-            newTimestamp += message.content.timeslice;
-          }
-        }
-        simulation.timeslice = message.content.timeslice;
-        simulation.simulationStates = newSimulationStates;
-        simulation.save((error, simulation) => {
-          if (error || !simulation) {
-            return console.error(error);
-          }
-          callback();
-        });
-      } else {
-        callback();
-      }
-      sendFrameworkList(simulation);
+        sendFrameworkList(simulation);
+      });
     })
   }
 
@@ -800,7 +808,7 @@ frameworkSocketServer.on('request', function(request) {
     const simulationID = message.simulationID;
     const frameworkID = message.frameworkID;
 
-    //const newState = _filterState(message.content, frameworkID); TODO: Check if works
+    //const newState = _filterState(message, frameworkID); TODO: Check if works
     const newState = message;
 
     Simulation.findById(simulationID, function(error, simulation) {
@@ -815,26 +823,67 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      if (message.timestamp > simulation.latestTimestamp) {
-        simulation.latestTimestamp = message.timestamp;
-      }
-      const simulationStateIndex = Math.floor(message.timestamp / simulation.timeslice);
-      if (simulation.simulationStates.length == simulationStateIndex) {
-        simulation.simulationStates.push({timestamp: message.timestamp, frameworkstates: []});
-      }
-      simulation.simulationStates[simulationStateIndex].frameworkStates.push(newState);
+      const simulationStateIndex = Math.ceil(message.timestamp / simulation.timeslice);
 
-      simulation.save((error, simulation) => {
-        if (error || !simulation) {
-          return console.error(error);
+      for (const j in simulation.frameworks) { //TODO: Figure better access method //TODO: Revert to 'of'
+        const framework = simulation.frameworks[j];
+        if (framework._id == frameworkID) {
+          if (simulationStateIndex != framework.nextIndex) {
+            console.log('\tError');
+            console.log('\tError');
+            console.log('\tError');
+            console.log('\tError');
+          }
+
+          const nextIndex = Math.ceil((message.timestamp + framework.timeslice) / simulation.timeslice);
+          for (const i = simulationStateIndex; i < nextIndex; i++) {
+            if (simulation.simulationStates.length == i) {
+              simulation.simulationStates.push({
+                communicated: false,
+                timestamp: nearTimestamp,
+                formattedTimestamp: message.formattedTimestamp,
+                id: message.id,
+                frameworkstates: [newState]
+              });
+            } else {
+              simulation.simulationStates[i].frameworkStates.push(newState);
+            }
+          }
+          framework.nextIndex = nextIndex;
+          console.log('\t\tTest: ' + simulation.frameworks[j].nextIndex);
         }
+      }
 
-        console.log("Updated simulationState");
+      const simulationState = simulation.simulationStates[simulationStateIndex];
+      if (simulationState.frameworkStates.length >= simulation.frameworks.length) {
+        if (simulationState.communicated) {
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
+          console.log('\tError');
 
-        const numStates = simulation.simulationStates.length;
-        //Check if the number of framework states of the latest timestamp is equal to the number of frameworks connected
-        const latestFrameworkStates = simulation.simulationStates[numStates-1].frameworkStates;
-        if (latestFrameworkStates.length == simulation.frameworks.length) {
+          const specifiedSimulationState = simulation.simulationStates[simulationStateIndex].frameworkStates.filter((frameworkState) => frameworkState.frameworkID != newState.frameworkID);
+          connection.send(JSON.stringify({
+            type: "simulation-communicate",
+            content: specifiedSimulationState
+          }))
+        }
+        else {
+          simulation.latestTimestamp += simulation.timeslice;
+          simulationState.communicated = true;
+          console.log('\t\tCheck: ' + simulation.simulationStates[simulationStateIndex].communicated);
           for (const framework of simulation.frameworks) {
             const specifiedSimulationState = latestFrameworkStates.filter((frameworkState) => frameworkState.frameworkID != framework._id);
             frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
@@ -846,7 +895,7 @@ frameworkSocketServer.on('request', function(request) {
           for (const frontend of simulation.frontends) {
             const index = frontend.connectionIndex;
             if (frontendConnections[index]['speed'] != undefined) {
-              frontendConnections[index]['timestamp'] += frontendConnections[index]['speed']
+              frontendConnections[index]['timestamp'] += frontendConnections[index]['speed'];
               if (frontendConnections[index]['timestamp'] > message.timestamp) {
                 frontendConnections[index]['timestamp'] = message.timestamp;
               }
@@ -863,14 +912,14 @@ frameworkSocketServer.on('request', function(request) {
               }
             }))
           }
-        } else if (simulation.simulationStates[simulationStateIndex].frameworkStates.length >= simulation.frameworks.length) {
-          console.log("Error");
-          const specifiedSimulationState = simulation.simulationStates[simulationStateIndex].frameworkStates.filter((frameworkState) => frameworkState.frameworkID != newState.frameworkID);
-          connection.send(JSON.stringify({
-            type: "simulation-communicate",
-            content: specifiedSimulationState
-          }))
         }
+      }
+
+      simulation.save((error, simulation) => {
+        if (error || !simulation) {
+          return console.error(error);
+        }
+        console.log("Updated simulationState");
       });
     });
   }
