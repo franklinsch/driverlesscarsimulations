@@ -306,7 +306,6 @@ export default class SimulationMap extends React.Component {
         }
       <ScrubTimer
         timestamp          = {this.props.simulationState.timestamp}
-        formattedTimestamp = {this.props.simulationState.formattedTimestamp}
         latestTimestamp    = {this.props.simulationState.latestTimestamp}
         handlers           = {scrubHandlers}
       />

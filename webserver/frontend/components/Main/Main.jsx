@@ -58,10 +58,8 @@ export default class Main extends React.Component {
         cityID: "0"
       },
       simulationState: {
-        id: "0",
         timestamp: 0,
         latestTimestamp: 0,
-        formattedTimestamp: "00:00:00",
         objects: []
       },
       pendingJourneys: []
@@ -106,9 +104,6 @@ export default class Main extends React.Component {
     const messageData = JSON.parse(message.data);
 
     if (messageData.type === "available-cities") {
-      if (this.state.simulationInfo.id == 0) {
-        //this._startInitialSimulation(messageData.content[0]._id);
-      }
       this.setState({
         availableCities: messageData.content,
         selectedCityID: messageData.content[0]._id
@@ -124,11 +119,7 @@ export default class Main extends React.Component {
       });
     } else if (messageData.type === "simulation-state") {
       const simulationState = messageData.content.state;
-      if (messageData.content.latestTimestamp) {
-        simulationState['latestTimestamp'] = messageData.content.latestTimestamp;
-      } else {
-        simulationState['latestTimestamp'] = this.state.simulationState['latestTimestamp'];
-      }
+      simulationState['latestTimestamp'] = messageData.content.latestTimestamp;
 
       const frameworkStates = simulationState.frameworkStates;
       let objects = [];
