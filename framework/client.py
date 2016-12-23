@@ -4,12 +4,15 @@ import websockets
 import sys
 import threading
 import time
+import requests
 
 import os
 
 HOST_IP = 'localhost' if 'SAVN_ENV' in os.environ else '35.160.255.102'
 
 HOST = 'ws://' + HOST_IP + ':9000'
+
+SIMULATION_ROUTE = 'http://' + HOST_IP + ':3000' + '/simulations/active'
 
 loop = asyncio.get_event_loop()
 
@@ -45,6 +48,15 @@ class SAVNConnectionAssistant:
 
   def handleSimulationStop(self, packet):
     pass
+
+  async def fetchSimulationData(self, username, password):
+    loginInfo = {'username': username, 'password': password}
+    r = requests.post(SIMULATION_ROUTE, data=loginInfo)
+    if r.status_code == 200:
+      resData = r.json()
+      self.simulationID = resData['active_simulation']
+    else:
+      r.raise_for_status()  # raise an error for 404 response
 
   async def fetchMessage(self):
     message = await self.messageQueue.get()
@@ -138,4 +150,3 @@ class SAVNConnectionAssistant:
         await self.handlerLoop()
 
     loop.run_until_complete(coro())
-
