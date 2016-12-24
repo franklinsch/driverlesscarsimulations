@@ -484,21 +484,12 @@ export default class Main extends React.Component {
     const RATIO = 0.1;
     const EXPECTED = 1;
     const TIMEOUT = RATIO * EXPECTED;
-    console.log(timestamp);
     if (timestamp == this.state.simulationState.timestamp) { //TODO: Many calls if time paused
       const simulationState = this.state.simulationState;
-      console.log("motion");
       for (const object of simulationState.objects) {
-        console.log(object.speed);
         const distance = RATIO * object.speed * 1000 / (60 * 60);
-        console.log(distance);
-        console.log(object.position);
-
         object.position = this._addDistance(object.position, object.bearing, distance);
-        console.log(object.position);
       }
-      console.log(simulationState.objects);
-      console.log();
       this.setState({
         simulationState: simulationState
       });
