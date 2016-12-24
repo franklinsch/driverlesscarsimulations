@@ -2079,7 +2079,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
   height: 3.166667rem;
 }
 
-.form-group {
+.input-field {
   margin-bottom: 1rem;
 }
 
@@ -2233,7 +2233,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 }
 
 @media (min-width: 576px) {
-  .form-inline .form-group {
+  .form-inline .input-field {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle;

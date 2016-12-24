@@ -41,10 +41,10 @@ export default class SpeedSetting extends React.Component {
     return (
       <div id="speed-setting" hidden={this.props.hidden}>
         <form>
-          <div className="form-group">
+          <div className="input-field">
             <div className="row">
-              <input
-                className = "form-group"
+              <input 
+                className = "input-field"
                 type      = "range"
                 min       = {0}
                 max       = {9}

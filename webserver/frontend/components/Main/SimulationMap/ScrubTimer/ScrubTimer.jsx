@@ -87,10 +87,10 @@ export default class ScrubTimer extends React.Component {
       <div id="scrub-timer">
         <p> Simulation time: { formattedTimestamp } ({ d }) </p>
         <form>
-          <div className="form-group">
+          <div className="input-field">
             <div className="row">
               <input
-                className   = "form-group"
+                className   = "input-field"
                 type        = "range"
                 min         = {0}
                 max         = {maxTimestamp}

@@ -91,7 +91,7 @@ export default class JourneyImport extends React.Component {
         { this.state.showView && 
           <div>
             <form>
-              <div className="form-group">
+              <div className="input-field">
                 <label htmlFor="inputFile">Journey import</label>
                 <input id="inputFile" className="form-control input-sm" type="file" accept="application/json" onChange={::this._handleFileChange}/>
               </div>
