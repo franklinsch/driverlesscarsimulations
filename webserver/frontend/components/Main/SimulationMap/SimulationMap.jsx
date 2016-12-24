@@ -172,7 +172,7 @@ export default class SimulationMap extends React.Component {
       <Popup position={position}>
         <span>
           <p> Create new journey? </p>
-          <div className="form-group">
+          <div className="input-field">
             <select className="form-control" onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
               {
                 objectTypes.map((object) => {return object.name}).map((name, index) => {

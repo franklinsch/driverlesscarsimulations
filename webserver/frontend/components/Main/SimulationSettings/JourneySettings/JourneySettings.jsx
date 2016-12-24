@@ -139,7 +139,7 @@ export default class JourneySettings extends React.Component {
         </div>
 
         <form>
-          <div className="form-group">
+          <div className="input-field">
             <button 
               className = "btn btn-secondary"
               onClick   = {::this._toggleJourneyManualAddForm}
@@ -149,22 +149,22 @@ export default class JourneySettings extends React.Component {
             { showJourneyManualAddForm &&
               <div className="row">
                 <input 
-                  className = "form-group"
+                  className = "input-field"
                   value     = {originLat}
                   onChange  = {::this._handleOriginLatChange}
                 />
                 <input 
-                  className = "form-group"
+                  className = "input-field"
                   value     = {originLng}
                   onChange  = {::this._handleOriginLngChange}
                 />
                 <input 
-                  className = "form-group"
+                  className = "input-field"
                   value     = {destinationLat}
                   onChange  = {::this._handleDestinationLatChange}
                 />
                 <input 
-                  className = "form-group"
+                  className = "input-field"
                   value     = {destinationLng}
                   onChange  = {::this._handleDestinationLngChange}
                 />

@@ -110,7 +110,7 @@ export default class ObjectSettings extends React.Component {
     const typeName = this.state.typeName || '';
 
     return (
-      <div className="form-group">
+      <div className="input-field">
         <label htmlFor="typeName">Type name</label>
         <input id="typeName" className="form-control" onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
       </div>
@@ -137,7 +137,7 @@ export default class ObjectSettings extends React.Component {
               }
 
               return (
-                <div className="form-group" key={index}>
+                <div className="input-field" key={index}>
                   <label htmlFor={name}> {name} </label>
                   <select onChange={onChange}>
                     {
@@ -160,7 +160,7 @@ export default class ObjectSettings extends React.Component {
               }
 
               return (
-                <div className="form-group" key={index}>
+                <div className="input-field" key={index}>
                   <label htmlFor={name}> {name} </label>
                   <input id={name} value={value} onChange={onChange} className="form-control"/>
                 </div>
@@ -209,7 +209,7 @@ export default class ObjectSettings extends React.Component {
               </Modal.Header>
               <Modal.Body>
                 {this._renderTypeNameInput()}
-                <div className="form-group">
+                <div className="input-field">
                   <label htmlFor="kind">Kind</label>
                   {this._renderKindDropdown()}
                 </div>
