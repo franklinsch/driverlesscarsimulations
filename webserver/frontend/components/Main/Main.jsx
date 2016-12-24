@@ -82,18 +82,18 @@ export default class Main extends React.Component {
         method: 'GET',
         headers: reqHeaders
       })
-      .then((response) => {
-        response.json().then((data) => {
-          this.setState({
-            userID: data.userID,
-            activeUser: data.username,
-            userSimulations: data.simulations
+        .then((response) => {
+          response.json().then((data) => {
+            this.setState({
+              userID: data.userID,
+              activeUser: data.username,
+              userSimulations: data.simulations
+            });
           });
-        });
-      })
-      .catch(err => {
-        console.log("error fetching user simulations");
-      })
+        })
+        .catch(err => {
+          console.log("error fetching user simulations");
+        })
     }
   }
 
@@ -414,15 +414,15 @@ export default class Main extends React.Component {
         simulationID: simulationID
       })
     })
-    .then((response) => {
-      if (!response.ok) {
-        console.log("error authenticating user");
-        return;
-      }
-    })
-    .catch(err => {
-      console.log("error updating active simulations");
-    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log("error authenticating user");
+          return;
+        }
+      })
+      .catch(err => {
+        console.log("error updating active simulations");
+      })
   }
 
   handleBenchmarkRequest() {
@@ -596,38 +596,31 @@ export default class Main extends React.Component {
           simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />
-        <div className="jumbotron">
-          <div className="container">
-            <div className="col-md-4 text-center" id="simulation-settings">
-              <SimulationSettings
-                activeSimulationID  = {simulationID}
-                selectedCity        = {selectedCity}
-                pendingJourneys     = {pendingJourneys}
-                simulationJourneys  = {simulationJourneys}
-                objectTypes         = {this.state.objectTypes}
-                objectKindInfo      = {this.state.objectKindInfo}
-                benchmarkValue      = {this.state.benchmarkValue}
-                currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
-                handlers            = {simulationSettingsHandlers}
-              />
-            </div>
-            <div className="col-md-6 map" id="simulation-map">
-              <input
-                type     = 'checkbox'
-                onChange = {::this._handleToggleSmoothMotion}/>
-                Toggle predictive motion smoothening
-              <SimulationMap
-                width                      = {680 + 'px'}
-                height                     = {600 + 'px'}
-                simulationID               = {simulationID}
-                bounds                     = {bounds}
-                simulationState            = {simulationState}
-                previewMarkerPosition      = {previewMarkerPosition}
-                objectTypes                = {this.state.objectTypes}
-                selectedJourneyID          = {this.state.selectedJourneyID}
-                handlers                   = {simulationMapHandlers}
-              />
-            </div>
+        <div className="row">
+          <div className="col s3 text-center" id="simulation-settings">
+            <SimulationSettings
+              activeSimulationID  = {simulationID}
+              selectedCity        = {selectedCity}
+              pendingJourneys     = {pendingJourneys}
+              simulationJourneys  = {simulationJourneys}
+              objectTypes         = {this.state.objectTypes}
+              objectKindInfo      = {this.state.objectKindInfo}
+              benchmarkValue      = {this.state.benchmarkValue}
+              handlers            = {simulationSettingsHandlers}
+            />
+          </div>
+          <div className="col s9 map" id="simulation-map">
+            <SimulationMap
+              width                      = {680 + 'px'}
+              height                     = {600 + 'px'}
+              simulationID               = {simulationID}
+              bounds                     = {bounds}
+              simulationState            = {simulationState}
+              previewMarkerPosition      = {previewMarkerPosition}
+              objectTypes                = {this.state.objectTypes}
+              selectedJourneyID          = {this.state.selectedJourneyID}
+              handlers                   = {simulationMapHandlers}
+            />
           </div>
         </div>
       </div>
