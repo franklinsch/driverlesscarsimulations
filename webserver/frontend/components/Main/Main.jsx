@@ -65,6 +65,9 @@ export default class Main extends React.Component {
       pendingJourneys: []
     }
     this.updateUserSimulations();
+
+    this.averageWaitingTime = undefined;
+    this.lastUpdateTime = undefined;
   }
 
   updateUserSimulations() {
@@ -118,6 +121,17 @@ export default class Main extends React.Component {
         simulationJourneys: messageData.content.journeys
       });
     } else if (messageData.type === "simulation-state") {
+      if (this.lastWaitingTime) {
+        const weight = 0.6;
+        const newWaitingTime = Date.now() - this.lastWaitingTime;
+        if (this.averageWaitingTime) {
+          this.averageWaitingTime = (1-weight) * this.averageWaitingTime + weight * newWaitingTime;
+        } else {
+          this.averageWaitingTime = newWaitingTime;
+        }
+      }
+      this.lastWaitingTime = Date.now();
+
       const simulationState = messageData.content.state;
       simulationState['latestTimestamp'] = messageData.content.latestTimestamp;
 
@@ -481,19 +495,22 @@ export default class Main extends React.Component {
   }
 
   _smoothMotion(timestamp) {
-    const RATIO = 0.1;
-    const EXPECTED = 1;
-    const TIMEOUT = RATIO * EXPECTED;
-    if (timestamp == this.state.simulationState.timestamp) { //TODO: Many calls if time paused
-      const simulationState = this.state.simulationState;
-      for (const object of simulationState.objects) {
-        const distance = RATIO * object.speed * 1000 / (60 * 60);
-        object.position = this._addDistance(object.position, object.bearing, distance);
+    if (this.averageWaitingTime && this.lastWaitingTime) {
+      const elapsedTime = Date.now() - this.lastWaitingTime;
+      if (timestamp == this.state.simulationState.timestamp && elapsedTime <= this.averageWaitingTime) { //TODO: Many calls if time paused
+        const RATIO = 0.1;
+        const TIMEOUT = RATIO * this.averageWaitingTime;
+
+        const simulationState = this.state.simulationState;
+        for (const object of simulationState.objects) {
+          const distance = RATIO * object.speed * 1000 / (60 * 60);
+          object.position = this._addDistance(object.position, object.bearing, distance);
+        }
+        this.setState({
+          simulationState: simulationState
+        });
+        setTimeout(::this._smoothMotion, TIMEOUT, timestamp);
       }
-      this.setState({
-        simulationState: simulationState
-      });
-      setTimeout(::this._smoothMotion, 1000 * TIMEOUT, timestamp);
     }
   }
 
