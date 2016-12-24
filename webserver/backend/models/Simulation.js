@@ -24,6 +24,10 @@ const simulationSchema = mongoose.Schema({
   latestTimestamp: Number,
   journeys: [Journey.schema],
   frontends: [Frontend.schema],
+  completionLogs: [{
+    duration: Number,
+    journeyID: String
+  }],
   frameworks: [Framework.schema],
   simulationStates: [{
     timestamp: Number,
