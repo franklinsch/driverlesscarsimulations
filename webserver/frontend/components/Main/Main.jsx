@@ -147,7 +147,7 @@ export default class Main extends React.Component {
 
       this.setState({
         simulationState: simulationState
-      });
+      }, () => this._smoothMotion(this.state.simulationState.timestamp));
     } else if (messageData.type === "simulation-start-parameters") {
       const newSimulationInfo = this.state.simulationInfo;
       newSimulationInfo.id = messageData.content.simID;
@@ -223,7 +223,7 @@ export default class Main extends React.Component {
     this.setState({
       selectedCityID: newCityId
     })
-    
+
     if (this.state.simulationInfo.id == "0") {
       this.setState({
         pendingJourneys: []
@@ -453,6 +453,57 @@ export default class Main extends React.Component {
     this.setState({
       pendingJourneys: []
     })
+  }
+
+  //_addDistance(point, direction, distance) {
+    //const LNG_SCL = 111.319e3;
+    //const LAT_SCL = 110.574e3;
+    //direction *= Math.PI / 180;
+    //latDeg = distance * Math.sin(direction)/(LAT_SCL*Math.cos(point[1]*Math.PI/180))
+    //lngDeg = distance * Math.cos(direction)/LNG_SCL
+    //return [point[0] + lngDeg, point[1] + latDeg]
+
+  _addDistance(point, bearing, distance) {
+    const R = 6371e3;
+
+    const delta = distance/R;
+    const theta = bearing * Math.PI / 180;
+    const lat1 = point['lat'] * Math.PI / 180;
+    const lng1 = point['lng'] * Math.PI / 180;
+
+    const lat2 = Math.asin(Math.sin(lat1) * Math.cos(delta) + Math.cos(lat1) * Math.sin(delta) * Math.cos(theta));
+    const lng2 = lng1 + Math.atan2(Math.sin(theta) * Math.sin(delta) * Math.cos(lat1), Math.cos(delta) - Math.sin(lat1) * Math.sin(lat2));
+
+    return {
+      lat: lat2 * 180 / Math.PI,
+      lng: lng2 * 180 / Math.PI
+    };
+  }
+
+  _smoothMotion(timestamp) {
+    const RATIO = 0.1;
+    const EXPECTED = 1;
+    const TIMEOUT = RATIO * EXPECTED;
+    console.log(timestamp);
+    if (timestamp == this.state.simulationState.timestamp) { //TODO: Many calls if time paused
+      const simulationState = this.state.simulationState;
+      console.log("motion");
+      for (const object of simulationState.objects) {
+        console.log(object.speed);
+        const distance = RATIO * object.speed * 1000 / (60 * 60);
+        console.log(distance);
+        console.log(object.position);
+
+        object.position = this._addDistance(object.position, object.bearing, distance);
+        console.log(object.position);
+      }
+      console.log(simulationState.objects);
+      console.log();
+      this.setState({
+        simulationState: simulationState
+      });
+      setTimeout(::this._smoothMotion, 1000 * TIMEOUT, timestamp);
+    }
   }
 
   componentDidUpdate() {
