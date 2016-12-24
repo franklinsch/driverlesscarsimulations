@@ -9,6 +9,7 @@ const Journey = require('../models/Journey');
 const User = require('../models/User');
 const config = require('../config');
 const auth = require('../authenticate');
+const fs = require('fs');
 
 const server = require('../../server.js');
 
@@ -210,6 +211,15 @@ router.route('/login')
     })(req, res);
   });
 
+router.route('/uploads')
+  .post((req, res) => {
+    fs.writeFile('../uploads/hotspots.json', JSON.stringify(req.body, null, 2), function(err) {
+      if (err) {
+        console.log(err);
+      }
+      res.status(200).send('success');
+    });
+  });
 
 router.get('*', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));

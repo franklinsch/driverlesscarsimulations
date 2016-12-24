@@ -326,23 +326,39 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  handleSimulationStart(useRealData, realWorldJourneyNum) {
+  handleSimulationStart(useRealData, realWorldJourneyNum, hotspotFile) {
     const pendingJourneys = this.state.pendingJourneys || [];
     const socket = this.state.socket;
     const selectedCity = this._cityWithID(this.state.selectedCityID);
     const userID = this.state.userID;
-
     const type = "request-simulation-start";
     const content = {
       selectedCity: selectedCity,
       journeys: pendingJourneys,
       userID: userID,
       useRealData: useRealData,
-      realWorldJourneyNum: realWorldJourneyNum
+      realWorldJourneyNum: realWorldJourneyNum,
+    };
+
+    if (hotspotFile) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/uploads', true);
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          UtilFunctions.sendSocketMessage(socket, type, content);
+          this.updateUserSimulations();
+          this.clearPendingJourneys();
+        } else {
+          console.error("An error occured during POST request");
+        }
+      };
+      xhr.send(hotspotFile);
     }
-    UtilFunctions.sendSocketMessage(socket, type, content);
-    this.updateUserSimulations();
-    this.clearPendingJourneys();
+    else {
+      UtilFunctions.sendSocketMessage(socket, type, content);
+      this.updateUserSimulations();
+      this.clearPendingJourneys();
+    }
   }
 
   handleSimulationUpdate() {

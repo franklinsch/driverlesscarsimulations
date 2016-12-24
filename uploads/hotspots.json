@@ -1,0 +1,3754 @@
+[
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.235045
+      }
+    ],
+    "name": "Acton Town",
+    "coordinates": {
+      "lat": 51.502817347,
+      "lng": -0.280214656
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.52781
+      }
+    ],
+    "name": "Aldgate ",
+    "coordinates": {
+      "lat": 51.514342817,
+      "lng": -0.075600611
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 12.839311
+      }
+    ],
+    "name": "Aldgate East ",
+    "coordinates": {
+      "lat": 51.515300715,
+      "lng": -0.072274025
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.205455
+      }
+    ],
+    "name": "Alperton ",
+    "coordinates": {
+      "lat": 51.540757238,
+      "lng": -0.299447373
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.287149
+      }
+    ],
+    "name": "Amersham ",
+    "coordinates": {
+      "lat": 51.674200078,
+      "lng": -0.607416256
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 19.756365
+      }
+    ],
+    "name": "Angel ",
+    "coordinates": {
+      "lat": 51.532570565,
+      "lng": -0.105772295
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 9.794439
+      }
+    ],
+    "name": "Archway ",
+    "coordinates": {
+      "lat": 51.565495779,
+      "lng": -0.135099708
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.550587
+      }
+    ],
+    "name": "Arnos Grove ",
+    "coordinates": {
+      "lat": 51.616398898,
+      "lng": -0.133501198
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.802635
+      }
+    ],
+    "name": "Arsenal ",
+    "coordinates": {
+      "lat": 51.5585615,
+      "lng": -0.105746916
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 29.379132
+      }
+    ],
+    "name": "Baker Street ",
+    "coordinates": {
+      "lat": 51.523131159,
+      "lng": -0.156881847
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 14.178948
+      }
+    ],
+    "name": "Balham ",
+    "coordinates": {
+      "lat": 51.443404055,
+      "lng": -0.153182996
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 57.512971
+      }
+    ],
+    "name": "Bank & Monument",
+    "coordinates": {
+      "lat": 51.513373502,
+      "lng": -0.088906725
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.283478
+      }
+    ],
+    "name": "Barbican ",
+    "coordinates": {
+      "lat": 51.520213415,
+      "lng": -0.097698591
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 16.055212
+      }
+    ],
+    "name": "Barking ",
+    "coordinates": {
+      "lat": 51.539520555,
+      "lng": 0.080855743
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.406286
+      }
+    ],
+    "name": "Barkingside ",
+    "coordinates": {
+      "lat": 51.585855444,
+      "lng": 0.088509189
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.295186
+      }
+    ],
+    "name": "Barons Court ",
+    "coordinates": {
+      "lat": 51.490227393,
+      "lng": -0.213576608
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.21959
+      }
+    ],
+    "name": "Bayswater ",
+    "coordinates": {
+      "lat": 51.512299747,
+      "lng": -0.188009447
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.490288
+      }
+    ],
+    "name": "Becontree ",
+    "coordinates": {
+      "lat": 51.540363533,
+      "lng": 0.12740105
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.155599
+      }
+    ],
+    "name": "Belsize Park ",
+    "coordinates": {
+      "lat": 51.550493839,
+      "lng": -0.164212238
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.163683
+      }
+    ],
+    "name": "Bermondsey ",
+    "coordinates": {
+      "lat": 51.498024522,
+      "lng": -0.063635613
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 16.164737
+      }
+    ],
+    "name": "Bethnal Green ",
+    "coordinates": {
+      "lat": 51.527267549,
+      "lng": -0.055423847
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 13.702647
+      }
+    ],
+    "name": "Blackfriars ",
+    "coordinates": {
+      "lat": 51.511562507,
+      "lng": -0.103596123
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.360092
+      }
+    ],
+    "name": "Blackhorse Road ",
+    "coordinates": {
+      "lat": 51.587012708,
+      "lng": -0.040984391
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 37.119274
+      }
+    ],
+    "name": "Bond Street ",
+    "coordinates": {
+      "lat": 51.513879061,
+      "lng": -0.149315708
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.358351
+      }
+    ],
+    "name": "Borough ",
+    "coordinates": {
+      "lat": 51.5012707,
+      "lng": -0.093692651
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.242854
+      }
+    ],
+    "name": "Boston Manor ",
+    "coordinates": {
+      "lat": 51.49576555,
+      "lng": -0.324729543
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.4623
+      }
+    ],
+    "name": "Bounds Green ",
+    "coordinates": {
+      "lat": 51.607152312,
+      "lng": -0.124210461
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.102443
+      }
+    ],
+    "name": "Bow Road ",
+    "coordinates": {
+      "lat": 51.526866904,
+      "lng": -0.024809606
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.566618
+      }
+    ],
+    "name": "Brent Cross ",
+    "coordinates": {
+      "lat": 51.576860881,
+      "lng": -0.213428926
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 30.830921
+      }
+    ],
+    "name": "Brixton ",
+    "coordinates": {
+      "lat": 51.462653263,
+      "lng": -0.114611795
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.68584
+      }
+    ],
+    "name": "Bromley By Bow ",
+    "coordinates": {
+      "lat": 51.524842766,
+      "lng": -0.01165748
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.063838
+      }
+    ],
+    "name": "Buckhurst Hill ",
+    "coordinates": {
+      "lat": 51.626575799,
+      "lng": 0.046733076
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.383772
+      }
+    ],
+    "name": "Burnt Oak ",
+    "coordinates": {
+      "lat": 51.602738309,
+      "lng": -0.264170829
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.126683
+      }
+    ],
+    "name": "Caledonian Road ",
+    "coordinates": {
+      "lat": 51.548491331,
+      "lng": -0.118292408
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 21.898497
+      }
+    ],
+    "name": "Camden Town ",
+    "coordinates": {
+      "lat": 51.539468601,
+      "lng": -0.142709548
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 12.77743
+      }
+    ],
+    "name": "Canada Water ",
+    "coordinates": {
+      "lat": 51.497965204,
+      "lng": -0.049695892
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 54.441424
+      }
+    ],
+    "name": "Canary Wharf ",
+    "coordinates": {
+      "lat": 51.50362313,
+      "lng": -0.019426407
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.916031
+      }
+    ],
+    "name": "Canning Town ",
+    "coordinates": {
+      "lat": 51.513908219,
+      "lng": 0.008181999
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.485065
+      }
+    ],
+    "name": "Cannon Street ",
+    "coordinates": {
+      "lat": 51.511505842,
+      "lng": -0.090681195
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.786006
+      }
+    ],
+    "name": "Canons Park ",
+    "coordinates": {
+      "lat": 51.607820681,
+      "lng": -0.294618585
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.437534
+      }
+    ],
+    "name": "Chalfont & Latimer ",
+    "coordinates": {
+      "lat": 51.668076304,
+      "lng": -0.560477729
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.752495
+      }
+    ],
+    "name": "Chalk Farm ",
+    "coordinates": {
+      "lat": 51.544151895,
+      "lng": -0.153701577
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 16.355373
+      }
+    ],
+    "name": "Chancery Lane ",
+    "coordinates": {
+      "lat": 51.518194371,
+      "lng": -0.111660401
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 20.690327
+      }
+    ],
+    "name": "Charing Cross ",
+    "coordinates": {
+      "lat": 51.508661338,
+      "lng": -0.124733426
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.875261
+      }
+    ],
+    "name": "Chesham ",
+    "coordinates": {
+      "lat": 51.705072763,
+      "lng": -0.611158209
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.559061
+      }
+    ],
+    "name": "Chigwell ",
+    "coordinates": {
+      "lat": 51.617931677,
+      "lng": 0.074523461
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.148469
+      }
+    ],
+    "name": "Chiswick Park ",
+    "coordinates": {
+      "lat": 51.494371103,
+      "lng": -0.267715593
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.137678
+      }
+    ],
+    "name": "Chorleywood ",
+    "coordinates": {
+      "lat": 51.654266956,
+      "lng": -0.518312173
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.072099
+      }
+    ],
+    "name": "Clapham Common ",
+    "coordinates": {
+      "lat": 51.461803357,
+      "lng": -0.138295129
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.026138
+      }
+    ],
+    "name": "Clapham North ",
+    "coordinates": {
+      "lat": 51.464923475,
+      "lng": -0.129515616
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.584904
+      }
+    ],
+    "name": "Clapham South ",
+    "coordinates": {
+      "lat": 51.452674157,
+      "lng": -0.14795997
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.847585
+      }
+    ],
+    "name": "Cockfosters ",
+    "coordinates": {
+      "lat": 51.65174478,
+      "lng": -0.149604351
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.946531
+      }
+    ],
+    "name": "Colindale ",
+    "coordinates": {
+      "lat": 51.595351419,
+      "lng": -0.250108975
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.515664
+      }
+    ],
+    "name": "Colliers Wood ",
+    "coordinates": {
+      "lat": 51.418149511,
+      "lng": -0.177678808
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 14.66925
+      }
+    ],
+    "name": "Covent Garden ",
+    "coordinates": {
+      "lat": 51.512979259,
+      "lng": -0.124146712
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.059406
+      }
+    ],
+    "name": "Croxley ",
+    "coordinates": {
+      "lat": 51.647103901,
+      "lng": -0.441669863
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.858892
+      }
+    ],
+    "name": "Dagenham East ",
+    "coordinates": {
+      "lat": 51.544187099,
+      "lng": 0.165864184
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.065247
+      }
+    ],
+    "name": "Dagenham Heathway ",
+    "coordinates": {
+      "lat": 51.541701213,
+      "lng": 0.147674142
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.4625
+      }
+    ],
+    "name": "Debden ",
+    "coordinates": {
+      "lat": 51.645494269,
+      "lng": 0.083832469
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.085602
+      }
+    ],
+    "name": "Dollis Hill ",
+    "coordinates": {
+      "lat": 51.551969462,
+      "lng": -0.238775764
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 16.840132
+      }
+    ],
+    "name": "Ealing Broadway ",
+    "coordinates": {
+      "lat": 51.514979099,
+      "lng": -0.301471777
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.516563
+      }
+    ],
+    "name": "Ealing Common ",
+    "coordinates": {
+      "lat": 51.510196802,
+      "lng": -0.288221583
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 20.501361
+      }
+    ],
+    "name": "Earls Court ",
+    "coordinates": {
+      "lat": 51.491876177,
+      "lng": -0.193526047
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.009433
+      }
+    ],
+    "name": "East Acton ",
+    "coordinates": {
+      "lat": 51.516648287,
+      "lng": -0.247481639
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.342555
+      }
+    ],
+    "name": "East Finchley ",
+    "coordinates": {
+      "lat": 51.587335007,
+      "lng": -0.164725648
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 15.094316
+      }
+    ],
+    "name": "East Ham ",
+    "coordinates": {
+      "lat": 51.538996697,
+      "lng": 0.051467145
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.99512
+      }
+    ],
+    "name": "East Putney ",
+    "coordinates": {
+      "lat": 51.458878826,
+      "lng": -0.210975744
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.833742
+      }
+    ],
+    "name": "Eastcote ",
+    "coordinates": {
+      "lat": 51.576553216,
+      "lng": -0.39680646
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.776513
+      }
+    ],
+    "name": "Edgware ",
+    "coordinates": {
+      "lat": 51.613684847,
+      "lng": -0.274946709
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.503184
+      }
+    ],
+    "name": "Edgware Road (Bakerloo)",
+    "coordinates": {
+      "lat": 51.520250118,
+      "lng": -0.17010672
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.210074
+      }
+    ],
+    "name": "Edgware Road (Circle, District, H & C)",
+    "coordinates": {
+      "lat": 51.519994068,
+      "lng": -0.167644928
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 19.088917
+      }
+    ],
+    "name": "Elephant & Castle ",
+    "coordinates": {
+      "lat": 51.495847724,
+      "lng": -0.100711857
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.004341
+      }
+    ],
+    "name": "Elm Park ",
+    "coordinates": {
+      "lat": 51.549872773,
+      "lng": 0.199159843
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 21.562479
+      }
+    ],
+    "name": "Embankment ",
+    "coordinates": {
+      "lat": 51.507310119,
+      "lng": -0.122340604
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.330335
+      }
+    ],
+    "name": "Epping ",
+    "coordinates": {
+      "lat": 51.693689859,
+      "lng": 0.113845981
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 42.159332
+      }
+    ],
+    "name": "Euston ",
+    "coordinates": {
+      "lat": 51.528665946,
+      "lng": -0.133265016
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 14.878866
+      }
+    ],
+    "name": "Euston Square ",
+    "coordinates": {
+      "lat": 51.525626629,
+      "lng": -0.135824263
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.134269
+      }
+    ],
+    "name": "Fairlop ",
+    "coordinates": {
+      "lat": 51.595747808,
+      "lng": 0.090921024
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 23.775738
+      }
+    ],
+    "name": "Farringdon ",
+    "coordinates": {
+      "lat": 51.52051764,
+      "lng": -0.10505032
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.779925
+      }
+    ],
+    "name": "Finchley Central ",
+    "coordinates": {
+      "lat": 51.601039042,
+      "lng": -0.19242871
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 9.951123
+      }
+    ],
+    "name": "Finchley Road ",
+    "coordinates": {
+      "lat": 51.547132085,
+      "lng": -0.18047382
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 28.847088
+      }
+    ],
+    "name": "Finsbury Park ",
+    "coordinates": {
+      "lat": 51.56447095,
+      "lng": -0.106495674
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.714422
+      }
+    ],
+    "name": "Fulham Broadway ",
+    "coordinates": {
+      "lat": 51.480598681,
+      "lng": -0.194937978
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.588251
+      }
+    ],
+    "name": "Gants Hill ",
+    "coordinates": {
+      "lat": 51.576557097,
+      "lng": 0.066103646
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 14.203922
+      }
+    ],
+    "name": "Gloucester Road ",
+    "coordinates": {
+      "lat": 51.494312745,
+      "lng": -0.182960687
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.700123
+      }
+    ],
+    "name": "Golders Green ",
+    "coordinates": {
+      "lat": 51.572285858,
+      "lng": -0.19396566
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.088026
+      }
+    ],
+    "name": "Goldhawk Road ",
+    "coordinates": {
+      "lat": 51.502026467,
+      "lng": -0.226720989
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.841266
+      }
+    ],
+    "name": "Goodge Street ",
+    "coordinates": {
+      "lat": 51.520499085,
+      "lng": -0.134642741
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.657661
+      }
+    ],
+    "name": "Grange Hill ",
+    "coordinates": {
+      "lat": 51.61340971,
+      "lng": 0.092132915
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.343311
+      }
+    ],
+    "name": "Great Portland Street ",
+    "coordinates": {
+      "lat": 51.523789348,
+      "lng": -0.14393025
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 39.552887
+      }
+    ],
+    "name": "Green Park ",
+    "coordinates": {
+      "lat": 51.506918921,
+      "lng": -0.142899998
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.716521
+      }
+    ],
+    "name": "Greenford ",
+    "coordinates": {
+      "lat": 51.542361624,
+      "lng": -0.34641202
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.410585
+      }
+    ],
+    "name": "Gunnersbury ",
+    "coordinates": {
+      "lat": 51.491867355,
+      "lng": -0.275147144
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.607791
+      }
+    ],
+    "name": "Hainault ",
+    "coordinates": {
+      "lat": 51.603792541,
+      "lng": 0.093105998
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 28.834401
+      }
+    ],
+    "name": "Hammersmith  (Circle)",
+    "coordinates": {
+      "lat": 51.492639704,
+      "lng": -0.222367633
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.703965
+      }
+    ],
+    "name": "Hammersmith  (District & Piccadilly)",
+    "coordinates": {
+      "lat": 51.493572715,
+      "lng": -0.224892685
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.557566
+      }
+    ],
+    "name": "Hampstead ",
+    "coordinates": {
+      "lat": 51.556754839,
+      "lng": -0.17820292
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.949461
+      }
+    ],
+    "name": "Hanger Lane ",
+    "coordinates": {
+      "lat": 51.530072876,
+      "lng": -0.292973103
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.007807
+      }
+    ],
+    "name": "Harlesden ",
+    "coordinates": {
+      "lat": 51.536255187,
+      "lng": -0.257476566
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.002877
+      }
+    ],
+    "name": "Harrow & Wealdstone ",
+    "coordinates": {
+      "lat": 51.592263678,
+      "lng": -0.335193509
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.259516
+      }
+    ],
+    "name": "Harrow On The Hill ",
+    "coordinates": {
+      "lat": 51.579392732,
+      "lng": -0.336973212
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.199955
+      }
+    ],
+    "name": "Hatton Cross ",
+    "coordinates": {
+      "lat": 51.466685423,
+      "lng": -0.423356896
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.347501
+      }
+    ],
+    "name": "Heathrow Airport Terminal 1, 2 & 3",
+    "coordinates": {
+      "lat": 51.458624169,
+      "lng": -0.446006279
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.902026
+      }
+    ],
+    "name": "Heathrow Terminal 4",
+    "coordinates": {
+      "lat": 51.471290175,
+      "lng": -0.452385526
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.489313
+      }
+    ],
+    "name": "Heathrow Terminal 5",
+    "coordinates": {
+      "lat": 51.471593893,
+      "lng": -0.487913971
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.970028
+      }
+    ],
+    "name": "Hendon Central ",
+    "coordinates": {
+      "lat": 51.583358035,
+      "lng": -0.226465843
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.648827
+      }
+    ],
+    "name": "High Barnet ",
+    "coordinates": {
+      "lat": 51.650657954,
+      "lng": -0.194737478
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 13.36254
+      }
+    ],
+    "name": "High Street Kensington ",
+    "coordinates": {
+      "lat": 51.500745724,
+      "lng": -0.192480691
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 18.443978
+      }
+    ],
+    "name": "Highbury & Islington ",
+    "coordinates": {
+      "lat": 51.546300742,
+      "lng": -0.103948483
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.482772
+      }
+    ],
+    "name": "Highgate ",
+    "coordinates": {
+      "lat": 51.57765885,
+      "lng": -0.146618543
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.856117
+      }
+    ],
+    "name": "Hillingdon ",
+    "coordinates": {
+      "lat": 51.553780278,
+      "lng": -0.44988129
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 40.530196
+      }
+    ],
+    "name": "Holborn ",
+    "coordinates": {
+      "lat": 51.5175063,
+      "lng": -0.119995446
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.366174
+      }
+    ],
+    "name": "Holland Park ",
+    "coordinates": {
+      "lat": 51.507404594,
+      "lng": -0.205705089
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.728651
+      }
+    ],
+    "name": "Holloway Road ",
+    "coordinates": {
+      "lat": 51.552821168,
+      "lng": -0.112913541
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.023958
+      }
+    ],
+    "name": "Hornchurch ",
+    "coordinates": {
+      "lat": 51.55407287,
+      "lng": 0.218999452
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.010773
+      }
+    ],
+    "name": "Hounslow Central ",
+    "coordinates": {
+      "lat": 51.471152208,
+      "lng": -0.366881823
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.515142
+      }
+    ],
+    "name": "Hounslow East ",
+    "coordinates": {
+      "lat": 51.47324113,
+      "lng": -0.356648626
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.545552
+      }
+    ],
+    "name": "Hounslow West ",
+    "coordinates": {
+      "lat": 51.473106027,
+      "lng": -0.385684911
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.436827
+      }
+    ],
+    "name": "Hyde Park Corner ",
+    "coordinates": {
+      "lat": 51.502828707,
+      "lng": -0.152730468
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.190362
+      }
+    ],
+    "name": "Ickenham ",
+    "coordinates": {
+      "lat": 51.562046398,
+      "lng": -0.441975598
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.529121
+      }
+    ],
+    "name": "Kennington ",
+    "coordinates": {
+      "lat": 51.488193706,
+      "lng": -0.10547519
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.563193
+      }
+    ],
+    "name": "Kensal Green ",
+    "coordinates": {
+      "lat": 51.530526498,
+      "lng": -0.224683208
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.008711
+      }
+    ],
+    "name": "Kensington ( Olympia ) ",
+    "coordinates": {
+      "lat": 51.497883187,
+      "lng": -0.210355325
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.493555
+      }
+    ],
+    "name": "Kentish Town ",
+    "coordinates": {
+      "lat": 51.550367969,
+      "lng": -0.140452418
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.116417
+      }
+    ],
+    "name": "Kenton ",
+    "coordinates": {
+      "lat": 51.581846365,
+      "lng": -0.317125399
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.549683
+      }
+    ],
+    "name": "Kew Gardens ",
+    "coordinates": {
+      "lat": 51.477097778,
+      "lng": -0.285212918
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.269438
+      }
+    ],
+    "name": "Kilburn ",
+    "coordinates": {
+      "lat": 51.546943685,
+      "lng": -0.204612104
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.417148
+      }
+    ],
+    "name": "Kilburn Park ",
+    "coordinates": {
+      "lat": 51.535139924,
+      "lng": -0.193943923
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 93.413018
+      }
+    ],
+    "name": "King's Cross St Pancras",
+    "coordinates": {
+      "lat": 51.53046702,
+      "lng": -0.123838556
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.968747
+      }
+    ],
+    "name": "Kingsbury ",
+    "coordinates": {
+      "lat": 51.584818808,
+      "lng": -0.278758866
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 20.296928
+      }
+    ],
+    "name": "Knightsbridge ",
+    "coordinates": {
+      "lat": 51.50161953,
+      "lng": -0.160476448
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.813508
+      }
+    ],
+    "name": "Ladbroke Grove ",
+    "coordinates": {
+      "lat": 51.517255223,
+      "lng": -0.210833786
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.285854
+      }
+    ],
+    "name": "Lambeth North ",
+    "coordinates": {
+      "lat": 51.499131086,
+      "lng": -0.111745717
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.293475
+      }
+    ],
+    "name": "Lancaster Gate ",
+    "coordinates": {
+      "lat": 51.511894768,
+      "lng": -0.175400817
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.572535
+      }
+    ],
+    "name": "Latimer Road ",
+    "coordinates": {
+      "lat": 51.51360963,
+      "lng": -0.217746133
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 43.745951
+      }
+    ],
+    "name": "Leicester Square ",
+    "coordinates": {
+      "lat": 51.511290786,
+      "lng": -0.12822255
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 14.406501
+      }
+    ],
+    "name": "Leyton ",
+    "coordinates": {
+      "lat": 51.556503397,
+      "lng": -0.00561874
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.244737
+      }
+    ],
+    "name": "Leytonstone ",
+    "coordinates": {
+      "lat": 51.568254279,
+      "lng": 0.008223901
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 73.257321
+      }
+    ],
+    "name": "Liverpool Street ",
+    "coordinates": {
+      "lat": 51.517421127,
+      "lng": -0.082958757
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 71.964428
+      }
+    ],
+    "name": "London Bridge ",
+    "coordinates": {
+      "lat": 51.50557208,
+      "lng": -0.086907553
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.272688
+      }
+    ],
+    "name": "Loughton ",
+    "coordinates": {
+      "lat": 51.641570622,
+      "lng": 0.055302636
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.382758
+      }
+    ],
+    "name": "Maida Vale ",
+    "coordinates": {
+      "lat": 51.52982887,
+      "lng": -0.185609035
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 9.275642
+      }
+    ],
+    "name": "Manor House ",
+    "coordinates": {
+      "lat": 51.570821904,
+      "lng": -0.095699338
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.561213
+      }
+    ],
+    "name": "Mansion House ",
+    "coordinates": {
+      "lat": 51.5120941,
+      "lng": -0.094171678
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 15.442682
+      }
+    ],
+    "name": "Marble Arch ",
+    "coordinates": {
+      "lat": 51.51361041,
+      "lng": -0.158415035
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 12.525312
+      }
+    ],
+    "name": "Marylebone ",
+    "coordinates": {
+      "lat": 51.522296752,
+      "lng": -0.163080891
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 16.310716
+      }
+    ],
+    "name": "Mile End ",
+    "coordinates": {
+      "lat": 51.525162272,
+      "lng": -0.033400538
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.318158
+      }
+    ],
+    "name": "Mill Hill East ",
+    "coordinates": {
+      "lat": 51.608322331,
+      "lng": -0.209873024
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.88639
+      }
+    ],
+    "name": "Moor Park ",
+    "coordinates": {
+      "lat": 51.629790112,
+      "lng": -0.432617492
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 26.06263
+      }
+    ],
+    "name": "Moorgate ",
+    "coordinates": {
+      "lat": 51.518434153,
+      "lng": -0.088988842
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 9.275569
+      }
+    ],
+    "name": "Morden ",
+    "coordinates": {
+      "lat": 51.402413117,
+      "lng": -0.194767862
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.531089
+      }
+    ],
+    "name": "Mornington Crescent ",
+    "coordinates": {
+      "lat": 51.534278448,
+      "lng": -0.138821617
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.67247
+      }
+    ],
+    "name": "Neasden ",
+    "coordinates": {
+      "lat": 51.554031104,
+      "lng": -0.249760238
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.327727
+      }
+    ],
+    "name": "Newbury Park ",
+    "coordinates": {
+      "lat": 51.575639509,
+      "lng": 0.090329654
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.106253
+      }
+    ],
+    "name": "North Acton ",
+    "coordinates": {
+      "lat": 51.523436048,
+      "lng": -0.25970031
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.892594
+      }
+    ],
+    "name": "North Ealing ",
+    "coordinates": {
+      "lat": 51.517624754,
+      "lng": -0.288970664
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 26.377071
+      }
+    ],
+    "name": "North Greenwich ",
+    "coordinates": {
+      "lat": 51.500253938,
+      "lng": 0.00361738
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.937838
+      }
+    ],
+    "name": "North Harrow ",
+    "coordinates": {
+      "lat": 51.584853438,
+      "lng": -0.362187319
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.836732
+      }
+    ],
+    "name": "North Wembley ",
+    "coordinates": {
+      "lat": 51.562548968,
+      "lng": -0.304116057
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.080122
+      }
+    ],
+    "name": "Northfields ",
+    "coordinates": {
+      "lat": 51.499341967,
+      "lng": -0.314126947
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.026
+      }
+    ],
+    "name": "Northolt ",
+    "coordinates": {
+      "lat": 51.54821512,
+      "lng": -0.368420431
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.588128
+      }
+    ],
+    "name": "Northwick Park ",
+    "coordinates": {
+      "lat": 51.578651178,
+      "lng": -0.318174443
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.475743
+      }
+    ],
+    "name": "Northwood ",
+    "coordinates": {
+      "lat": 51.611217965,
+      "lng": -0.423813419
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.720439
+      }
+    ],
+    "name": "Northwood Hills ",
+    "coordinates": {
+      "lat": 51.600549275,
+      "lng": -0.409262774
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 16.683962
+      }
+    ],
+    "name": "Notting Hill Gate ",
+    "coordinates": {
+      "lat": 51.509135067,
+      "lng": -0.196517879
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.842657
+      }
+    ],
+    "name": "Oakwood ",
+    "coordinates": {
+      "lat": 51.647643252,
+      "lng": -0.131828432
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 25.14351
+      }
+    ],
+    "name": "Old Street ",
+    "coordinates": {
+      "lat": 51.525673036,
+      "lng": -0.087540958
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.350196
+      }
+    ],
+    "name": "Osterley ",
+    "coordinates": {
+      "lat": 51.481001483,
+      "lng": -0.351955627
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.968322
+      }
+    ],
+    "name": "Oval ",
+    "coordinates": {
+      "lat": 51.482175453,
+      "lng": -0.112872504
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 92.355623
+      }
+    ],
+    "name": "Oxford Circus ",
+    "coordinates": {
+      "lat": 51.515198326,
+      "lng": -0.141753096
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 49.637302
+      }
+    ],
+    "name": "Paddington ",
+    "coordinates": {
+      "lat": 51.515378873,
+      "lng": -0.175365294
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.019382
+      }
+    ],
+    "name": "Park Royal ",
+    "coordinates": {
+      "lat": 51.526964839,
+      "lng": -0.284197489
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.822161
+      }
+    ],
+    "name": "Parsons Green ",
+    "coordinates": {
+      "lat": 51.475172662,
+      "lng": -0.201208748
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.405584
+      }
+    ],
+    "name": "Perivale ",
+    "coordinates": {
+      "lat": 51.536659128,
+      "lng": -0.323817282
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 42.796831
+      }
+    ],
+    "name": "Piccadilly Circus ",
+    "coordinates": {
+      "lat": 51.510101282,
+      "lng": -0.133994054
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.264698
+      }
+    ],
+    "name": "Pimlico ",
+    "coordinates": {
+      "lat": 51.489267016,
+      "lng": -0.13371586
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.084213
+      }
+    ],
+    "name": "Pinner ",
+    "coordinates": {
+      "lat": 51.592920216,
+      "lng": -0.380877555
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.063495
+      }
+    ],
+    "name": "Plaistow ",
+    "coordinates": {
+      "lat": 51.531286207,
+      "lng": 0.017807961
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.427709
+      }
+    ],
+    "name": "Preston Road ",
+    "coordinates": {
+      "lat": 51.572097704,
+      "lng": -0.295226402
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.75691
+      }
+    ],
+    "name": "Putney Bridge ",
+    "coordinates": {
+      "lat": 51.467978221,
+      "lng": -0.208948328
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.771615
+      }
+    ],
+    "name": "Queens Park ",
+    "coordinates": {
+      "lat": 51.534167072,
+      "lng": -0.204675391
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.525278
+      }
+    ],
+    "name": "Queensbury ",
+    "coordinates": {
+      "lat": 51.594408067,
+      "lng": -0.285756688
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.656619
+      }
+    ],
+    "name": "Queensway ",
+    "coordinates": {
+      "lat": 51.510453171,
+      "lng": -0.187402539
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.189008
+      }
+    ],
+    "name": "Ravenscourt Park ",
+    "coordinates": {
+      "lat": 51.494211265,
+      "lng": -0.236225664
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.512905
+      }
+    ],
+    "name": "Rayners Lane ",
+    "coordinates": {
+      "lat": 51.575039739,
+      "lng": -0.370959601
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.934539
+      }
+    ],
+    "name": "Redbridge ",
+    "coordinates": {
+      "lat": 51.576368336,
+      "lng": 0.045413423
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.541481
+      }
+    ],
+    "name": "Regent's Park ",
+    "coordinates": {
+      "lat": 51.523573745,
+      "lng": -0.146845189
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.661325
+      }
+    ],
+    "name": "Richmond ",
+    "coordinates": {
+      "lat": 51.463232128,
+      "lng": -0.301717924
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.442771
+      }
+    ],
+    "name": "Rickmansworth ",
+    "coordinates": {
+      "lat": 51.640327496,
+      "lng": -0.473664594
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.260651
+      }
+    ],
+    "name": "Roding Valley ",
+    "coordinates": {
+      "lat": 51.617179945,
+      "lng": 0.04385609
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.491199
+      }
+    ],
+    "name": "Royal Oak ",
+    "coordinates": {
+      "lat": 51.519090535,
+      "lng": -0.188212572
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.903105
+      }
+    ],
+    "name": "Ruislip ",
+    "coordinates": {
+      "lat": 51.571511893,
+      "lng": -0.421416905
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.112623
+      }
+    ],
+    "name": "Ruislip Gardens ",
+    "coordinates": {
+      "lat": 51.560651409,
+      "lng": -0.410993312
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.005867
+      }
+    ],
+    "name": "Ruislip Manor ",
+    "coordinates": {
+      "lat": 51.573246766,
+      "lng": -0.412305976
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 13.328942
+      }
+    ],
+    "name": "Russell Square ",
+    "coordinates": {
+      "lat": 51.522981488,
+      "lng": -0.124290511
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 17.522713
+      }
+    ],
+    "name": "Seven Sisters ",
+    "coordinates": {
+      "lat": 51.583414085,
+      "lng": -0.07247832
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 22.257246
+      }
+    ],
+    "name": "Shepherd's Bush ",
+    "coordinates": {
+      "lat": 51.504520582,
+      "lng": -0.218739321
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.41259
+      }
+    ],
+    "name": "Shepherd's Bush Market",
+    "coordinates": {
+      "lat": 51.505626762,
+      "lng": -0.22628142
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 17.197513
+      }
+    ],
+    "name": "Sloane Square ",
+    "coordinates": {
+      "lat": 51.492361608,
+      "lng": -0.156471428
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.674477
+      }
+    ],
+    "name": "Snaresbrook ",
+    "coordinates": {
+      "lat": 51.580893551,
+      "lng": 0.021492179
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.699819
+      }
+    ],
+    "name": "South Ealing ",
+    "coordinates": {
+      "lat": 51.501439579,
+      "lng": -0.306982297
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.583973
+      }
+    ],
+    "name": "South Harrow ",
+    "coordinates": {
+      "lat": 51.564742755,
+      "lng": -0.352171569
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 33.869744
+      }
+    ],
+    "name": "South Kensington ",
+    "coordinates": {
+      "lat": 51.494072248,
+      "lng": -0.173903021
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.957195
+      }
+    ],
+    "name": "South Kenton ",
+    "coordinates": {
+      "lat": 51.570231405,
+      "lng": -0.308554798
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.718085
+      }
+    ],
+    "name": "South Ruislip ",
+    "coordinates": {
+      "lat": 51.556575808,
+      "lng": -0.398609938
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.57044
+      }
+    ],
+    "name": "South Wimbledon ",
+    "coordinates": {
+      "lat": 51.415358688,
+      "lng": -0.191946864
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.148679
+      }
+    ],
+    "name": "South Woodford ",
+    "coordinates": {
+      "lat": 51.591793443,
+      "lng": 0.027321779
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.173897
+      }
+    ],
+    "name": "Southfields ",
+    "coordinates": {
+      "lat": 51.44500591,
+      "lng": -0.206514155
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.555527
+      }
+    ],
+    "name": "Southgate ",
+    "coordinates": {
+      "lat": 51.63237561,
+      "lng": -0.127741029
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 17.937654
+      }
+    ],
+    "name": "Southwark ",
+    "coordinates": {
+      "lat": 51.503912041,
+      "lng": -0.105079612
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 15.698186
+      }
+    ],
+    "name": "St James's Park ",
+    "coordinates": {
+      "lat": 51.499417081,
+      "lng": -0.134167037
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.879484
+      }
+    ],
+    "name": "St John's Wood ",
+    "coordinates": {
+      "lat": 51.534629498,
+      "lng": -0.174155402
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 17.371372
+      }
+    ],
+    "name": "St Pauls' ",
+    "coordinates": {
+      "lat": 51.514875732,
+      "lng": -0.097559304
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.695977
+      }
+    ],
+    "name": "Stamford Brook ",
+    "coordinates": {
+      "lat": 51.494865328,
+      "lng": -0.245421899
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.973686
+      }
+    ],
+    "name": "Stanmore ",
+    "coordinates": {
+      "lat": 51.619673212,
+      "lng": -0.303078406
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.846372
+      }
+    ],
+    "name": "Stepney Green ",
+    "coordinates": {
+      "lat": 51.521979324,
+      "lng": -0.046455251
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.082161
+      }
+    ],
+    "name": "Stockwell ",
+    "coordinates": {
+      "lat": 51.472241139,
+      "lng": -0.122895213
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.67489
+      }
+    ],
+    "name": "Stonebridge Park ",
+    "coordinates": {
+      "lat": 51.543989547,
+      "lng": -0.275371113
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 61.44263
+      }
+    ],
+    "name": "Stratford ",
+    "coordinates": {
+      "lat": 51.541377658,
+      "lng": -0.003185389
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.217946
+      }
+    ],
+    "name": "Sudbury Hill ",
+    "coordinates": {
+      "lat": 51.557060075,
+      "lng": -0.336185424
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.179203
+      }
+    ],
+    "name": "Sudbury Town ",
+    "coordinates": {
+      "lat": 51.550846283,
+      "lng": -0.315443563
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.71083
+      }
+    ],
+    "name": "Swiss Cottage ",
+    "coordinates": {
+      "lat": 51.54338298,
+      "lng": -0.174736507
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.595799
+      }
+    ],
+    "name": "Temple ",
+    "coordinates": {
+      "lat": 51.511041845,
+      "lng": -0.113692896
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0.854702
+      }
+    ],
+    "name": "Theydon Bois ",
+    "coordinates": {
+      "lat": 51.671773226,
+      "lng": 0.103118143
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.933544
+      }
+    ],
+    "name": "Tooting Bec ",
+    "coordinates": {
+      "lat": 51.435836121,
+      "lng": -0.159677894
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 15.737978
+      }
+    ],
+    "name": "Tooting Broadway ",
+    "coordinates": {
+      "lat": 51.427516012,
+      "lng": -0.167954323
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 16.2498
+      }
+    ],
+    "name": "Tottenham Court Road ",
+    "coordinates": {
+      "lat": 51.516276082,
+      "lng": -0.13085605
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.954313
+      }
+    ],
+    "name": "Tottenham Hale ",
+    "coordinates": {
+      "lat": 51.588112841,
+      "lng": -0.060276117
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.33448
+      }
+    ],
+    "name": "Totteridge ",
+    "coordinates": {
+      "lat": 51.630265127,
+      "lng": -0.179247175
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 22.176713
+      }
+    ],
+    "name": "Tower Hill ",
+    "coordinates": {
+      "lat": 51.510139104,
+      "lng": -0.076335576
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 0
+      }
+    ],
+    "name": "Tufnell Park ",
+    "coordinates": {
+      "lat": 51.556736692,
+      "lng": -0.137907511
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.445923
+      }
+    ],
+    "name": "Turnham Green ",
+    "coordinates": {
+      "lat": 51.495185091,
+      "lng": -0.254500038
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 10.790301
+      }
+    ],
+    "name": "Turnpike Lane ",
+    "coordinates": {
+      "lat": 51.590364168,
+      "lng": -0.102786628
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.140645
+      }
+    ],
+    "name": "Upminster ",
+    "coordinates": {
+      "lat": 51.5589594,
+      "lng": 0.251068748
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.146772
+      }
+    ],
+    "name": "Upminster Bridge ",
+    "coordinates": {
+      "lat": 51.558822332,
+      "lng": 0.235751225
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.684747
+      }
+    ],
+    "name": "Upney ",
+    "coordinates": {
+      "lat": 51.538404215,
+      "lng": 0.101558788
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.413623
+      }
+    ],
+    "name": "Upton Park ",
+    "coordinates": {
+      "lat": 51.535300668,
+      "lng": 0.035269676
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.341531
+      }
+    ],
+    "name": "Uxbridge ",
+    "coordinates": {
+      "lat": 51.546558503,
+      "lng": -0.478086633
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 26.834959
+      }
+    ],
+    "name": "Vauxhall ",
+    "coordinates": {
+      "lat": 51.485802837,
+      "lng": -0.123728675
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 82.88556
+      }
+    ],
+    "name": "Victoria ",
+    "coordinates": {
+      "lat": 51.496415738,
+      "lng": -0.143828518
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 18.333582
+      }
+    ],
+    "name": "Walthamstow Central ",
+    "coordinates": {
+      "lat": 51.583022656,
+      "lng": -0.01991023
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.90356
+      }
+    ],
+    "name": "Wanstead ",
+    "coordinates": {
+      "lat": 51.575586046,
+      "lng": 0.028739769
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 19.917362
+      }
+    ],
+    "name": "Warren Street ",
+    "coordinates": {
+      "lat": 51.52458249,
+      "lng": -0.138254185
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.501822
+      }
+    ],
+    "name": "Warwick Avenue ",
+    "coordinates": {
+      "lat": 51.523345437,
+      "lng": -0.183649798
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 95.138374
+      }
+    ],
+    "name": "Waterloo ",
+    "coordinates": {
+      "lat": 51.503576438,
+      "lng": -0.114051784
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.845823
+      }
+    ],
+    "name": "Watford ",
+    "coordinates": {
+      "lat": 51.657472766,
+      "lng": -0.417233505
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.789849
+      }
+    ],
+    "name": "Wembley Central ",
+    "coordinates": {
+      "lat": 51.552393189,
+      "lng": -0.296820887
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 14.542576
+      }
+    ],
+    "name": "Wembley Park ",
+    "coordinates": {
+      "lat": 51.563321392,
+      "lng": -0.279220664
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.736847
+      }
+    ],
+    "name": "West Acton ",
+    "coordinates": {
+      "lat": 51.517928534,
+      "lng": -0.280959813
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.168452
+      }
+    ],
+    "name": "West Brompton ",
+    "coordinates": {
+      "lat": 51.48732681,
+      "lng": -0.195513643
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.613941
+      }
+    ],
+    "name": "West Finchley ",
+    "coordinates": {
+      "lat": 51.60954907,
+      "lng": -0.188445598
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.814553
+      }
+    ],
+    "name": "West Ham ",
+    "coordinates": {
+      "lat": 51.528257231,
+      "lng": 0.005040569
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.160117
+      }
+    ],
+    "name": "West Hampstead ",
+    "coordinates": {
+      "lat": 51.546770903,
+      "lng": -0.19072983
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.329655
+      }
+    ],
+    "name": "West Harrow ",
+    "coordinates": {
+      "lat": 51.579833961,
+      "lng": -0.352886823
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 5.321523
+      }
+    ],
+    "name": "West Kensington ",
+    "coordinates": {
+      "lat": 51.49056563,
+      "lng": -0.206454516
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.564634
+      }
+    ],
+    "name": "West Ruislip ",
+    "coordinates": {
+      "lat": 51.569591648,
+      "lng": -0.437840503
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.79496
+      }
+    ],
+    "name": "Westbourne Park ",
+    "coordinates": {
+      "lat": 51.52099106,
+      "lng": -0.200858
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 25.614455
+      }
+    ],
+    "name": "Westminster ",
+    "coordinates": {
+      "lat": 51.501156967,
+      "lng": -0.124793827
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 7.704418
+      }
+    ],
+    "name": "White City ",
+    "coordinates": {
+      "lat": 51.512044211,
+      "lng": -0.224221914
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 11.702345
+      }
+    ],
+    "name": "Whitechapel ",
+    "coordinates": {
+      "lat": 51.519529261,
+      "lng": -0.059968492
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 8.960771
+      }
+    ],
+    "name": "Willesden Green ",
+    "coordinates": {
+      "lat": 51.549376909,
+      "lng": -0.222378339
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 4.597796
+      }
+    ],
+    "name": "Willesden Junction ",
+    "coordinates": {
+      "lat": 51.532259837,
+      "lng": -0.244259053
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 15.631389
+      }
+    ],
+    "name": "Wimbledon ",
+    "coordinates": {
+      "lat": 51.421464866,
+      "lng": -0.206353858
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 1.821025
+      }
+    ],
+    "name": "Wimbledon Park ",
+    "coordinates": {
+      "lat": 51.43453896,
+      "lng": -0.199572031
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 13.18919
+      }
+    ],
+    "name": "Wood Green ",
+    "coordinates": {
+      "lat": 51.597536265,
+      "lng": -0.109617731
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 3.698414
+      }
+    ],
+    "name": "Wood Lane",
+    "coordinates": {
+      "lat": 51.509958279,
+      "lng": -0.224245427
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 6.034086
+      }
+    ],
+    "name": "Woodford ",
+    "coordinates": {
+      "lat": 51.607093559,
+      "lng": 0.034027185
+    }
+  },
+  {
+    "popularityLevels": [
+      {
+        "endTime": "23:59:59",
+        "startTime": "00:00:00",
+        "level": 2.816775
+      }
+    ],
+    "name": "Woodside Park ",
+    "coordinates": {
+      "lat": 51.617872781,
+      "lng": -0.185394277
+    }
+  }
+]
