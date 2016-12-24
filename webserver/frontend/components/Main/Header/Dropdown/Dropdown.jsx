@@ -13,20 +13,27 @@ export default class Dropdown extends React.Component {
     return this.props.handlers.handleSelect(item);
   }
 
+  componentDidMount() {
+    $('select').material_select();
+  }
+
+  componentDidUpdate() {
+    $('select').material_select();
+  }
+
   render() {
     let items = [];
     for (let i = 0; i < this.props.items.length; i++) {
-      items.push(<option key={i} value={i}>{this.props.items[i].name}</option>); //TODO: Not a generalised Dropdown. Either specific further, or generalise
+      //TODO: Not a generalised Dropdown. Either specific further, or generalise
+      items.push(<option key={i} value={i}>{this.props.items[i].name}</option>);
     }
     //TODO: Replace with map below
-
     return (
-			<div className="row">
+			<div className="input-field">
         <select disabled={!this.props.enabled}
-          className="form-control"
           onChange={::this._onSelect}
         >
-          {items} //TODO: Replace here
+          {items}
         </select>
 			</div>
 		);
