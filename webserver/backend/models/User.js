@@ -35,10 +35,9 @@ userSchema.methods.setAPIAccess = function(id, key) {
   this.api_key_hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
 }
 
-userSchema.methods.validateAPIAccess = function(id, key) {
-  const id_hash = crypto.pbkdf2Sync(id, this.api_access.id_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
-  const key_hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
-  return this.api_access.id_hash === id_hash && this.api_access.key_hash = key_hash;
+userSchema.methods.validateAPIAccess = function(key) {
+  const hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
+  return this.api_key_hash = hash;
 
 }
 
