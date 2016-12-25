@@ -15,6 +15,12 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true
   },
+  api_access: {
+    id_hash: String,
+    key_hash: String,
+    id_salt: String,
+    key_salt: String
+  },
   hash: String,
   salt: String,
   admin: Boolean,
@@ -25,6 +31,22 @@ const userSchema = mongoose.Schema({
     ref: 'Simulation'
   }]
 });
+
+userSchema.methods.setAPIAccess = function(id, key) {
+  this.api_access.id_salt = crypto.randomBytes(SALT_BYTES_LENGTH).toString('hex');
+  this.api_access.key_salt = crypto.randomBytes(SALT_BYTES_LENGTH).toString('hex');
+  const id_hash = crypto.pbkdf2Sync(id, this.api_access.id_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
+  const key_hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
+  this.api_access.id_hash = id_hash;
+  this.api_access.key_hash = key_hash;
+}
+
+userSchema.methods.validateAPIAccess = function(id, key) {
+  const id_hash = crypto.pbkdf2Sync(id, this.api_access.id_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
+  const key_hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
+  return this.api_access.id_hash === id_hash && this.api_access.key_hash = key_hash;
+
+}
 
 userSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(SALT_BYTES_LENGTH).toString('hex');
