@@ -15,9 +15,9 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true
   },
-  api_id: String
-  api_key_hash: String
-  api_key_salt: String
+  api_id: String,
+  api_key_hash: String,
+  api_key_salt: String,
   hash: String,
   salt: String,
   admin: Boolean,
@@ -39,6 +39,21 @@ userSchema.methods.validateAPIAccess = function(key) {
   const hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
   return this.api_key_hash = hash;
 
+}
+
+userSchema.methods.generateAPIToken = function(simulation, ip) {
+  let simID = this.active_simulation;
+  if (simulation) {
+    simID = simulation;
+  }
+  const dayInSec = 24 * 60 * 60
+  //expires in 100 days
+  return jwt.sign({
+    _id: this._id,
+    sid: simID,
+    cip: ip,
+    exp: Math.floor(Date.now() / 1000) + 100 * dayInSec
+  }, config.token_secret);
 }
 
 userSchema.methods.setPassword = function(password) {

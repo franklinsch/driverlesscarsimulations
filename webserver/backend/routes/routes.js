@@ -9,7 +9,6 @@ const Journey = require('../models/Journey');
 const User = require('../models/User');
 const config = require('../config');
 const auth = require('../authenticate');
-const fs = require('fs');
 
 const server = require('../../server.js');
 
@@ -211,15 +210,31 @@ router.route('/login')
     })(req, res);
   });
 
-router.route('/uploads')
+router.route('/framework_api')
   .post((req, res) => {
-    fs.writeFile('../uploads/hotspots.json', JSON.stringify(req.body, null, 2), function(err) {
-      if (err) {
-        console.log(err);
+    User.findOne({ api_id: req.body.api_id }, (err, user) => {
+      if (err) { 
+        res.status(500).json(err);
+        return;
       }
-      res.status(200).send('success');
+      if (!user) {
+        res.status(404);
+      }
+      if(!user.validateAPIAccess(req.body.api_key)) {
+        res.status(401)
+      }
+      const simID = req.body.simulationID;
+      const ip = req.ip;
+      authentication_token = user.generateAPIToken(simID, ip); 
+      res.status(200).json({
+        'activeSimulationID': user.active_simulation,
+        'token': authentication_token
+      });
     });
   });
+
+
+
 
 router.get('*', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));

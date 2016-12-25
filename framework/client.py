@@ -44,6 +44,8 @@ class SAVNConnectionAssistant:
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)
+
+  #returns a tuple of api_id, and api_key  
   def getAPIKeys():
     pass
 
@@ -147,12 +149,16 @@ class SAVNConnectionAssistant:
 
   def authenticate():
     api_id, api_key = getAPIKeys()
-    payload = {'api_id': api_id, 'api_key': api_key}
+    payload = {
+      'api_id': api_id, 
+      'api_key': api_key, 
+      'simulationID': self.simulationID
+    }
     r = requests.post(AUTHENTICATION_ROUTE, data=payload)
     if r.status_code == 200:
       data = r.json()
       if not self.simulationID:
-        self.simulationID = data.simulationID
+        self.simulationID = data.activeSimulationID
       self.token = data.token
     else:
       r.raise_for_status()
