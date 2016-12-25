@@ -4,17 +4,19 @@ import websockets
 import sys
 import threading
 import time
-
+import requests
 import os
 
 HOST_IP = 'localhost' if 'SAVN_ENV' in os.environ else '35.160.255.102'
 
 HOST = 'ws://' + HOST_IP + ':9000'
 
+AUTHENTICATION_ROUTE = 'http://' + HOST_IP + ':3000' + '/framework_api'
+
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
-  def __init__(self, simulationID):
+  def __init__(self, simulationID=None):
     self.simulationID = simulationID
     self.messageQueue = asyncio.Queue()
     self.frameworkID = 0
@@ -42,6 +44,8 @@ class SAVNConnectionAssistant:
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
+  def getAPIKeys():
+    pass
 
   def handleSimulationStart(self, initialParameters):
     pass
@@ -137,8 +141,23 @@ class SAVNConnectionAssistant:
     while (self.shouldAwait):
       time.sleep(sleepTime)
 
+  def authenticate():
+    api_id, api_key = getAPIKeys()
+    payload = {'api_id': api_id, 'api_key': api_key}
+    r = requests.post(AUTHENTICATION_ROUTE, data=payload)
+    if r.status_code == 200:
+      data = r.json()
+      if not self.simulationID:
+        self.simulationID = data.simulationID
+      self.token = data.token
+    else:
+      r.raise_for_status()
+
+
   def initSession(self, timeslice):
     async def coro():
+      authenticate()
+      if not self.simulationID:
       async with websockets.connect(HOST) as websocket:
         self.ws = websocket
         await self.startConnection(timeslice)
