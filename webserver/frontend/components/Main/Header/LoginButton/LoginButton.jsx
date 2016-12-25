@@ -104,14 +104,14 @@ export default class LoginButton extends React.Component {
         </a>
         <div id="modal-form" className="modal bottom-sheet">
           <div className="modal-content">
-            <form>
+            <form className="col s12">
               <div className="row">
                 <div className="input-field col s6">
                   <input
                     type        = "username"
                     value       = {this.state.username}
                     onChange    = {::this._handleUserChange}
-                    className   = "form-control"
+                    className   = "validate"
                     placeholder = "Username"
                   />
                 </div>
@@ -120,7 +120,7 @@ export default class LoginButton extends React.Component {
                     type        = "password"
                     value       = {this.state.password}
                     onChange    = {::this._handlePasswordChange}
-                    className   = "form-control"
+                    className   = "validate"
                     placeholder = "Password"
                   />
                 </div>
