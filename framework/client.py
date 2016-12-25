@@ -29,7 +29,7 @@ class SAVNConnectionAssistant:
                  'timestamp': timestamp,
                  'objects': state,
                  'frameworkID': self.frameworkID}}
-    asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)
     if (sync):
       self.synchronize()
@@ -42,7 +42,7 @@ class SAVNConnectionAssistant:
                  'journeyStart': journeyStart,
                  'journeyID': journeyID,
                  'frameworkID': self.frameworkID}}
-    asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)
   def getAPIKeys():
     pass
@@ -67,6 +67,10 @@ class SAVNConnectionAssistant:
     packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'timeslice': timeslice}}
     await self.ws.send(json.dumps(packet))
 
+  async def send_packet(packet):
+    packet['token'] = self.token
+    await self.ws.send(json.dumps(packet))
+
   async def handlerLoop(self):
     #We handle the connection whilst the simulation is alive
     while self.active:
@@ -80,7 +84,7 @@ class SAVNConnectionAssistant:
 
       if producer_task in done:
         packet = producer_task.result()
-        await self.ws.send(packet)
+        await self.send_packet(packet)
       else:
         producer_task.cancel()
 
@@ -127,7 +131,7 @@ class SAVNConnectionAssistant:
       #The connection is officialy dead we need to terminate the handling loop,
       #to achieve this we populate the message queue with a confirmation packet
       packet = {'type': 'simulation-close', 'content': {'simulationID': self.simulationID}}
-      asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+      asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)
     elif isUpdate():
       self.handleSimulationDataUpdate(packet["content"])
@@ -152,7 +156,6 @@ class SAVNConnectionAssistant:
       self.token = data.token
     else:
       r.raise_for_status()
-
 
   def initSession(self, timeslice):
     async def coro():
