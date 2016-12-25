@@ -67,7 +67,7 @@ class SAVNConnectionAssistant:
 
   async def startConnection(self, timeslice):
     packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'timeslice': timeslice}}
-    await self.ws.send(json.dumps(packet))
+    await self.send_packet(packet)
 
   async def send_packet(packet):
     packet['token'] = self.token

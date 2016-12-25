@@ -29,15 +29,15 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
 });
 
 function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1);
-  var a =
+  const R = 6371; // Radius of the earth in km
+  const dLat = deg2rad(lat2-lat1);  // deg2rad below
+  const dLon = deg2rad(lon2-lon1); 
+  const a = 
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  var d = R * c; // Distance in km
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2); 
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  const d = R * c; // Distance in km
   return d;
 }
 
@@ -45,50 +45,52 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-//function averageSpeedToDestination(journeys, simulationStates) {
-  //let carsOnTheRoad = {};
-  //let totalTime = 0;
-  //let totalDistance = 0;
-
-  //for (const simulationState of simulationStates) {
-    //for (const frameworkState of simulationState.frameworkStates) {
-      //for (const obj of frameworkState.objects) {
-        //obj['id'] += frameworkState.frameworkID;
-        //if (obj['id'] in carsOnTheRoad) {
-          //const journey = journeys[obj['journeyID']];
-          //dest = journey.destination;
-          //pos = obj.position;
-          //if (pos.lat == dest.lat && pos.lng == dest.lng) {
-            //totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-            //totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
-          //}
-        //} else {
-          //carsOnTheRoad[obj['id']] = {departure: simulationState.timestamp, origin: obj.position}
-        //}
-      //}
-    //}
-  //}
-  //if (totalTime == 0) {
-    //totalTime++;
-  //}
-  //return totalDistance / totalTime;
-//}
-
-function averageSpeedToDestination(journeys, completionLogs) {
+function getBenchmarks(journeys, states) {
+  console.log('request for benchmark');
+  let carsOnTheRoad = {};
   let totalTime = 0;
   let totalDistance = 0;
-
-  for (const log of completionLogs) {
-    console.log(log);
-    totalTime += log.duration;
-
-    const journey = journeys[log['journeyID']];
-    totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
+  let carsArrived = 0;
+  let staten = 0;
+  for (let state of states) {
+    for (let fstate of state.frameworkStates) {
+      for (let obj of fstate.objects) {
+        if (obj.id in carsOnTheRoad && carsOnTheRoad[obj.id].init) {
+          const journey = journeys.find((j) => {return j._id == obj.journeyID});
+          const dest = journey.destination;
+          const orig = journey.origin;
+          const pos = obj.position;
+          console.log(pos.lat - dest.lat);
+          console.log(pos.lng - dest.lng);
+          console.log("");
+          if (pos.lat == dest.lat && pos.lng == dest.lng) {
+            console.log('pls');
+            totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
+            totalDistance += getDistanceLatLonInKm(orig.lat, orig.lng, dest.lat, dest.lng);
+            carsArrived += 1;
+            carsOnTheRoad[obj.id].init = false; 
+          } 
+        } else {
+          carsOnTheRoad[obj.id] = { 
+            departure: state.timestamp, 
+            origin: obj.position,
+            init: true
+          };
+        }
+      }
+    }
   }
   if (totalTime == 0) {
     totalTime++;
   }
-  return totalDistance / totalTime * 60 * 60;
+  console.log('hey');
+  ret = {
+    'averageSpeedToDestination': totalDistance / totalTime,
+    'totalTime': totalTime,
+    'totalDistance': totalDistance,
+    'averageTime': totalTime / carsArrived,
+  };
+  return ret;
 }
 
 //
@@ -111,7 +113,7 @@ app.use(session({
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     res.status(401);
-    res.json({
+		res.json({
       "message": err.name + ": " + err.message
     });
   }
@@ -874,25 +876,32 @@ frameworkSocketServer.on('request', function(request) {
     });
   }
 
-  connection.on('message', function(message) {
+	connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
       const messageContent = messageData.content;
+			const token = messageData.token
 
-      switch(messageData.type) {
-        case "simulation-start":
-          _handleSimulationStart(messageContent);
-          break;
-        case "simulation-state":
-          _handleSimulationStateUpdate(messageContent);
-          break;
-        case "simulation-close":
-          _handleSimulationClose(messageContent);
-          break;
-        case "simulation-journey-complete":
-          _handleJourneyComplete(messageContent);
-      }
-    }
+		  jwt.verify(token, config.TOKEN_SECRET, function(err, decoded) {
+        if (err) { return err; }
+				if (messageContent.simulationID === decoded.sid) {
+					console.log("Received valid JSON packet from:" + decoded.cip);
+      		switch(messageData.type) {
+        		case "simulation-start":
+        	  	_handleSimulationStart(messageContent);
+        	  	break;
+        		case "simulation-state":
+        	  	_handleSimulationStateUpdate(messageContent);
+        	  	break;
+        		case "simulation-close":
+        	  	_handleSimulationClose(messageContent);
+        	  	break;
+        		case "simulation-journey-complete":
+        	  	_handleJourneyComplete(messageContent);
+					}
+      	}
+    	});
+		}
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
       connection.sendBytes(message.binaryData);

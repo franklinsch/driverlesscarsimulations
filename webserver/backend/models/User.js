@@ -53,7 +53,7 @@ userSchema.methods.generateAPIToken = function(simulation, ip) {
     sid: simID,
     cip: ip,
     exp: Math.floor(Date.now() / 1000) + 100 * dayInSec
-  }, config.token_secret);
+  }, config.TOKEN_SECRET);
 }
 
 userSchema.methods.setPassword = function(password) {
@@ -75,7 +75,7 @@ userSchema.methods.generateJwt = function() {
     email: this.email,
     name: this.name,
     exp: parseInt(expiry.getTime() / 1000),
-  }, config.token_secret);
+  }, config.TOKEN_SECRET);
 };
 
 module.exports = mongoose.model('User', userSchema);
