@@ -4,7 +4,8 @@ setup(name='framework',
     version='0.1',
     license='MIT',
     install_requires=[
-      'autobahn',
-      'asyncio'
+      'asyncio',
+      'overpass',
+      'websockets'
       ],
     zip_safe=False)
