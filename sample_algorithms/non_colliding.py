@@ -1,6 +1,7 @@
 import sys
 import time
 import math
+import random
 sys.path.append('../framework')
 
 import client
@@ -152,7 +153,16 @@ def preprocess(route):
     maxSpeed_km_h = MAX_SPEED_KM_H
     if 'maxspeed' in props:
       try:
-        maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
+        speeds = []
+        for speed in props['maxspeed'].split(';'):
+          text = speed.split('mph')
+          maxspeed = int(text[0])
+          if len(text) == 2:
+            maxspeed *= 1.61
+          speeds.append(maxspeed)
+        minSpeed = min(speeds[0], speeds[-1])
+        maxSpeed = max(speeds[0], speeds[-1])
+        maxSpeed_km_h = random.uniform(minSpeed, maxSpeed)
       except Exception as err:
         maxSpeed_km_h = MAX_SPEED_KM_H
         print(err)
