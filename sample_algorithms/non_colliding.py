@@ -119,6 +119,10 @@ def updateCache(bounds):
   R.saveGeojson(south, west, north, east, CACHE_MAP_FILE)
 
 def analyseData(data):
+  for frameworkState in data:
+    for obj in frameworkState['objects']:
+      obj['position'] = [obj['position']['lng'], obj['position']['lat']]
+
   for car in state:
     car['sensorData'] = translateDataToSensor(car, data)
 
@@ -131,12 +135,12 @@ def translateDataToCameraData(car, data):
   cameraData = []
   for frameworkState in data:
     for obj in frameworkState['objects']:
-      obj['position'] = [obj['position']['lng'], obj['position']['lat']]
       distance = get_distance(car['position'], obj['position'])
       bearing = get_bearing(car['position'], obj['position'])
-      if 'position' in obj and distance <= cameraSensorRadius and abs(bearing - car['bearing']) <= cameraSensorFOVAngle / 2 :
-        print(cameraData)
+      if distance <= cameraSensorRadius and abs(bearing - car['bearing']) <= cameraSensorFOVAngle / 2 :
         cameraData.append(obj)
+  if len(cameraData) > 0:
+    print(cameraData)
   return cameraData
 
 def addToState(journeys, state):
