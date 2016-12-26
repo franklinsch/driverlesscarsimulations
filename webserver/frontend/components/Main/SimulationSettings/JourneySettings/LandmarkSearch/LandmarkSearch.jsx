@@ -90,22 +90,22 @@ export default class LandmarkSearch extends React.Component {
     }
 
     return (
-      <div className="container">
-				<div className="row">
-					<input
-						type        = 'text'
-						className   = "form-control"
+      <div>
+        <div className="input-field">
+          <input
+            type        = 'text'
+            className   = "form-control"
             id          = "landmark-search"
             placeholder = 'Search name or address'
-						value       = {this.state.inputValue}
-						onChange    = {::this._handleChange}
-						onKeyPress  = {::this._handleSubmit}
+            value       = {this.state.inputValue}
+            onChange    = {::this._handleChange}
+            onKeyPress  = {::this._handleSubmit}
           />
-					<LandmarkSearchResults 
+          <LandmarkSearchResults
             results  = {this.state.searchResults}
             handlers = {landmarkSearchResultsHandlers}
           />
-				</div>
+        </div>
       </div>
     )
   }
