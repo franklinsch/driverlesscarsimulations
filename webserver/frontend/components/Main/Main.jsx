@@ -596,7 +596,7 @@ export default class Main extends React.Component {
           simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />
-        <div className="row tertiary-color">
+        <div className="row">
           <div className="col s3" id="simulation-settings">
               <SimulationSettings
                 activeSimulationID  = {simulationID}
@@ -609,7 +609,7 @@ export default class Main extends React.Component {
                 handlers            = {simulationSettingsHandlers}
               />
           </div>
-          <div className="col s9 map" id="simulation-map">
+          <div className="col s9 " id="simulation-map">
             <SimulationMap
               width                      = {680 + 'px'}
               height                     = {600 + 'px'}
