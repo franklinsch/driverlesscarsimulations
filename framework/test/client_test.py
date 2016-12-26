@@ -29,9 +29,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
     packet = {'type': 'simulation-state',
               'content':
                 {'simulationID': self.connection.simulationID,
-                 'id': str(timestamp),
                  'timestamp': timestamp,
-                 'formattedTimestamp': str(timestamp),
                  'objects': state,
                  'frameworkID': 0}}
     self.connection.updateState(timestamp, state, sync=False)
