@@ -1,3 +1,5 @@
-*.geojson
+map.geojson
+cache.geojson
+cache.info
 *.json
 !package.json
