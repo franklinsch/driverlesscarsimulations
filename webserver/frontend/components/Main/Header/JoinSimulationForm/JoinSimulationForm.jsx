@@ -49,7 +49,7 @@ export default class JoinSimulationForm extends React.Component {
             </div>
             <div className="col s6">
               <button
-                className = "btn btn-outline-success"
+                className = "btn waves-effect waves-light"
                 type      = "submit"
                 onClick   = {::this._handleJoinSubmit}
               >
