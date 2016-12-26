@@ -96,7 +96,7 @@ export default class LoginButton extends React.Component {
               'Login'
           }
         </a>
-        <div id="modal-form" className="modal bottom-sheet">
+        <div id="modal-form" className="modal">
           <div className="modal-content">
             <form className="col s12">
               <div className="row">
@@ -119,7 +119,7 @@ export default class LoginButton extends React.Component {
                   />
                 </div>
               </div>
-              <button
+              <button className="modal-action modal-close"
                 type="submit"
                 value=
                   {
@@ -129,7 +129,7 @@ export default class LoginButton extends React.Component {
                     'login'
                   }
                 onClick={::this._handleFormSubmit}
-                className="btn btn-default">
+                className=" modal-close btn btn-default">
                 {
                   this.state.token ?
                     'Log Out'
@@ -140,7 +140,7 @@ export default class LoginButton extends React.Component {
                 type="submit"
                 value="register"
                 onClick={::this._handleFormSubmit}
-                className="btn btn-default">
+                className=" modal-close btn btn-default">
                 Register
               </button>
             </form>
