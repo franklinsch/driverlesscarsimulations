@@ -162,6 +162,19 @@ export default class SimulationSettings extends React.Component {
           }
         </button>
           </div>
+        <p>Current simulation ID: {simID}</p>
+        {
+          simID !== '0' ?
+            <button
+              className = "btn waves-effect waves-light"
+              hidden    = {!simID}
+              onClick   = {(e) => this.props.handlers.handleSimulationActivate(simID)}
+            >
+              Activate simulation
+            </button>
+            :
+            ''
+        }
         <button
           id        = "update-button"
           className = "btn waves-effect waves-light"
