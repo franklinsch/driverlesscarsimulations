@@ -471,7 +471,7 @@ export default class Main extends React.Component {
       handleCityChange     : ::this.handleCityChange,
       handleTokenChange    : ::this.handleTokenChange
     }
-    
+
     const simulationSettingsHandlers = {
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
@@ -504,7 +504,7 @@ export default class Main extends React.Component {
           simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />
-        <div className="row">
+        <div className="row white">
           <div className="col s3" id="simulation-settings">
             <SimulationSettings
               activeSimulationID  = {simulationID}
