@@ -1,9 +1,8 @@
-import React from 'react';
-import UtilFunctions from '../../Utils/UtilFunctions.jsx';
-import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
-import JourneySettings from './JourneySettings/JourneySettings.jsx';
-import JourneyList from './JourneyList/JourneyList.jsx';
-import SpeedSetting from './SpeedSetting/SpeedSetting.jsx';
+import React from "react";
+import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
+import JourneySettings from "./JourneySettings/JourneySettings.jsx";
+import JourneyList from "./JourneyList/JourneyList.jsx";
+import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
@@ -29,7 +28,7 @@ export default class SimulationSettings extends React.Component {
   }
 
   _handleFileUpload(e) {
-      this.setState({hotspotFile: e.target.files[0]});
+    this.setState({hotspotFile: e.target.files[0]});
   }
 
   _handleRealDataCheckboxChange(e) {
@@ -119,72 +118,75 @@ export default class SimulationSettings extends React.Component {
           handlers            = {journeySettingsHandlers}
           activeSimulationID  = {simID}
         />
-        <div id="simulation-buttons" className="row">
+        <div className="row">
           <input
             type     = "checkbox"
-            name     = "real-data"
+            id       = "real-data"
             disabled = {hasSimulationStarted}
             onChange = {::this._handleRealDataCheckboxChange}
           />
-          Use real world data
+          <label htmlFor="real-data"> Use real world data </label>
           {
             usingRealData &&
-            <p>Number of real world journeys to create on simulation start.</p>
+            <form>
+              <div className="input-field">
+                <input
+                  type="number"
+                  placeholder="Number of real world journeys"
+                  name="journey-number"
+                  disabled={hasSimulationStarted}
+                  onChange={::this._handleRealWorldJourneyNumChange}
+                />
+              </div>
+              <div className="file-field input-field">
+                <div className="btn waves-effect waves-light">
+                  <span>Upload Hotspots</span>
+                  <input type="file" onChange={::this._handleFileUpload}/>
+                </div>
+                <div className="file-path-wrapper">
+                  <input className="file-path validate" type="text"/>
+                </div>
+              </div>
+            </form>
           }
-          {
-            usingRealData &&
-            <input
-              type     = "number"
-              name     = "journey-number"
-              disabled = {hasSimulationStarted}
-              onChange = {::this._handleRealWorldJourneyNumChange}
-            />
+        </div>
+        <div className="row">
+        <button
+          className = "btn waves-effect waves-light"
+          disabled  = {!allowSimulationStart}
+          onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+        >
+          { !allowSimulationStart &&
+          <span>Simulation Ended</span> || hasSimulationStarted  &&
+          <span>End Simulation</span> || <span>Start simulation</span>
           }
-          {
-            usingRealData &&
-            <input
-              type="file"
-              name="hotspots"
-              accept=".json"
-              onChange= {(e) => this._handleFileUpload(e)}
-            />
-          }
-          <button
-            className = "btn btn-primary"
-            disabled  = {!allowSimulationStart}
-            onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
-          >
-            { !allowSimulationStart &&
-                <p>Simulation Ended</p> || hasSimulationStarted  &&
-                <p>End Simulation</p> || <p>Start simulation</p>
-            }
-          </button>
+        </button>
+          </div>
+        <button
+          id        = "update-button"
+          className = "btn waves-effect waves-light"
+          hidden    = {!hasSimulationStarted}
+          onClick   = {::this._handleSimulationUpdate}
+        >
+          Update simulation
+        </button>
 
-          <button
-            id        = "update-button"
-            className = "btn btn-primary"
-            hidden    = {!hasSimulationStarted}
-            onClick   = {::this._handleSimulationUpdate}
-          >
-            Update simulation
-          </button>
-
+        <div className="row">
           <SpeedSetting
             hidden   = {!hasSimulationStarted}
             handlers = {speedSettingHandlers}
           />
-
-          <button
-            className = "btn btn-primary"
-            hidden    = {!hasSimulationStarted && allowSimulationStart}
-            onClick   = {::this._handleBenchmarkRequest}
-          >
-            Request benchmark
-          </button>
-          <p hidden={benchmarkValue == undefined}>
-            {benchmarkValue} is the average speed to destination in km/s
-          </p>
         </div>
+        <button
+          className = "btn waves-effect waves-light"
+          hidden    = {!hasSimulationStarted && allowSimulationStart}
+          onClick   = {::this._handleBenchmarkRequest}
+        >
+          Request benchmark
+        </button>
+        <p hidden={benchmarkValue == undefined}>
+          {benchmarkValue} is the average speed to destination in km/s
+        </p>
       </div>
     )
   }
