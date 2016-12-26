@@ -140,7 +140,7 @@ function _handleRequestEventUpdate(message, callback) {
       destination: journey.destination
     }));
   }
-  
+
   Simulation.findByIdAndUpdate(simulationID, {
     $push: {
       journeys: { $each: newJourneys }
@@ -777,7 +777,7 @@ frameworkSocketServer.on('request', function(request) {
       }
       const simulationStateIndex = Math.floor(message.timestamp / simulation.timeslice);
       if (simulation.simulationStates.length == simulationStateIndex) {
-        simulation.simulationStates.push({timestamp: message.timestamp, formattedTimestamp: message.formattedTimestamp, id: message.id, frameworkstates: []});
+        simulation.simulationStates.push({timestamp: message.timestamp, frameworkstates: []});
       }
       simulation.simulationStates[simulationStateIndex].frameworkStates.push(newState);
 
@@ -861,7 +861,7 @@ frameworkSocketServer.on('request', function(request) {
 
   function _handleJourneyComplete(message) {
     const log = {
-      duration: message.timestamp - message.journeyStart, 
+      duration: message.timestamp - message.journeyStart,
       journeyID: message.journeyID
     };
     console.log(message);

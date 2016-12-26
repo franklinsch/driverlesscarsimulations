@@ -8,7 +8,6 @@ export default class ScrubTimer extends React.Component {
   static propTypes = {
     timestamp: React.PropTypes.number,
     latestTimestamp: React.PropTypes.number,
-    formattedTimestamp: React.PropTypes.string,
     handlers: React.PropTypes.object
   }
 
@@ -76,11 +75,16 @@ export default class ScrubTimer extends React.Component {
   render() {
     const scrubTime = this.state.scrubTime;
     const maxTimestamp = this.state.storedMax || this.props.latestTimestamp;
-    const formattedTimestamp = this.props.formattedTimestamp;
+
+    const d = this.props.timestamp;
+    const h = Math.floor(d / 3600);
+    const m = Math.floor(d % 3600 / 60);
+    const s = Math.floor(d % 3600 % 60);
+    const formattedTimestamp = ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
 
     return (
       <div id="scrub-timer">
-        <p> Simulation time: { formattedTimestamp } </p>
+        <p> Simulation time: { formattedTimestamp } ({ d }) </p>
         <form>
           <div className="form-group">
             <div className="row">
