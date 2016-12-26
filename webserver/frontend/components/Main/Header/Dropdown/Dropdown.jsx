@@ -9,7 +9,7 @@ export default class Dropdown extends React.Component {
   }
 
   _onSelect(e) {
-    let item = this.props.items[e.target.value];
+    let item = this.props.items[e.target.name];
     return this.props.handlers.handleSelect(item);
   }
 
@@ -43,7 +43,7 @@ export default class Dropdown extends React.Component {
     let items = [];
     for (let i = 0; i < this.props.items.length; i++) {
       //TODO: Not a generalised Dropdown. Either specific further, or generalise
-      items.push(<li><a href="#!"> {this.props.items[i].name}</a></li>);
+      items.push(<li key={i}><a href="#!" name={this.props.items[i].name} onClick={::this._onSelect}> {this.props.items[i].name}</a></li>);
     }
     //TODO: Replace with map below
     return (
