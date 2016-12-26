@@ -86,17 +86,22 @@ export default class JourneyImport extends React.Component {
 
   render() {
     return (
-      <div id="journeys-import">
-        <button className="btn btn-secondary" onClick={::this._toggleView}>Import/Export Journeys</button>
+      <div className="row" id="journeys-import">
+        <button className="btn waves-effect waves-light" onClick={::this._toggleView}>Import/Export Journeys</button>
         { this.state.showView && 
           <div>
             <form>
-              <div className="input-field">
-                <label htmlFor="inputFile">Journey import</label>
-                <input id="inputFile" className="form-control input-sm" type="file" accept="application/json" onChange={::this._handleFileChange}/>
+              <div className="file-field input-field">
+                <div className="btn">
+                  <span>Import</span>
+                  <input type="file"/>
+                </div>
+                <div className="file-path-wrapper">
+                  <input className="file-path validate" type="text"/>
+                </div>
               </div>
             </form>
-            <button className="btn btn-sm btn-info" onClick={::this._handleExportClick}>Export</button>
+            <button className="btn waves-effect waves-light" onClick={::this._handleExportClick}>Export</button>
           </div>
         }
       </div>

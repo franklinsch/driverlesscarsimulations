@@ -50,7 +50,7 @@ export default class Dropdown extends React.Component {
     //TODO: Replace with map below
     return (
       <div>
-        <a className='dropdown-button btn' href='#' data-activates='dropdown-cities'>Select city</a>
+        <a className='dropdown-button btn waves-effect waves-light' href='#' data-activates='dropdown-cities'>Select city</a>
         <ul id='dropdown-cities' className='dropdown-content'>
           {items}
         </ul>

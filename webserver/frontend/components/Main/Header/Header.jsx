@@ -44,7 +44,7 @@ export default class Header extends React.Component {
           <a className="brand-logo center" href="#">SAVN</a>
           <ul className="left hide-on-med-and-down">
             <li>
-              <a href="#">Home</a>
+              <a href="#" className="btn waves-effect waves-light">Home</a>
             </li>
             <li>
               <Dropdown
@@ -79,22 +79,3 @@ export default class Header extends React.Component {
     )
   }
 }
-// <nav>
-//   <div class="nav-wrapper">
-//     <a href="#!" class="brand-logo">Logo</a>
-//     <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-//     <ul class="right hide-on-med-and-down">
-//       <li><a href="sass.html">Sass</a></li>
-//       <li><a href="badges.html">Components</a></li>
-//       <li><a href="collapsible.html">Javascript</a></li>
-//       <li><a href="mobile.html">Mobile</a></li>
-//     </ul>
-//     <ul class="side-nav" id="mobile-demo">
-//       <li><a href="sass.html">Sass</a></li>
-//       <li><a href="badges.html">Components</a></li>
-//       <li><a href="collapsible.html">Javascript</a></li>
-//       <li><a href="mobile.html">Mobile</a></li>
-//     </ul>
-//   </div>
-// </nav>
-//
