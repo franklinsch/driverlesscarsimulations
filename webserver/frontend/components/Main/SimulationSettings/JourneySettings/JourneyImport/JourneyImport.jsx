@@ -92,7 +92,7 @@ export default class JourneyImport extends React.Component {
           <div>
             <form>
               <div className="file-field input-field">
-                <div className="btn">
+                <div className="btn waves-effect waves-light">
                   <span>Import</span>
                   <input type="file"/>
                 </div>

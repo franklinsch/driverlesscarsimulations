@@ -177,11 +177,11 @@ export default class ObjectSettings extends React.Component {
 
     return (
       <div id="object-settings">
-        <button className="btn btn-secondary" onClick={::this._toggleShow}>Show Objects</button>
+        <button className="btn waves-effect waves-light" onClick={::this._toggleShow}>Show Objects</button>
         {
           this.state.showSettings &&
           <div>
-            <ul>
+            <ul className="collection">
               {
                 objects.map((object, index) => {
                   const parameters = object.parameters || [];
@@ -193,11 +193,11 @@ export default class ObjectSettings extends React.Component {
                     return "";
                   }).join("\n");
 
-                  return <li title={title} key={index}> {object.name} </li>
+                  return <li className="collection-item" title={title} key={index}> {object.name} </li>
                 })
               }
             </ul>
-            <button type='button' className="btn" onClick={::this._toggleShowAdd}>Add Object Type</button>
+            <button type='button' className="btn waves-effect waves-light" onClick={::this._toggleShowAdd}>Add Object Type</button>
 
             <Modal
               show            = {this.state.showAddObject}
