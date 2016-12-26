@@ -3080,11 +3080,11 @@ nav {
 
 @media only screen and (min-width: 601px) {
   nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
-    height: 64px;
-    line-height: 64px; }
+    height: 7.5vh;
+    line-height: 7.5vh; }
 
   .navbar-fixed {
-    height: 64px; } }
+    height: 7.5vh; } }
 @font-face {
   font-family: "Roboto";
   src: local(Roboto Thin), url("../fonts/roboto/Roboto-Thin.eot");
@@ -6368,10 +6368,10 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 #simulation-settings {
   background-color: #00b8d4;
-  height: 100vh; }
+  height: 92.5vh; }
 
 #simulation-map {
   background-color: #f8f5f2;
-  height: 100vh; }
+  height: 92.5vh; }
 
 /*# sourceMappingURL=main.css.map */
