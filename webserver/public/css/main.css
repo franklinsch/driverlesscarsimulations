@@ -2286,16 +2286,16 @@ td, th {
       border-right: 1px solid #d0d0d0; } }
 .collection {
   margin: 0.5rem 0 1rem 0;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #26a69a;
   border-radius: 2px;
   overflow: hidden;
   position: relative; }
   .collection .collection-item {
-    background-color: #fff;
+    background-color: #00b8d4;
     line-height: 1.5rem;
     padding: 10px 20px;
     margin: 0;
-    border-bottom: 1px solid #e0e0e0; }
+    border-bottom: 1px solid #26a69a; }
     .collection .collection-item.avatar {
       min-height: 84px;
       padding-left: 72px;
@@ -2332,12 +2332,12 @@ td, th {
   .collection a.collection-item {
     display: block;
     transition: .25s;
-    color: #26a69a; }
+    color: #000; }
     .collection a.collection-item:not(.active):hover {
       background-color: #ddd; }
   .collection.with-header .collection-header {
-    background-color: #fff;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #00b8d4;
+    border-bottom: 1px solid #26a69a;
     padding: 10px 20px; }
   .collection.with-header .collection-item {
     padding-left: 30px; }
