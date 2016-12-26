@@ -245,8 +245,8 @@ export default class SimulationMap extends React.Component {
   render() {
     const simulationID = this.props.simulationID;
     const style = {
-      height: this.props.height || 300 + 'px',
-      width: this.props.width || 300 + 'px'
+      height: $('#simulation-map').height(),
+      width:  $('#simulation-map').width()
     }
 
     const cars = this.props.simulationState.objects;
