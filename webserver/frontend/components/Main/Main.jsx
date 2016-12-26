@@ -1,4 +1,5 @@
 import React from 'react';
+import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
 import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
 import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
@@ -563,6 +564,12 @@ export default class Main extends React.Component {
       handleRequestAPIAccess : ::this.handleRequestAPIAccess
     }
 
+    const scrubHandlers = {
+      handlePause         : ::this.handlePause,
+      handleResume        : ::this.handleResume,
+      handleScrub         : ::this.handleScrub
+    }
+
     const simulationSettingsHandlers = {
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
@@ -573,16 +580,12 @@ export default class Main extends React.Component {
       handleSpeedChange               : ::this.handleSpeedChange,
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
       handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
-      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut
-
+      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
+      handleSimulationActivate : ::this.handleSimulationActivate
     }
 
     const simulationMapHandlers = {
       handleAddJourney         : ::this.handlePendingJourneyAdd,
-      handlePause              : ::this.handlePause,
-      handleResume             : ::this.handleResume,
-      handleScrub              : ::this.handleScrub,
-      handleSimulationActivate : ::this.handleSimulationActivate
     }
 
     return (
@@ -597,22 +600,27 @@ export default class Main extends React.Component {
           handlers        = {headerHandlers}
         />
         <div className="row">
+          <ScrubTimer
+            timestamp          = {simulationState.timestamp}
+            latestTimestamp    = {simulationState.latestTimestamp}
+            handlers           = {scrubHandlers}
+          />
+        </div>
+        <div className="row">
           <div className="col s3" id="simulation-settings">
-              <SimulationSettings
-                activeSimulationID  = {simulationID}
-                selectedCity        = {selectedCity}
-                pendingJourneys     = {pendingJourneys}
-                simulationJourneys  = {simulationJourneys}
-                objectTypes         = {this.state.objectTypes}
-                objectKindInfo      = {this.state.objectKindInfo}
-                benchmarkValue      = {this.state.benchmarkValue}
-                handlers            = {simulationSettingsHandlers}
-              />
+            <SimulationSettings
+              activeSimulationID  = {simulationID}
+              selectedCity        = {selectedCity}
+              pendingJourneys     = {pendingJourneys}
+              simulationJourneys  = {simulationJourneys}
+              objectTypes         = {this.state.objectTypes}
+              objectKindInfo      = {this.state.objectKindInfo}
+              benchmarkValue      = {this.state.benchmarkValue}
+              handlers            = {simulationSettingsHandlers}
+            />
           </div>
           <div className="col s9 " id="simulation-map">
             <SimulationMap
-              width                      = {680 + 'px'}
-              height                     = {600 + 'px'}
               simulationID               = {simulationID}
               bounds                       = {bounds}
               simulationState            = {simulationState}
