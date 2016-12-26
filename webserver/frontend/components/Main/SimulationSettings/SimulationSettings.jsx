@@ -104,7 +104,7 @@ export default class SimulationSettings extends React.Component {
     };
 
     return (
-      <div className="container">
+      <div>
         <JourneyList
           pendingJourneys     = {pendingJourneys}
           simulationJourneys  = {simulationJourneys}

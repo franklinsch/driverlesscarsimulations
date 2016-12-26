@@ -597,24 +597,24 @@ export default class Main extends React.Component {
           handlers        = {headerHandlers}
         />
         <div className="row">
-          <div className="col s3 text-center" id="simulation-settings">
-            <SimulationSettings
-              activeSimulationID  = {simulationID}
-              selectedCity        = {selectedCity}
-              pendingJourneys     = {pendingJourneys}
-              simulationJourneys  = {simulationJourneys}
-              objectTypes         = {this.state.objectTypes}
-              objectKindInfo      = {this.state.objectKindInfo}
-              benchmarkValue      = {this.state.benchmarkValue}
-              handlers            = {simulationSettingsHandlers}
-            />
+          <div className="col s3 primary-color" id="simulation-settings">
+              <SimulationSettings
+                activeSimulationID  = {simulationID}
+                selectedCity        = {selectedCity}
+                pendingJourneys     = {pendingJourneys}
+                simulationJourneys  = {simulationJourneys}
+                objectTypes         = {this.state.objectTypes}
+                objectKindInfo      = {this.state.objectKindInfo}
+                benchmarkValue      = {this.state.benchmarkValue}
+                handlers            = {simulationSettingsHandlers}
+              />
           </div>
           <div className="col s9 map" id="simulation-map">
             <SimulationMap
               width                      = {680 + 'px'}
               height                     = {600 + 'px'}
               simulationID               = {simulationID}
-              bounds                     = {bounds}
+              bounds                       = {bounds}
               simulationState            = {simulationState}
               previewMarkerPosition      = {previewMarkerPosition}
               objectTypes                = {this.state.objectTypes}
