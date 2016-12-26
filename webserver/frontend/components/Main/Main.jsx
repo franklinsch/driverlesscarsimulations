@@ -596,8 +596,8 @@ export default class Main extends React.Component {
           simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />
-        <div className="row">
-          <div className="col s3 primary-color" id="simulation-settings">
+        <div className="row cyan accent-4">
+          <div className="col s3" id="simulation-settings">
               <SimulationSettings
                 activeSimulationID  = {simulationID}
                 selectedCity        = {selectedCity}
