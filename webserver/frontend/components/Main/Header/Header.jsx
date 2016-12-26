@@ -39,43 +39,45 @@ export default class Header extends React.Component {
     }
 
     return (
-      <nav>
-        <div className="nav-wrapper">
-          <a className="brand-logo center" href="#">SAVN</a>
-          <ul className="left hide-on-med-and-down">
-            <li>
-              <a href="#" className="btn waves-effect waves-light">Home</a>
-            </li>
-            <li>
-              <Dropdown
-                enabled  = {this.props.enabled}
-                items    = {cities}
-                handlers = {dropdownHandlers}
+      <div className="navbar-fixed">
+        <nav>
+          <div className="nav-wrapper">
+            <a className="brand-logo center" href="#">SAVN</a>
+            <ul className="left hide-on-med-and-down">
+              <li>
+                <a href="#" className="btn waves-effect waves-light">Home</a>
+              </li>
+              <li>
+                <Dropdown
+                  enabled  = {this.props.enabled}
+                  items    = {cities}
+                  handlers = {dropdownHandlers}
+                />
+              </li>
+              <li>
+                <LoginButton
+                  token      = {this.props.token}
+                  activeUser = {this.props.activeUser}
+                  handlers   = {loginButtonHandlers}
+                />
+              </li>
+              <li>
+                {
+                  this.props.token ?
+                    <SimulationList
+                      simulations = {userSimulations}
+                    /> : ''
+                }
+              </li>
+            </ul>
+            <ul className="right hide-on-med-and-down">
+              <JoinSimulationForm
+                handlers = {joinSimulationFormHandlers}
               />
-            </li>
-            <li>
-              <LoginButton
-                token      = {this.props.token}
-                activeUser = {this.props.activeUser}
-                handlers   = {loginButtonHandlers}
-              />
-            </li>
-            <li>
-              {
-                this.props.token ?
-                  <SimulationList
-                    simulations = {userSimulations}
-                  /> : ''
-              }
-            </li>
-          </ul>
-          <ul className="right hide-on-med-and-down">
-            <JoinSimulationForm
-              handlers = {joinSimulationFormHandlers}
-            />
-          </ul>
-        </div>
-      </nav>
+            </ul>
+          </div>
+        </nav>
+      </div>
     )
   }
 }

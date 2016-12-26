@@ -3,10 +3,12 @@ import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
 import JourneySettings from "./JourneySettings/JourneySettings.jsx";
 import JourneyList from "./JourneyList/JourneyList.jsx";
 import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
+import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
 
 export default class SimulationSettings extends React.Component {
   static propTypes = {
     activeSimulationID: React.PropTypes.string,
+    simulationState: CustomPropTypes.simulationState.isRequired,
     selectedCity: CustomPropTypes.city,
     simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
@@ -101,6 +103,12 @@ export default class SimulationSettings extends React.Component {
       handleSpeedChange : this.props.handlers.handleSpeedChange
     };
 
+    const scrubHandlers = {
+      handlePause         : ::this.props.handlers.handlePause,
+      handleResume        : ::this.props.handlers.handleResume,
+      handleScrub         : ::this.props.handlers.handleScrub
+    }
+
     return (
       <div>
         <JourneyList
@@ -175,6 +183,11 @@ export default class SimulationSettings extends React.Component {
             :
             ''
         }
+        <ScrubTimer
+          timestamp          = {this.props.simulationState.timestamp}
+          latestTimestamp    = {this.props.simulationState.latestTimestamp}
+          handlers           = {scrubHandlers}
+        />
         <button
           id        = "update-button"
           className = "btn waves-effect waves-light"

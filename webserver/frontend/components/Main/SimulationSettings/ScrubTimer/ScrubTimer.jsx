@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import CustomPropTypes from '../../Utils/CustomPropTypes.jsx'
 
 export default class ScrubTimer extends React.Component {
   _timeoutValue = 200;

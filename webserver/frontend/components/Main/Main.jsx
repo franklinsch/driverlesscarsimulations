@@ -1,5 +1,4 @@
 import React from 'react';
-import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
 import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
 import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
@@ -472,13 +471,7 @@ export default class Main extends React.Component {
       handleCityChange     : ::this.handleCityChange,
       handleTokenChange    : ::this.handleTokenChange
     }
-
-    const scrubHandlers = {
-      handlePause         : ::this.handlePause,
-      handleResume        : ::this.handleResume,
-      handleScrub         : ::this.handleScrub
-    }
-
+    
     const simulationSettingsHandlers = {
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
@@ -490,7 +483,10 @@ export default class Main extends React.Component {
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
       handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
       handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
-      handleSimulationActivate : ::this.handleSimulationActivate
+      handleSimulationActivate        : ::this.handleSimulationActivate,
+      handlePause                     : ::this.handlePause,
+      handleResume                     : ::this.handleResume,
+      handleScrub                     : ::this.handleScrub
     }
 
     const simulationMapHandlers = {
@@ -509,16 +505,10 @@ export default class Main extends React.Component {
           handlers        = {headerHandlers}
         />
         <div className="row">
-          <ScrubTimer
-            timestamp          = {simulationState.timestamp}
-            latestTimestamp    = {simulationState.latestTimestamp}
-            handlers           = {scrubHandlers}
-          />
-        </div>
-        <div className="row">
           <div className="col s3" id="simulation-settings">
             <SimulationSettings
               activeSimulationID  = {simulationID}
+              simulationState     = {simulationState}
               selectedCity        = {selectedCity}
               pendingJourneys     = {pendingJourneys}
               simulationJourneys  = {simulationJourneys}
