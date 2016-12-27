@@ -69,7 +69,7 @@ class SAVNConnectionAssistant:
     packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'timeslice': timeslice}}
     await self.send_packet(packet)
 
-  async def send_packet(packet):
+  async def send_packet(self, packet):
     packet['token'] = self.token
     await self.ws.send(json.dumps(packet))
 
@@ -128,7 +128,6 @@ class SAVNConnectionAssistant:
       self.handleSimulationStart(packet["content"])
     elif isClose():
       self.handleSimulationStop(packet["content"])
-      #At this point the actual algorithm must have made sure it will terminate
       self.alive = False
       #The connection is officialy dead we need to terminate the handling loop,
       #to achieve this we populate the message queue with a confirmation packet
@@ -157,9 +156,10 @@ class SAVNConnectionAssistant:
     r = requests.post(AUTHENTICATION_ROUTE, data=payload)
     if r.status_code == 200:
       data = r.json()
+      print(data)
       if not self.simulationID:
-        self.simulationID = data.activeSimulationID
-      self.token = data.token
+        self.simulationID = data['activeSimulationID']
+      self.token = data['token']
     else:
       r.raise_for_status()
 

@@ -23,8 +23,8 @@ CACHE_INFO_FILE = 'cache.info'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
   def getAPIKeys(self):
-    api_id = "a044925e-7ec9-4664-88b4-521b6b165f97"
-    api_key = "edc52fbd-97c7-466b-b0de-91c42dc5806c"
+    api_id = "cc368a2a-504c-4091-9a8a-56cea754e18e"
+    api_key = "b4060a26-a5cc-4f26-bb88-7f47d75523a9"
     return api_id, api_key
   def handleSimulationStart(self, initialParameters):
     try: #TODO: Users should not need to try-except their code to get error messages

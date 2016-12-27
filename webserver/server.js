@@ -10,6 +10,7 @@ const config = require('./backend/config');
 const passwordConfig = require('./backend/passport');
 const fs = require('fs');
 const uuidV4 = require('uuid/v4');
+const jwt = require('jsonwebtoken');
 
 const WebSocketServer = require('websocket').server;
 
@@ -583,13 +584,15 @@ frontendSocketServer.on('request', function(request) {
       const id  = uuidV4(); 
       const key = uuidV4(); 
       user.setAPIAccess(id, key);
-      connection.send(JSON.stringify({
-        type: "user-api-access",
-        content: {
-          api_id: id,
-          api_key: key
-        }
-      }));
+      user.save( (err) => {
+        connection.send(JSON.stringify({
+          type: "user-api-access",
+          content: {
+            api_id: id,
+            api_key: key
+          }
+        }));
+      });
     });
   }
 
