@@ -153,177 +153,175 @@ export default class Header extends React.Component {
 
     return (
       <div>
-        <ul className="side-nav fixed">
+        <ul className="side-nav">
           <li>
             <a className="brand-logo center" href="#">SAVN</a>
           </li>
-          <li>
-            <div className="row">
-              <div className="col s12">
-                <ul className="tabs">
-                  <li className="tab col s3">
-                    <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="account" href="#account">
+          <div className="row">
+            <div className="col s12">
+              <ul className="tabs">
+                <li className="tab col s3">
+                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="account" href="#account">
                       <span className="center-align">
                         <i className="material-icons">account_box</i>
                     </span>
-                    </a>
-                  </li>
-                  <li className="tab col s3">
-                    <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="simulation settings" href="#settings">
+                  </a>
+                </li>
+                <li className="tab col s3">
+                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="global settings" href="#settings">
                       <span className="center-align">
                         <i className="material-icons">settings</i>
                     </span>
-                    </a>
-                  </li>
-                  <li className="tab col s3">
-                    <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="create journeys"  href="#journeys">
+                  </a>
+                </li>
+                <li className="tab col s3">
+                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="create journeys"  href="#journeys">
                       <span className="center-align">
                         <i className="material-icons">directions_car</i>
                     </span>
-                    </a>
-                  </li>
-                  <li className="tab col s3">
-                    <a  className="tooltipped" data-position="top" data-delay="50" data-tooltip="run simulation" href="#run">
+                  </a>
+                </li>
+                <li className="tab col s3">
+                  <a  className="tooltipped" data-position="top" data-delay="50" data-tooltip="run simulation" href="#run">
                       <span className="center-align">
                         <i className="material-icons">play_arrow</i>
                     </span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div id="account" className="col s12">
-                <LoginForm
-                  token      = {this.props.token}
-                  activeUser = {this.props.activeUser}
-                  handlers   = {loginButtonHandlers}
-                />
-              </div>
-              <div id="settings" className="col s12">
-                <Dropdown
-                  enabled  = {this.props.enabled}
-                  items    = {cities}
-                  handlers = {dropdownHandlers}
-                />
-              </div>
-              <div id="journeys" className="col s12">
-                <JourneyList
-                  pendingJourneys     = {pendingJourneys}
-                  simulationJourneys  = {simulationJourneys}
-                  handlers            = {journeyListHandlers}
-                />
-                <JourneySettings
-                  bounds              = {bounds}
-                  simulationJourneys  = {simulationJourneys}
-                  pendingJourneys     = {pendingJourneys}
-                  objectTypes         = {this.props.objectTypes}
-                  objectKindInfo      = {this.props.objectKindInfo}
-                  handlers            = {journeySettingsHandlers}
-                  activeSimulationID  = {simID}
-                />
-                <div className="row">
-                  <input
-                    type     = "checkbox"
-                    id       = "real-data"
-                    disabled = {hasSimulationStarted}
-                    onChange = {::this._handleRealDataCheckboxChange}
-                  />
-                  <label htmlFor="real-data"> Use real world data </label>
-                  {
-                    usingRealData &&
-                    <form>
-                      <div className="input-field">
-                        <input
-                          type="number"
-                          placeholder="Number of real world journeys"
-                          disabled={hasSimulationStarted}
-                          onChange={::this._handleRealWorldJourneyNumChange}
-                        />
-                      </div>
-                      <div className="file-field input-field">
-                        <div className="btn waves-effect waves-light">
-                          <span>Upload Hotspots</span>
-                          <input type="file" onChange={::this._handleFileUpload}/>
-                        </div>
-                        <div className="file-path-wrapper">
-                          <input className="file-path validate" type="text"/>
-                        </div>
-                      </div>
-                    </form>
-                  }
-                </div>
-              </div>
-              <div id="run" className="col s12">
-                <div className="row">
-                  <button
-                    className = "btn waves-effect waves-light"
-                    disabled  = {!allowSimulationStart}
-                    onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
-                  >
-                    { !allowSimulationStart &&
-                    <span>Simulation Ended</span> || hasSimulationStarted  &&
-                    <span>End Simulation</span> || <span>Start simulation</span>
-                    }
-                  </button>
-                </div>
-                <p>Current simulation ID: {simID}</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div id="account" className="col s12">
+              <LoginForm
+                token      = {this.props.token}
+                activeUser = {this.props.activeUser}
+                handlers   = {loginButtonHandlers}
+              />
+              <li>
                 {
-                  simID !== '0' ?
-                    <button
-                      className = "btn waves-effect waves-light"
-                      hidden    = {!simID}
-                      onClick   = {(e) => this.props.handlers.handleSimulationActivate(simID)}
-                    >
-                      Activate simulation
-                    </button>
-                    :
-                    ''
+                  this.props.token ?
+                    <SimulationList
+                      simulations = {userSimulations}
+                    /> : ''
                 }
-                <ScrubTimer
-                  timestamp          = {this.props.simulationState.timestamp}
-                  latestTimestamp    = {this.props.simulationState.latestTimestamp}
-                  handlers           = {scrubHandlers}
+              </li>
+            </div>
+            <div id="settings" className="col s12">
+              <Dropdown
+                enabled  = {this.props.enabled}
+                items    = {cities}
+                handlers = {dropdownHandlers}
+              />
+              <li>
+                <JoinSimulationForm
+                  handlers = {joinSimulationFormHandlers}
                 />
-                <button
-                  id        = "update-button"
-                  className = "btn waves-effect waves-light"
-                  hidden    = {!hasSimulationStarted}
-                  onClick   = {::this._handleSimulationUpdate}
-                >
-                  Update simulation
-                </button>
-
-                <div className="row">
-                  <SpeedSetting
-                    hidden   = {!hasSimulationStarted}
-                    handlers = {speedSettingHandlers}
-                  />
-                </div>
-                <button
-                  className = "btn waves-effect waves-light"
-                  hidden    = {!hasSimulationStarted && allowSimulationStart}
-                  onClick   = {::this._handleBenchmarkRequest}
-                >
-                  Request benchmark
-                </button>
-                <p hidden={benchmarkValue == undefined}>
-                  {benchmarkValue} is the average speed to destination in km/s
-                </p>
+              </li>
+            </div>
+            <div id="journeys" className="col s12">
+              <JourneyList
+                pendingJourneys     = {pendingJourneys}
+                simulationJourneys  = {simulationJourneys}
+                handlers            = {journeyListHandlers}
+              />
+              <JourneySettings
+                bounds              = {bounds}
+                simulationJourneys  = {simulationJourneys}
+                pendingJourneys     = {pendingJourneys}
+                objectTypes         = {this.props.objectTypes}
+                objectKindInfo      = {this.props.objectKindInfo}
+                handlers            = {journeySettingsHandlers}
+                activeSimulationID  = {simID}
+              />
+              <div className="row">
+                <input
+                  type     = "checkbox"
+                  id       = "real-data"
+                  disabled = {hasSimulationStarted}
+                  onChange = {::this._handleRealDataCheckboxChange}
+                />
+                <label htmlFor="real-data"> Use real world data </label>
+                {
+                  usingRealData &&
+                  <form>
+                    <div className="input-field">
+                      <input
+                        type="number"
+                        placeholder="Number of real world journeys"
+                        disabled={hasSimulationStarted}
+                        onChange={::this._handleRealWorldJourneyNumChange}
+                      />
+                    </div>
+                    <div className="file-field input-field">
+                      <div className="btn waves-effect waves-light">
+                        <span>Upload Hotspots</span>
+                        <input type="file" onChange={::this._handleFileUpload}/>
+                      </div>
+                      <div className="file-path-wrapper">
+                        <input className="file-path validate" type="text"/>
+                      </div>
+                    </div>
+                  </form>
+                }
               </div>
             </div>
-          </li>
-          <li>
-            {
-              this.props.token ?
-                <SimulationList
-                  simulations = {userSimulations}
-                /> : ''
-            }
-          </li>
-          <li>
-            <JoinSimulationForm
-              handlers = {joinSimulationFormHandlers}
-            />
-          </li>
+            <div id="run" className="col s12">
+              <div className="row">
+                <button
+                  className = "btn waves-effect waves-light"
+                  disabled  = {!allowSimulationStart}
+                  onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                >
+                  { !allowSimulationStart &&
+                  <span>Simulation Ended</span> || hasSimulationStarted  &&
+                  <span>End Simulation</span> || <span>Start simulation</span>
+                  }
+                </button>
+              </div>
+              <p>Current simulation ID: {simID}</p>
+              {
+                simID !== '0' ?
+                  <button
+                    className = "btn waves-effect waves-light"
+                    hidden    = {!simID}
+                    onClick   = {(e) => this.props.handlers.handleSimulationActivate(simID)}
+                  >
+                    Activate simulation
+                  </button>
+                  :
+                  ''
+              }
+              <ScrubTimer
+                timestamp          = {this.props.simulationState.timestamp}
+                latestTimestamp    = {this.props.simulationState.latestTimestamp}
+                handlers           = {scrubHandlers}
+              />
+              <button
+                id        = "update-button"
+                className = "btn waves-effect waves-light"
+                hidden    = {!hasSimulationStarted}
+                onClick   = {::this._handleSimulationUpdate}
+              >
+                Update simulation
+              </button>
+
+              <div className="row">
+                <SpeedSetting
+                  hidden   = {!hasSimulationStarted}
+                  handlers = {speedSettingHandlers}
+                />
+              </div>
+              <button
+                className = "btn waves-effect waves-light"
+                hidden    = {!hasSimulationStarted && allowSimulationStart}
+                onClick   = {::this._handleBenchmarkRequest}
+              >
+                Request benchmark
+              </button>
+              <p hidden={benchmarkValue == undefined}>
+                {benchmarkValue} is the average speed to destination in km/s
+              </p>
+            </div>
+          </div>
         </ul>
       </div>
     )
