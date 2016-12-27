@@ -22,6 +22,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
     self.connection.alive = True
     self.connection.ws = Mock()
     self.loop = asyncio.get_event_loop()
+    self.connection.token = 'hello'
 
   def test_updateState(self):
     state = {"car": 1}
@@ -34,7 +35,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
                  'frameworkID': 0}}
     self.connection.updateState(timestamp, state, sync=False)
     message = self.loop.run_until_complete(self.connection.fetchMessage())
-    self.assertEqual(json.dumps(packet), message)
+    self.assertEqual(packet, message)
 
   def test_message_reception(self):
     self.loop.run_in_executor = Mock()
@@ -48,7 +49,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
 
   def test_messageQueue_drainage(self):
     self.loop.run_in_executor = Mock()
-    packet = {'content': 'fish'}
+    packet = {'content': 'fish', 'token': 'hello'}
     async def op():
       await asyncio.sleep(100)
     self.connection.ws.recv = op
