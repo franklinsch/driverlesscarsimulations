@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
+import { Map, Marker, TileLayer, Popup, GeoJson, Rectangle } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.jsx'
 import RotatableMarker from './RotatableMarker/RotatableMarker.jsx'
@@ -249,6 +249,12 @@ export default class SimulationMap extends React.Component {
 
     const heightInVh = heightInPx / $(window).height() * 100;
     const widthInVh = widthInPx / $(window).width() * 100;
+    let rectBounds = [];
+    if (this.props.bounds) {
+      rectBounds = [[this.props.bounds.southWest.lat, this.props.bounds.southWest.lng],
+                          [this.props.bounds.southWest.lat, this.props.bounds.southWest.lng]];
+    }
+    const simulationID = this.props.simulationID;
     const style = {
       height: heightInVh +'vh',
       width:  widthInVh + 'vw'
@@ -290,6 +296,24 @@ export default class SimulationMap extends React.Component {
 
     return (
       <div>
+        <p>Current simulation ID: {simulationID}</p>
+        {
+          simulationID !== '0' ?
+            <button
+              className = "btn btn-primary"
+              hidden    = {!simulationID}
+              onClick   = {(e) => this.props.handlers.handleSimulationActivate(this.props.simulationID)}
+            >
+              Activate simulation
+            </button>
+            :
+            ''
+        }
+        <ScrubTimer
+          timestamp          = {this.props.simulationState.timestamp}
+          latestTimestamp    = {this.props.simulationState.latestTimestamp}
+          handlers           = {scrubHandlers}
+        />
         <Map
           style             = {style}
           onClick           = {::this._handleMapClick}
@@ -368,6 +392,11 @@ export default class SimulationMap extends React.Component {
               {this._renderPopup()}
             </Marker>
           }
+          <Rectangle
+            key = {Math.random()}
+            bounds = {rectBounds}
+            colour = 'black'
+          />
         </Map>
       </div>
     );
