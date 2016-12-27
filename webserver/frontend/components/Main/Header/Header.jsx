@@ -26,6 +26,15 @@ export default class Header extends React.Component {
     this.props.handlers.handleRequestAPIAccess();
   }
 
+  componentDidMount() {
+    $('ul.tabs').tabs();
+
+  }
+
+  componentDidUpdate() {
+    $('ul.tabs').tabs();
+  }
+
   render() {
     const cities = this.props.availableCities || [];
 
@@ -44,43 +53,52 @@ export default class Header extends React.Component {
     }
 
     return (
-        <nav>
-          <div className="nav-wrapper">
-            <a className="brand-logo center" href="#">SAVN</a>
-            <ul className="left hide-on-med-and-down">
-              <li>
-                <a href="#" className="btn waves-effect waves-light">Home</a>
-              </li>
-              <li>
-                <Dropdown
-                  enabled  = {this.props.enabled}
-                  items    = {cities}
-                  handlers = {dropdownHandlers}
-                />
-              </li>
-              <li>
-                <LoginButton
-                  token      = {this.props.token}
-                  activeUser = {this.props.activeUser}
-                  handlers   = {loginButtonHandlers}
-                />
-              </li>
-              <li>
-                {
-                  this.props.token ?
-                    <SimulationList
-                      simulations = {userSimulations}
-                    /> : ''
-                }
-              </li>
-            </ul>
-            <ul className="right hide-on-med-and-down">
-              <JoinSimulationForm
-                handlers = {joinSimulationFormHandlers}
-              />
-            </ul>
-          </div>
-        </nav>
+      <div>
+        <ul className="side-nav fixed">
+          <a className="brand-logo center" href="#">SAVN</a>
+          <li>
+            <div className="row">
+                <ul className="tabs">
+                  <li className="tab col s3"><a href="#test1">Test 1</a></li>
+                  <li className="tab col s3"><a class="active" href="#test2">Test 2</a></li>
+                  <li className="tab col s3 disabled"><a href="#test3">Disabled Tab</a></li>
+                  <li className="tab col s3"><a href="#test4">Test 4</a></li>
+                </ul>
+              </div>
+              <div id="test1" className="col s12">Test 1</div>
+              <div id="test2" className="col s12">Test 2</div>
+              <div id="test3" className="col s12">Test 3</div>
+              <div id="test4" className="col s12">Test 4</div>
+          </li>
+          <li>
+            <Dropdown
+              enabled  = {this.props.enabled}
+              items    = {cities}
+              handlers = {dropdownHandlers}
+            />
+          </li>
+          <li>
+            <LoginButton
+              token      = {this.props.token}
+              activeUser = {this.props.activeUser}
+              handlers   = {loginButtonHandlers}
+            />
+          </li>
+          <li>
+            {
+              this.props.token ?
+                <SimulationList
+                  simulations = {userSimulations}
+                /> : ''
+            }
+          </li>
+          <li>
+            <JoinSimulationForm
+              handlers = {joinSimulationFormHandlers}
+            />
+          </li>
+        </ul>
+      </div>
     )
   }
 }

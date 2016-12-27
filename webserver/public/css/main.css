@@ -5116,7 +5116,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 .side-nav {
   position: fixed;
-  width: 300px;
+  width: 25vw;
   left: 0;
   top: 0;
   margin: 0;
@@ -6393,7 +6393,9 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   height: 92.5vh; }
 
 #simulation-map {
+  padding-top: 5vh;
   background-color: #f8f5f2;
-  height: 92.5vh; }
+  height: 94vh;
+  width: 75vw; }
 
 /*# sourceMappingURL=main.css.map */
