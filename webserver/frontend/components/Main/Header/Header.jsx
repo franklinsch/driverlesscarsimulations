@@ -44,7 +44,6 @@ export default class Header extends React.Component {
     }
 
     return (
-      <div className="navbar-fixed">
         <nav>
           <div className="nav-wrapper">
             <a className="brand-logo center" href="#">SAVN</a>
@@ -82,7 +81,6 @@ export default class Header extends React.Component {
             </ul>
           </div>
         </nav>
-      </div>
     )
   }
 }
