@@ -11,23 +11,21 @@ export default class SimulationList extends React.Component {
     const simulations = this.props.simulations || [];
     return (
       <div>
-        <a className="nav-link" href="#" id="SimulationListDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a className="btn waves-effect waves-light dropdown-button" href="#dropdown" data-activates="dropdown">
           My Simulations
         </a>
-        <div id="auth-dropdown" className="dropdown-menu" aria-labelledby="SimulationListDropdown">
-          <div className="list-group">
+        <ul id="dropdown" className="dropdown-content">
             {
               simulations.map((simulation, index) => {
                 const link = '/simulations/' + simulation;
                 return (
-                  <div key={ index }>
-                    <a href={ link } className="list-group-item list-group-item-action">{ simulation }</a>
-                  </div>
+                  <li key={ index }>
+                    <a href={ link }> { simulation }</a>
+                  </li>
                 );
               })
             }
-          </div>
-        </div>
+        </ul>
       </div>
     );
   }
