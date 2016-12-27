@@ -33,11 +33,11 @@
 // 1. Colors
 // ==========================================================================
 
-$primary-color: color("materialize-red", "lighten-2") !default;
+$primary-color: #2f2828 !default;
 $primary-color-light: lighten($primary-color, 15%) !default;
 $primary-color-dark: darken($primary-color, 15%) !default;
 
-$secondary-color: color("teal", "lighten-1") !default;
+$secondary-color: #f0eff0 !default;
 $success-color: color("green", "base") !default;
 $error-color: color("red", "base") !default;
 $link-color: color("light-blue", "darken-1") !default;
@@ -67,7 +67,7 @@ $button-disabled-color: #9F9F9F !default;
 // Raised buttons
 $button-raised-background: $secondary-color !default;
 $button-raised-background-hover: lighten($button-raised-background, 5%) !default;
-$button-raised-color: #fff !default;
+$button-raised-color: black !default;
 
 // Large buttons
 $button-large-icon-font-size: 1.6rem !default;
@@ -227,8 +227,8 @@ $navbar-brand-font-size: 2.1rem !default;
 
 $sidenav-width: 25vw !default;
 $sidenav-font-size: 14px !default;
-$sidenav-font-color: rgba(0,0,0,.87) !default;
-$sidenav-bg-color: #fff !default;
+$sidenav-font-color: white !default;
+$sidenav-bg-color: $primary-color !default;
 $sidenav-padding: 16px !default;
 $sidenav-item-height: 48px !default;
 
@@ -252,7 +252,7 @@ $spinner-default-color: $secondary-color !default;
 
 $tabs-underline-color: $secondary-color !default;
 $tabs-text-color: $secondary-color !default;
-$tabs-bg-color: #fff !default;
+$tabs-bg-color: $sidenav-bg-color !default;
 
 
 // 18. Tables
