@@ -36,9 +36,7 @@ export default class JoinSimulationForm extends React.Component {
 
     return (
       <div id="input-join-simulation">
-        <form className="col s12">
-          <div className="row">
-            <div className="input-field col s6">
+        <form>
               <input
                 className   = "validate"
                 type        = "text"
@@ -46,8 +44,6 @@ export default class JoinSimulationForm extends React.Component {
                 value       = {simulationID}
                 onChange    = {::this._handleSimulationIDChange}
               />
-            </div>
-            <div className="col s6">
               <button
                 className = "btn waves-effect waves-light"
                 type      = "submit"
@@ -55,8 +51,6 @@ export default class JoinSimulationForm extends React.Component {
               >
                 Join Simulation
               </button>
-            </div>
-          </div>
         </form>
       </div>
     )

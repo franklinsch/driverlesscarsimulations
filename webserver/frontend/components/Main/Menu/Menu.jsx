@@ -206,11 +206,13 @@ export default class Menu extends React.Component {
               </li>
             </div>
             <div id="settings" className="col s12">
+              <li>
               <Dropdown
                 enabled  = {this.props.enabled}
                 items    = {cities}
                 handlers = {dropdownHandlers}
               />
+              </li>
               <li>
                 <JoinSimulationForm
                   handlers = {joinSimulationFormHandlers}
