@@ -30,13 +30,13 @@ const userSchema = mongoose.Schema({
 });
 
 userSchema.methods.setAPIAccess = function(id, key) {
-  this.api_id = id
+  this.api_id = id;
   this.api_key_salt = crypto.randomBytes(SALT_BYTES_LENGTH).toString('hex');
-  this.api_key_hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
+  this.api_key_hash = crypto.pbkdf2Sync(key, this.api_key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
 }
 
 userSchema.methods.validateAPIAccess = function(key) {
-  const hash = crypto.pbkdf2Sync(key, this.api_access.key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
+  const hash = crypto.pbkdf2Sync(key, this.api_key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
   return this.api_key_hash = hash;
 
 }
@@ -53,7 +53,7 @@ userSchema.methods.generateAPIToken = function(simulation, ip) {
     sid: simID,
     cip: ip,
     exp: Math.floor(Date.now() / 1000) + 100 * dayInSec
-  }, config.TOKEN_SECRET);
+  }, config.token_secret);
 }
 
 userSchema.methods.setPassword = function(password) {
@@ -75,7 +75,7 @@ userSchema.methods.generateJwt = function() {
     email: this.email,
     name: this.name,
     exp: parseInt(expiry.getTime() / 1000),
-  }, config.TOKEN_SECRET);
+  }, config.token_secret);
 };
 
 module.exports = mongoose.model('User', userSchema);

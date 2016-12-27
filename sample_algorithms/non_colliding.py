@@ -22,6 +22,10 @@ CACHE_MAP_FILE = 'cache.geojson'
 CACHE_INFO_FILE = 'cache.info'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
+  def getAPIKeys(self):
+    api_id = "a044925e-7ec9-4664-88b4-521b6b165f97"
+    api_key = "edc52fbd-97c7-466b-b0de-91c42dc5806c"
+    return api_id, api_key
   def handleSimulationStart(self, initialParameters):
     try: #TODO: Users should not need to try-except their code to get error messages
       runSimulation(self, initialParameters)

@@ -180,8 +180,15 @@ export default class Main extends React.Component {
       const benchmarkValue = messageData.content.value;
       this.setState({
         benchmarkValue: benchmarkValue
-      })
+      });
+    } else if (messageData.type === "user-api-access") {
+      const id = messageData.content.api_id;
+      const key = messageData.content.api_key;
+      alert("Your API id is " + id + " and your API key is " + key);
+    } else if (messageData.type === "user-error") {
+      alert(messageData.content.error);
     }
+
   }
 
   handleJoinSimulation(simulationID) {
@@ -430,6 +437,18 @@ export default class Main extends React.Component {
     })
   }
 
+  handleRequestAPIAccess() {
+    const socket = this.state.socket;
+    const user = this.state.userID;
+
+    const type = "request-user-api-access";
+    const content = {
+      userID: user 
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
   clearPendingJourneys() {
     this.setState({
       pendingJourneys: []
@@ -467,9 +486,10 @@ export default class Main extends React.Component {
     const simulationRunning = simulationID != undefined && simulationID != 0;
 
     const headerHandlers = {
-      handleJoinSimulation : ::this.handleJoinSimulation,
-      handleCityChange     : ::this.handleCityChange,
-      handleTokenChange    : ::this.handleTokenChange
+      handleJoinSimulation   : ::this.handleJoinSimulation,
+      handleCityChange       : ::this.handleCityChange,
+      handleTokenChange      : ::this.handleTokenChange,
+      handleRequestAPIAccess : ::this.handleRequestAPIAccess
     }
 
     const simulationSettingsHandlers = {

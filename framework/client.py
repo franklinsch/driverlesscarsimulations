@@ -46,7 +46,7 @@ class SAVNConnectionAssistant:
       loop)
 
   #returns a tuple of api_id, and api_key  
-  def getAPIKeys():
+  def getAPIKeys(self):
     pass
 
   def handleSimulationStart(self, initialParameters):
@@ -147,8 +147,8 @@ class SAVNConnectionAssistant:
     while (self.shouldAwait):
       time.sleep(sleepTime)
 
-  def authenticate():
-    api_id, api_key = getAPIKeys()
+  def authenticate(self):
+    api_id, api_key = self.getAPIKeys()
     payload = {
       'api_id': api_id, 
       'api_key': api_key, 
@@ -165,14 +165,14 @@ class SAVNConnectionAssistant:
 
   def initSession(self, timeslice):
     async def coro():
-      authenticate()
-      if not self.simulationID:
-      async with websockets.connect(HOST) as websocket:
-        self.ws = websocket
-        await self.startConnection(timeslice)
-        self.alive = True
-        self.active = True
-        await self.handlerLoop()
+      self.authenticate()
+      if self.simulationID:
+        async with websockets.connect(HOST) as websocket:
+          self.ws = websocket
+          await self.startConnection(timeslice)
+          self.alive = True
+          self.active = True
+          await self.handlerLoop()
 
     loop.run_until_complete(coro())
 

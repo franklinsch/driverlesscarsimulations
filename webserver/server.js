@@ -9,6 +9,7 @@ const session = require('express-session');
 const config = require('./backend/config');
 const passwordConfig = require('./backend/passport');
 const fs = require('fs');
+const uuidV4 = require('uuid/v4');
 
 const WebSocketServer = require('websocket').server;
 
@@ -566,6 +567,32 @@ frontendSocketServer.on('request', function(request) {
     });
   }
 
+  function _handleRequestAPIAccess(message) {
+    console.log("Request API access");
+    const userID = message.userID;
+    User.findById(userID, function (error, user) {
+      if (error || !user) {
+        err = error ? error : "User not found"
+        connection.send(JSON.stringify({
+          type: "user-error",
+          content: {
+            error: err
+          }
+        }));
+      } 
+      const id  = uuidV4(); 
+      const key = uuidV4(); 
+      user.setAPIAccess(id, key);
+      connection.send(JSON.stringify({
+        type: "user-api-access",
+        content: {
+          api_id: id,
+          api_key: key
+        }
+      }));
+    });
+  }
+
   function _handleRequestSimulationBenchmark(message) {
     console.log("Request benchmark");
     Simulation.findById(message.simulationID, function (error, simulation) {
@@ -642,6 +669,9 @@ frontendSocketServer.on('request', function(request) {
           break;
         case "request-simulation-benchmark":
           _handleRequestSimulationBenchmark(messageContent);
+          break;
+        case "request-user-api-access":
+          _handleRequestAPIAccess(messageContent);
           break;
       }
     }
@@ -882,7 +912,7 @@ frameworkSocketServer.on('request', function(request) {
       const messageContent = messageData.content;
 			const token = messageData.token
 
-		  jwt.verify(token, config.TOKEN_SECRET, function(err, decoded) {
+		  jwt.verify(token, config.token_secret, function(err, decoded) {
         if (err) { return err; }
 				if (messageContent.simulationID === decoded.sid) {
 					console.log("Received valid JSON packet from:" + decoded.cip);
