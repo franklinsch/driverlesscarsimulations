@@ -725,7 +725,7 @@ frameworkSocketServer.on('request', function(request) {
         const newSimulationStates = [];
         const expectedTimestamp = simulation.latestTimestamp + simulation.timeslice;
         let newTimestamp = 0;
-        for (const i = 0; i < simulation.simulationStates.length && newTimestamp < expectedTimestamp; i++) {
+        for (let i = 0; i < simulation.simulationStates.length && newTimestamp < expectedTimestamp; i++) {
           while (newTimestamp < (i + 1) * simulation.timeslice) {
             newSimulationStates.push(simulation.simulationStates[i]);
             newTimestamp += message.timeslice;
@@ -837,11 +837,11 @@ frameworkSocketServer.on('request', function(request) {
       for (const j in simulation.frameworks) { //TODO: Figure better access method //TODO: Revert to 'of'
         const framework = simulation.frameworks[j];
         if (framework._id == frameworkID) {
-          if (simulationStateIndex != framework.nextIndex) {
-            console.log('\tError');
-            console.log('\tError');
-            console.log('\tError');
-            console.log('\tError');
+          if (simulationStateIndex != framework.nextIndex) { //TODO: Not a good error measure
+            console.log('\tMaybe Error');
+            console.log('\tMaybe Error');
+            console.log('\tMaybe Error');
+            console.log('\tMaybe Error');
           }
 
           const nextIndex = Math.ceil((message.timestamp + framework.timeslice) / simulation.timeslice);
