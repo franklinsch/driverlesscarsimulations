@@ -572,16 +572,14 @@ export default class Main extends React.Component {
       handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
       handleSpeedChange               : ::this.handleSpeedChange,
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
+      handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
+      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
       handleSimulationActivate        : ::this.handleSimulationActivate,
       handlePause                     : ::this.handlePause,
       handleResume                     : ::this.handleResume,
       handleScrub                     : ::this.handleScrub
     }
     
-    const simulationSettingsHandlers = {
-
-    }
-
     const simulationMapHandlers = {
       handleAddJourney         : ::this.handlePendingJourneyAdd,
     }
@@ -595,30 +593,26 @@ export default class Main extends React.Component {
           userID          = {userID}
           activeUser      = {activeUser}
           simulations     = {userSimulations}
-          pendingJourneys     = {pendingJourneys}
-          simulationJourneys  = {simulationJourneys}
+          handlers        = {headerHandlers}
           activeSimulationID  = {simulationID}
           simulationState     = {simulationState}
           selectedCity        = {selectedCity}
+          pendingJourneys     = {pendingJourneys}
+          simulationJourneys  = {simulationJourneys}
           objectTypes         = {this.state.objectTypes}
           objectKindInfo      = {this.state.objectKindInfo}
           benchmarkValue      = {this.state.benchmarkValue}
-          handlers        = {headerHandlers}
         />
-        <div className="row">
-          <div className="col s3" id="simulation-settings">
-          </div>
-          <div className="col s9 " id="simulation-map">
-            <SimulationMap
-              simulationID               = {simulationID}
-              bounds                       = {bounds}
-              simulationState            = {simulationState}
-              previewMarkerPosition      = {previewMarkerPosition}
-              objectTypes                = {this.state.objectTypes}
-              selectedJourneyID          = {this.state.selectedJourneyID}
-              handlers                   = {simulationMapHandlers}
-            />
-          </div>
+        <div id="simulation-map">
+          <SimulationMap
+            simulationID               = {simulationID}
+            bounds                       = {bounds}
+            simulationState            = {simulationState}
+            previewMarkerPosition      = {previewMarkerPosition}
+            objectTypes                = {this.state.objectTypes}
+            selectedJourneyID          = {this.state.selectedJourneyID}
+            handlers                   = {simulationMapHandlers}
+          />
         </div>
       </div>
     )

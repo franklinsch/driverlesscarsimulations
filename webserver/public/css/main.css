@@ -6388,10 +6388,6 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 .secondary-color {
   background-color: #26a69a; }
 
-#simulation-settings {
-  background-color: #00b8d4;
-  height: 92.5vh; }
-
 #simulation-map {
   padding-top: 5vh;
   background-color: #f8f5f2;

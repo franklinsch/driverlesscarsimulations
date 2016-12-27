@@ -5,7 +5,6 @@ import JoinSimulationForm from "./JoinSimulationForm/JoinSimulationForm.jsx";
 import LoginForm from "./LoginForm/LoginForm.jsx";
 import SimulationList from "./SimulationList/SimulationList.jsx";
 import JourneyList from "./JourneyList/JourneyList.jsx";
-import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
 import JourneySettings from "./JourneySettings/JourneySettings.jsx";
 import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
 import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
