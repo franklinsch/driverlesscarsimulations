@@ -153,7 +153,7 @@ export default class Header extends React.Component {
 
     return (
       <div>
-        <ul className="side-nav">
+        <ul className="side-nav fixed">
           <li>
             <a className="brand-logo center" href="#">SAVN</a>
           </li>
