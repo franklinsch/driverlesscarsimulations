@@ -1,5 +1,4 @@
 import React from 'react';
-import Modal from 'react-bootstrap-modal';
 import CustomPropTypes from '../../../../Utils/CustomPropTypes.jsx';
 
 export default class ObjectSettings extends React.Component {
@@ -41,10 +40,10 @@ export default class ObjectSettings extends React.Component {
 
     this.props.handlers.handleSave(typeInfo);
 
-    this._handleModalHide();
+    this._handleformHide();
   }
 
-  _handleModalHide() {
+  _handleformHide() {
     let firstKind = null;
     if (this.props && this.props.objectKindInfo) {
       firstKind = this.props.objectKindInfo[0].name;
@@ -79,18 +78,18 @@ export default class ObjectSettings extends React.Component {
           }
         })
       }}>
-      {
-        settings.map((setting, index) => {
-          const name = setting.name;
-          return <option value={name} key={index}>{name}</option>
-        })
-      }
-    </select>
+        {
+          settings.map((setting, index) => {
+            const name = setting.name;
+            return <option value={name} key={index}>{name}</option>
+          })
+        }
+      </select>
     )
   }
 
   _paramsForKindName(kindName) {
-    for (const setting of this.props.objectKindInfo) { 
+    for (const setting of this.props.objectKindInfo) {
       if (setting.name === kindName) {
         return setting.parameters;
       }
@@ -186,12 +185,12 @@ export default class ObjectSettings extends React.Component {
                 objects.map((object, index) => {
                   const parameters = object.parameters || [];
                   const title = object.kindName + ":\n" + Object.keys(parameters).map((key) => {
-                    if (parameters.hasOwnProperty(key)) {
-                      return key + ": " + parameters[key];
-                    }
+                      if (parameters.hasOwnProperty(key)) {
+                        return key + ": " + parameters[key];
+                      }
 
-                    return "";
-                  }).join("\n");
+                      return "";
+                    }).join("\n");
 
                   return <li className="collection-item" title={title} key={index}> {object.name} </li>
                 })
@@ -199,30 +198,24 @@ export default class ObjectSettings extends React.Component {
             </ul>
             <button type='button' className="btn waves-effect waves-light" onClick={::this._toggleShowAdd}>Add Object Type</button>
 
-            <Modal
-              show            = {this.state.showAddObject}
-              onHide          = {::this._handleModalHide}
-              aria-labelledby = "ModalHeader"
-            >
-              <Modal.Header closeButton>
-                <Modal.Title id='ModalHeader'>Add Object Type</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {this._renderTypeNameInput()}
+            <div>
+              { this.state.showAddObject &&
+              <form>
+              {this._renderTypeNameInput()}
                 <div className="input-field">
-                  <label htmlFor="kind">Kind</label>
-                  {this._renderKindDropdown()}
+                <label htmlFor="kind">Kind</label>
+                {this._renderKindDropdown()}
                 </div>
-
-                {this._renderSettings()}
-              </Modal.Body>
-              <Modal.Footer>
-                <Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
-                <button className='btn btn-primary' onClick={::this._handleFormSave}>
-                  Save
+              {this._renderSettings()}
+                <button className='btn btn-default' onClick={::this._handleformHide}>
+                  Cancel
                 </button>
-              </Modal.Footer>
-            </Modal>
+                <button className='btn btn-primary' onClick={::this._handleFormSave}>
+                Save
+                </button>
+              </form>
+              }
+            </div>
           </div>
         }
       </div>

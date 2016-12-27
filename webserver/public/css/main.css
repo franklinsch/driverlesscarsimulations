@@ -3479,7 +3479,7 @@ small {
     margin: 0;
     text-transform: uppercase; }
     .tabs .tab a {
-      color: rgba(238, 110, 115, 0.7);
+      color: rgba(38, 166, 154, 0.7);
       display: block;
       width: 100%;
       height: 100%;
@@ -3490,9 +3490,9 @@ small {
       transition: color .28s ease; }
       .tabs .tab a:hover, .tabs .tab a.active {
         background-color: transparent;
-        color: #ee6e73; }
+        color: #26a69a; }
     .tabs .tab.disabled a, .tabs .tab.disabled a:hover {
-      color: rgba(238, 110, 115, 0.7);
+      color: rgba(38, 166, 154, 0.7);
       cursor: default; }
   .tabs .indicator {
     position: absolute;
