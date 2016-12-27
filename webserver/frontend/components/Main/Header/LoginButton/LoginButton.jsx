@@ -94,63 +94,59 @@ export default class LoginButton extends React.Component {
   render() {
     return (
       <div>
-        <a className="waves-effect waves-light btn" href="#modal-form">
+        <h4>
           {
-            this.state.token ?
+            this.state.token &&
             'Hello ' + this.props.activeUser + '!'
-              :
-              'Login'
           }
-        </a>
-        <div id="modal-form" className="modal">
-          <div className="modal-content">
-            <form className="col s12">
-              <div className="row">
-                <div className="input-field col s6">
-                  <input
-                    type        = "username"
-                    value       = {this.state.username}
-                    onChange    = {::this._handleUserChange}
-                    className   = "validate"
-                    placeholder = "Username"
-                  />
-                </div>
-                <div className="input-field col s6">
-                  <input
-                    type        = "password"
-                    value       = {this.state.password}
-                    onChange    = {::this._handlePasswordChange}
-                    className   = "validate"
-                    placeholder = "Password"
-                  />
-                </div>
+        </h4>
+        <div className="login-form">
+          <form className="col s12">
+            <div className="row">
+              <div className="input-field">
+                <input
+                  type        = "text"
+                  value       = {this.state.username}
+                  onChange    = {::this._handleUserChange}
+                  className   = "validate"
+                  placeholder = "Username"
+                />
               </div>
-              <button className=" btn waves-effect waves-light modal-action modal-close"
-                type="submit"
-                value=
-                  {
-                    this.state.token ?
-                    'logout'
-                    :
-                    'login'
-                  }
-                onClick={::this._handleFormSubmit}
-                className="btn waves-effect waves-light modal-action modal-close">
-                {
-                  this.state.token ?
-                    'Log Out'
-                    :
-                    'Log In'}
-              </button>
-              <button
-                type="submit"
-                value="register"
-                onClick={::this._handleFormSubmit}
-                className="btn waves-effect waves-light modal-action modal-close">
-                Register
-              </button>
-            </form>
-          </div>
+              <div className="input-field">
+                <input
+                  type        = "password"
+                  value       = {this.state.password}
+                  onChange    = {::this._handlePasswordChange}
+                  className   = "validate"
+                  placeholder = "Password"
+                />
+              </div>
+            </div>
+            <button className=" btn waves-effect waves-light modal-action modal-close"
+                    type="submit"
+                    value=
+                      {
+                        this.state.token ?
+                        'logout'
+                        :
+                        'login'
+                      }
+                    onClick={::this._handleFormSubmit}
+                    className="btn waves-effect waves-light modal-action modal-close">
+              {
+                this.state.token ?
+                  'Log Out'
+                  :
+                  'Log In'}
+            </button>
+            <button
+              type="submit"
+              value="register"
+              onClick={::this._handleFormSubmit}
+              className="btn waves-effect waves-light modal-action modal-close">
+              Register
+            </button>
+          </form>
         </div>
       </div>
     )

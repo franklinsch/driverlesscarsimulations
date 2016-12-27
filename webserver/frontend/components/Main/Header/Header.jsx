@@ -27,11 +27,15 @@ export default class Header extends React.Component {
 
   componentDidMount() {
     $('ul.tabs').tabs();
+    $('.tooltipped').tooltip({delay: 50});
+
 
   }
 
   componentDidUpdate() {
     $('ul.tabs').tabs();
+    $('.tooltipped').tooltip({delay: 50});
+
   }
 
   render() {
@@ -62,28 +66,28 @@ export default class Header extends React.Component {
               <div className="col s12">
                 <ul className="tabs">
                   <li className="tab col s3">
-                    <a href="#account">
+                    <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="account" href="#account">
                       <span className="center-align">
                         <i className="material-icons">account_box</i>
                     </span>
                     </a>
                   </li>
                   <li className="tab col s3">
-                    <a href="#settings">
+                    <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="simulation settings" href="#settings">
                       <span className="center-align">
                         <i className="material-icons">settings</i>
                     </span>
                     </a>
                   </li>
                   <li className="tab col s3">
-                    <a href="#search">
+                    <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="create journeys"  href="#journeys">
                       <span className="center-align">
-                        <i className="material-icons">search</i>
+                        <i className="material-icons">directions_car</i>
                     </span>
                     </a>
                   </li>
                   <li className="tab col s3">
-                    <a href="#run">
+                    <a  className="tooltipped" data-position="top" data-delay="50" data-tooltip="run simulation" href="#run">
                       <span className="center-align">
                         <i className="material-icons">play_arrow</i>
                     </span>
@@ -105,7 +109,7 @@ export default class Header extends React.Component {
                   handlers = {dropdownHandlers}
                 />
               </div>
-              <div id="search" className="col s12">Test 3</div>
+              <div id="journeys" className="col s12">Test 3</div>
               <div id="run" className="col s12">Test 3</div>
             </div>
           </li>
