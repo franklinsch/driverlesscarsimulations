@@ -252,17 +252,20 @@ export default class SimulationMap extends React.Component {
 
     const heightInVh = heightInPx / $(window).height() * 100;
     const widthInVh = widthInPx / $(window).width() * 100;
-    let rectBounds = [];
-    if (this.props.bounds) {
-      rectBounds = [[this.props.bounds.southWest.lat, this.props.bounds.southWest.lng],
-                          [this.props.bounds.northEast.lat, this.props.bounds.northEast.lng]];
-    }
-    const simulationID = this.props.simulationID;
+
     const style = {
       height: heightInVh +'vh',
       width:  widthInVh + 'vw'
     }
 
+    let rectBounds = [];
+    if (this.props.bounds) {
+      rectBounds = [[this.props.bounds.southWest.lat, this.props.bounds.southWest.lng],
+        [this.props.bounds.southWest.lat, this.props.bounds.southWest.lng]];
+    }
+
+    const simulationID = this.props.simulationID;
+    
     const cars = this.props.simulationState.objects;
 
     if (!this.props.bounds) {
@@ -402,6 +405,7 @@ export default class SimulationMap extends React.Component {
             clickable = {false}
             width = {'3'}
             color = '#000'
+            colour = 'black'
           />
         </Map>
       </div>
