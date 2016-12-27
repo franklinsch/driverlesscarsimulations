@@ -103,11 +103,10 @@ export default class LoginButton extends React.Component {
         {
           this.state.token?
             <button
-              className=" btn waves-effect waves-light modal-action modal-close"
               type="submit"
               value= 'logout'
               onClick={::this._handleFormSubmit}
-              className="btn waves-effect waves-light modal-action modal-close">
+              className="btn waves-effect waves-light">
               Log Out
             </button>
             :
@@ -133,18 +132,17 @@ export default class LoginButton extends React.Component {
               </div>
             </div>
             <button
-              className=" btn waves-effect waves-light modal-action modal-close"
               type="submit"
               value= 'login'
               onClick={::this._handleFormSubmit}
-              className="btn waves-effect waves-light modal-action modal-close">
+              className="btn waves-effect waves-light left ">
               Log In
             </button>
             <button
               type="submit"
               value="register"
               onClick={::this._handleFormSubmit}
-              className="btn waves-effect waves-light modal-action modal-close">
+                className="btn waves-effect waves-light right">
               Register
             </button>
           </form>
