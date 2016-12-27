@@ -12,20 +12,18 @@ export default class LandmarkSearchResults extends React.Component {
     const results = this.props.results;
 
     return (
-      <ul>
+      <ul className="collection">
         {
           results.map((result, index) => {
             return (
-              <li key={index}> 
-                <a 
+                <a key={index} className="collection-item"
                   href    = "#"
                   onClick = {() => this.props.handlers.handleResultSelect(result)}
                 >
                   { result.displayName }
                 </a>
-              </li>
             )
-          })
+          }).slice(0,5)
         }
       </ul> 
     )

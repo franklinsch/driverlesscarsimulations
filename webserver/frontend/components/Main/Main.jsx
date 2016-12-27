@@ -78,18 +78,18 @@ export default class Main extends React.Component {
         method: 'GET',
         headers: reqHeaders
       })
-      .then((response) => {
-        response.json().then((data) => {
-          this.setState({
-            userID: data.userID,
-            activeUser: data.username,
-            userSimulations: data.simulations
+        .then((response) => {
+          response.json().then((data) => {
+            this.setState({
+              userID: data.userID,
+              activeUser: data.username,
+              userSimulations: data.simulations
+            });
           });
-        });
-      })
-      .catch(err => {
-        console.log("error fetching user simulations");
-      })
+        })
+        .catch(err => {
+          console.log("error fetching user simulations");
+        })
     }
   }
 
@@ -135,13 +135,13 @@ export default class Main extends React.Component {
       objects = objects.reduce((acc, fObjects) => {return acc.concat(fObjects)})
 
       //const objects = frameworkStates.map((fState) => {
-        //const objects = fState.objects;
-        //objects.map((object) => {
-          //object.frameworkID = fState.frameworkID;
-          //return object;
-        //})
+      //const objects = fState.objects;
+      //objects.map((object) => {
+      //object.frameworkID = fState.frameworkID;
+      //return object;
+      //})
 
-        //return objects;
+      //return objects;
       //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
       simulationState.objects = objects;
 
@@ -216,7 +216,7 @@ export default class Main extends React.Component {
     this.setState({
       selectedCityID: newCityId
     })
-    
+
     if (this.state.simulationInfo.id == "0") {
       this.setState({
         pendingJourneys: []
@@ -388,15 +388,15 @@ export default class Main extends React.Component {
         simulationID: simulationID
       })
     })
-    .then((response) => {
-      if (!response.ok) {
-        console.log("error authenticating user");
-        return;
-      }
-    })
-    .catch(err => {
-      console.log("error updating active simulations");
-    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log("error authenticating user");
+          return;
+        }
+      })
+      .catch(err => {
+        console.log("error updating active simulations");
+      })
   }
 
   handleBenchmarkRequest() {
@@ -471,7 +471,7 @@ export default class Main extends React.Component {
       handleCityChange     : ::this.handleCityChange,
       handleTokenChange    : ::this.handleTokenChange
     }
-
+    
     const simulationSettingsHandlers = {
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
@@ -482,16 +482,15 @@ export default class Main extends React.Component {
       handleSpeedChange               : ::this.handleSpeedChange,
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
       handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
-      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut
-
+      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
+      handleSimulationActivate        : ::this.handleSimulationActivate,
+      handlePause                     : ::this.handlePause,
+      handleResume                     : ::this.handleResume,
+      handleScrub                     : ::this.handleScrub
     }
 
     const simulationMapHandlers = {
       handleAddJourney         : ::this.handlePendingJourneyAdd,
-      handlePause              : ::this.handlePause,
-      handleResume             : ::this.handleResume,
-      handleScrub              : ::this.handleScrub,
-      handleSimulationActivate : ::this.handleSimulationActivate
     }
 
     return (
@@ -505,33 +504,30 @@ export default class Main extends React.Component {
           simulations     = {userSimulations}
           handlers        = {headerHandlers}
         />
-        <div className="jumbotron">
-          <div className="container">
-            <div className="col-md-4 text-center" id="simulation-settings">
-              <SimulationSettings
-                activeSimulationID  = {simulationID}
-                selectedCity        = {selectedCity}
-                pendingJourneys     = {pendingJourneys}
-                simulationJourneys  = {simulationJourneys}
-                objectTypes         = {this.state.objectTypes}
-                objectKindInfo      = {this.state.objectKindInfo}
-                benchmarkValue      = {this.state.benchmarkValue}
-                handlers            = {simulationSettingsHandlers}
-              />
-            </div>
-            <div className="col-md-6 map" id="simulation-map">
-              <SimulationMap
-                width                      = {680 + 'px'}
-                height                     = {600 + 'px'}
-                simulationID               = {simulationID}
-                bounds                     = {bounds}
-                simulationState            = {simulationState}
-                previewMarkerPosition      = {previewMarkerPosition}
-                objectTypes                = {this.state.objectTypes}
-                selectedJourneyID          = {this.state.selectedJourneyID}
-                handlers                   = {simulationMapHandlers}
-              />
-            </div>
+        <div className="row">
+          <div className="col s3" id="simulation-settings">
+            <SimulationSettings
+              activeSimulationID  = {simulationID}
+              simulationState     = {simulationState}
+              selectedCity        = {selectedCity}
+              pendingJourneys     = {pendingJourneys}
+              simulationJourneys  = {simulationJourneys}
+              objectTypes         = {this.state.objectTypes}
+              objectKindInfo      = {this.state.objectKindInfo}
+              benchmarkValue      = {this.state.benchmarkValue}
+              handlers            = {simulationSettingsHandlers}
+            />
+          </div>
+          <div className="col s9 " id="simulation-map">
+            <SimulationMap
+              simulationID               = {simulationID}
+              bounds                       = {bounds}
+              simulationState            = {simulationState}
+              previewMarkerPosition      = {previewMarkerPosition}
+              objectTypes                = {this.state.objectTypes}
+              selectedJourneyID          = {this.state.selectedJourneyID}
+              handlers                   = {simulationMapHandlers}
+            />
           </div>
         </div>
       </div>

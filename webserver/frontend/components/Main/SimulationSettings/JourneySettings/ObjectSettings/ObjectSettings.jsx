@@ -110,7 +110,7 @@ export default class ObjectSettings extends React.Component {
     const typeName = this.state.typeName || '';
 
     return (
-      <div className="form-group">
+      <div className="input-field">
         <label htmlFor="typeName">Type name</label>
         <input id="typeName" className="form-control" onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
       </div>
@@ -137,7 +137,7 @@ export default class ObjectSettings extends React.Component {
               }
 
               return (
-                <div className="form-group" key={index}>
+                <div className="input-field" key={index}>
                   <label htmlFor={name}> {name} </label>
                   <select onChange={onChange}>
                     {
@@ -160,7 +160,7 @@ export default class ObjectSettings extends React.Component {
               }
 
               return (
-                <div className="form-group" key={index}>
+                <div className="input-field" key={index}>
                   <label htmlFor={name}> {name} </label>
                   <input id={name} value={value} onChange={onChange} className="form-control"/>
                 </div>
@@ -177,11 +177,11 @@ export default class ObjectSettings extends React.Component {
 
     return (
       <div id="object-settings">
-        <button className="btn btn-secondary" onClick={::this._toggleShow}>Show Objects</button>
+        <button className="btn waves-effect waves-light" onClick={::this._toggleShow}>Show Objects</button>
         {
           this.state.showSettings &&
           <div>
-            <ul>
+            <ul className="collection">
               {
                 objects.map((object, index) => {
                   const parameters = object.parameters || [];
@@ -193,11 +193,11 @@ export default class ObjectSettings extends React.Component {
                     return "";
                   }).join("\n");
 
-                  return <li title={title} key={index}> {object.name} </li>
+                  return <li className="collection-item" title={title} key={index}> {object.name} </li>
                 })
               }
             </ul>
-            <button type='button' className="btn" onClick={::this._toggleShowAdd}>Add Object Type</button>
+            <button type='button' className="btn waves-effect waves-light" onClick={::this._toggleShowAdd}>Add Object Type</button>
 
             <Modal
               show            = {this.state.showAddObject}
@@ -209,7 +209,7 @@ export default class ObjectSettings extends React.Component {
               </Modal.Header>
               <Modal.Body>
                 {this._renderTypeNameInput()}
-                <div className="form-group">
+                <div className="input-field">
                   <label htmlFor="kind">Kind</label>
                   {this._renderKindDropdown()}
                 </div>

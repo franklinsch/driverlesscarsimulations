@@ -36,21 +36,27 @@ export default class JoinSimulationForm extends React.Component {
 
     return (
       <div id="input-join-simulation">
-        <form className="form-inline float-xs-right">
-          <input 
-            className   = "form-control"
-            type        = "text"
-            placeholder = "Simulation ID"
-            value       = {simulationID}
-            onChange    = {::this._handleSimulationIDChange}
-          />
-          <button 
-            className = "btn btn-outline-success"
-            type      = "submit"
-            onClick   = {::this._handleJoinSubmit}
-          >
-            Join Simulation
-          </button>
+        <form className="col s12">
+          <div className="row">
+            <div className="input-field col s6">
+              <input
+                className   = "validate"
+                type        = "text"
+                placeholder = "Simulation ID"
+                value       = {simulationID}
+                onChange    = {::this._handleSimulationIDChange}
+              />
+            </div>
+            <div className="col s6">
+              <button
+                className = "btn waves-effect waves-light"
+                type      = "submit"
+                onClick   = {::this._handleJoinSubmit}
+              >
+                Join Simulation
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     )

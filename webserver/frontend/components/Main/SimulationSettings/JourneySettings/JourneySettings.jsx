@@ -1,8 +1,8 @@
-import React from 'react';
-import CustomPropTypes from '../../../Utils/CustomPropTypes.jsx';
-import LandmarkSearch from './LandmarkSearch/LandmarkSearch.jsx';
-import JourneyImport from './JourneyImport/JourneyImport.jsx';
-import ObjectSettings from './ObjectSettings/ObjectSettings.jsx';
+import React from "react";
+import CustomPropTypes from "../../../Utils/CustomPropTypes.jsx";
+import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
+import JourneyImport from "./JourneyImport/JourneyImport.jsx";
+import ObjectSettings from "./ObjectSettings/ObjectSettings.jsx";
 
 export default class JourneySettings extends React.Component {
 
@@ -123,67 +123,80 @@ export default class JourneySettings extends React.Component {
 
     return (
       <div id="journey-settings">
-	      <div id="input-journeys">
-				</div>
+        <div id="input-journeys">
+        </div>
         <LandmarkSearch
           boundLimit = {bounds}
           handlers   = {landmarkSearchHandlers}
         />
-        <JourneyImport 
+        <JourneyImport
           journeys = {journeys}
           handlers = {journeyImportHandlers}
         />
-        
-        <div id="simulation-download">
-          <button className="btn btn-secondary" onClick={::this._downloadSimulation}>Download Simulation Data</button>
+
+        <div className="row" id="simulation-download">
+          <button className="btn waves-effect waves-light" onClick={::this._downloadSimulation}>Download Simulation Data</button>
         </div>
 
-        <form>
-          <div className="form-group">
-            <button 
-              className = "btn btn-secondary"
-              onClick   = {::this._toggleJourneyManualAddForm}
+        <div className="row">
+          <button
+            className = "btn waves-effect waves-light"
+            onClick   = {::this._toggleJourneyManualAddForm}
+          >
+            Manually add journey
+          </button>
+
+          { showJourneyManualAddForm &&
+          <form>
+            <div className="input-field">
+              <input
+                className = "validate"
+                value     = {originLat}
+                onChange  = {::this._handleOriginLatChange}
+                placeholder = "Origin Latitude"
+              />
+            </div>
+            <div className="input-field">
+              <input
+                className = "validate"
+                value     = {originLng}
+                onChange  = {::this._handleOriginLngChange}
+                placeholder = "Origin Longitude"
+              />
+            </div>
+            <div className="input-field">
+              <input
+                className = "validate"
+                value     = {destinationLat}
+                onChange  = {::this._handleDestinationLatChange}
+                placeholder= "Destination Latitude"
+              />
+            </div>
+            <div className="input-field">
+              <input
+                className = "validate"
+                value     = {destinationLng}
+                onChange  = {::this._handleDestinationLngChange}
+                placeholder = "Destination Longitude"
+              />
+            </div>
+            <button
+              className = "btn waves-effect waves-light"
+              type      = "submit"
+              onClick   = {this._handleJourneySubmit}
             >
-              Manually add journey
+              Add journey
             </button>
-            { showJourneyManualAddForm &&
-              <div className="row">
-                <input 
-                  className = "form-group"
-                  value     = {originLat}
-                  onChange  = {::this._handleOriginLatChange}
-                />
-                <input 
-                  className = "form-group"
-                  value     = {originLng}
-                  onChange  = {::this._handleOriginLngChange}
-                />
-                <input 
-                  className = "form-group"
-                  value     = {destinationLat}
-                  onChange  = {::this._handleDestinationLatChange}
-                />
-                <input 
-                  className = "form-group"
-                  value     = {destinationLng}
-                  onChange  = {::this._handleDestinationLngChange}
-                />
-                <button 
-                  className = "btn btn-primary"
-                  type      = "submit"
-                  onClick   = {this._handleJourneySubmit}
-                >
-                  Add journey
-                </button>
-              </div>
-            }
-          </div>
-        </form>
-        <ObjectSettings 
-          objects={this.props.objectTypes}
-          objectKindInfo={this.props.objectKindInfo}
-          handlers={objectSettingsHandlers}
-        />
+          </form>
+          }
+        </div>
+        <div className="row">
+          <ObjectSettings
+            objects={this.props.objectTypes}
+            objectKindInfo={this.props.objectKindInfo}
+            handlers={objectSettingsHandlers}
+          />
+        </div>
       </div>
     )
   }
