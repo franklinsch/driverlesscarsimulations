@@ -2,7 +2,7 @@ import React from "react";
 import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
 import Dropdown from "./Dropdown/Dropdown.jsx";
 import JoinSimulationForm from "./JoinSimulationForm/JoinSimulationForm.jsx";
-import LoginButton from "./LoginButton/LoginButton.jsx";
+import LoginForm from "./LoginForm/LoginForm.jsx";
 import SimulationList from "./SimulationList/SimulationList.jsx";
 
 export default class Header extends React.Component {
@@ -96,7 +96,7 @@ export default class Header extends React.Component {
                 </ul>
               </div>
               <div id="account" className="col s12">
-                <LoginButton
+                <LoginForm
                   token      = {this.props.token}
                   activeUser = {this.props.activeUser}
                   handlers   = {loginButtonHandlers}

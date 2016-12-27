@@ -100,44 +100,45 @@ export default class LoginButton extends React.Component {
             'Hello ' + this.props.activeUser + '!'
           }
         </h4>
-        <div className="login-form">
+        {
+          this.state.token?
+            <button
+              className=" btn waves-effect waves-light modal-action modal-close"
+              type="submit"
+              value= 'logout'
+              onClick={::this._handleFormSubmit}
+              className="btn waves-effect waves-light modal-action modal-close">
+              Log Out
+            </button>
+            :
           <form className="col s12">
             <div className="row">
               <div className="input-field">
                 <input
-                  type        = "text"
-                  value       = {this.state.username}
-                  onChange    = {::this._handleUserChange}
-                  className   = "validate"
-                  placeholder = "Username"
+                  type="text"
+                  value={this.state.username}
+                  onChange={::this._handleUserChange}
+                  className="validate"
+                  placeholder="Username"
                 />
               </div>
               <div className="input-field">
                 <input
-                  type        = "password"
-                  value       = {this.state.password}
-                  onChange    = {::this._handlePasswordChange}
-                  className   = "validate"
-                  placeholder = "Password"
+                  type="password"
+                  value={this.state.password}
+                  onChange={::this._handlePasswordChange}
+                  className="validate"
+                  placeholder="Password"
                 />
               </div>
             </div>
-            <button className=" btn waves-effect waves-light modal-action modal-close"
-                    type="submit"
-                    value=
-                      {
-                        this.state.token ?
-                        'logout'
-                        :
-                        'login'
-                      }
-                    onClick={::this._handleFormSubmit}
-                    className="btn waves-effect waves-light modal-action modal-close">
-              {
-                this.state.token ?
-                  'Log Out'
-                  :
-                  'Log In'}
+            <button
+              className=" btn waves-effect waves-light modal-action modal-close"
+              type="submit"
+              value= 'login'
+              onClick={::this._handleFormSubmit}
+              className="btn waves-effect waves-light modal-action modal-close">
+              Log In
             </button>
             <button
               type="submit"
@@ -147,8 +148,9 @@ export default class LoginButton extends React.Component {
               Register
             </button>
           </form>
-        </div>
+        }
       </div>
+
     )
   }
 }
