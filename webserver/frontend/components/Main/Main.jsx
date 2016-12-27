@@ -557,13 +557,13 @@ export default class Main extends React.Component {
     const simulationRunning = simulationID != undefined && simulationID != 0;
 
     const headerHandlers = {
-      handleJoinSimulation   : ::this.handleJoinSimulation,
-      handleCityChange       : ::this.handleCityChange,
-      handleTokenChange      : ::this.handleTokenChange,
-      handleRequestAPIAccess : ::this.handleRequestAPIAccess
-    }
-    
-    const simulationSettingsHandlers = {
+
+
+      handleJoinSimulation            : ::this.handleJoinSimulation,
+      handleCityChange                : ::this.handleCityChange,
+      handleTokenChange               : ::this.handleTokenChange,
+      handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
+      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
       handleSimulationUpdate          : ::this.handleSimulationUpdate,
@@ -572,12 +572,14 @@ export default class Main extends React.Component {
       handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
       handleSpeedChange               : ::this.handleSpeedChange,
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
-      handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
-      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
       handleSimulationActivate        : ::this.handleSimulationActivate,
       handlePause                     : ::this.handlePause,
       handleResume                     : ::this.handleResume,
       handleScrub                     : ::this.handleScrub
+    }
+    
+    const simulationSettingsHandlers = {
+
     }
 
     const simulationMapHandlers = {
@@ -593,21 +595,18 @@ export default class Main extends React.Component {
           userID          = {userID}
           activeUser      = {activeUser}
           simulations     = {userSimulations}
+          pendingJourneys     = {pendingJourneys}
+          simulationJourneys  = {simulationJourneys}
+          activeSimulationID  = {simulationID}
+          simulationState     = {simulationState}
+          selectedCity        = {selectedCity}
+          objectTypes         = {this.state.objectTypes}
+          objectKindInfo      = {this.state.objectKindInfo}
+          benchmarkValue      = {this.state.benchmarkValue}
           handlers        = {headerHandlers}
         />
         <div className="row">
           <div className="col s3" id="simulation-settings">
-            <SimulationSettings
-              activeSimulationID  = {simulationID}
-              simulationState     = {simulationState}
-              selectedCity        = {selectedCity}
-              pendingJourneys     = {pendingJourneys}
-              simulationJourneys  = {simulationJourneys}
-              objectTypes         = {this.state.objectTypes}
-              objectKindInfo      = {this.state.objectKindInfo}
-              benchmarkValue      = {this.state.benchmarkValue}
-              handlers            = {simulationSettingsHandlers}
-            />
           </div>
           <div className="col s9 " id="simulation-map">
             <SimulationMap
