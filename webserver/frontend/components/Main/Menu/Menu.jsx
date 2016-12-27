@@ -9,7 +9,7 @@ import JourneySettings from "./JourneySettings/JourneySettings.jsx";
 import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
 import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
 
-export default class Header extends React.Component {
+export default class Menu extends React.Component {
 
   static propTypes = {
     enabled: React.PropTypes.bool,

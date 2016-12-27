@@ -1,9 +1,7 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
-import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
-import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
-import Header from './Header/Header.jsx';
+import Menu from './Menu/Menu.jsx';
 import cookie from 'react-cookie';
 import 'whatwg-fetch';
 
@@ -556,14 +554,11 @@ export default class Main extends React.Component {
 
     const simulationRunning = simulationID != undefined && simulationID != 0;
 
-    const headerHandlers = {
 
-
-      handleJoinSimulation            : ::this.handleJoinSimulation,
-      handleCityChange                : ::this.handleCityChange,
-      handleTokenChange               : ::this.handleTokenChange,
-      handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
-      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
+    const menuHandlers = {
+      handleJoinSimulation : ::this.handleJoinSimulation,
+      handleCityChange     : ::this.handleCityChange,
+      handleTokenChange    : ::this.handleTokenChange,
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
       handleSimulationUpdate          : ::this.handleSimulationUpdate,
@@ -586,14 +581,14 @@ export default class Main extends React.Component {
 
     return (
       <div>
-        <Header
-          enabled         = {!simulationRunning}
-          availableCities = {availableCities}
-          token           = {token}
-          userID          = {userID}
-          activeUser      = {activeUser}
-          simulations     = {userSimulations}
-          handlers        = {headerHandlers}
+        <Menu
+          enabled             = {!simulationRunning}
+          availableCities     = {availableCities}
+          token               = {token}
+          userID              = {userID}
+          activeUser          = {activeUser}
+          simulations         = {userSimulations}
+          handlers            = {menuHandlers}
           activeSimulationID  = {simulationID}
           simulationState     = {simulationState}
           selectedCity        = {selectedCity}
@@ -606,7 +601,7 @@ export default class Main extends React.Component {
         <div id="simulation-map">
           <SimulationMap
             simulationID               = {simulationID}
-            bounds                       = {bounds}
+            bounds                     = {bounds}
             simulationState            = {simulationState}
             previewMarkerPosition      = {previewMarkerPosition}
             objectTypes                = {this.state.objectTypes}
