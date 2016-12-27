@@ -301,7 +301,7 @@ $interval-size: $range / $intervals !default;
 // ==========================================================================
 
 $collection-border-color: $secondary-color !default;
-$collection-bg-color: color("cyan", "accent-4") !default;
+$collection-bg-color: $secondary-color !default;
 $collection-active-bg-color: $secondary-color !default;
 $collection-active-color: lighten($secondary-color, 55%) !default;
 $collection-hover-bg-color: #ddd !default;
