@@ -252,7 +252,7 @@ export default class SimulationMap extends React.Component {
     let rectBounds = [];
     if (this.props.bounds) {
       rectBounds = [[this.props.bounds.southWest.lat, this.props.bounds.southWest.lng],
-                          [this.props.bounds.southWest.lat, this.props.bounds.southWest.lng]];
+                          [this.props.bounds.northEast.lat, this.props.bounds.northEast.lng]];
     }
     const simulationID = this.props.simulationID;
     const style = {
@@ -395,7 +395,10 @@ export default class SimulationMap extends React.Component {
           <Rectangle
             key = {Math.random()}
             bounds = {rectBounds}
-            colour = 'black'
+            fill = {false}
+            clickable = {false}
+            width = {'3'}
+            color = '#000'
           />
         </Map>
       </div>
