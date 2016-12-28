@@ -195,6 +195,7 @@ export default class SimulationMap extends React.Component {
   componentDidUpdate() {
     if (this.refs.map) {
       const map = this.refs.map.leafletElement;
+      map.zoomControl.setPosition('topright')
       const bounds = this.props.bounds;
       const mapBounds = [bounds.southWest, bounds.northEast];
 
