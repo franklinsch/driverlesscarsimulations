@@ -52,14 +52,17 @@ export default class SimulationMap extends React.Component {
   _handleMapClick(e) {
     const lat = e.latlng.lat;
     const lng = e.latlng.lng;
+    const bounds = this.props.bounds;
 
     const position = {
       lat: lat,
       lng: lng
     }
 
-    this._updateMarker(position);
-
+    if (lat < bounds.northEast.lat && lng < bounds.northEast.lng &&
+        lat > bounds.southWest.lat && lng > bounds.southWest.lng) {
+      this._updateMarker(position);
+    }
     // If one clicks on the map, the currently clicked car isn't active anymore
     this.setState({
       clickedCar: null
