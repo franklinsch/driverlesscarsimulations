@@ -261,7 +261,12 @@ export default class SimulationMap extends React.Component {
     let rectBounds = [];
     if (this.props.bounds) {
       rectBounds = [[this.props.bounds.southWest.lat, this.props.bounds.southWest.lng],
-        [this.props.bounds.southWest.lat, this.props.bounds.southWest.lng]];
+                    [this.props.bounds.northEast.lat, this.props.bounds.northEast.lng]];
+    }
+    const simulationID = this.props.simulationID;
+    const style = {
+      height: this.props.height || 300 + 'px',
+      width: this.props.width || 300 + 'px'
     }
 
     const simulationID = this.props.simulationID;
