@@ -37,7 +37,7 @@ userSchema.methods.setAPIAccess = function(id, key) {
 
 userSchema.methods.validateAPIAccess = function(key) {
   const hash = crypto.pbkdf2Sync(key, this.api_key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
-  return this.api_key_hash = hash;
+  return this.api_key_hash === hash;
 
 }
 

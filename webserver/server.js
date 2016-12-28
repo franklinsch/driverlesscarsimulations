@@ -47,52 +47,21 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-function getBenchmarks(journeys, states) {
-  console.log('request for benchmark');
-  let carsOnTheRoad = {};
+function averageSpeedToDestination(journeys, completionLogs) {
   let totalTime = 0;
   let totalDistance = 0;
-  let carsArrived = 0;
-  let staten = 0;
-  for (let state of states) {
-    for (let fstate of state.frameworkStates) {
-      for (let obj of fstate.objects) {
-        if (obj.id in carsOnTheRoad && carsOnTheRoad[obj.id].init) {
-          const journey = journeys.find((j) => {return j._id == obj.journeyID});
-          const dest = journey.destination;
-          const orig = journey.origin;
-          const pos = obj.position;
-          console.log(pos.lat - dest.lat);
-          console.log(pos.lng - dest.lng);
-          console.log("");
-          if (pos.lat == dest.lat && pos.lng == dest.lng) {
-            console.log('pls');
-            totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-            totalDistance += getDistanceLatLonInKm(orig.lat, orig.lng, dest.lat, dest.lng);
-            carsArrived += 1;
-            carsOnTheRoad[obj.id].init = false; 
-          } 
-        } else {
-          carsOnTheRoad[obj.id] = { 
-            departure: state.timestamp, 
-            origin: obj.position,
-            init: true
-          };
-        }
-      }
-    }
+
+  for (const log of completionLogs) {
+    console.log(log);
+    totalTime += log.duration;
+
+    const journey = journeys[log['journeyID']];
+    totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
   }
   if (totalTime == 0) {
     totalTime++;
   }
-  console.log('hey');
-  ret = {
-    'averageSpeedToDestination': totalDistance / totalTime,
-    'totalTime': totalTime,
-    'totalDistance': totalDistance,
-    'averageTime': totalTime / carsArrived,
-  };
-  return ret;
+  return totalDistance / totalTime * 60 * 60;
 }
 
 //
@@ -115,7 +84,7 @@ app.use(session({
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     res.status(401);
-		res.json({
+    res.json({
       "message": err.name + ": " + err.message
     });
   }
@@ -227,46 +196,46 @@ frontendSocketServer.on('request', function(request) {
       content: [{
         name: "Vehicle",
         parameters: [
-          {
-            name: "Average Speed",
-            kind: "text"
-          },
-          {
-            name: "Top Speed",
-            kind: "text"
-          },
-          {
-            name: "Weight",
-            kind: "text"
-          },
-          {
-            name: "Length",
-            kind: "text"
-          }
+        {
+          name: "Average Speed",
+          kind: "text"
+        },
+        {
+          name: "Top Speed",
+          kind: "text"
+        },
+        {
+          name: "Weight",
+          kind: "text"
+        },
+        {
+          name: "Length",
+          kind: "text"
+        }
         ]
       },
       {
         name: "Creature",
         parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["unicorn", "dog"]
-          }
+        {
+          name: "Type",
+          kind: "predefined",
+          allowedValues: ["unicorn", "dog"]
+        }
         ]
       },
       {
         name: "Road Hazard",
         parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
-          },
-          {
-            name: "Slowdown factor",
-            kind: "text"
-          }
+        {
+          name: "Type",
+          kind: "predefined",
+          allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+        },
+        {
+          name: "Slowdown factor",
+          kind: "text"
+        }
         ]
       }]
     }));
@@ -574,12 +543,12 @@ frontendSocketServer.on('request', function(request) {
     User.findById(userID, function (error, user) {
       if (error || !user) {
         err = error ? error : "User not found"
-        connection.send(JSON.stringify({
-          type: "user-error",
-          content: {
-            error: err
-          }
-        }));
+          connection.send(JSON.stringify({
+            type: "user-error",
+            content: {
+              error: err
+            }
+          }));
       } 
       const id  = uuidV4(); 
       const key = uuidV4(); 
@@ -614,8 +583,8 @@ frontendSocketServer.on('request', function(request) {
       for (const journey of simulation.journeys) {
         journeys[journey._id] = journey;
       }
-    	//benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
-    	benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
+      //benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
+      benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
 
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
@@ -652,9 +621,9 @@ frontendSocketServer.on('request', function(request) {
                 },
                 journeys: journeys
               }
-          }));
-        });
-        break;
+            }));
+          });
+          break;
         case "request-simulation-join":
           _handleRequestSimulationJoin(messageContent);
           break;
@@ -909,32 +878,31 @@ frameworkSocketServer.on('request', function(request) {
     });
   }
 
-	connection.on('message', function(message) {
+  connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
       const messageContent = messageData.content;
-			const token = messageData.token
-
-		  jwt.verify(token, config.token_secret, function(err, decoded) {
+      const token = messageData.token
+      jwt.verify(token, config.token_secret, function(err, decoded) {
         if (err) { return err; }
-				if (messageContent.simulationID === decoded.sid) {
-					console.log("Received valid JSON packet from:" + decoded.cip);
-      		switch(messageData.type) {
-        		case "simulation-start":
-        	  	_handleSimulationStart(messageContent);
-        	  	break;
-        		case "simulation-state":
-        	  	_handleSimulationStateUpdate(messageContent);
-        	  	break;
-        		case "simulation-close":
-        	  	_handleSimulationClose(messageContent);
-        	  	break;
-        		case "simulation-journey-complete":
-        	  	_handleJourneyComplete(messageContent);
-					}
-      	}
-    	});
-		}
+        if (messageContent.simulationID === decoded.sid) {
+          console.log("Received valid JSON packet from:" + decoded.cip);
+          switch(messageData.type) {
+            case "simulation-start":
+              _handleSimulationStart(messageContent);
+              break;
+            case "simulation-state":
+              _handleSimulationStateUpdate(messageContent);
+              break;
+            case "simulation-close":
+              _handleSimulationClose(messageContent);
+              break;
+            case "simulation-journey-complete":
+              _handleJourneyComplete(messageContent);
+          }
+        }
+      });
+    }
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
       connection.sendBytes(message.binaryData);

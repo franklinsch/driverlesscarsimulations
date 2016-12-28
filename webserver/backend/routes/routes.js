@@ -230,22 +230,17 @@ router.route('/framework_api')
       }
       if (!user) {
         res.status(404);
-        console.log('chey');
         return;
       }
-      console.log('hey');
       if(!user.validateAPIAccess(req.body.api_key)) {
         res.status(401)
       }
-      user.save( (err) => {
-        console.log('hey');
-        const simID = req.body.simulationID;
-        const ip = req.ip;
-        authentication_token = user.generateAPIToken(simID, ip); 
-        res.status(200).json({
-          'activeSimulationID': user.active_simulation,
-          'token': authentication_token
-        });
+      const simID = req.body.simulationID;
+      const ip = req.ip;
+      authentication_token = user.generateAPIToken(simID, ip); 
+      res.status(200).json({
+        'activeSimulationID': user.active_simulation,
+        'token': authentication_token
       });
     });
   });
