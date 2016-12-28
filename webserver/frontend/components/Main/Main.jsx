@@ -523,6 +523,9 @@ export default class Main extends React.Component {
       }
     }
   }
+  componentDidMount() {
+    $("#lol").sideNav();
+  }
 
   componentDidUpdate() {
     const sessionToken = cookie.load('token');
@@ -556,9 +559,9 @@ export default class Main extends React.Component {
 
 
     const menuHandlers = {
-      handleJoinSimulation : ::this.handleJoinSimulation,
-      handleCityChange     : ::this.handleCityChange,
-      handleTokenChange    : ::this.handleTokenChange,
+      handleJoinSimulation            : ::this.handleJoinSimulation,
+      handleCityChange                : ::this.handleCityChange,
+      handleTokenChange               : ::this.handleTokenChange,
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
       handleSimulationUpdate          : ::this.handleSimulationUpdate,
@@ -571,16 +574,21 @@ export default class Main extends React.Component {
       handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
       handleSimulationActivate        : ::this.handleSimulationActivate,
       handlePause                     : ::this.handlePause,
-      handleResume                     : ::this.handleResume,
+      handleResume                    : ::this.handleResume,
       handleScrub                     : ::this.handleScrub
     }
-    
+
     const simulationMapHandlers = {
       handleAddJourney         : ::this.handlePendingJourneyAdd,
     }
 
     return (
       <div>
+        <nav>
+          <div className="nav-wrapper z-depth-5">
+            <a id="lol" href="#"  data-activates="slide-out" className=" button-collapse show-on-large">Menu</a>
+          </div>
+        </nav>
         <Menu
           enabled             = {!simulationRunning}
           availableCities     = {availableCities}

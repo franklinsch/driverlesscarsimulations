@@ -363,5 +363,4 @@ export default class SimulationMap extends React.Component {
       </div>
     );
   }
-
 }

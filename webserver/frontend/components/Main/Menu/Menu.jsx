@@ -153,10 +153,9 @@ export default class Menu extends React.Component {
 
     return (
       <div>
-        <ul className="side-nav fixed">
-          <li>
-            <a className="brand-logo center" href="#">SAVN</a>
-          </li>
+        <ul id ="slide-out" className="side-nav">
+          <div className="row">
+            </div>
           <div className="row">
             <div className="col s12">
               <ul className="tabs">
