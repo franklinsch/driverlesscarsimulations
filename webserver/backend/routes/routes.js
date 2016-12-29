@@ -224,20 +224,21 @@ router.route('/uploads')
 router.route('/framework_api')
   .post((req, res) => {
     User.findOne({ api_id: req.body.api_id }, (err, user) => {
-      if (err) { 
-        res.status(500).json(err);
+      if (err) {
+        console.log(err);
+        res.status(500).send('Internal error');
         return;
       }
       if (!user) {
-        res.status(404);
+        res.status(404).send('User not found');
         return;
       }
       if(!user.validateAPIAccess(req.body.api_key)) {
-        res.status(401)
+        res.status(401).send('API key not valid');
       }
       const simID = req.body.simulationID;
       const ip = req.ip;
-      authentication_token = user.generateAPIToken(simID, ip); 
+      authentication_token = user.generateAPIToken(simID, ip);
       res.status(200).json({
         'activeSimulationID': user.active_simulation,
         'token': authentication_token

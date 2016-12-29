@@ -21,7 +21,7 @@ export default class Main extends React.Component {
       simID = tokens[tokens.length - 1];
     }
 
-    var socket = new WebSocket(`ws://${host}:3000`);
+    var socket = new WebSocket('ws://' + host + ':3000');
 
     socket.onopen = (event) => {
       console.log("Connected to: " + event.currentTarget.URL)
@@ -65,6 +65,10 @@ export default class Main extends React.Component {
       pendingJourneys: []
     }
     this.updateUserSimulations();
+
+    this.smoothMotion = false;
+    this.averageWaitingTime = undefined;
+    this.lastUpdateTime = undefined;
   }
 
   updateUserSimulations() {
@@ -118,36 +122,61 @@ export default class Main extends React.Component {
         simulationJourneys: messageData.content.journeys
       });
     } else if (messageData.type === "simulation-state") {
+      if (this.lastWaitingTime) {
+        const weight = 0.6;
+        const newWaitingTime = Date.now() - this.lastWaitingTime;
+        if (this.averageWaitingTime) {
+          this.averageWaitingTime = (1-weight) * this.averageWaitingTime + weight * newWaitingTime;
+        } else {
+          this.averageWaitingTime = newWaitingTime;
+        }
+      }
+      this.lastWaitingTime = Date.now();
+
       const simulationState = messageData.content.state;
       simulationState['latestTimestamp'] = messageData.content.latestTimestamp;
 
-      const frameworkStates = simulationState.frameworkStates;
-      let objects = [];
-
-      let colourIndex = 0
-      for (const fState of simulationState.frameworkStates) {
-        fState.objects.map((object) => {
-          object.colourIndex = colourIndex
-        });
-        objects.push(fState.objects);
-        colourIndex++;
+      const timestampDiff = simulationState.timestamp - this.state.simulationState.timestamp;
+      if (this.state.currentSpeed > 1 &&
+          this.state.currentSpeed != timestampDiff) {
+        this.handleSpeedChange(timestampDiff);
       }
-      objects = objects.reduce((acc, fObjects) => {return acc.concat(fObjects)})
+      if (simulationState.timestamp == this.state.simulationState.timestamp) {
+        simulationState['objects'] = this.state.simulationState['objects'];
+      } else {
+        const frameworkStates = simulationState.frameworkStates;
+        let objects = [];
 
-      //const objects = frameworkStates.map((fState) => {
-        //const objects = fState.objects;
-        //objects.map((object) => {
-          //object.frameworkID = fState.frameworkID;
-          //return object;
-        //})
+        let colourIndex = 0
+        for (const fState of simulationState.frameworkStates) {
+          fState.objects.map((object) => {
+            object.colourIndex = colourIndex
+          });
+          objects.push(fState.objects);
+          colourIndex++;
+        }
+        objects = objects.reduce((acc, fObjects) => {return acc.concat(fObjects)})
+        //const objects = frameworkStates.map((fState) => {
+          //const objects = fState.objects;
+          //objects.map((object) => {
+            //object.frameworkID = fState.frameworkID;
+            //return object;
+          //})
 
-        //return objects;
-      //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
-      simulationState.objects = objects;
+          //return objects;
+        //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
+        simulationState.objects = objects;
+      }
 
-      this.setState({
-        simulationState: simulationState
-      });
+      if (this.smoothMotion) {
+        this.setState({
+          simulationState: simulationState
+        }, () => this._smoothMotion(this.state.simulationState.timestamp, this.lastWaitingTime));
+      } else {
+        this.setState({
+          simulationState: simulationState
+        });
+      }
     } else if (messageData.type === "simulation-start-parameters") {
       const newSimulationInfo = this.state.simulationInfo;
       newSimulationInfo.id = messageData.content.simID;
@@ -223,7 +252,7 @@ export default class Main extends React.Component {
     this.setState({
       selectedCityID: newCityId
     })
-    
+
     if (this.state.simulationInfo.id == "0") {
       this.setState({
         pendingJourneys: []
@@ -282,25 +311,15 @@ export default class Main extends React.Component {
   }
 
   handlePause() {
-    if (this.state.currentSpeed != undefined) {
-      this.setState({
-        pausedSpeed: this.state.currentSpeed
-      });
-    }
+    this.setState({
+      pausedSpeed: this.state.currentSpeed || 1
+    });
 
     this.handleSpeedChange(0);
   }
 
   handleResume() {
-    if (this.state.pausedSpeed == undefined) {
-      this.handleSpeedChange(1);
-    } else {
-      this.handleSpeedChange(this.state.pausedSpeed);
-
-      this.setState({
-        pausedSpeed: null
-      });
-    }
+    this.handleSpeedChange(this.state.pausedSpeed || 1);
   }
 
   handleScrub(newTimestamp) {
@@ -443,7 +462,7 @@ export default class Main extends React.Component {
 
     const type = "request-user-api-access";
     const content = {
-      userID: user 
+      userID: user
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
@@ -453,6 +472,58 @@ export default class Main extends React.Component {
     this.setState({
       pendingJourneys: []
     })
+  }
+
+  //_addDistance(point, direction, distance) {
+    //const LNG_SCL = 111.319e3;
+    //const LAT_SCL = 110.574e3;
+    //direction *= Math.PI / 180;
+    //latDeg = distance * Math.sin(direction)/(LAT_SCL*Math.cos(point[1]*Math.PI/180))
+    //lngDeg = distance * Math.cos(direction)/LNG_SCL
+    //return [point[0] + lngDeg, point[1] + latDeg]
+
+  _addDistance(point, bearing, distance) {
+    const R = 6371e3;
+
+    const delta = distance/R;
+    const theta = bearing * Math.PI / 180;
+    const lat1 = point['lat'] * Math.PI / 180;
+    const lng1 = point['lng'] * Math.PI / 180;
+
+    const lat2 = Math.asin(Math.sin(lat1) * Math.cos(delta) + Math.cos(lat1) * Math.sin(delta) * Math.cos(theta));
+    const lng2 = lng1 + Math.atan2(Math.sin(theta) * Math.sin(delta) * Math.cos(lat1), Math.cos(delta) - Math.sin(lat1) * Math.sin(lat2));
+
+    return {
+      lat: lat2 * 180 / Math.PI,
+      lng: lng2 * 180 / Math.PI
+    };
+  }
+
+  _handleToggleSmoothMotion() {
+    this.smoothMotion = !this.smoothMotion;
+  }
+
+  _smoothMotion(timestamp, lastWaitingTime) {
+    if (this.averageWaitingTime && lastWaitingTime && this.smoothMotion) {
+      const elapsedTime = Date.now() - lastWaitingTime;
+      if (timestamp == this.state.simulationState.timestamp && elapsedTime <= this.averageWaitingTime) {
+        const RATIO = 0.1;
+        const TIMEOUT = RATIO * this.averageWaitingTime;
+
+        const simulationState = this.state.simulationState;
+        for (const object of simulationState.objects) {
+          const simulationSpeed = this.state.currentSpeed != undefined ?
+            this.state.currentSpeed :
+            1;
+          const distance = RATIO * object.speed * 1000 / (60 * 60) * simulationSpeed;
+          object.position = this._addDistance(object.position, object.bearing, distance);
+        }
+        this.setState({
+          simulationState: simulationState
+        });
+        setTimeout(::this._smoothMotion, TIMEOUT, timestamp, lastWaitingTime);
+      }
+    }
   }
 
   componentDidUpdate() {
@@ -536,10 +607,15 @@ export default class Main extends React.Component {
                 objectTypes         = {this.state.objectTypes}
                 objectKindInfo      = {this.state.objectKindInfo}
                 benchmarkValue      = {this.state.benchmarkValue}
+                currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
                 handlers            = {simulationSettingsHandlers}
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">
+              <input
+                type     = 'checkbox'
+                onChange = {::this._handleToggleSmoothMotion}/>
+                Toggle predictive motion smoothening
               <SimulationMap
                 width                      = {680 + 'px'}
                 height                     = {600 + 'px'}

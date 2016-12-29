@@ -6,6 +6,7 @@ setup(name='framework',
     install_requires=[
       'asyncio',
       'overpass',
+      'requests',
       'websockets'
       ],
     zip_safe=False)

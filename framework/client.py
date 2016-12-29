@@ -2,7 +2,6 @@ import json
 import asyncio
 import websockets
 import sys
-import threading
 import time
 import requests
 import os
@@ -181,19 +180,18 @@ class SAVNConnectionAssistant:
       if not self.simulationID:
         self.simulationID = data['activeSimulationID']
       self.token = data['token']
+      return True
     else:
-      r.raise_for_status()
+      print(str(r.status_code) + ': ' + r.text)
+      return False
 
   def initSession(self, timeslice):
     async def coro():
-      self.authenticate()
-      if self.simulationID:
+      if self.authenticate() and self.simulationID:
         async with websockets.connect(HOST) as websocket:
           self.ws = websocket
           await self.startConnection(timeslice)
           self.alive = True
           self.active = True
           await self.handlerLoop()
-
     loop.run_until_complete(coro())
-

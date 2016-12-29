@@ -20,12 +20,17 @@ MAX_SPEED_KM_H = 60
 MAP_FILE = 'map.geojson'
 CACHE_MAP_FILE = 'cache.geojson'
 CACHE_INFO_FILE = 'cache.info'
+API_KEYS_FILE = 'api_keys'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
   def getAPIKeys(self):
-    api_id = "cc368a2a-504c-4091-9a8a-56cea754e18e"
-    api_key = "b4060a26-a5cc-4f26-bb88-7f47d75523a9"
-    return api_id, api_key
+    with open(API_KEYS_FILE) as data:
+      data = data.read().split('\n')
+      api_id = data[0]
+      api_key = data[1]
+      return api_id, api_key
+    return '', ''
+
   def handleSimulationStart(self, initialParameters):
     runSimulation(self, initialParameters)
     #testInitialisation(initialParameters)
@@ -127,8 +132,8 @@ def translateDataToCameraData(car, data):
     for obj in frameworkState['objects']:
       obj['position'] = [obj['position']['lng'], obj['position']['lat']]
       distance = get_distance(car['position'], obj['position'])
-      direction = get_direction(car['position'], obj['position'])
-      if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
+      bearing = get_bearing(car['position'], obj['position'])
+      if 'position' in obj and distance <= cameraSensorRadius and abs(bearing - car['bearing']) <= cameraSensorFOVAngle / 2 :
         print(cameraData)
         cameraData.append(obj)
   return cameraData
@@ -155,7 +160,7 @@ def get_distance(start, end):
 
   return R*c
 
-def get_direction(start, end):
+def get_bearing(start, end):
   lat1 = math.radians(start[1])
   lng1 = math.radians(start[0])
   lat2 = math.radians(end[1])
@@ -163,7 +168,7 @@ def get_direction(start, end):
   d_lng = lng2-lng1
   y = math.sin(d_lng)*math.cos(lat2)
   x = math.cos(lat1)*math.sin(lat2)-math.sin(lat1)*math.cos(lat2)*math.cos(d_lng)
-  return (math.degrees(math.atan2(y, x))+270)%360
+  return math.degrees(math.atan2(y, x))
 
 def preprocess(route):
   for i in range(len(route)-1):
@@ -208,7 +213,7 @@ def scheduleNewRoute(car):
   car['journeyStart'] = timestamp
   car['route'] = deepcopy(car['baseRoute'])
   car['position'] = car['baseRoute'][0]
-  car['direction'] = get_direction(car['route'][0], car['route'][1])
+  car['bearing'] = get_bearing(car['route'][0], car['route'][1])
   car['lockedNode'] = start
   return True
 
@@ -255,7 +260,7 @@ def moveCar(car):
         start = end
         end = car['route'][1]
         car['speed'] = end[2]['maxSpeed']
-        car['direction'] = get_direction(start, end)
+        car['bearing'] = get_bearing(start, end)
 
         if (not switchNodeLock(car, start, end)):
           car['speed'] = 0
@@ -278,7 +283,7 @@ def executeGlobalAlgorithm(state):
   return state
 
 def createNewCar(i, journeyID, baseRoute):
-  car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
+  car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'bearing': 0,
       'route': None, 'sensorData': {}, 'baseRoute': baseRoute, 'lockedNode': None, 'journeyStart': None}
   scheduleNewRoute(car)
   return car
@@ -286,7 +291,7 @@ def createNewCar(i, journeyID, baseRoute):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
+    res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
   return res
 
 if(len(sys.argv) != 2):

@@ -72,7 +72,7 @@ def get_distance(start, end):
 
   return R*c
 
-def get_direction(start, end):
+def get_bearing(start, end):
   lat1 = math.radians(start[1])
   lng1 = math.radians(start[0])
   lat2 = math.radians(end[1])
@@ -80,7 +80,7 @@ def get_direction(start, end):
   d_lng = lng2-lng1
   y = math.sin(d_lng)*math.cos(lat2)
   x = math.cos(lat1)*math.sin(lat2)-math.sin(lat1)*math.cos(lat2)*math.cos(d_lng)
-  return (math.degrees(math.atan2(y, x))+270)%360
+  return math.degrees(math.atan2(y, x))
 
 def preprocess(route):
   start = route[0]
@@ -90,13 +90,27 @@ def preprocess(route):
   time = dist/WALKING_SPEED
   end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': WALKING_SPEED_KM_H})
 
-def add_distance(v, a, d):
-  LNG_SCL = 111.319e3
-  LAT_SCL = 110.574e3
-  a = math.radians(a)
-  lngDeg = d * math.cos(a)/LNG_SCL
-  latDeg = d * math.sin(a)/(LAT_SCL) #*math.cos(math.radians(v[1])))
-  return [v[0] + lngDeg, v[1] + latDeg]
+def add_distance(v, b, d):
+  R = 6371e3
+
+  delta = d/R
+  theta = math.radians(b)
+  lat1 = math.radians(v[1])
+  lng1 = math.radians(v[0])
+
+  lat2 = math.asin(math.sin(lat1) * math.cos(delta) + math.cos(lat1) * math.sin(delta) * math.cos(theta))
+  lng2 = lng1 + math.atan2(math.sin(theta) * math.sin(delta) * math.cos(lat1), math.cos(delta) - math.sin(lat1) * math.sin(lat2))
+
+  return [math.degrees(lng2), math.degrees(lat2)]
+
+#Quite possibly broken, mixing lat and lng
+#def add_distance(v, a, d):
+#  LNG_SCL = 111.319e3
+#  LAT_SCL = 110.574e3
+#  a = math.radians(a)
+#  lngDeg = d * math.cos(a)/LNG_SCL
+#  latDeg = d * math.sin(a)/(LAT_SCL*math.cos(math.radians(v[1])))
+#  return [v[0] + lngDeg, v[1] + latDeg]
 
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
@@ -119,9 +133,6 @@ def within_box(p, v1, v2):
 
 def interpolate(s, e, sc):
   return add(s, scale(sub(e, s), sc))
-
-def to_unit_circle(angle):
-  return [math.cos(math.radians(angle)), math.sin(math.radians(angle))]
 
 def pickCar(cars):
   car = None
@@ -171,7 +182,7 @@ def createNewPedestrianForCar(carID, car):
       intersectionPoint = end
     i += 1
 
-  carDirection = car['direction']
+  carBearing = car['bearing']
 
   MU_THETA = 0
   SIGMA_THETA = 15
@@ -182,17 +193,17 @@ def createNewPedestrianForCar(carID, car):
 
   speedRatio = WALKING_SPEED_KM_H / carSpeed
   startDistance = random.gauss(MU_DISTANCE, SIGMA_DISTANCE) * speedRatio
-  startAngle = carDirection + 90 + random.gauss(MU_THETA, SIGMA_THETA)
+  startBearing = carBearing + 90 + random.gauss(MU_THETA, SIGMA_THETA)
 
-  start = add_distance(intersectionPoint, startAngle, startDistance)
+  start = add_distance(intersectionPoint, startBearing, startDistance)
   end = interpolate(start, intersectionPoint, 2)
   if (random.random() < 0.5):
     start, end = end, start
   baseRoute = [start, end]
-  direction = get_direction(start, end)
+  bearing = get_bearing(start, end)
   preprocess(baseRoute)
 
-  pedestrian = {'id': carID, 'type': 'pedestrian', 'position': start, 'speed': 0, 'direction': direction, 'route': None, 'sensorData': {}, 'baseRoute': baseRoute}
+  pedestrian = {'id': carID, 'type': 'pedestrian', 'position': start, 'speed': 0, 'bearing': bearing, 'route': None, 'sensorData': {}, 'baseRoute': baseRoute}
   return pedestrian
 
 def generateEventTime():
@@ -233,7 +244,7 @@ def movePedestrian(pedestrian, timeLeft=TIMESLICE):
 def translate(state):
   res = []
   for pedestrian in state:
-    res.append({'id': str(pedestrian['id']), 'objectType': pedestrian['type'], 'speed': pedestrian['speed'], 'direction': pedestrian['direction'], 'position': {'lat': pedestrian['position'][1], 'lng': pedestrian['position'][0]}, 'route': pedestrian['baseRoute']})
+    res.append({'id': str(pedestrian['id']), 'objectType': pedestrian['type'], 'speed': pedestrian['speed'], 'bearing': pedestrian['bearing'], 'position': {'lat': pedestrian['position'][1], 'lng': pedestrian['position'][0]}, 'route': pedestrian['baseRoute']})
   return res
 
 if(len(sys.argv) != 2):
