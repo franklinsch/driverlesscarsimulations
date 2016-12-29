@@ -83,6 +83,7 @@ export default class SimulationSettings extends React.Component {
     const pendingJourneys = this.props.pendingJourneys || [];
 
     const benchmarkValue = this.props.benchmarkValue;
+    const currentSpeed = this.props.currentSpeed;
 
     const allowSimulationStart = this.state.allowSimulationStart;
 
@@ -170,6 +171,7 @@ export default class SimulationSettings extends React.Component {
           </button>
 
           <SpeedSetting
+            currentSpeed = {currentSpeed}
             hidden   = {!hasSimulationStarted}
             handlers = {speedSettingHandlers}
           />

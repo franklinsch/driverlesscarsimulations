@@ -11,9 +11,6 @@ export default class SpeedSetting extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      requestedSpeed: 1
-    }
   }
 
   _handleRequestedSpeedChange(e) {
@@ -28,14 +25,10 @@ export default class SpeedSetting extends React.Component {
     }
 
     this.props.handlers.handleSpeedChange(speed);
-
-    this.setState({
-      requestedSpeed: speed
-    })
   }
 
   render() {
-    const requestedSpeed = this.state.requestedSpeed;
+    const requestedSpeed = this.props.currentSpeed;
 
     let sliderValue = 4;
 
@@ -50,7 +43,7 @@ export default class SpeedSetting extends React.Component {
         <form>
           <div className="form-group">
             <div className="row">
-              <input 
+              <input
                 className = "form-group"
                 type      = "range"
                 min       = {0}
