@@ -20,12 +20,17 @@ MAX_SPEED_KM_H = 60
 MAP_FILE = 'map.geojson'
 CACHE_MAP_FILE = 'cache.geojson'
 CACHE_INFO_FILE = 'cache.info'
+API_KEYS_FILE = 'api_keys'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
   def getAPIKeys(self):
-    api_id = "cc368a2a-504c-4091-9a8a-56cea754e18e"
-    api_key = "b4060a26-a5cc-4f26-bb88-7f47d75523a9"
-    return api_id, api_key
+    with open(API_KEYS_FILE) as data:
+      data = data.read().split('\n')
+      api_id = data[0]
+      api_key = data[1]
+      return api_id, api_key
+    return '', ''
+
   def handleSimulationStart(self, initialParameters):
     runSimulation(self, initialParameters)
     #testInitialisation(initialParameters)
