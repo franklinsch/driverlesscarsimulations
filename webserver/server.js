@@ -9,6 +9,8 @@ const session = require('express-session');
 const config = require('./backend/config');
 const passwordConfig = require('./backend/passport');
 const fs = require('fs');
+const uuidV4 = require('uuid/v4');
+const jwt = require('jsonwebtoken');
 
 const WebSocketServer = require('websocket').server;
 
@@ -29,50 +31,21 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
 });
 
 function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1);
-  var a =
+  const R = 6371; // Radius of the earth in km
+  const dLat = deg2rad(lat2-lat1);  // deg2rad below
+  const dLon = deg2rad(lon2-lon1); 
+  const a = 
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  var d = R * c; // Distance in km
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2); 
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  const d = R * c; // Distance in km
   return d;
 }
 
 function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
-
-//function averageSpeedToDestination(journeys, simulationStates) {
-  //let carsOnTheRoad = {};
-  //let totalTime = 0;
-  //let totalDistance = 0;
-
-  //for (const simulationState of simulationStates) {
-    //for (const frameworkState of simulationState.frameworkStates) {
-      //for (const obj of frameworkState.objects) {
-        //obj['id'] += frameworkState.frameworkID;
-        //if (obj['id'] in carsOnTheRoad) {
-          //const journey = journeys[obj['journeyID']];
-          //dest = journey.destination;
-          //pos = obj.position;
-          //if (pos.lat == dest.lat && pos.lng == dest.lng) {
-            //totalTime += state.timestamp - carOnTheRoad[obj.id].departure;
-            //totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
-          //}
-        //} else {
-          //carsOnTheRoad[obj['id']] = {departure: simulationState.timestamp, origin: obj.position}
-        //}
-      //}
-    //}
-  //}
-  //if (totalTime == 0) {
-    //totalTime++;
-  //}
-  //return totalDistance / totalTime;
-//}
 
 function averageSpeedToDestination(journeys, completionLogs) {
   let totalTime = 0;
@@ -223,46 +196,46 @@ frontendSocketServer.on('request', function(request) {
       content: [{
         name: "Vehicle",
         parameters: [
-          {
-            name: "Average Speed",
-            kind: "text"
-          },
-          {
-            name: "Top Speed",
-            kind: "text"
-          },
-          {
-            name: "Weight",
-            kind: "text"
-          },
-          {
-            name: "Length",
-            kind: "text"
-          }
+        {
+          name: "Average Speed",
+          kind: "text"
+        },
+        {
+          name: "Top Speed",
+          kind: "text"
+        },
+        {
+          name: "Weight",
+          kind: "text"
+        },
+        {
+          name: "Length",
+          kind: "text"
+        }
         ]
       },
       {
         name: "Creature",
         parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["unicorn", "dog"]
-          }
+        {
+          name: "Type",
+          kind: "predefined",
+          allowedValues: ["unicorn", "dog"]
+        }
         ]
       },
       {
         name: "Road Hazard",
         parameters: [
-          {
-            name: "Type",
-            kind: "predefined",
-            allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
-          },
-          {
-            name: "Slowdown factor",
-            kind: "text"
-          }
+        {
+          name: "Type",
+          kind: "predefined",
+          allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+        },
+        {
+          name: "Slowdown factor",
+          kind: "text"
+        }
         ]
       }]
     }));
@@ -564,6 +537,34 @@ frontendSocketServer.on('request', function(request) {
     });
   }
 
+  function _handleRequestAPIAccess(message) {
+    console.log("Request API access");
+    const userID = message.userID;
+    User.findById(userID, function (error, user) {
+      if (error || !user) {
+        err = error ? error : "User not found"
+          connection.send(JSON.stringify({
+            type: "user-error",
+            content: {
+              error: err
+            }
+          }));
+      } 
+      const id  = uuidV4(); 
+      const key = uuidV4(); 
+      user.setAPIAccess(id, key);
+      user.save( (err) => {
+        connection.send(JSON.stringify({
+          type: "user-api-access",
+          content: {
+            api_id: id,
+            api_key: key
+          }
+        }));
+      });
+    });
+  }
+
   function _handleRequestSimulationBenchmark(message) {
     console.log("Request benchmark");
     Simulation.findById(message.simulationID, function (error, simulation) {
@@ -582,8 +583,8 @@ frontendSocketServer.on('request', function(request) {
       for (const journey of simulation.journeys) {
         journeys[journey._id] = journey;
       }
-    	//benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
-    	benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
+      //benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
+      benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
 
       connection.send(JSON.stringify({
         type: "simulation-benchmark",
@@ -620,9 +621,9 @@ frontendSocketServer.on('request', function(request) {
                 },
                 journeys: journeys
               }
-          }));
-        });
-        break;
+            }));
+          });
+          break;
         case "request-simulation-join":
           _handleRequestSimulationJoin(messageContent);
           break;
@@ -640,6 +641,9 @@ frontendSocketServer.on('request', function(request) {
           break;
         case "request-simulation-benchmark":
           _handleRequestSimulationBenchmark(messageContent);
+          break;
+        case "request-user-api-access":
+          _handleRequestAPIAccess(messageContent);
           break;
       }
     }
@@ -878,20 +882,26 @@ frameworkSocketServer.on('request', function(request) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
       const messageContent = messageData.content;
-
-      switch(messageData.type) {
-        case "simulation-start":
-          _handleSimulationStart(messageContent);
-          break;
-        case "simulation-state":
-          _handleSimulationStateUpdate(messageContent);
-          break;
-        case "simulation-close":
-          _handleSimulationClose(messageContent);
-          break;
-        case "simulation-journey-complete":
-          _handleJourneyComplete(messageContent);
-      }
+      const token = messageData.token
+      jwt.verify(token, config.token_secret, function(err, decoded) {
+        if (err) { return err; }
+        if (messageContent.simulationID === decoded.sid) {
+          console.log("Received valid JSON packet from:" + decoded.cip);
+          switch(messageData.type) {
+            case "simulation-start":
+              _handleSimulationStart(messageContent);
+              break;
+            case "simulation-state":
+              _handleSimulationStateUpdate(messageContent);
+              break;
+            case "simulation-close":
+              _handleSimulationClose(messageContent);
+              break;
+            case "simulation-journey-complete":
+              _handleJourneyComplete(messageContent);
+          }
+        }
+      });
     }
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');

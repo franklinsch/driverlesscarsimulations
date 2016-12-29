@@ -34,7 +34,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
                  'frameworkID': 0}}
     self.connection.updateState(timestamp, state, sync=False)
     message = self.loop.run_until_complete(self.connection.fetchMessage())
-    self.assertEqual(json.dumps(packet), message)
+    self.assertEqual(packet, message)
 
   def test_message_reception(self):
     self.loop.run_in_executor = Mock()
@@ -52,11 +52,11 @@ class TestFrameworkClientMethods(unittest.TestCase):
     async def op():
       await asyncio.sleep(100)
     self.connection.ws.recv = op
-    self.connection.ws.send = AsyncMock()
+    self.connection.send_packet = AsyncMock()
     msg = json.dumps(packet)
     self.connection.messageQueue.put_nowait(msg)
     self.loop.run_until_complete(self.connection.handler())
-    self.connection.ws.send.assert_called_with(msg)
+    self.connection.send_packet.assert_called_with(msg)
 
   def test_simulationStart(self):
     self.connection.handleSimulationStart = Mock()

@@ -20,6 +20,11 @@ export default class Header extends React.Component {
   handleCityChange(city) {
     this.props.handlers.handleCityChange(city._id);
   }
+  
+  _handleRequestAPIAccess(e) {
+    e.preventDefault();
+    this.props.handlers.handleRequestAPIAccess();
+  }
 
   render() {
     const cities = this.props.availableCities || [];
@@ -65,6 +70,17 @@ export default class Header extends React.Component {
                 <SimulationList
                   simulations = {userSimulations}
                 /> : ''
+              }
+            </li>
+            <li className="nav-item">
+              {
+                this.props.token ?
+                  <button 
+                    onClick={::this._handleRequestAPIAccess}
+                    className ="btn btn-default">
+                      Request API Access
+                  </button>
+                  : ''
               }
             </li>
           </ul>

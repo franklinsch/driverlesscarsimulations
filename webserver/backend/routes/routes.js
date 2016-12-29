@@ -221,6 +221,33 @@ router.route('/uploads')
     });
   });
 
+router.route('/framework_api')
+  .post((req, res) => {
+    User.findOne({ api_id: req.body.api_id }, (err, user) => {
+      if (err) { 
+        res.status(500).json(err);
+        return;
+      }
+      if (!user) {
+        res.status(404);
+        return;
+      }
+      if(!user.validateAPIAccess(req.body.api_key)) {
+        res.status(401)
+      }
+      const simID = req.body.simulationID;
+      const ip = req.ip;
+      authentication_token = user.generateAPIToken(simID, ip); 
+      res.status(200).json({
+        'activeSimulationID': user.active_simulation,
+        'token': authentication_token
+      });
+    });
+  });
+
+
+
+
 router.get('*', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
