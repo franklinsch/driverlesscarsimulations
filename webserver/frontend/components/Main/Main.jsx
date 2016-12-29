@@ -21,7 +21,7 @@ export default class Main extends React.Component {
       simID = tokens[tokens.length - 1];
     }
 
-    var socket = new WebSocket(`ws://${host}:3000`);
+    var socket = new WebSocket('ws://' + host + ':3000');
 
     socket.onopen = (event) => {
       console.log("Connected to: " + event.currentTarget.URL)
@@ -66,6 +66,7 @@ export default class Main extends React.Component {
     }
     this.updateUserSimulations();
 
+    this.smoothMotion = false;
     this.averageWaitingTime = undefined;
     this.lastUpdateTime = undefined;
   }
@@ -159,9 +160,15 @@ export default class Main extends React.Component {
       //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
       simulationState.objects = objects;
 
-      this.setState({
-        simulationState: simulationState
-      }, () => this._smoothMotion(this.state.simulationState.timestamp));
+      if (this.smoothMotion) {
+        this.setState({
+          simulationState: simulationState
+        }, () => this._smoothMotion(this.state.simulationState.timestamp));
+      } else {
+        this.setState({
+          simulationState: simulationState
+        });
+      }
     } else if (messageData.type === "simulation-start-parameters") {
       const newSimulationInfo = this.state.simulationInfo;
       newSimulationInfo.id = messageData.content.simID;
@@ -457,7 +464,7 @@ export default class Main extends React.Component {
 
     const type = "request-user-api-access";
     const content = {
-      userID: user 
+      userID: user
     }
 
     UtilFunctions.sendSocketMessage(socket, type, content);
@@ -494,10 +501,14 @@ export default class Main extends React.Component {
     };
   }
 
+  _handleToggleSmoothMotion() {
+    this.smoothMotion = !this.smoothMotion;
+  }
+
   _smoothMotion(timestamp) {
-    if (this.averageWaitingTime && this.lastWaitingTime) {
+    if (this.averageWaitingTime && this.lastWaitingTime && this.smoothMotion) {
       const elapsedTime = Date.now() - this.lastWaitingTime;
-      if (timestamp == this.state.simulationState.timestamp && elapsedTime <= this.averageWaitingTime) { //TODO: Many calls if time paused
+      if (timestamp == this.state.simulationState.timestamp && elapsedTime <= this.averageWaitingTime) {
         const RATIO = 0.1;
         const TIMEOUT = RATIO * this.averageWaitingTime;
 
@@ -599,6 +610,10 @@ export default class Main extends React.Component {
               />
             </div>
             <div className="col-md-6 map" id="simulation-map">
+              <input
+                type     = 'checkbox'
+                onChange = {::this._handleToggleSmoothMotion}/>
+                Toggle predictive motion smoothening
               <SimulationMap
                 width                      = {680 + 'px'}
                 height                     = {600 + 'px'}
