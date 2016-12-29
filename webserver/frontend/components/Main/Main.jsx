@@ -136,34 +136,42 @@ export default class Main extends React.Component {
       const simulationState = messageData.content.state;
       simulationState['latestTimestamp'] = messageData.content.latestTimestamp;
 
-      const frameworkStates = simulationState.frameworkStates;
-      let objects = [];
-
-      let colourIndex = 0
-      for (const fState of simulationState.frameworkStates) {
-        fState.objects.map((object) => {
-          object.colourIndex = colourIndex
-        });
-        objects.push(fState.objects);
-        colourIndex++;
+      const timestampDiff = simulationState.timestamp - this.state.simulationState.timestamp;
+      if (this.state.currentSpeed > 1 &&
+          this.state.currentSpeed != timestampDiff) {
+        this.handleSpeedChange(timestampDiff);
       }
-      objects = objects.reduce((acc, fObjects) => {return acc.concat(fObjects)})
+      if (simulationState.timestamp == this.state.simulationState.timestamp) {
+        simulationState['objects'] = this.state.simulationState['objects'];
+      } else {
+        const frameworkStates = simulationState.frameworkStates;
+        let objects = [];
 
-      //const objects = frameworkStates.map((fState) => {
-        //const objects = fState.objects;
-        //objects.map((object) => {
-          //object.frameworkID = fState.frameworkID;
-          //return object;
-        //})
+        let colourIndex = 0
+        for (const fState of simulationState.frameworkStates) {
+          fState.objects.map((object) => {
+            object.colourIndex = colourIndex
+          });
+          objects.push(fState.objects);
+          colourIndex++;
+        }
+        objects = objects.reduce((acc, fObjects) => {return acc.concat(fObjects)})
+        //const objects = frameworkStates.map((fState) => {
+          //const objects = fState.objects;
+          //objects.map((object) => {
+            //object.frameworkID = fState.frameworkID;
+            //return object;
+          //})
 
-        //return objects;
-      //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
-      simulationState.objects = objects;
+          //return objects;
+        //}).reduce((acc, fObjects) => {return acc.concat(fObjects)})
+        simulationState.objects = objects;
+      }
 
       if (this.smoothMotion) {
         this.setState({
           simulationState: simulationState
-        }, () => this._smoothMotion(this.state.simulationState.timestamp));
+        }, () => this._smoothMotion(this.state.simulationState.timestamp, this.lastWaitingTime));
       } else {
         this.setState({
           simulationState: simulationState
@@ -303,25 +311,15 @@ export default class Main extends React.Component {
   }
 
   handlePause() {
-    if (this.state.currentSpeed != undefined) {
-      this.setState({
-        pausedSpeed: this.state.currentSpeed
-      });
-    }
+    this.setState({
+      pausedSpeed: this.state.currentSpeed || 1
+    });
 
     this.handleSpeedChange(0);
   }
 
   handleResume() {
-    if (this.state.pausedSpeed == undefined) {
-      this.handleSpeedChange(1);
-    } else {
-      this.handleSpeedChange(this.state.pausedSpeed);
-
-      this.setState({
-        pausedSpeed: null
-      });
-    }
+    this.handleSpeedChange(this.state.pausedSpeed || 1);
   }
 
   handleScrub(newTimestamp) {
@@ -505,22 +503,25 @@ export default class Main extends React.Component {
     this.smoothMotion = !this.smoothMotion;
   }
 
-  _smoothMotion(timestamp) {
-    if (this.averageWaitingTime && this.lastWaitingTime && this.smoothMotion) {
-      const elapsedTime = Date.now() - this.lastWaitingTime;
+  _smoothMotion(timestamp, lastWaitingTime) {
+    if (this.averageWaitingTime && lastWaitingTime && this.smoothMotion) {
+      const elapsedTime = Date.now() - lastWaitingTime;
       if (timestamp == this.state.simulationState.timestamp && elapsedTime <= this.averageWaitingTime) {
         const RATIO = 0.1;
         const TIMEOUT = RATIO * this.averageWaitingTime;
 
         const simulationState = this.state.simulationState;
         for (const object of simulationState.objects) {
-          const distance = RATIO * object.speed * 1000 / (60 * 60);
+          const simulationSpeed = this.state.currentSpeed != undefined ?
+            this.state.currentSpeed :
+            1;
+          const distance = RATIO * object.speed * 1000 / (60 * 60) * simulationSpeed;
           object.position = this._addDistance(object.position, object.bearing, distance);
         }
         this.setState({
           simulationState: simulationState
         });
-        setTimeout(::this._smoothMotion, TIMEOUT, timestamp);
+        setTimeout(::this._smoothMotion, TIMEOUT, timestamp, lastWaitingTime);
       }
     }
   }
@@ -606,6 +607,7 @@ export default class Main extends React.Component {
                 objectTypes         = {this.state.objectTypes}
                 objectKindInfo      = {this.state.objectKindInfo}
                 benchmarkValue      = {this.state.benchmarkValue}
+                currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
                 handlers            = {simulationSettingsHandlers}
               />
             </div>
