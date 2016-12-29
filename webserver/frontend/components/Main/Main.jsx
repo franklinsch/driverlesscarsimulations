@@ -586,7 +586,7 @@ export default class Main extends React.Component {
       <div>
         <nav>
           <div className="nav-wrapper z-depth-5">
-            <a id="lol" href="#"  data-activates="slide-out" className=" button-collapse show-on-large">Menu</a>
+            <a id="lol" href="#"  data-activates="slide-out" className=""><i className="material-icons">menu</i></a>
           </div>
         </nav>
         <Menu
