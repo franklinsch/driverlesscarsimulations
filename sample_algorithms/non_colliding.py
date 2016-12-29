@@ -16,7 +16,9 @@ locked_nodes = []
 
 SLEEP_TIME = 1
 TIMESLICE = 1
-MAX_SPEED_KM_H = 60
+MAX_SPEED_KM_H = 60 #KM/H
+TURNING_SPEED = 90 #DEG/S
+
 MAP_FILE = 'map.geojson'
 CACHE_MAP_FILE = 'cache.geojson'
 CACHE_INFO_FILE = 'cache.info'
@@ -89,7 +91,7 @@ def runSimulation(savn, initialParameters):
 
   while savn.alive:
     print("Sending", timestamp)
-    savn.updateState(timestamp, translate(state))
+    savn.updateState(timestamp, translate(state), sleepTime=sleepTime)
     print("Working on next: Sent", timestamp)
     state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
@@ -260,34 +262,48 @@ def moveCar(car):
   timeLeft = TIMESLICE
   start = car['route'][0]
   end = car['route'][1]
+  car['speed'] = 0
 
   if (not switchNodeLock(car, start, end) or
       ('cameraData' in car['sensorData'] and len(car['sensorData']['cameraData']) > 0)):
-    car['speed'] = 0
     return
 
-  car['speed'] = end[2]['maxSpeed']
-  while(timeLeft > 0):
-    if(end[2]['timeLeft'] <= timeLeft):
+  bearing = get_bearing(start, end)
+  dirDiff = (bearing - car['bearing'] + math.pi) % (2 * math.pi) - math.pi
+  turningTime = abs(dirDiff) / TURNING_SPEED
+  while (timeLeft > 0):
+    if (turningTime > 0):
+      if (turningTime <= timeLeft):
+        timeLeft -= turningTime
+        turningTime = 0
+        car['speed'] = end[2]['maxSpeed']
+        car['bearing'] = bearing
+      else:
+        timeLeft = 0
+        car['bearing'] = bearing + dirDiff * (1 - timeLeft / turningTime)
+    elif (end[2]['timeLeft'] <= timeLeft):
       timeLeft -= end[2]['timeLeft']
       end[2]['timeLeft'] = 0
       del car['route'][0]
-      if(len(car['route']) == 1):
+      if (len(car['route']) == 1):
         timeLeft = 0
         car['route'] = None
       else:
         start = end
         end = car['route'][1]
-        car['speed'] = end[2]['maxSpeed']
-        car['bearing'] = get_bearing(start, end)
+        car['speed'] = 0
 
         if (not switchNodeLock(car, start, end)):
-          car['speed'] = 0
           break
+
+        bearing = get_bearing(start, end)
+        dirDiff = (bearing - car['bearing'] + math.pi) % (2 * math.pi) - math.pi
+        turningTime = abs(dirDiff) / TURNING_SPEED
     else:
       end[2]['timeLeft'] -= timeLeft
       timeLeft = 0
-  if(car['route'] == None):
+
+  if (car['route'] == None):
     car['position'] = end
     savn.completeObjectJourney(timestamp, car['journeyStart'], car['journeyID'])
     scheduleNewRoute(car)
