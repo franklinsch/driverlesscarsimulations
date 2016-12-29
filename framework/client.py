@@ -22,7 +22,7 @@ class SAVNConnectionAssistant:
     self.frameworkID = 0
     self.shouldAwait = False
 
-  def updateState(self, timestamp, state, sync=True):
+  def updateState(self, timestamp, state, sleepTime=1):
     packet = {'type': 'simulation-state',
               'content':
                 {'simulationID': self.simulationID,
@@ -31,8 +31,8 @@ class SAVNConnectionAssistant:
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)
-    if (sync):
-      self.synchronize()
+    if (sleepTime > 0):
+      self.synchronize(sleepTime)
 
   def completeObjectJourney(self, timestamp, journeyStart, journeyID):
     packet = {'type': 'simulation-journey-complete',
@@ -45,7 +45,7 @@ class SAVNConnectionAssistant:
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)
 
-  #returns a tuple of api_id, and api_key  
+  #returns a tuple of api_id, and api_key
   def getAPIKeys(self):
     pass
 
@@ -59,6 +59,9 @@ class SAVNConnectionAssistant:
     pass
 
   def handleSimulationStop(self, packet):
+    pass
+
+  def handleSimulationFailure(self, error):
     pass
 
   async def fetchMessage(self):
@@ -79,30 +82,45 @@ class SAVNConnectionAssistant:
       await self.handler()
 
   async def handler(self):
-      listener_task = asyncio.ensure_future(self.ws.recv())
-      producer_task = asyncio.ensure_future(self.fetchMessage())
-      done, pending = await asyncio.wait([listener_task, producer_task],
-                                         return_when=asyncio.FIRST_COMPLETED)
+    listener_task = asyncio.ensure_future(self.ws.recv())
+    producer_task = asyncio.ensure_future(self.fetchMessage())
+    done, pending = await asyncio.wait([listener_task, producer_task],
+                                       return_when=asyncio.FIRST_COMPLETED)
 
-      if producer_task in done:
-        packet = producer_task.result()
-        await self.send_packet(packet)
-      else:
-        producer_task.cancel()
+    if producer_task in done:
+      packet = producer_task.result()
+      await self.send_packet(packet)
+    else:
+      producer_task.cancel()
 
-      #if the connection is dead we will reach this point
-      if not self.alive:
-        self.active = False
-        for fut in pending:
-          fut.cancel()
-        return
+    #if the connection is dead we will reach this point
+    if not self.alive:
+      self.active = False
+      for fut in pending:
+        fut.cancel()
+      return
 
-      if listener_task in done:
-        message = listener_task.result()
-        packet = json.loads(message)
-        loop.run_in_executor(None, self.onMessage, packet)
-      else:
-        listener_task.cancel()
+    if listener_task in done:
+      message = listener_task.result()
+      packet = json.loads(message)
+      loop.run_in_executor(None, self.onMessage, packet)
+    else:
+      listener_task.cancel()
+
+  def failsafe(self, error):
+    try:
+      self.handleSimulationFailure(error)
+    except Exception as err:
+      print('handleSimulationFailure failed')
+      print(err)
+    self.shouldAwait = False
+    self.alive = False
+
+  def attempt(self, function, packet):
+    try:
+      function(packet["content"])
+    except Exception as err:
+      self.failsafe(err)
 
   def onMessage(self, packet):
     def isError():
@@ -121,36 +139,40 @@ class SAVNConnectionAssistant:
       return packet["type"] == "simulation-communicate"
 
     if isError():
-      print(packet["content"])
-      #print(packet["content"]["reason"])
+      self.failsafe(packet["content"])
     elif isInitialParams():
       self.frameworkID = packet["content"]["frameworkID"]
-      self.handleSimulationStart(packet["content"])
-    elif isClose():
-      self.handleSimulationStop(packet["content"])
-      self.alive = False
-      #The connection is officialy dead we need to terminate the handling loop,
-      #to achieve this we populate the message queue with a confirmation packet
-      packet = {'type': 'simulation-close', 'content': {'simulationID': self.simulationID}}
-      asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
-      loop)
+      self.attempt(self.handleSimulationStart, packet)
+      self.endSimulation()
     elif isUpdate():
-      self.handleSimulationDataUpdate(packet["content"])
+      self.attempt(self.handleSimulationDataUpdate, packet)
     elif isCommunication():
       print("\n\nReceived go-ahead at ", time.time())
-      self.handleSimulationCommunication(packet["content"])
+      self.attempt(self.handleSimulationCommunication, packet)
       self.shouldAwait = False
+    elif isClose():
+      self.attempt(self.handleSimulationStop, packet)
+      self.endSimulation()
 
-  def synchronize(self, sleepTime=1):
+  def endSimulation(self):
+    #At this point the actual algorithm must have made sure it will terminate
+    self.alive = False
+    #The connection is officialy dead we need to terminate the handling loop,
+    #to achieve this we populate the message queue with a confirmation packet
+    packet = {'type': 'simulation-close', 'content': {'simulationID': self.simulationID}}
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+    loop)
+
+  def synchronize(self, sleepTime):
     self.shouldAwait = True
-    while (self.shouldAwait):
+    while (self.shouldAwait): #TODO: Is there a better way to freeze this thread?
       time.sleep(sleepTime)
 
   def authenticate(self):
     api_id, api_key = self.getAPIKeys()
     payload = {
-      'api_id': api_id, 
-      'api_key': api_key, 
+      'api_id': api_id,
+      'api_key': api_key,
       'simulationID': self.simulationID
     }
     r = requests.post(AUTHENTICATION_ROUTE, data=payload)

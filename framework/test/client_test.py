@@ -32,7 +32,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
                  'timestamp': timestamp,
                  'objects': state,
                  'frameworkID': 0}}
-    self.connection.updateState(timestamp, state, sync=False)
+    self.connection.updateState(timestamp, state, sleepTime=0)
     message = self.loop.run_until_complete(self.connection.fetchMessage())
     self.assertEqual(packet, message)
 

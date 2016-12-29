@@ -27,11 +27,8 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     api_key = "b4060a26-a5cc-4f26-bb88-7f47d75523a9"
     return api_id, api_key
   def handleSimulationStart(self, initialParameters):
-    try: #TODO: Users should not need to try-except their code to get error messages
-      runSimulation(self, initialParameters)
-      #testInitialisation(initialParameters)
-    except Exception as err:
-      print(err)
+    runSimulation(self, initialParameters)
+    #testInitialisation(initialParameters)
 
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
@@ -41,6 +38,10 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
 
   def handleSimulationStop(self, info):
     pass
+
+  def handleSimulationFailure(self, error):
+    print('Error:')
+    print(error)
 
 def postParams(initialParameters):
   print(initialParameters)
