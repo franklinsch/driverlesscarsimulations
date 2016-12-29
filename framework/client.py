@@ -156,7 +156,6 @@ class SAVNConnectionAssistant:
     r = requests.post(AUTHENTICATION_ROUTE, data=payload)
     if r.status_code == 200:
       data = r.json()
-      print(data)
       if not self.simulationID:
         self.simulationID = data['activeSimulationID']
       self.token = data['token']
