@@ -30,7 +30,7 @@ export default class ScrubTimer extends React.Component {
 
   _checkScrub() {
     if (this._latestScrub != undefined) {
-      this._scrubToTime(this._latestScrub); 
+      this._scrubToTime(this._latestScrub);
       setTimeout(::this._checkScrub, this._timeoutValue);
     }
   }
@@ -65,11 +65,12 @@ export default class ScrubTimer extends React.Component {
   }
 
   _scrubToTime(scrubTime) {
-    this.setState({
-      scrubTime: scrubTime
-    });
-    this.props.handlers.handleScrub(scrubTime);
-
+    if (this.state.scrubTime != scrubTime) {
+      this.setState({
+        scrubTime: scrubTime
+      });
+      this.props.handlers.handleScrub(scrubTime);
+    }
   }
 
   render() {
@@ -88,11 +89,11 @@ export default class ScrubTimer extends React.Component {
         <form>
           <div className="form-group">
             <div className="row">
-              <input 
-                className   = "form-group" 
-                type        = "range" 
-                min         = {0} 
-                max         = {maxTimestamp} 
+              <input
+                className   = "form-group"
+                type        = "range"
+                min         = {0}
+                max         = {maxTimestamp}
                 step        = {1}
                 value       = {scrubTime}
                 onMouseDown = {::this._handlePause}
