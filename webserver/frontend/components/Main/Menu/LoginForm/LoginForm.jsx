@@ -94,12 +94,13 @@ export default class LoginButton extends React.Component {
   render() {
     return (
       <div>
-        <h5>
-          {
-            this.state.token &&
+
+        {
+          this.state.token &&
+          <h5>
             'Hello ' + this.props.activeUser + '!'
-          }
-        </h5>
+          </h5>
+        }
         {
           this.state.token?
             <button
@@ -111,7 +112,6 @@ export default class LoginButton extends React.Component {
             </button>
             :
           <form className="col s12">
-            <div className="row">
               <div className="input-field">
                 <input
                   type="text"
@@ -129,20 +129,19 @@ export default class LoginButton extends React.Component {
                   className="validate"
                   placeholder="Password"
                 />
-              </div>
             </div>
             <button
               type="submit"
               value= 'login'
               onClick={::this._handleFormSubmit}
-              className="btn waves-effect waves-light left ">
+              className="btn waves-effect waves-light">
               Log In
             </button>
             <button
               type="submit"
               value="register"
               onClick={::this._handleFormSubmit}
-                className="btn waves-effect waves-light right">
+                className="btn waves-effect waves-light">
               Register
             </button> 
           </form>

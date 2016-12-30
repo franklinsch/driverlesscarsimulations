@@ -7,7 +7,7 @@ import SimulationList from "./SimulationList/SimulationList.jsx";
 import JourneyList from "./JourneyList/JourneyList.jsx";
 import JourneySettings from "./JourneySettings/JourneySettings.jsx";
 import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
-import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
+import ScrubTimer from "./ScrubTimer/ScrubTimer.jsx";
 
 export default class Menu extends React.Component {
 
@@ -205,6 +205,8 @@ export default class Menu extends React.Component {
               </li>
             </div>
             <div id="settings" className="col s12">
+              <div className="row">
+              </div>
               <li>
                 <Dropdown
                   enabled  = {this.props.enabled}

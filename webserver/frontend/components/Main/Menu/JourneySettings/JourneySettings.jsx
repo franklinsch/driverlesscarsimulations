@@ -134,69 +134,65 @@ export default class JourneySettings extends React.Component {
           handlers = {journeyImportHandlers}
         />
 
-        <div className="row" id="simulation-download">
+        <div id="simulation-download">
           <button className="btn waves-effect waves-light" onClick={::this._downloadSimulation}>Download Simulation Data</button>
         </div>
 
-        <div className="row">
+        <button
+          className = "btn waves-effect waves-light"
+          onClick   = {::this._toggleJourneyManualAddForm}
+        >
+          Manually add journey
+        </button>
+
+        { showJourneyManualAddForm &&
+        <form>
+          <div className="input-field">
+            <input
+              className = "validate"
+              value     = {originLat}
+              onChange  = {::this._handleOriginLatChange}
+              placeholder = "Origin Latitude"
+            />
+          </div>
+          <div className="input-field">
+            <input
+              className = "validate"
+              value     = {originLng}
+              onChange  = {::this._handleOriginLngChange}
+              placeholder = "Origin Longitude"
+            />
+          </div>
+          <div className="input-field">
+            <input
+              className = "validate"
+              value     = {destinationLat}
+              onChange  = {::this._handleDestinationLatChange}
+              placeholder= "Destination Latitude"
+            />
+          </div>
+          <div className="input-field">
+            <input
+              className = "validate"
+              value     = {destinationLng}
+              onChange  = {::this._handleDestinationLngChange}
+              placeholder = "Destination Longitude"
+            />
+          </div>
           <button
             className = "btn waves-effect waves-light"
-            onClick   = {::this._toggleJourneyManualAddForm}
+            type      = "submit"
+            onClick   = {this._handleJourneySubmit}
           >
-            Manually add journey
+            Add journey
           </button>
-
-          { showJourneyManualAddForm &&
-          <form>
-            <div className="input-field">
-              <input
-                className = "validate"
-                value     = {originLat}
-                onChange  = {::this._handleOriginLatChange}
-                placeholder = "Origin Latitude"
-              />
-            </div>
-            <div className="input-field">
-              <input
-                className = "validate"
-                value     = {originLng}
-                onChange  = {::this._handleOriginLngChange}
-                placeholder = "Origin Longitude"
-              />
-            </div>
-            <div className="input-field">
-              <input
-                className = "validate"
-                value     = {destinationLat}
-                onChange  = {::this._handleDestinationLatChange}
-                placeholder= "Destination Latitude"
-              />
-            </div>
-            <div className="input-field">
-              <input
-                className = "validate"
-                value     = {destinationLng}
-                onChange  = {::this._handleDestinationLngChange}
-                placeholder = "Destination Longitude"
-              />
-            </div>
-            <button
-              className = "btn waves-effect waves-light"
-              type      = "submit"
-              onClick   = {this._handleJourneySubmit}
-            >
-              Add journey
-            </button>
-          </form>
-          }
-        </div>
-        <div className="row">
-          <ObjectSettings
-            objects={this.props.objectTypes}
-            objectKindInfo={this.props.objectKindInfo}
-            handlers={objectSettingsHandlers}
-          />
-        </div>
+        </form>
+        }
+        <ObjectSettings
+          objects={this.props.objectTypes}
+          objectKindInfo={this.props.objectKindInfo}
+          handlers={objectSettingsHandlers}
+        />
       </div>
     )
   }

@@ -86,7 +86,7 @@ export default class JourneyImport extends React.Component {
 
   render() {
     return (
-      <div className="row" id="journeys-import">
+      <div id="journeys-import">
         <button className="btn waves-effect waves-light" onClick={::this._toggleView}>Import/Export Journeys</button>
         { this.state.showView && 
           <div>

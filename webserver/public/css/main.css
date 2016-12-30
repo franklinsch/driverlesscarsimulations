@@ -3771,7 +3771,7 @@ button.btn-floating {
     min-height: 50px;
     line-height: 1.5rem;
     width: 100%;
-    text-align: left;
+    text-align: center;
     text-transform: none; }
     .dropdown-content li:hover, .dropdown-content li.active, .dropdown-content li.selected {
       background-color: white; }
@@ -5142,7 +5142,7 @@ input[type=range]:focus::-ms-fill-upper {
     margin: 0; }
   .side-nav li {
     float: none;
-    line-height: 48px; }
+    line-height: 36px; }
     .side-nav li.active {
       background-color: rgba(0, 0, 0, 0.05); }
   .side-nav a {
@@ -5150,8 +5150,8 @@ input[type=range]:focus::-ms-fill-upper {
     display: block;
     font-size: 14px;
     font-weight: 500;
-    height: 48px;
-    line-height: 48px;
+    height: 36px;
+    line-height: 36px;
     padding: 0 32px; }
     .side-nav a:hover {
       background-color: rgba(0, 0, 0, 0.05); }
@@ -5167,10 +5167,10 @@ input[type=range]:focus::-ms-fill-upper {
   .side-nav li > a > [class^="mdi-"], .side-nav li > a > [class*="mdi-"],
   .side-nav li > a > i.material-icons {
     float: left;
-    height: 48px;
-    line-height: 48px;
+    height: 36px;
+    line-height: 36px;
     margin: 0 32px 0 0;
-    width: 24px;
+    width: 18px;
     color: rgba(0, 0, 0, 0.54); }
   .side-nav .divider {
     margin: 8px 0 0 0; }
@@ -5180,7 +5180,7 @@ input[type=range]:focus::-ms-fill-upper {
     color: rgba(0, 0, 0, 0.54);
     font-size: 14px;
     font-weight: 500;
-    line-height: 48px; }
+    line-height: 36px; }
     .side-nav .subheader:hover {
       background-color: transparent; }
   .side-nav .userView {
@@ -6397,6 +6397,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   color: #f4eade; }
 
 .side-nav .btn, .side-nav .btn-large {
-  width: 100%; }
+  width: 100%;
+  margin-bottom: 20px; }
 
 /*# sourceMappingURL=main.css.map */
