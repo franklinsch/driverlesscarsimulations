@@ -91,7 +91,7 @@ def runSimulation(savn, initialParameters):
 
   while savn.alive:
     print("Sending", timestamp)
-    savn.updateState(timestamp, translate(state), sleepTime=sleepTime)
+    savn.updateState(timestamp, translate(state), sleepTime=SLEEP_TIME)
     print("Working on next: Sent", timestamp)
     state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
@@ -262,15 +262,18 @@ def moveCar(car):
   timeLeft = TIMESLICE
   start = car['route'][0]
   end = car['route'][1]
-  car['speed'] = 0
 
   if (not switchNodeLock(car, start, end) or
       ('cameraData' in car['sensorData'] and len(car['sensorData']['cameraData']) > 0)):
     return
 
   bearing = get_bearing(start, end)
-  dirDiff = (bearing - car['bearing'] + math.pi) % (2 * math.pi) - math.pi
+  dirDiff = (bearing - car['bearing'] + 180) % 360 - 180
   turningTime = abs(dirDiff) / TURNING_SPEED
+  if (turningTime == 0):
+    car['speed'] = end[2]['maxSpeed']
+  else:
+    car['speed'] = 0
   while (timeLeft > 0):
     if (turningTime > 0):
       if (turningTime <= timeLeft):
@@ -279,8 +282,8 @@ def moveCar(car):
         car['speed'] = end[2]['maxSpeed']
         car['bearing'] = bearing
       else:
+        car['bearing'] += dirDiff * timeLeft / turningTime
         timeLeft = 0
-        car['bearing'] = bearing + dirDiff * (1 - timeLeft / turningTime)
     elif (end[2]['timeLeft'] <= timeLeft):
       timeLeft -= end[2]['timeLeft']
       end[2]['timeLeft'] = 0
@@ -291,14 +294,17 @@ def moveCar(car):
       else:
         start = end
         end = car['route'][1]
-        car['speed'] = 0
 
         if (not switchNodeLock(car, start, end)):
           break
 
         bearing = get_bearing(start, end)
-        dirDiff = (bearing - car['bearing'] + math.pi) % (2 * math.pi) - math.pi
+        dirDiff = (bearing - car['bearing'] + 180) % 360 - 180
         turningTime = abs(dirDiff) / TURNING_SPEED
+        if (turningTime == 0):
+          car['speed'] = end[2]['maxSpeed']
+        else:
+          car['speed'] = 0
     else:
       end[2]['timeLeft'] -= timeLeft
       timeLeft = 0
