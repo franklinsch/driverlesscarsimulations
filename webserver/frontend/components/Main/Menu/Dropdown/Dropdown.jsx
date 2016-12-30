@@ -21,7 +21,7 @@ export default class Dropdown extends React.Component {
         outDuration: 225,
         constrain_width: true, // Does not change width of dropdown to that of the activator
         hover: false, // Activate on hover
-        gutter: 15, // Spacing from edge
+        gutter: 0, // Spacing from edge
         belowOrigin: true, // Displays dropdown below the button
         alignment: 'left' // Displays dropdown with edge aligned to the left of button
       }
@@ -34,7 +34,7 @@ export default class Dropdown extends React.Component {
         outDuration: 225,
         constrain_width: true, // Does not change width of dropdown to that of the activator
         hover: false, // Activate on hover
-        gutter: 15, // Spacing from edge
+        gutter: 0, // Spacing from edge
         belowOrigin: true, // Displays dropdown below the button
         alignment: 'left' // Displays dropdown with edge aligned to the left of button
       }
