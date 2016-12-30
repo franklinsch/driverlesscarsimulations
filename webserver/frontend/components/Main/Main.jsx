@@ -100,6 +100,7 @@ export default class Main extends React.Component {
     this.setState({
       pendingJourneys: pendingJourneys.concat([pendingJourney])
     })
+    Materialize.toast($('<span>New journey created</span>'), 1000);
   }
 
   handleMessageReceive(message) {
