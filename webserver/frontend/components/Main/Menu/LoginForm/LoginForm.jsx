@@ -94,12 +94,12 @@ export default class LoginButton extends React.Component {
   render() {
     return (
       <div>
-        <h4>
+        <h5>
           {
             this.state.token &&
             'Hello ' + this.props.activeUser + '!'
           }
-        </h4>
+        </h5>
         {
           this.state.token?
             <button
@@ -144,7 +144,7 @@ export default class LoginButton extends React.Component {
               onClick={::this._handleFormSubmit}
                 className="btn waves-effect waves-light right">
               Register
-            </button>
+            </button> 
           </form>
         }
       </div>

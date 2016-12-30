@@ -9,37 +9,46 @@ export default class JourneyList extends React.Component {
     handlers: React.PropTypes.object
   }
 
+  componentDidMount() {
+    $('.collapsible').collapsible();
+  }
+
   render() {
     const simulationJourneys = this.props.simulationJourneys || [];
     const pendingJourneys = this.props.pendingJourneys || [];
 
     return (
       <div id="journey-list">
-        <h4>Journeys</h4>
-        { (simulationJourneys.length == 0 && pendingJourneys.length == 0) &&
-          <i> No journeys </i>
-        }
-        <ul>
+        <ul className="collapsible">
           {
             simulationJourneys.map((journey, index) => {
               return (
-                <li
-                  key={index}
-                  onMouseEnter={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
-                  onMouseLeave={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
-                >
-                  { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } 
+                <li>
+                  <div className="collapsible-header">
+                    Journey {index}
+                  </div>
+                  <div className="collapsible-body">
+                    key={index}
+                    onMouseEnter={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
+                    onMouseLeave={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
+                    >
+                    { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" }
+                  </div>
                 </li>
               )
             })
           }
-        </ul>
-        <ul>
           {
             pendingJourneys.map((journey, index) => {
               return (
-                <li key={index}>
-                  { "(Pending) " + index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" } 
+                <li>
+                  <div className="collapsible-header">
+                    Journey {index}
+                  </div>
+                  <div className="collapsible-body">
+                    key={index}>
+                    { "(Pending) " + index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" }
+                  </div>
                 </li>
               )
             })

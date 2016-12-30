@@ -2313,7 +2313,7 @@ td, th {
   overflow: hidden;
   position: relative; }
   .collection .collection-item {
-    background-color: #f4eade;
+    background-color: #2f496e;
     line-height: 1.5rem;
     padding: 10px 20px;
     margin: 0;
@@ -2347,8 +2347,8 @@ td, th {
     .collection .collection-item:last-child {
       border-bottom: none; }
     .collection .collection-item.active {
-      background-color: #f4eade;
-      color: white; }
+      background-color: #2f496e;
+      color: #ccd8e9; }
       .collection .collection-item.active .secondary-content {
         color: #fff; }
   .collection a.collection-item {
@@ -2358,7 +2358,7 @@ td, th {
     .collection a.collection-item:not(.active):hover {
       background-color: #ddd; }
   .collection.with-header .collection-header {
-    background-color: #f4eade;
+    background-color: #2f496e;
     border-bottom: 1px solid #f4eade;
     padding: 10px 20px; }
   .collection.with-header .collection-item {
@@ -3997,7 +3997,8 @@ button.btn-floating {
     padding: 0; }
 .side-nav .collapsible-header,
 .side-nav.fixed .collapsible-header {
-  background-color: transparent;
+  background-color: #f4eade;
+  color: black;
   border: none;
   line-height: inherit;
   height: inherit;
@@ -4011,7 +4012,8 @@ button.btn-floating {
 .side-nav .collapsible-body,
 .side-nav.fixed .collapsible-body {
   border: 0;
-  background-color: #fff; }
+  background-color: #f4eade;
+  color: black; }
   .side-nav .collapsible-body li a,
   .side-nav.fixed .collapsible-body li a {
     padding: 0 23.5px 0 31px; }
@@ -6392,5 +6394,8 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   background-color: #f8f5f2;
   height: 100vh;
   width: 100vw; }
+
+#slide-out {
+  color: #f4eade; }
 
 /*# sourceMappingURL=main.css.map */

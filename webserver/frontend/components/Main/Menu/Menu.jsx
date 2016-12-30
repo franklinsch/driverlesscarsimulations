@@ -155,7 +155,7 @@ export default class Menu extends React.Component {
       <div>
         <ul id ="slide-out" className="side-nav">
           <div className="row">
-            </div>
+          </div>
           <div className="row">
             <div className="col s12">
               <ul className="tabs">
@@ -206,11 +206,11 @@ export default class Menu extends React.Component {
             </div>
             <div id="settings" className="col s12">
               <li>
-              <Dropdown
-                enabled  = {this.props.enabled}
-                items    = {cities}
-                handlers = {dropdownHandlers}
-              />
+                <Dropdown
+                  enabled  = {this.props.enabled}
+                  items    = {cities}
+                  handlers = {dropdownHandlers}
+                />
               </li>
               <li>
                 <JoinSimulationForm
@@ -267,17 +267,17 @@ export default class Menu extends React.Component {
             </div>
             <div id="run" className="col s12">
               <div className="row">
-                <button
-                  className = "btn waves-effect waves-light"
-                  disabled  = {!allowSimulationStart}
-                  onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
-                >
-                  { !allowSimulationStart &&
-                  <span>Simulation Ended</span> || hasSimulationStarted  &&
-                  <span>End Simulation</span> || <span>Start simulation</span>
-                  }
-                </button>
               </div>
+              <button
+                className = "btn  waves-effect waves-light"
+                disabled  = {!allowSimulationStart}
+                onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+              >
+                { !allowSimulationStart &&
+                <span>Simulation Ended</span> || hasSimulationStarted  &&
+                <span>End Simulation</span> || <span>Start simulation</span>
+                }
+              </button>
               <p>Current simulation ID: {simID}</p>
               {
                 simID !== '0' ?
