@@ -6400,4 +6400,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   width: 100%;
   margin-bottom: 20px; }
 
+.side-nav .tabs {
+  margin-top: 30px; }
+
 /*# sourceMappingURL=main.css.map */

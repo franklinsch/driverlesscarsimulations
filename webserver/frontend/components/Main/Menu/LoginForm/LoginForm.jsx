@@ -98,7 +98,7 @@ export default class LoginButton extends React.Component {
         {
           this.state.token &&
           <h5>
-            'Hello ' + this.props.activeUser + '!'
+            Hello {this.props.activeUser}!
           </h5>
         }
         {
