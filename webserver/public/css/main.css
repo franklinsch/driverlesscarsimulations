@@ -6398,4 +6398,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 #slide-out {
   color: #f4eade; }
 
+.side-nav .btn, .side-nav .btn-large {
+  width: 100%; }
+
 /*# sourceMappingURL=main.css.map */
