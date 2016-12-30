@@ -94,7 +94,7 @@ export default class JourneyImport extends React.Component {
               <div className="file-field input-field">
                 <div className="btn waves-effect waves-light">
                   <span>Import</span>
-                  <input type="file"/>
+                  <input type="file" onChange={::this._handleFileChange}/>
                 </div>
                 <div className="file-path-wrapper">
                   <input className="file-path validate" type="text"/>
