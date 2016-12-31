@@ -571,6 +571,7 @@ export default class Main extends React.Component {
       handleSimulationClose           : ::this.handleSimulationClose,
       handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
       handleSpeedChange               : ::this.handleSpeedChange,
+      handleToggleSmoothMotion        : ::this._handleToggleSmoothMotion,
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
       handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
       handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,

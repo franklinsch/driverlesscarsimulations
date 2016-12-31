@@ -203,17 +203,25 @@ export default class Menu extends React.Component {
               <li>
                 {
                   this.props.token &&
-                    <button
-                      onClick={::this._handleRequestAPIAccess}
-                      className="btn waves-effect waves-light">
-                        Request Api Access
-                      </button>
+                  <button
+                    onClick={::this._handleRequestAPIAccess}
+                    className="btn waves-effect waves-light">
+                    Request Api Access
+                  </button>
                 }
               </li>
             </div>
             <div id="settings" className="col s12">
               <div className="row">
               </div>
+              <li>
+                  <input
+                    type     = "checkbox"
+                    id       = "smooth-motion"
+                    onChange = {::this.props.handlers.handleToggleSmoothMotion}
+                  />
+                  <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
+              </li>
               <li>
                 <Dropdown
                   enabled  = {this.props.enabled}
