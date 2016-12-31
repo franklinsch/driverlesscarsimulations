@@ -17,12 +17,14 @@ class CenterControl extends MapControl {
     );
 
     centerControl.onAdd = function (map) {
+      console.log("here")
       let div = L.DomUtil.create('div', '');
       ReactDOM.render(jsx, div);
       return div;
     };
-
+    console.log("here")
     this.leafletElement = centerControl;
+    console.log("here")
   }
 }
 

@@ -49,7 +49,7 @@ export default class LandmarkSearch extends React.Component {
         lat: parseFloat(data.lat),
         lng: parseFloat(data.lon)
       },
-      displayName: data.display_name
+      displayName: data.display_name.slice(0,135)
     }
   }
 
@@ -78,7 +78,7 @@ export default class LandmarkSearch extends React.Component {
       success: (data) => {
         const results = data.map((result) => {
           return this._toOSMSearchResults(result);
-        });
+        })
         this.setState({searchResults: results});
       }
     })
