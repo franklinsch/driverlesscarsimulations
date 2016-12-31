@@ -8,6 +8,7 @@ export default class LandmarkSearchResults extends React.Component {
     handlers: React.PropTypes.object
   }
 
+
   render() {
     const results = this.props.results;
 

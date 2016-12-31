@@ -5219,7 +5219,6 @@ input[type=range]:focus::-ms-fill-upper {
 .drag-target {
   height: 100%;
   width: 10px;
-  position: fixed;
   top: 0;
   z-index: 998; }
 
@@ -5248,7 +5247,6 @@ input[type=range]:focus::-ms-fill-upper {
     color: #2f496e; }
 
 #sidenav-overlay {
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -6391,7 +6389,8 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 #simulation-map {
   background-color: #f8f5f2;
   height: 100vh;
-  width: 100vw; }
+  width: 100vw;
+  z-index: 1000; }
 
 #slide-out {
   color: #ededed; }

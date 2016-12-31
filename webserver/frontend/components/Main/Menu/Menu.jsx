@@ -218,6 +218,8 @@ export default class Menu extends React.Component {
               </li>
             </div>
             <div id="journeys" className="col s12">
+              <div className="row">
+              </div>
               <JourneyList
                 pendingJourneys     = {pendingJourneys}
                 simulationJourneys  = {simulationJourneys}
