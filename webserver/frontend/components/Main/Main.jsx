@@ -1,6 +1,7 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
+import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
 import Menu from './Menu/Menu.jsx';
 import cookie from 'react-cookie';
 import 'whatwg-fetch';
@@ -567,7 +568,6 @@ export default class Main extends React.Component {
       handleSimulationStart           : ::this.handleSimulationStart,
       handleSimulationUpdate          : ::this.handleSimulationUpdate,
       handleSimulationClose           : ::this.handleSimulationClose,
-      handlePositionSelect            : ::this.handlePositionPreview,
       handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
       handleSpeedChange               : ::this.handleSpeedChange,
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
@@ -583,11 +583,26 @@ export default class Main extends React.Component {
       handleAddJourney         : ::this.handlePendingJourneyAdd,
     }
 
+    const landmarkSearchHandlers = {
+      handlePositionAdd : ::this.handlePositionPreview
+    }
+
+
     return (
       <div>
         <nav>
-          <div className="nav-wrapper z-depth-5">
-            <a id="menu-button" href="#"  data-activates="slide-out" className=""><i className="material-icons">menu</i></a>
+          <div className="nav-wrapper z-depth-3">
+            <div className="row">
+              <div className="col s1">
+                <a id="menu-button" href="#"  data-activates="slide-out" className=""><i className="material-icons">menu</i></a>
+              </div>
+              <div className="col s11">
+                <LandmarkSearch
+                  boundLimit = {bounds}
+                  handlers   = {landmarkSearchHandlers}
+                />
+              </div>
+            </div>
           </div>
         </nav>
         <Menu

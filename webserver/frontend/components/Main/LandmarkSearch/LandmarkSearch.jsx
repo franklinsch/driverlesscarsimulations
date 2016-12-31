@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import CustomPropTypes from '../../../../Utils/CustomPropTypes.jsx';
+import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
 import LandmarkSearchResults from './LandmarkSearchResults/LandmarkSearchResults.jsx';
 
 export default class LandmarkSearch extends React.Component {
@@ -91,9 +91,9 @@ export default class LandmarkSearch extends React.Component {
 
     return (
       <div>
-        <div className="input-field">
+        <div className="input-field ">
           <input
-            type        = 'text'
+            type        = 'search'
             className   = "form-control"
             id          = "landmark-search"
             placeholder = 'Search Name or Address'

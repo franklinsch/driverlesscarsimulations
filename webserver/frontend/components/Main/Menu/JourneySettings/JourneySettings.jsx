@@ -1,6 +1,5 @@
 import React from "react";
 import CustomPropTypes from "../../../Utils/CustomPropTypes.jsx";
-import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
 import JourneyImport from "./JourneyImport/JourneyImport.jsx";
 import ObjectSettings from "./ObjectSettings/ObjectSettings.jsx";
 
@@ -108,11 +107,7 @@ export default class JourneySettings extends React.Component {
     const showJourneyManualAddForm = this.state.showJourneyManualAddForm;
 
     const journeys = this.props.simulationJourneys;
-
-    const landmarkSearchHandlers = {
-      handlePositionAdd : this.props.handlers.handlePositionAdd
-    }
-
+    
     const journeyImportHandlers = {
       handleJourneysSubmit : this.props.handlers.handleJourneysFileImport
     }
@@ -125,10 +120,6 @@ export default class JourneySettings extends React.Component {
       <div id="journey-settings">
         <div id="input-journeys">
         </div>
-        <LandmarkSearch
-          boundLimit = {bounds}
-          handlers   = {landmarkSearchHandlers}
-        />
         <JourneyImport
           journeys = {journeys}
           handlers = {journeyImportHandlers}

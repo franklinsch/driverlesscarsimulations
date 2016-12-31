@@ -120,7 +120,6 @@ export default class Menu extends React.Component {
 
     const journeySettingsHandlers = {
       handleJourneysFileImport : ::this.handleJourneysSubmit,
-      handlePositionAdd        : this.props.handlers.handlePositionSelect,
       handleObjectCreate       : this.props.handlers.handleObjectTypeCreate
     };
 
