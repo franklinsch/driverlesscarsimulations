@@ -4002,9 +4002,6 @@ button.btn-floating {
   line-height: inherit;
   height: inherit;
   padding: 0 16px; }
-  .side-nav .collapsible-header:hover,
-  .side-nav.fixed .collapsible-header:hover {
-    background-color: rgba(0, 0, 0, 0.05); }
   .side-nav .collapsible-header i,
   .side-nav.fixed .collapsible-header i {
     line-height: inherit; }
