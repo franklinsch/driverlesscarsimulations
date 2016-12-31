@@ -55,7 +55,14 @@ export default class ObjectSettings extends React.Component {
       settings: null,
       kind: firstKind
     })
+  }
 
+  componentDidMount() {
+    $('select').material_select();
+  }
+
+  componentDidUpdate() {
+    $('select').material_select();
   }
 
   _renderKindDropdown() {
@@ -78,6 +85,7 @@ export default class ObjectSettings extends React.Component {
           }
         })
       }}>
+        <option value="" disabled selected>Kind</option>
         {
           settings.map((setting, index) => {
             const name = setting.name;
@@ -203,7 +211,6 @@ export default class ObjectSettings extends React.Component {
               <form>
               {this._renderTypeNameInput()}
                 <div className="input-field">
-                <label htmlFor="kind">Kind</label>
                 {this._renderKindDropdown()}
                 </div>
               {this._renderSettings()}
