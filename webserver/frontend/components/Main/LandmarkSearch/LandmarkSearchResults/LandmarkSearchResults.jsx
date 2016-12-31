@@ -12,7 +12,7 @@ export default class LandmarkSearchResults extends React.Component {
     const results = this.props.results;
 
     return (
-      <ul className="collection">
+      <ul id="search-results" className="collection">
         {
           results.map((result, index) => {
             return (

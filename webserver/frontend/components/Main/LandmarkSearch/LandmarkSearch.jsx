@@ -1,7 +1,7 @@
-import React from 'react';
-import $ from 'jquery';
-import CustomPropTypes from '../../Utils/CustomPropTypes.jsx';
-import LandmarkSearchResults from './LandmarkSearchResults/LandmarkSearchResults.jsx';
+import React from "react";
+import $ from "jquery";
+import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
+import LandmarkSearchResults from "./LandmarkSearchResults/LandmarkSearchResults.jsx";
 
 export default class LandmarkSearch extends React.Component {
 
@@ -104,11 +104,11 @@ export default class LandmarkSearch extends React.Component {
           <label htmlFor="landmark-search">
             <i className="material-icons"> search </i>
           </label>
-          <LandmarkSearchResults
-            results  = {this.state.searchResults}
-            handlers = {landmarkSearchResultsHandlers}
-          />
         </div>
+        <LandmarkSearchResults
+          results  = {this.state.searchResults}
+          handlers = {landmarkSearchResultsHandlers}
+        />
       </div>
     )
   }
