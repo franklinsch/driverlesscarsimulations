@@ -3,31 +3,6 @@ import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.jsx'
 import RotatableMarker from './RotatableMarker/RotatableMarker.jsx'
-import { MapControl } from 'react-leaflet';
-
-class CenterControl extends MapControl {
-  componentWillUpdate() {
-    const centerControl = L.control({position: 'topleft'});  // see http://leafletjs.com/reference.html#control-positions for other positions
-    const jsx = (
-      <div {...this.props}>
-        <button className="btn waves-effect waves-light">
-          Test button
-        </button>
-      </div>
-    );
-
-    centerControl.onAdd = function (map) {
-      console.log("here")
-      let div = L.DomUtil.create('div', '');
-      ReactDOM.render(jsx, div);
-      return div;
-    };
-    console.log("here")
-    this.leafletElement = centerControl;
-    console.log("here")
-  }
-}
-
 
 export default class SimulationMap extends React.Component {
   static propTypes = {
@@ -238,18 +213,18 @@ export default class SimulationMap extends React.Component {
     // We use a random key so that on each change, the GeoJson is rerendered (GeoJson implementation is immutable)
     return this.state.clickedCar &&
       <GeoJson key={Math.random()} data={
-                { "type": "FeatureCollection",
-                  "features": [
-                    {
-                      "type": "Feature",
-                      "geometry": {
-                        "type": "LineString",
-                        "coordinates": this.state.clickedCar.route
-                      }
-                    }
-                  ]
-                }
+        { "type": "FeatureCollection",
+           "features": [
+          {
+            "type": "Feature",
+              "geometry": {
+                "type": "LineString",
+                "coordinates": this.state.clickedCar.route
               }
+          }
+          ]
+        }
+      }
       />;
   }
 
@@ -390,7 +365,6 @@ export default class SimulationMap extends React.Component {
               {this._renderPopup()}
             </Marker>
           }
-          <CenterControl/>
         </Map>
       </div>
     );

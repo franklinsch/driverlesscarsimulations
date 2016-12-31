@@ -633,6 +633,11 @@ export default class Main extends React.Component {
             handlers                   = {simulationMapHandlers}
           />
         </div>
+        <footer class="page-footer">
+          <div className="footer-copyright">
+            © 2016 SAVN team.
+          </div>
+        </footer>
       </div>
     )
   }
