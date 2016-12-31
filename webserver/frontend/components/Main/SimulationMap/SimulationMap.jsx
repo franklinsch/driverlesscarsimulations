@@ -273,9 +273,9 @@ export default class SimulationMap extends React.Component {
 
     if (!this.props.bounds) {
       return (
-        <p> Loading map... </p>
-      )
-    }
+        <div className="progress">
+          <div className="indeterminate"></div>
+        </div>)}
 
     const origin = this.state.origin;
     const destination = this.state.destination;

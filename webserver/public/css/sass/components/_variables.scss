@@ -244,7 +244,7 @@ $slider-indicator-color: color('green', 'base') !default;
 // 16. Spinners | Loaders
 // ==========================================================================
 
-$spinner-default-color: $secondary-color !default;
+$spinner-default-color: $primary-color !default;
 
 
 // 17. Tabs
@@ -311,4 +311,4 @@ $collection-link-color: #000 !default;
 // 24. Progress Bar
 // ==========================================================================
 
-$progress-bar-color: $secondary-color !default;
+$progress-bar-color: $primary-color !default;
