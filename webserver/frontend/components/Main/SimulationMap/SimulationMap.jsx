@@ -3,6 +3,29 @@ import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.jsx'
 import RotatableMarker from './RotatableMarker/RotatableMarker.jsx'
+import { MapControl } from 'react-leaflet';
+
+class CenterControl extends MapControl {
+  componentWillUpdate() {
+    const centerControl = L.control({position: 'topleft'});  // see http://leafletjs.com/reference.html#control-positions for other positions
+    const jsx = (
+      <div {...this.props}>
+        <button className="btn waves-effect waves-light">
+          Test button
+        </button>
+      </div>
+    );
+
+    centerControl.onAdd = function (map) {
+      let div = L.DomUtil.create('div', '');
+      ReactDOM.render(jsx, div);
+      return div;
+    };
+
+    this.leafletElement = centerControl;
+  }
+}
+
 
 export default class SimulationMap extends React.Component {
   static propTypes = {
@@ -360,6 +383,7 @@ export default class SimulationMap extends React.Component {
               {this._renderPopup()}
             </Marker>
           }
+          <CenterControl/>
         </Map>
       </div>
     );
