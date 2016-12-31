@@ -2211,13 +2211,11 @@ ul.staggered-list li {
     text-align: center; } }
 
 footer.page-footer {
-  margin-top: 20px;
-  padding-top: 20px;
   background-color: #2f496e; }
   footer.page-footer .footer-copyright {
     overflow: hidden;
-    height: 50px;
-    line-height: 50px;
+    height: 5vh;
+    line-height: 5vh;
     color: rgba(255, 255, 255, 0.8);
     background-color: rgba(51, 51, 51, 0.08); }
 
