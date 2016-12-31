@@ -4,3 +4,4 @@ cache.info
 *.json
 !package.json
 api_keys
+!node_modules
