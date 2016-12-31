@@ -564,6 +564,7 @@ export default class Main extends React.Component {
       handleJoinSimulation            : ::this.handleJoinSimulation,
       handleCityChange                : ::this.handleCityChange,
       handleTokenChange               : ::this.handleTokenChange,
+      handleRequestAPIAccess          : ::this.handleRequestAPIAccess,
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
       handleSimulationUpdate          : ::this.handleSimulationUpdate,

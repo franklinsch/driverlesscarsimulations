@@ -86,7 +86,7 @@ export default class Menu extends React.Component {
   handleCityChange(city) {
     this.props.handlers.handleCityChange(city._id);
   }
-  
+
   _handleRequestAPIAccess(e) {
     e.preventDefault();
     this.props.handlers.handleRequestAPIAccess();
@@ -198,6 +198,16 @@ export default class Menu extends React.Component {
                     <SimulationList
                       simulations = {userSimulations}
                     /> : ''
+                }
+              </li>
+              <li>
+                {
+                  this.props.token &&
+                    <button
+                      onClick={::this._handleRequestAPIAccess}
+                      className="btn waves-effect waves-light">
+                        Request Api Access
+                      </button>
                 }
               </li>
             </div>
