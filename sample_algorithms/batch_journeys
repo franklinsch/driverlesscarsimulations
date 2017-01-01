@@ -1,10 +1,6 @@
 #!/bin/bash
 
-<<<<<<< e8efad19365e6dec05e4aa6e7ccb24a5e288ddd2
 mongo < reset_all_journeys.mongo
-=======
-mongo < reset_simulation.mongo
->>>>>>> Fix batch_journeys to use new name for mongo executable
 node journeys.js $2
 curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST http://localhost:3000/simulations/$1/journeys -d @new_journeys.json
 echo
