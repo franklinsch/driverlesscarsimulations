@@ -118,8 +118,7 @@ export default class ObjectSettings extends React.Component {
 
     return (
       <div className="input-field">
-        <label htmlFor="typeName">Type name</label>
-        <input id="typeName" className="form-control" onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
+        <input placeholder="typeName" className="form-control" onChange={(e)=>{this.setState({typeName: e.target.value})}}/>
       </div>
     )
   }
@@ -145,7 +144,6 @@ export default class ObjectSettings extends React.Component {
 
               return (
                 <div className="input-field" key={index}>
-                  <label htmlFor={name}> {name} </label>
                   <select onChange={onChange}>
                     {
                       allowedValues.map((value, index1) => {
@@ -168,8 +166,7 @@ export default class ObjectSettings extends React.Component {
 
               return (
                 <div className="input-field" key={index}>
-                  <label htmlFor={name}> {name} </label>
-                  <input id={name} value={value} onChange={onChange} className="form-control"/>
+                  <input placeholder={name} value={value} onChange={onChange} className="validate"/>
                 </div>
               )
             }
