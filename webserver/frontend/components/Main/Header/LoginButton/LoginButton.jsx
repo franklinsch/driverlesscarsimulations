@@ -53,7 +53,14 @@ export default class LoginButton extends React.Component {
     .then((response) => {
       this.setState({ password: '' });
       if (!response.ok) {
-        console.log("error logging in");
+        response.json().then((data) => {
+          if (data.message) {
+            alert(data.message);
+          }
+          if (data.code === 11000) {
+            alert("Username is already taken");
+          }
+        });
         return;
       }
 
