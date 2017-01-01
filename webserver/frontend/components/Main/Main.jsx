@@ -46,6 +46,7 @@ export default class Main extends React.Component {
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
     const initialToken = cookie.load('token') || '';
     this.state = {
+      showMenu: false,
       token: initialToken,
       userID: '',
       activeUser: '',
@@ -94,6 +95,21 @@ export default class Main extends React.Component {
           console.log("error fetching user simulations");
         })
     }
+  }
+
+  handleMenuButtonClick() {
+
+    if (this.state.showMenu) {
+      $('.nav-wrapper').animate({paddingLeft: '0px'}, 'fast');
+      $('#dummy-button').sideNav('hide')
+    }
+    else {
+      $('.nav-wrapper').animate({paddingLeft: '300px'}, 'fast');
+      $('#dummy-button').sideNav('show')
+    }
+    this.setState({
+      showMenu: !this.state.showMenu
+    })
   }
 
   handlePendingJourneyAdd(pendingJourney) {
@@ -526,7 +542,7 @@ export default class Main extends React.Component {
     }
   }
   componentDidMount() {
-    $("#menu-button").sideNav();
+    $("#dummy-button").sideNav();
   }
 
   componentDidUpdate() {
@@ -596,7 +612,8 @@ export default class Main extends React.Component {
           <div className="nav-wrapper z-depth-3">
             <div className="row">
               <div className="col s1">
-                <a id="menu-button" href="#"  data-activates="slide-out" className=""><i className="material-icons">menu</i></a>
+                <a href="#" onClick={::this.handleMenuButtonClick}><i className="material-icons">menu</i></a>
+                <a id="dummy-button" href="#" data-activates="slide-out" hidden><i className="material-icons">menu</i></a>
               </div>
               <div className="col s11">
                 <LandmarkSearch
