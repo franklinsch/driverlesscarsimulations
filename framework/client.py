@@ -29,9 +29,8 @@ class SAVNConnectionAssistant:
                 {'simulationID': self.simulationID,
                  'timestamp': timestamp,
                  'objects': state,
-                 'frameworkID': self.frameworkID,
-                 'epochAtSend': clock_val}}
-    asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+                 'frameworkID': self.frameworkID}}
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)
     if (sleepTime > 0):
       self.synchronize(sleepTime)
@@ -77,7 +76,9 @@ class SAVNConnectionAssistant:
     await self.send_packet(packet)
 
   async def send_packet(self, packet):
+    clock_val = time.time()
     packet['token'] = self.token
+    packet['content']['epochAtSend'] = clock_val
     await self.ws.send(json.dumps(packet))
 
   async def handlerLoop(self):

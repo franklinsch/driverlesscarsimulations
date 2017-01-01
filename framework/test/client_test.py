@@ -24,7 +24,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
     self.loop = asyncio.get_event_loop()
 
   def test_updateState(self):
-    state = {"car": 1}
+    state = {'car': 1}
     timestamp = 0
     packet = {'type': 'simulation-state-update',
               'content':
