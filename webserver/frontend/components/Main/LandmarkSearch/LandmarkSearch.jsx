@@ -3,6 +3,10 @@ import $ from "jquery";
 import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
 import LandmarkSearchResults from "./LandmarkSearchResults/LandmarkSearchResults.jsx";
 
+const onClickOutside = require('react-onclickoutside');
+
+const ResultsWrapper = onClickOutside(LandmarkSearchResults);
+
 export default class LandmarkSearch extends React.Component {
 
   static propTypes = {
@@ -15,12 +19,22 @@ export default class LandmarkSearch extends React.Component {
 
     this.state = {
       inputValue: "",
-      searchResults: []
+      searchResults: [],
+      hidden: true,
     }
+  }
+
+  _showResults() {
+    this.setState({hidden: false});
+  }
+
+  _hideResults() {
+    this.setState({hidden: true})
   }
 
   _handleChange(e) {
     const input = e.target.value;
+    this._showResults();
     this.setState({inputValue: input});
   }
 
@@ -54,7 +68,6 @@ export default class LandmarkSearch extends React.Component {
   }
 
   handleResultSelect(result) {
-    console.log(result);
     this.props.handlers.handlePositionAdd(result.position);
   }
 
@@ -105,10 +118,14 @@ export default class LandmarkSearch extends React.Component {
             <i className="material-icons"> search </i>
           </label>
         </div>
-        <LandmarkSearchResults
-          results  = {this.state.searchResults}
-          handlers = {landmarkSearchResultsHandlers}
-        />
+        {
+          !this.state.hidden &&
+          <ResultsWrapper
+            hide={e => this._hideResults()}
+            results={this.state.searchResults}
+            handlers={landmarkSearchResultsHandlers}
+          />
+        }
       </div>
     )
   }

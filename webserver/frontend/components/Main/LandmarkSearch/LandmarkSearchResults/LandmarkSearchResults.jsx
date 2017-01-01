@@ -9,6 +9,11 @@ export default class LandmarkSearchResults extends React.Component {
   }
 
 
+  handleClickOutside() {
+    console.log("here");
+    this.props.hide();
+  }
+  
   render() {
     const results = this.props.results;
 
