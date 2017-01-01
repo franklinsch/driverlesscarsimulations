@@ -23,13 +23,15 @@ class SAVNConnectionAssistant:
     self.shouldAwait = False
 
   def updateState(self, timestamp, state, sleepTime=1):
+    clock_val = time.time()
     packet = {'type': 'simulation-state-update',
               'content':
                 {'simulationID': self.simulationID,
                  'timestamp': timestamp,
                  'objects': state,
-                 'frameworkID': self.frameworkID}}
-    asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
+                 'frameworkID': self.frameworkID,
+                 'epochAtSend': clock_val}}
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
       loop)
     if (sleepTime > 0):
       self.synchronize(sleepTime)

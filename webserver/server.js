@@ -825,10 +825,13 @@ frameworkSocketServer.on('request', function(request) {
   }
 
   function _handleSimulationStateUpdate(message) {
+    const epochAtReception = (new Date).getTime();
+
     console.log("Received simulation-update from framework");
 
-    const simulationID = message.simulationID;
-    const frameworkID = message.frameworkID;
+    const simulationID = message.content.simulationID;
+    const frameworkID = message.content.frameworkID;
+    const epochAtSend = message.content.epochAtSend;
 
     const newState = message;
 
@@ -856,6 +859,17 @@ frameworkSocketServer.on('request', function(request) {
       const simulationStateTimestamp = simulationStateIndex * simulation.timeslice;
       const nextFrameworkTimestamp = message.timestamp + framework.timeslice;
       const nextIndex = Math.ceil(nextFrameworkTimestamp / simulation.timeslice);
+      const epochAtUpdate = (new Date).getTime();
+
+      const dump = {
+        'numCars': newState.objects.length,
+        'timestamp': message.content.timestamp,
+        'networkTime': epochAtReception - epochAtSend,
+        'dbTime': epochAtUpdate - epochAtReception
+      };
+      fs.writeFile("../stress_test.log", dump, function(err) {
+        if (err) throw err;
+      });
 
       const pushIndexInfo = {};
       for (let i = simulationStateIndex; i < simulation.numSimulationStates; i++) {
