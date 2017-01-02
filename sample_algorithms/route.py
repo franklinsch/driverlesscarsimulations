@@ -5,6 +5,8 @@ import math
 import json
 import subprocess
 
+import time
+
 def saveGeojson(bottom, left, top, right, output):
   api = overpass.API()
   map_query = overpass.MapQuery(bottom, left, top, right)
@@ -43,13 +45,17 @@ def getProperties(inp, nstart, nend):
 #  return props
 
 def getRoute(inp, start, end):
+  t = time.time()
   start = newPoint(getNearest(inp, start))
+  print(time.time() - t)
   end = newPoint(getNearest(inp, end))
+  print(time.time() - t)
 
   os.system("node route.js " + str(gjson.dumps(start).encode('utf8')) + " " + str(gjson.dumps(end).encode('utf8')) + " " + inp + " > path.json");
   path = None
   with open("path.json") as data_file:
     path = json.load(data_file)
+  print(time.time() - t)
   return path
 
 def newPoint(coordinates):
@@ -76,77 +82,78 @@ def scale(point, scale):
 def equal(point1, point2):
   return point1[0] == point2[0] and point1[1] == point2[1]
 
-#def getNearest(inp, point):
-#  os.system("node find_node.js " + str(gjson.dumps(point).encode('utf8')) + " " + inp + " > find.json")
-#  proj = None
-#  with open("find.json") as data_file:
-#    proj = json.load(data_file)
-#  return proj
-
 def getNearest(inp, point):
-  point = point['geometry']['coordinates']
-  with open(inp, "r+") as data_file:
-    geojson = gjson.load(data_file)
+  os.system("node find_node.js " + str(gjson.dumps(point).encode('utf8')) + " " + inp + " > find.json")
+  proj = None
+  with open("find.json") as data_file:
+    proj = json.load(data_file)
+  return proj
 
-    min2_angle = None
-    min2_point = None
-    min2_i     = None
-    min2_j     = None
+#def getNearest(inp, point):
+#  point = point['geometry']['coordinates']
+#  with open(inp, "r+") as data_file:
+#    geojson = gjson.load(data_file)
 
-    min_distance    = -1
-    min_point       = None
-    min_i           = None
-    min_j           = None
-    min_point_angle = None
+#    min2_angle = None
+#    min2_point = None
+#    min2_i     = None
+#    min2_j     = None
 
-    for (i, feature) in enumerate(geojson['features']):
-      last_point = None
-      if (feature['geometry']['type'] == 'LineString' and 'highway' in feature['properties']):
-        for (j, coordinate) in enumerate(feature['geometry']['coordinates']):
-          dist = distance(point, coordinate)
-          if (min_distance == -1 or dist < min_distance):
-            min_point_angle = angle(coordinate, point)
-            min_distance = dist
-            min_point = coordinate
-            min_i = i
-            min_j = j
+#    min_distance    = -1
+#    min_point       = None
+#    min_i           = None
+#    min_j           = None
+#    min_point_angle = None
 
-            if (j > 0):
-              min2_angle = abs(angle(coordinate, last_point)-min_point_angle)
-              min2_point = last_point
-              min2_i = i
-              min2_j = j-1
-            else:
-              min2_angle = None
-          elif (j-1 == min_j and i == min_i):
-            ang = abs(angle(min_point, coordinate)-min_point_angle)
-            if (min2_angle == None or ang < min2_angle):
-              min2_angle = ang
-              min2_point = coordinate
-              min2_j = j
+#    for (i, feature) in enumerate(geojson['features']):
+#      last_point = None
+#      if (feature['geometry']['type'] == 'LineString' and 'highway' in feature['properties']):
+#        for (j, coordinate) in enumerate(feature['geometry']['coordinates']):
+#          dist = distance(point, coordinate)
+#          if (min_distance == -1 or dist < min_distance):
+#            min_point_angle = angle(coordinate, point)
+#            min_distance = dist
+#            min_point = coordinate
+#            min_i = i
+#            min_j = j
 
-          last_point = coordinate
+#            if (j > 0):
+#              min2_angle = abs(angle(coordinate, last_point)-min_point_angle)
+#              min2_point = last_point
+#              min2_i = i
+#              min2_j = j-1
+#            else:
+#              min2_angle = None
+#          elif (j-1 == min_j and i == min_i):
+#            ang = abs(angle(min_point, coordinate)-min_point_angle)
+#            if (min2_angle == None or ang < min2_angle):
+#              min2_angle = ang
+#              min2_point = coordinate
+#              min2_i = i
+#              min2_j = j
 
-    B = sub(min2_point, min_point)
-    A = sub(point, min_point)
-    sc = scale(B, dot(A, B)/dot(B, B))
-    proj = add(sc, min_point)
-    if (min2_i == min_i or abs(min2_j - min_j) == 1):
-      proj_distance = distance(proj, min_point)
-      if (proj_distance < 0.00001):
-        return min_point
-      else:
-        j = min_j
-        if (min2_j > min_j):
-          j = min2_j
-        geojson['features'][min_i]['geometry']['coordinates'].insert(j, proj)
+#          last_point = coordinate
 
-        data_file.seek(0)
-        data_file.write(gjson.dumps(geojson))
-        data_file.truncate()
+#    B = sub(min2_point, min_point)
+#    A = sub(point, min_point)
+#    sc = scale(B, dot(A, B)/dot(B, B))
+#    proj = add(sc, min_point)
+#    if (min2_i == min_i and abs(min2_j - min_j) == 1):
+#      proj_distance = distance(proj, min_point)
+#      if (proj_distance < 0.00001):
+#        return min_point
+#      else:
+#        j = min_j
+#        if (min2_j > min_j):
+#          j = min2_j
+#        geojson['features'][min_i]['geometry']['coordinates'].insert(j, proj)
 
-        return proj
-  return None
+#        data_file.seek(0)
+#        data_file.write(gjson.dumps(geojson))
+#        data_file.truncate()
+
+#        return proj
+#  return None
 
 #saveGeojson(50.68166, 4.78482, 50.68347, 4.78780, 'map.geojson')
 #start = {"geometry": {"type": "Point", "coordinates": [4.778602, 50.6840807]}, "type": "Feature", "properties": {}}

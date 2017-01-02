@@ -55,12 +55,13 @@ for (let i in geojson['features']) {
         } else {
           min2_angle = undefined;
         }
-      } 
+      }
       else if (j-1 == min_j && i == min_i) {
         ang = Math.abs(angle(min_point, coordinate)-min_point_angle);
         if (min2_angle == undefined || ang < min2_angle) {
           min2_angle = ang;
           min2_point = coordinate;
+          min2_i = i;
           min2_j = j;
         }
       }
