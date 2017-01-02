@@ -157,6 +157,39 @@ router.route('/simulations/:simulationID/journeys')
     })
   });
 
+router.route('/create-simulation')
+  .post((req, res) => {
+    const simulationData = {
+      createdAt: Date.now(),
+      latestTimestamp: 0,
+      journeys: [],
+      frontends: [],
+      completionLogs: [],
+      frameworks: [],
+      simulationStates: []
+    };
+
+    simulation = new Simulation(simulationData);
+    simulation.save((error, simulation) => {
+      if (error) {
+        res.status(404).end();
+        return console.log(error);
+      }
+      const updateInfo = {
+        $push: {
+          simulations: simulation._id
+        },
+        $set: {
+          active_simulation: simulation._id
+        }
+      };
+      const options = {
+        upsert: true
+      };
+      res.status(200).send(simulation._id);
+    });
+  });
+
 router.route('/register')
   .post((req, res) => {
     const username = req.body.username;
