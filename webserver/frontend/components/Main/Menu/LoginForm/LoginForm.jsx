@@ -55,10 +55,10 @@ export default class LoginButton extends React.Component {
       if (!response.ok) {
         response.json().then((data) => {
           if (data.message) {
-            alert(data.message);
+            Materialize.toast(data.message, 3000);
           }
           if (data.code === 11000) {
-            alert("Username is already taken");
+            Materialize.toast('Username already taken', 3000);
           }
         });
         return;
