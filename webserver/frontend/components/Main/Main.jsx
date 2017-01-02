@@ -4,6 +4,8 @@ import UtilFunctions from '../Utils/UtilFunctions.jsx';
 import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
 import Menu from './Menu/Menu.jsx';
 import cookie from 'react-cookie';
+import crossroads from 'crossroads';
+import hasher from 'hasher';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
@@ -20,7 +22,31 @@ export default class Main extends React.Component {
       simID = tokens[tokens.length - 1];
     }
 
+
     var socket = new WebSocket('ws://' + host + ':3000');
+
+    const initialToken = cookie.load('token') || '';
+    this.state = {
+      showMenu: false,
+      token: initialToken,
+      userID: '',
+      activeUser: '',
+      selectedCityID: 0,
+      selectedJourneyID: "0",
+      socket: socket,
+      simulationInfo: {
+        id: simID,
+        cityID: "0"
+      },
+      simulationState: {
+        timestamp: 0,
+        latestTimestamp: 0,
+        objects: []
+      },
+      pendingJourneys: [],
+      simulationJourneys: [],
+      userSimulations: []
+    }
 
     socket.onopen = (event) => {
       console.log("Connected to: " + event.currentTarget.URL)
@@ -40,35 +66,51 @@ export default class Main extends React.Component {
       if (simID != "0") {
         this.handleJoinSimulation(simID);
       }
+
+      this._registerRoutes();
     }
     socket.onerror = (error) => { console.error("WebSocket error: " + error) }
     socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
-    const initialToken = cookie.load('token') || '';
-    this.state = {
-      showMenu: false,
-      token: initialToken,
-      userID: '',
-      activeUser: '',
-      selectedCityID: 0,
-      selectedJourneyID: "0",
-      socket: socket,
-      simulationInfo: {
-        id: simID,
-        cityID: "0"
-      },
-      simulationState: {
-        timestamp: 0,
-        latestTimestamp: 0,
-        objects: []
-      },
-      pendingJourneys: []
-    }
+
     this.updateUserSimulations();
 
     this.smoothMotion = false;
     this.averageWaitingTime = undefined;
     this.lastUpdateTime = undefined;
+  }
+
+  _parseURLHash(newHash, oldHash){
+      crossroads.parse(newHash);
+  }
+  
+  _registerRoutes() {
+    crossroads.addRoute('/simulations/{simID}', (simID) => {
+      this.setState({
+        selectedJourneyID: "0",
+        simulationInfo: {
+          id: simID,
+          cityID: this.state.simulationInfo.cityID
+        },
+        simulationState: {
+          timestamp: 0,
+          latestTimestamp: 0,
+          objects: []
+        },
+        pendingJourneys: [],
+        simulationJourneys: []
+      });
+      this.handleJoinSimulation(simID);
+    });
+
+    // parse initial hash
+    hasher.initialized.add(this._parseURLHash);
+
+    // parse hash changes
+    hasher.changed.add(this._parseURLHash);
+
+    //start listening for history changes
+    hasher.init();
   }
 
   updateUserSimulations() {
@@ -541,6 +583,7 @@ export default class Main extends React.Component {
       }
     }
   }
+
   componentDidMount() {
     $("#dummy-button").sideNav();
   }

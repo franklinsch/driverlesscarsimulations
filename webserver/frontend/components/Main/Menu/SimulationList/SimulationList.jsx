@@ -17,7 +17,7 @@ export default class SimulationList extends React.Component {
         <ul id="dropdown" className="dropdown-content">
             {
               simulations.map((simulation, index) => {
-                const link = '/simulations/' + simulation;
+                const link = '#/simulations/' + simulation;
                 return (
                   <li key={ index }>
                     <a href={ link }> { simulation }</a>
