@@ -42,8 +42,8 @@ export default class SpeedSetting extends React.Component {
       <div id="speed-setting" hidden={this.props.hidden}>
         <form>
           <div className="input-field">
-            <div className="row">
-              <input 
+            <p className="range-field">
+              <input
                 className = "input-field"
                 type      = "range"
                 min       = {0}
@@ -52,10 +52,10 @@ export default class SpeedSetting extends React.Component {
                 value     = {sliderValue}
                 onChange  = {::this._handleRequestedSpeedChange}
               />
-              <p>{requestedSpeed + "x"}</p>
-            </div>
+            </p>
           </div>
         </form>
+        {requestedSpeed && <p>{requestedSpeed + "x"}</p>}
       </div>
     )
   }
