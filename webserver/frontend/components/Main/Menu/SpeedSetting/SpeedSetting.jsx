@@ -46,7 +46,7 @@ export default class SpeedSetting extends React.Component {
               <input
                 className = "input-field"
                 type      = "range"
-                min       = {0}
+                min       = {1}
                 max       = {9}
                 step      = {1}
                 value     = {sliderValue}
