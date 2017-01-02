@@ -3,12 +3,9 @@ import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.jsx'
 import RotatableMarker from './RotatableMarker/RotatableMarker.jsx'
-import ScrubTimer from './ScrubTimer/ScrubTimer.jsx'
 
 export default class SimulationMap extends React.Component {
   static propTypes = {
-    width: React.PropTypes.string,
-    height: React.PropTypes.string,
     bounds: CustomPropTypes.bounds,
     simulationState: CustomPropTypes.simulationState.isRequired,
     previewMarkerPosition: CustomPropTypes.position,
@@ -172,19 +169,20 @@ export default class SimulationMap extends React.Component {
       <Popup position={position}>
         <span>
           <p> Create new journey? </p>
-          <div className="form-group">
-            <select className="form-control" onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
+          <div className="input-field">
+            <select className="browser-default" onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
               {
                 objectTypes.map((object) => {return object.name}).map((name, index) => {
                   return <option value={name} key={index}>{name}</option>
                 })
               }
             </select>
+          </div>
               <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
               <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button>
-            </div>
+
           </span>
-          </Popup>
+      </Popup>
     )
 
   }
@@ -195,9 +193,12 @@ export default class SimulationMap extends React.Component {
     });
   }
 
+
   componentDidUpdate() {
+
     if (this.refs.map) {
       const map = this.refs.map.leafletElement;
+      map.zoomControl.setPosition('topright')
       const bounds = this.props.bounds;
       const mapBounds = [bounds.southWest, bounds.northEast];
 
@@ -214,20 +215,20 @@ export default class SimulationMap extends React.Component {
   _renderGeoJson() {
     // We use a random key so that on each change, the GeoJson is rerendered (GeoJson implementation is immutable)
     return this.state.clickedCar &&
-            <GeoJson key={Math.random()} data={
-                { "type": "FeatureCollection",
-                  "features": [
-                    {
-                      "type": "Feature",
-                      "geometry": {
-                        "type": "LineString",
-                        "coordinates": this.state.clickedCar.route
-                      }
-                    }
-                  ]
-                }
+      <GeoJson key={Math.random()} data={
+        { "type": "FeatureCollection",
+           "features": [
+          {
+            "type": "Feature",
+              "geometry": {
+                "type": "LineString",
+                "coordinates": this.state.clickedCar.route
               }
-            />;
+          }
+          ]
+        }
+      }
+      />;
   }
 
   _getCarByJourneyID(journeyID) {
@@ -243,19 +244,23 @@ export default class SimulationMap extends React.Component {
   }
 
   render() {
-    const simulationID = this.props.simulationID;
+    const heightInPx = $('#simulation-map').height();
+    const widthInPx  = $('#simulation-map').width();
+
+    const heightInVh = heightInPx / $(window).height() * 100;
+    const widthInVh = widthInPx / $(window).width() * 100;
     const style = {
-      height: this.props.height || 300 + 'px',
-      width: this.props.width || 300 + 'px'
+      height: heightInVh +'vh',
+      width:  widthInVh + 'vw'
     }
 
     const cars = this.props.simulationState.objects;
 
     if (!this.props.bounds) {
       return (
-        <p> Loading map... </p>
-      )
-    }
+        <div className="progress">
+          <div className="indeterminate"></div>
+        </div>)}
 
     const origin = this.state.origin;
     const destination = this.state.destination;
@@ -283,113 +288,88 @@ export default class SimulationMap extends React.Component {
       iconSize: [30, 30]
     })
 
-    const scrubHandlers = {
-      handlePause: this.props.handlers.handlePause,
-      handleResume: this.props.handlers.handleResume,
-      handleScrub: this.props.handlers.handleScrub
-    }
-
     return (
       <div>
-        <p>Current simulation ID: {simulationID}</p>
-        {
-          simulationID !== '0' ?
-          <button
-            className = "btn btn-primary"
-            hidden    = {!simulationID}
-            onClick   = {(e) => this.props.handlers.handleSimulationActivate(this.props.simulationID)}
-          >
-            Activate simulation
-          </button>
-          :
-          ''
-        }
-      <ScrubTimer
-        timestamp          = {this.props.simulationState.timestamp}
-        latestTimestamp    = {this.props.simulationState.latestTimestamp}
-        handlers           = {scrubHandlers}
-      />
-      <Map
-        style             = {style}
-        onClick           = {::this._handleMapClick}
-        ref               = 'map'
-        closePopupOnClick = {false}
-      >
-        { this._renderGeoJson() }
-
-        <TileLayer
-          url         = 'https://api.mapbox.com/styles/v1/aminkaramlou/cixdq8dol003i2pr2877x0p3d/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW1pbmthcmFtbG91IiwiYSI6ImNpeGRxNjByeTAwZzIydHMxNWNzbjRkN2MifQ.WBLGq6SKrd0wmdHEYFvq6Q'
-          attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        />
-
-        {
-          cars &&
-          cars.map((car, index) => {
-            const icon = icons[car.colourIndex];
-
-            const key = car.colourIndex + "" + car.id;
-            return (
-              <RotatableMarker
-                position      = {car.position}
-                key           = {key}
-                icon          = {icon}
-                rotationAngle = {0}
-                handleClick   = {(e) => this.handleCarMarkerClick(car, e)}
-              >
-                <Popup>
-                  <div>
-                  <dl>
-                    <dt>Speed</dt>
-                    <dd>{ car.speed }</dd>
-                  </dl>
-                  <dl>
-                    <dt>Bearing</dt>
-                    <dd>{ car.bearing }</dd>
-                  </dl>
-                  </div>
-                </Popup>
-              </RotatableMarker>
-            )
-          })
-        }
-
-      {
-        origin &&
-        < Marker
-          draggable
-          position  = {origin}
-          onDragend = {::this._updateOriginMarkerPosition}
-          icon      = {originMarkerIcon}
-          ref       = {(originMarker) => {this.originMarker = originMarker}}
+        <Map
+          style             = {style}
+          onClick           = {::this._handleMapClick}
+          ref               = 'map'
+          closePopupOnClick = {false}
         >
-          <Popup>
-            <button onClick = {::this._clearOriginMarker}>
-              Clear
-            </button>
-          </Popup>
-        </Marker>
-      }
+          { this._renderGeoJson() }
 
-      {
-        destination &&
-        this._renderPopup()
-      }
+          <TileLayer
+            url         = 'https://api.mapbox.com/styles/v1/aminkaramlou/cixdq8dol003i2pr2877x0p3d/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW1pbmthcmFtbG91IiwiYSI6ImNpeGRxNjByeTAwZzIydHMxNWNzbjRkN2MifQ.WBLGq6SKrd0wmdHEYFvq6Q'
+            attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          />
 
-      {
-        destination &&
-          <Marker
-            draggable
-            position  = {destination}
-            onDragend = {::this._updateDestinationMarkerPosition}
-            icon      = {destinationMarkerIcon}
-            ref       = {(destinationMarker) => {this.destinationMarker = destinationMarker}}
-          >
-          {this._renderPopup()}
-          </Marker>
-      }
-      </Map>
+          {
+            cars &&
+            cars.map((car, index) => {
+              const icon = icons[car.colourIndex];
+
+              const key = car.colourIndex + "" + car.id;
+              return (
+                <RotatableMarker
+                  position      = {car.position}
+                  key           = {key}
+                  icon          = {icon}
+                  rotationAngle = {0}
+                  handleClick   = {(e) => this.handleCarMarkerClick(car, e)}
+                >
+                  <Popup>
+                    <div>
+                      <dl>
+                        <dt>Speed</dt>
+                        <dd>{ car.speed }</dd>
+                      </dl>
+                      <dl>
+                        <dt>Direction</dt>
+                        <dd>{ car.direction }</dd>
+                      </dl>
+                    </div>
+                  </Popup>
+                </RotatableMarker>
+              )
+            })
+          }
+
+          {
+            origin &&
+            < Marker
+              draggable
+              position  = {origin}
+              onDragend = {::this._updateOriginMarkerPosition}
+              icon      = {originMarkerIcon}
+              ref       = {(originMarker) => {this.originMarker = originMarker}}
+            >
+              <Popup>
+                <button onClick = {::this._clearOriginMarker}>
+                  Clear
+                </button>
+              </Popup>
+            </Marker>
+          }
+
+          {
+            destination &&
+            this._renderPopup()
+          }
+
+          {
+            destination &&
+            <Marker
+              draggable
+              position  = {destination}
+              onDragend = {::this._updateDestinationMarkerPosition}
+              icon      = {destinationMarkerIcon}
+              ref       = {(destinationMarker) => {this.destinationMarker = destinationMarker}}
+            >
+              {this._renderPopup()}
+            </Marker>
+          }
+        </Map>
       </div>
     );
   }
-
 }

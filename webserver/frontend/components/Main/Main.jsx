@@ -1,9 +1,8 @@
 import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
-import SimulationSettings from './SimulationSettings/SimulationSettings.jsx';
-import CustomPropTypes from '../Utils/CustomPropTypes.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
-import Header from './Header/Header.jsx';
+import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
+import Menu from './Menu/Menu.jsx';
 import cookie from 'react-cookie';
 import 'whatwg-fetch';
 
@@ -47,6 +46,7 @@ export default class Main extends React.Component {
     socket.onmessage = (message) => { this.handleMessageReceive(message) }
     const initialToken = cookie.load('token') || '';
     this.state = {
+      showMenu: false,
       token: initialToken,
       userID: '',
       activeUser: '',
@@ -82,19 +82,34 @@ export default class Main extends React.Component {
         method: 'GET',
         headers: reqHeaders
       })
-      .then((response) => {
-        response.json().then((data) => {
-          this.setState({
-            userID: data.userID,
-            activeUser: data.username,
-            userSimulations: data.simulations
+        .then((response) => {
+          response.json().then((data) => {
+            this.setState({
+              userID: data.userID,
+              activeUser: data.username,
+              userSimulations: data.simulations
+            });
           });
-        });
-      })
-      .catch(err => {
-        console.log("error fetching user simulations");
-      })
+        })
+        .catch(err => {
+          console.log("error fetching user simulations");
+        })
     }
+  }
+
+  handleMenuButtonClick() {
+
+    if (this.state.showMenu) {
+      $('.nav-wrapper').animate({paddingLeft: '0px'}, 'fast');
+      $('#dummy-button').sideNav('hide')
+    }
+    else {
+      $('.nav-wrapper').animate({paddingLeft: '300px'}, 'fast');
+      $('#dummy-button').sideNav('show')
+    }
+    this.setState({
+      showMenu: !this.state.showMenu
+    })
   }
 
   handlePendingJourneyAdd(pendingJourney) {
@@ -102,6 +117,7 @@ export default class Main extends React.Component {
     this.setState({
       pendingJourneys: pendingJourneys.concat([pendingJourney])
     })
+    Materialize.toast($('<span>New journey created</span>'), 1000);
   }
 
   handleMessageReceive(message) {
@@ -414,15 +430,15 @@ export default class Main extends React.Component {
         simulationID: simulationID
       })
     })
-    .then((response) => {
-      if (!response.ok) {
-        console.log("error authenticating user");
-        return;
-      }
-    })
-    .catch(err => {
-      console.log("error updating active simulations");
-    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log("error authenticating user");
+          return;
+        }
+      })
+      .catch(err => {
+        console.log("error updating active simulations");
+      })
   }
 
   handleBenchmarkRequest() {
@@ -525,6 +541,9 @@ export default class Main extends React.Component {
       }
     }
   }
+  componentDidMount() {
+    $("#dummy-button").sideNav();
+  }
 
   componentDidUpdate() {
     const sessionToken = cookie.load('token');
@@ -556,79 +575,84 @@ export default class Main extends React.Component {
 
     const simulationRunning = simulationID != undefined && simulationID != 0;
 
-    const headerHandlers = {
-      handleJoinSimulation   : ::this.handleJoinSimulation,
-      handleCityChange       : ::this.handleCityChange,
-      handleTokenChange      : ::this.handleTokenChange,
-      handleRequestAPIAccess : ::this.handleRequestAPIAccess
-    }
 
-    const simulationSettingsHandlers = {
+    const menuHandlers = {
+      handleJoinSimulation            : ::this.handleJoinSimulation,
+      handleCityChange                : ::this.handleCityChange,
+      handleTokenChange               : ::this.handleTokenChange,
+      handleRequestAPIAccess          : ::this.handleRequestAPIAccess,
       handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
       handleSimulationStart           : ::this.handleSimulationStart,
       handleSimulationUpdate          : ::this.handleSimulationUpdate,
       handleSimulationClose           : ::this.handleSimulationClose,
-      handlePositionSelect            : ::this.handlePositionPreview,
       handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
       handleSpeedChange               : ::this.handleSpeedChange,
+      handleToggleSmoothMotion        : ::this._handleToggleSmoothMotion,
       handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
       handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
-      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut
-
+      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
+      handleSimulationActivate        : ::this.handleSimulationActivate,
+      handlePause                     : ::this.handlePause,
+      handleResume                    : ::this.handleResume,
+      handleScrub                     : ::this.handleScrub
     }
 
     const simulationMapHandlers = {
       handleAddJourney         : ::this.handlePendingJourneyAdd,
-      handlePause              : ::this.handlePause,
-      handleResume             : ::this.handleResume,
-      handleScrub              : ::this.handleScrub,
-      handleSimulationActivate : ::this.handleSimulationActivate
     }
+
+    const landmarkSearchHandlers = {
+      handlePositionAdd : ::this.handlePositionPreview
+    }
+
 
     return (
       <div>
-        <Header
-          enabled         = {!simulationRunning}
-          availableCities = {availableCities}
-          token           = {token}
-          userID          = {userID}
-          activeUser      = {activeUser}
-          simulations     = {userSimulations}
-          handlers        = {headerHandlers}
-        />
-        <div className="jumbotron">
-          <div className="container">
-            <div className="col-md-4 text-center" id="simulation-settings">
-              <SimulationSettings
-                activeSimulationID  = {simulationID}
-                selectedCity        = {selectedCity}
-                pendingJourneys     = {pendingJourneys}
-                simulationJourneys  = {simulationJourneys}
-                objectTypes         = {this.state.objectTypes}
-                objectKindInfo      = {this.state.objectKindInfo}
-                benchmarkValue      = {this.state.benchmarkValue}
-                currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
-                handlers            = {simulationSettingsHandlers}
-              />
-            </div>
-            <div className="col-md-6 map" id="simulation-map">
-              <input
-                type     = 'checkbox'
-                onChange = {::this._handleToggleSmoothMotion}/>
-                Toggle predictive motion smoothening
-              <SimulationMap
-                width                      = {680 + 'px'}
-                height                     = {600 + 'px'}
-                simulationID               = {simulationID}
-                bounds                     = {bounds}
-                simulationState            = {simulationState}
-                previewMarkerPosition      = {previewMarkerPosition}
-                objectTypes                = {this.state.objectTypes}
-                selectedJourneyID          = {this.state.selectedJourneyID}
-                handlers                   = {simulationMapHandlers}
-              />
+        <nav>
+          <div className="nav-wrapper z-depth-3">
+            <div className="row">
+              <div className="col s1">
+                <a href="#" onClick={::this.handleMenuButtonClick}><i className="material-icons">menu</i></a>
+                <a id="dummy-button" href="#" data-activates="slide-out" hidden><i className="material-icons">menu</i></a>
+              </div>
+              <div className="col s11">
+                <LandmarkSearch
+                  boundLimit = {bounds}
+                  handlers   = {landmarkSearchHandlers}
+                />
+              </div>
             </div>
           </div>
+        </nav>
+        <Menu
+          enabled             = {!simulationRunning}
+          availableCities     = {availableCities}
+          token               = {token}
+          userID              = {userID}
+          activeUser          = {activeUser}
+          simulations         = {userSimulations}
+          activeSimulationID  = {simulationID}
+          simulationState     = {simulationState}
+          selectedCity        = {selectedCity}
+          pendingJourneys     = {pendingJourneys}
+          simulationJourneys  = {simulationJourneys}
+          objectTypes         = {this.state.objectTypes}
+          objectKindInfo      = {this.state.objectKindInfo}
+          benchmarkValue      = {this.state.benchmarkValue}
+          currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
+          handlers            = {menuHandlers}
+
+        />
+        <div id="simulation-map">
+          <SimulationMap
+            simulationID               = {simulationID}
+            bounds                     = {bounds}
+            simulationState            = {simulationState}
+            previewMarkerPosition      = {previewMarkerPosition}
+            objectTypes                = {this.state.objectTypes}
+            selectedJourneyID          = {this.state.selectedJourneyID}
+            handlers                   = {simulationMapHandlers}
+          />
         </div>
       </div>
     )

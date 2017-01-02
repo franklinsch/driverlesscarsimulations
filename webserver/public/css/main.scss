@@ -1,0 +1,42 @@
+@import "sass/materialize";
+.tertiary-color {
+  background-color: #f8f5f2;
+}
+.primary-color-text {
+  color: $primary-color;
+}
+.primary-color {
+  background-color: $primary-color;
+}
+.secondary-color {
+  background-color: $secondary-color;
+}
+
+#simulation-map {
+  background-color: #f8f5f2;
+  height: 92.5vh;
+  width: 100vw;
+  z-index: 1000;
+}
+
+#slide-out {
+  color: $secondary-color;
+}
+
+.side-nav .btn {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.side-nav .tabs {
+  margin-top: 30px;
+}
+
+#landmark-search {
+  margin-bottom: 0px;
+}
+
+#search-results {
+  position:fixed;
+  z-index: 10;
+}
