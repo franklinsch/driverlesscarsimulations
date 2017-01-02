@@ -164,7 +164,7 @@ export default class Main extends React.Component {
 
   handleMessageReceive(message) {
     const messageData = JSON.parse(message.data);
-    console.log(messageData);
+
     if (messageData.type === "available-cities") {
       this.setState({
         availableCities: messageData.content,
