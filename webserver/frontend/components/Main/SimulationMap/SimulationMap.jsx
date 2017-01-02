@@ -318,7 +318,7 @@ export default class SimulationMap extends React.Component {
         { this._renderGeoJson() }
 
         <TileLayer
-          url         = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          url         = 'https://api.mapbox.com/styles/v1/aminkaramlou/cixdq8dol003i2pr2877x0p3d/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW1pbmthcmFtbG91IiwiYSI6ImNpeGRxNjByeTAwZzIydHMxNWNzbjRkN2MifQ.WBLGq6SKrd0wmdHEYFvq6Q'
           attribution = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
 
