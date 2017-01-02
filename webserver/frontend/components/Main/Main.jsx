@@ -43,7 +43,9 @@ export default class Main extends React.Component {
         latestTimestamp: 0,
         objects: []
       },
-      pendingJourneys: []
+      pendingJourneys: [],
+      simulationJourneys: [],
+      userSimulations: []
     }
 
     socket.onopen = (event) => {
@@ -84,13 +86,21 @@ export default class Main extends React.Component {
   
   _registerRoutes() {
     crossroads.addRoute('/simulations/{simID}', (simID) => {
-      this.handleJoinSimulation(simID);
       this.setState({
+        selectedJourneyID: "0",
         simulationInfo: {
           id: simID,
           cityID: this.state.simulationInfo.cityID
-        }
+        },
+        simulationState: {
+          timestamp: 0,
+          latestTimestamp: 0,
+          objects: []
+        },
+        pendingJourneys: [],
+        simulationJourneys: []
       });
+      this.handleJoinSimulation(simID);
     });
 
     // parse initial hash
@@ -154,7 +164,7 @@ export default class Main extends React.Component {
 
   handleMessageReceive(message) {
     const messageData = JSON.parse(message.data);
-
+    console.log(messageData);
     if (messageData.type === "available-cities") {
       this.setState({
         availableCities: messageData.content,
