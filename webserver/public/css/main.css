@@ -4445,7 +4445,7 @@ textarea.materialize-textarea {
   padding-left: 4rem;
   width: calc(100% - 4rem); }
   .input-field input[type=search]:focus {
-    background-color: #fff;
+    background-color: black;
     border: 0;
     box-shadow: none;
     color: #444; }
@@ -4722,8 +4722,8 @@ form p:last-child {
   height: 13px;
   border-top: 2px solid transparent;
   border-left: 2px solid transparent;
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
   -webkit-transform: rotateZ(37deg);
   transform: rotateZ(37deg);
   -webkit-transform-origin: 100% 100%;
@@ -4985,7 +4985,7 @@ input[type=range] + .thumb {
   input[type=range] + .thumb.active {
     border-radius: 50% 50% 50% 0; }
     input[type=range] + .thumb.active .value {
-      color: #fff;
+      color: black;
       margin-left: -1px;
       margin-top: 8px;
       font-size: 10px; }

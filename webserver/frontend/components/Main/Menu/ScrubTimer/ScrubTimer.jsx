@@ -87,9 +87,8 @@ export default class ScrubTimer extends React.Component {
         <p> Simulation time: { formattedTimestamp } ({ d }) </p>
         <form>
           <div className="input-field">
-            <div className="row">
+            <p className="range-field">
               <input
-                className   = "input-field"
                 type        = "range"
                 min         = {0}
                 max         = {maxTimestamp}
@@ -99,7 +98,7 @@ export default class ScrubTimer extends React.Component {
                 onMouseUp   = {::this._handleResume}
                 onChange    = {::this._handleScrubTimeChange}
               />
-            </div>
+              </p>
           </div>
         </form>
       </div>
