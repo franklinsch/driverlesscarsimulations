@@ -115,6 +115,7 @@ export default class Menu extends React.Component {
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
     const benchmarkValue = this.props.benchmarkValue;
+    const currentSpeed = this.props.currentSpeed;
     const allowSimulationStart = this.state.allowSimulationStart;
     const usingRealData = this.state.useRealData;
 
@@ -326,6 +327,7 @@ export default class Menu extends React.Component {
 
               <div className="row">
                 <SpeedSetting
+                  currentSpeed = {currentSpeed}
                   hidden   = {!hasSimulationStarted}
                   handlers = {speedSettingHandlers}
                 />

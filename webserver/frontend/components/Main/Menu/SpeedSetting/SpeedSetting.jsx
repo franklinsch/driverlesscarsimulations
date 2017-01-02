@@ -52,7 +52,7 @@ export default class SpeedSetting extends React.Component {
                 value     = {sliderValue}
                 onChange  = {::this._handleRequestedSpeedChange}
               />
-              {requestedSpeed && <p>{requestedSpeed + "x"}</p>}
+              <p>{requestedSpeed + "x"}</p>
             </div>
           </div>
         </form>

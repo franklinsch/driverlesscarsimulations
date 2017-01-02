@@ -631,7 +631,6 @@ export default class Main extends React.Component {
           userID              = {userID}
           activeUser          = {activeUser}
           simulations         = {userSimulations}
-          handlers            = {menuHandlers}
           activeSimulationID  = {simulationID}
           simulationState     = {simulationState}
           selectedCity        = {selectedCity}
@@ -640,6 +639,9 @@ export default class Main extends React.Component {
           objectTypes         = {this.state.objectTypes}
           objectKindInfo      = {this.state.objectKindInfo}
           benchmarkValue      = {this.state.benchmarkValue}
+          currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
+          handlers            = {menuHandlers}
+
         />
         <div id="simulation-map">
           <SimulationMap
