@@ -181,6 +181,7 @@ function _handleRequestSimulationBenchmark(message, connection) {
 function _handleRequestEventUpdate(message, connection, callback) {
   const simulationID = message.simulationID;
 
+  console.log(message.simulationID);
   // We need to create Journey models so that the ids will be correctly assigned by mongoose
   const newJourneys = [];
   for (let journey of message.journeys) {
@@ -189,8 +190,7 @@ function _handleRequestEventUpdate(message, connection, callback) {
       destination: journey.destination
     }));
   }
-
-  Simulation.findByIdAndUpdate(simulationID, {
+  Simulation.findByIdAndUpdate(message.simulationID, {
     $push: {
       journeys: { $each: newJourneys }
     }
@@ -829,9 +829,9 @@ frameworkSocketServer.on('request', function(request) {
 
     console.log("Received simulation-update from framework");
 
-    const simulationID = message.content.simulationID;
-    const frameworkID = message.content.frameworkID;
-    const epochAtSend = message.content.epochAtSend;
+    const simulationID = message.simulationID;
+    const frameworkID = message.frameworkID;
+    const epochAtSend = message.epochAtSend;
 
     const newState = message;
 
@@ -863,11 +863,12 @@ frameworkSocketServer.on('request', function(request) {
 
       const dump = {
         'numCars': newState.objects.length,
-        'timestamp': message.content.timestamp,
+        'timestamp': message.timestamp,
         'networkTime': epochAtReception - epochAtSend,
         'dbTime': epochAtUpdate - epochAtReception
       };
-      fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", ",\n" + JSON.stringify(dump, null, 2), function(err) {
+      console.log(__dirname);
+      fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", "," + JSON.stringify(dump, null, 2), function(err) {
         if (err) throw err;
       });
 

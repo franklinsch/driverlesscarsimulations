@@ -5,6 +5,7 @@ import sys
 import time
 import requests
 import os
+import traceback
 
 HOST_IP = 'localhost' if 'SAVN_ENV' in os.environ else '35.160.255.102'
 
@@ -125,6 +126,7 @@ class SAVNConnectionAssistant:
     try:
       function(packet["content"])
     except Exception as err:
+      traceback.print_tb(err.__traceback__)
       self.failsafe(err)
 
   def onMessage(self, packet):

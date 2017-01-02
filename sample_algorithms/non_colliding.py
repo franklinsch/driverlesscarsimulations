@@ -108,6 +108,7 @@ def updateCache(bounds):
       except:
         pass
 
+  print(bounds)
   south = bounds['southWest']['lat']
   west = bounds['southWest']['lng']
   north = bounds['northEast']['lat']

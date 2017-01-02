@@ -1,12 +1,11 @@
 #!/bin/bash
 
 cd $(dirname $0)
+mkdir logs || true
 
 for NUM_CARS in $(seq $1 $2)
   do
     SIM_ID=$(curl http://localhost:3000/create-simulation -X POST)
-    ../sample_algorithms/exec_sim $SIM_ID $NUM_CARS &
-    PID=$!
-    sleep $3
-    kill -9 $PID
+    eval ../sample_algorithms/exec_sim $SIM_ID $NUM_CARS
+    killall -9 python
   done

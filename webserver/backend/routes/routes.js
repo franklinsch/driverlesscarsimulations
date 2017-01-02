@@ -4,6 +4,7 @@ const async = require('async');
 const path = require('path');
 const passport = require('passport');
 const Simulation = require('../models/Simulation');
+const City = require('../models/City');
 const FilteredSimulation = require('../models/FilteredSimulation');
 const Journey = require('../models/Journey');
 const User = require('../models/User');
@@ -143,6 +144,7 @@ router.route('/simulations/:simulationID/journeys')
   })
   .post((req, res) => {
     const id = req.params.simulationID;
+    console.log(id);
     const journeys = req.body;
     savedJourneys = [];
     server._handleRequestEventUpdate({
@@ -159,34 +161,41 @@ router.route('/simulations/:simulationID/journeys')
 
 router.route('/create-simulation')
   .post((req, res) => {
-    const simulationData = {
-      createdAt: Date.now(),
-      latestTimestamp: 0,
-      journeys: [],
-      frontends: [],
-      completionLogs: [],
-      frameworks: [],
-      simulationStates: []
-    };
-
-    simulation = new Simulation(simulationData);
-    simulation.save((error, simulation) => {
-      if (error) {
+    City.findOne( {name: "Kensington"}, (err, obj) => {
+      if (err || !obj) {
         res.status(404).end();
-        return console.log(error);
+        return console.log("Ouch");
       }
-      const updateInfo = {
-        $push: {
-          simulations: simulation._id
-        },
-        $set: {
-          active_simulation: simulation._id
+      const simulationData = {
+        city: obj,
+        createdAt: Date.now(),
+        latestTimestamp: 0,
+        journeys: [],
+        frontends: [],
+        completionLogs: [],
+        frameworks: [],
+        simulationStates: []
+      };
+
+      simulation = new Simulation(simulationData);
+      simulation.save((error, simulation) => {
+        if (error) {
+          res.status(404).end();
+          return console.log(error);
         }
-      };
-      const options = {
-        upsert: true
-      };
-      res.status(200).send(simulation._id);
+        const updateInfo = {
+          $push: {
+            simulations: simulation._id
+          },
+          $set: {
+            active_simulation: simulation._id
+          }
+        };
+        const options = {
+          upsert: true
+        };
+        res.status(200).send(simulation._id);
+      });
     });
   });
 

@@ -1,5 +1,10 @@
 #!/bin/bash
+#!/bin/bash
 
+#Move to the right directory
+cd $(dirname $0)
+
+#Script proper
 mongo < reset_all_simulations.mongo
 
 if [ $3 ]; then
