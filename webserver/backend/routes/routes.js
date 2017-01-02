@@ -171,8 +171,11 @@ router.route('/register')
     });
     user.setPassword(password);
 
-
     user.save((err) => {
+      if (err) {
+        res.status(404).json(err);
+        return;
+      }
       const token = user.generateJwt();
       res.status(200);
       res.setHeader('token', token);
