@@ -4,6 +4,8 @@ import UtilFunctions from '../Utils/UtilFunctions.jsx';
 import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
 import Menu from './Menu/Menu.jsx';
 import cookie from 'react-cookie';
+import crossroads from 'crossroads';
+import hasher from 'hasher';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
@@ -20,30 +22,9 @@ export default class Main extends React.Component {
       simID = tokens[tokens.length - 1];
     }
 
+
     var socket = new WebSocket('ws://' + host + ':3000');
 
-    socket.onopen = (event) => {
-      console.log("Connected to: " + event.currentTarget.URL)
-
-      socket.send(JSON.stringify({
-        ...UtilFunctions.socketMessage(),
-        type:"request-available-cities"
-      }))
-      socket.send(JSON.stringify({
-        ...UtilFunctions.socketMessage(),
-        type:"request-default-object-types"
-      }))
-      socket.send(JSON.stringify({
-        ...UtilFunctions.socketMessage(),
-        type:"request-object-kind-info"
-      }))
-      if (simID != "0") {
-        this.handleJoinSimulation(simID);
-      }
-    }
-    socket.onerror = (error) => { console.error("WebSocket error: " + error) }
-    socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
-    socket.onmessage = (message) => { this.handleMessageReceive(message) }
     const initialToken = cookie.load('token') || '';
     this.state = {
       showMenu: false,
@@ -64,11 +45,62 @@ export default class Main extends React.Component {
       },
       pendingJourneys: []
     }
+
+    socket.onopen = (event) => {
+      console.log("Connected to: " + event.currentTarget.URL)
+
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-available-cities"
+      }))
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-default-object-types"
+      }))
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-object-kind-info"
+      }))
+      if (simID != "0") {
+        this.handleJoinSimulation(simID);
+      }
+
+      this._registerRoutes();
+    }
+    socket.onerror = (error) => { console.error("WebSocket error: " + error) }
+    socket.onclose = (event) => { console.log("Disconnected from WebSocket") }
+    socket.onmessage = (message) => { this.handleMessageReceive(message) }
+
     this.updateUserSimulations();
 
     this.smoothMotion = false;
     this.averageWaitingTime = undefined;
     this.lastUpdateTime = undefined;
+  }
+
+  _parseURLHash(newHash, oldHash){
+      crossroads.parse(newHash);
+  }
+  
+  _registerRoutes() {
+    crossroads.addRoute('/simulations/{simID}', (simID) => {
+      this.handleJoinSimulation(simID);
+      this.setState({
+        simulationInfo: {
+          id: simID,
+          cityID: this.state.simulationInfo.cityID
+        }
+      });
+    });
+
+    // parse initial hash
+    hasher.initialized.add(this._parseURLHash);
+
+    // parse hash changes
+    hasher.changed.add(this._parseURLHash);
+
+    //start listening for history changes
+    hasher.init();
   }
 
   updateUserSimulations() {
@@ -541,6 +573,7 @@ export default class Main extends React.Component {
       }
     }
   }
+
   componentDidMount() {
     $("#dummy-button").sideNav();
   }
