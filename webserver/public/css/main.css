@@ -4445,7 +4445,7 @@ textarea.materialize-textarea {
   padding-left: 4rem;
   width: calc(100% - 4rem); }
   .input-field input[type=search]:focus {
-    background-color: black;
+    background-color: white;
     border: 0;
     box-shadow: none;
     color: #444; }
