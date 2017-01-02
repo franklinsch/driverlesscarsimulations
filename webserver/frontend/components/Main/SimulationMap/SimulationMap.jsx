@@ -170,7 +170,7 @@ export default class SimulationMap extends React.Component {
         <span>
           <p> Create new journey? </p>
           <div className="input-field">
-            <select onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
+            <select className="browser-default" onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
               {
                 objectTypes.map((object) => {return object.name}).map((name, index) => {
                   return <option value={name} key={index}>{name}</option>
@@ -193,12 +193,8 @@ export default class SimulationMap extends React.Component {
     });
   }
 
-  componentDidMount() {
-    $('select').material_select();
-  }
 
   componentDidUpdate() {
-    $('select').material_select();
 
     if (this.refs.map) {
       const map = this.refs.map.leafletElement;
