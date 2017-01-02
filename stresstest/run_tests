@@ -1,0 +1,7 @@
+
+for NUM_CARS in $(seq $1 $2)
+  do
+    SIM_ID=$(curl http://localhost:3000/create-simulation -X POST)
+    echo $SIM_ID
+    ../sample_algorithms/exec_sim $SIM_ID $NUM_CARS
+  done
