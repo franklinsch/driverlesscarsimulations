@@ -170,16 +170,17 @@ export default class SimulationMap extends React.Component {
         <span>
           <p> Create new journey? </p>
           <div className="input-field">
-            <select className="form-control" onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
+            <select onChange={(e)=>{this.setState({selectedObjectTypeName: e.target.value})}}>
               {
                 objectTypes.map((object) => {return object.name}).map((name, index) => {
                   return <option value={name} key={index}>{name}</option>
                 })
               }
             </select>
+          </div>
               <button onClick={() => { this._handleJourneyCreate(journey) }}>Create</button>
               <button onClick={() => { this._clearDestinationMarker() }}> Clear destination </button>
-            </div>
+
           </span>
       </Popup>
     )
@@ -192,7 +193,13 @@ export default class SimulationMap extends React.Component {
     });
   }
 
+  componentDidMount() {
+    $('select').material_select();
+  }
+
   componentDidUpdate() {
+    $('select').material_select();
+
     if (this.refs.map) {
       const map = this.refs.map.leafletElement;
       map.zoomControl.setPosition('topright')
