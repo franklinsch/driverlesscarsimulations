@@ -263,8 +263,6 @@ export default class SimulationMap extends React.Component {
       rectBounds = [[this.props.bounds.southWest.lat, this.props.bounds.southWest.lng],
                     [this.props.bounds.northEast.lat, this.props.bounds.northEast.lng]];
     }
-
-    const simulationID = this.props.simulationID;
     
     const cars = this.props.simulationState.objects;
 
@@ -302,24 +300,6 @@ export default class SimulationMap extends React.Component {
 
     return (
       <div>
-        <p>Current simulation ID: {simulationID}</p>
-        {
-          simulationID !== '0' ?
-            <button
-              className = "btn btn-primary"
-              hidden    = {!simulationID}
-              onClick   = {(e) => this.props.handlers.handleSimulationActivate(this.props.simulationID)}
-            >
-              Activate simulation
-            </button>
-            :
-            ''
-        }
-        <ScrubTimer
-          timestamp          = {this.props.simulationState.timestamp}
-          latestTimestamp    = {this.props.simulationState.latestTimestamp}
-          handlers           = {scrubHandlers}
-        />
         <Map
           style             = {style}
           onClick           = {::this._handleMapClick}
