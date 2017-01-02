@@ -146,10 +146,8 @@ router.route('/simulations/:simulationID/journeys')
     const journeys = req.body;
     savedJourneys = [];
     server._handleRequestEventUpdate({
-      content: {
-        simulationID: id,
-        journeys: journeys
-      }
+      simulationID: id,
+      journeys: journeys
     }, (error, simulation) => {
       if (error || !simulation) {
         res.send(error);
