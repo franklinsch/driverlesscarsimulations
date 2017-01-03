@@ -46,7 +46,6 @@ function drawDbTimeAgainstCarNumbers(experimentData) {
     hAxis: {
       title: 'CarNumbers'
     },
-    colors: ['#a52714'],
     width: 1000,
     height: 500
   };
@@ -82,7 +81,6 @@ function drawDbTimeAgainstTimestamp(experimentData) {
     hAxis: {
       title: 'Timestamp'
     },
-    colors: ['#a52714'],
     width: 1000,
     height: 500
   };
@@ -118,7 +116,6 @@ function drawNetworkTimeAgainstCarNumbers(experimentData) {
     hAxis: {
       title: 'CarNumbers'
     },
-    colors: ['#a52714'],
     width: 1000,
     height: 500
   };
@@ -154,7 +151,6 @@ function drawNetworkTimeAgainstTimestamp(experimentData) {
     hAxis: {
       title: 'Timestamp'
     },
-    colors: ['#a52714'],
     width: 1000,
     height: 500
   };
