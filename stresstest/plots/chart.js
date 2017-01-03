@@ -4,21 +4,6 @@ google.charts.setOnLoadCallback(drawGraphs);
 function drawGraphs() {
   var experimentData;
 
-  var dir = "http://localhost:63342/plots/data/";
-  var fileextension=".json";
-  $.ajax({
-    //This will retrieve the contents of the folder if the folder is configured as 'browsable'
-    url: dir,
-    success: function (data) {
-      console.log(data)
-      //Lsit all png file names in the page
-      $(data).find("a:contains(" + fileextension + ")").each(function () {
-        var filename = this.href.replace(window.location.host, "").replace("http:///","");
-      });
-    }
-  });
-
-
   $.ajax({
     url:'data.json',
     dataType: 'json',
