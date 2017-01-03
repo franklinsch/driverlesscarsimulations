@@ -1,4 +1,5 @@
-[{
+[
+  [{
   "numCars": 0,
   "timestamp": 0,
   "networkTime": 1479187867471.9932,
@@ -2175,7 +2176,7 @@
   "timestamp": 362,
   "networkTime": 1479188229732.3699,
   "dbTime": 36
-}]
+}],
 [{
   "numCars": 3,
   "timestamp": 0,
@@ -4960,3 +4961,4 @@
   "networkTime": 1479189167819.3535,
   "dbTime": 1077
 }]
+]

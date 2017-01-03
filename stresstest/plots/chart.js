@@ -22,11 +22,23 @@ function drawGraphs() {
 function drawDbTimeAgainstCarNumbers(experimentData) {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'Car Numbers');
-  data.addColumn('number', 'dbTime');
-
+  for (i = 0; i < experimentData.length; i++) {
+    data.addColumn('number', 'dbTime' + i);
+  }
   var rowData = [];
   for (i = 0; i < experimentData.length; i++) {
-    rowData.push([experimentData[i].numCars, experimentData[i].dbTime]);
+    for (j = 0; j < experimentData[i].length; j++) {
+      var row = []
+      row.push(experimentData[i][j].numCars);
+      for (a = 0; a < i; a++) {
+        row.push(null);
+      }
+      row.push(experimentData[i][j].dbTime)
+      for (a = i + 1; a < experimentData.length; a++) {
+        row.push(null)
+      }
+      rowData.push(row)
+    }
   }
   data.addRows(rowData);
 
@@ -46,11 +58,23 @@ function drawDbTimeAgainstCarNumbers(experimentData) {
 function drawDbTimeAgainstTimestamp(experimentData) {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'timestamp');
-  data.addColumn('number', 'dbTime');
-
+  for (i = 0; i < experimentData.length; i++) {
+    data.addColumn('number', 'dbTime' + i);
+  }
   var rowData = [];
   for (i = 0; i < experimentData.length; i++) {
-    rowData.push([experimentData[i].timestamp, experimentData[i].dbTime]);
+    for (j = 0; j < experimentData[i].length; j++) {
+      var row = []
+      row.push(experimentData[i][j].timestamp);
+      for (a = 0; a < i; a++) {
+        row.push(null);
+      }
+      row.push(experimentData[i][j].dbTime)
+      for (a = i + 1; a < experimentData.length; a++) {
+        row.push(null)
+      }
+      rowData.push(row)
+    }
   }
   data.addRows(rowData);
 
@@ -70,11 +94,23 @@ function drawDbTimeAgainstTimestamp(experimentData) {
 function drawNetworkTimeAgainstCarNumbers(experimentData) {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'Car Numbers');
-  data.addColumn('number', 'networkTime');
-
+  for (i = 0; i < experimentData.length; i++) {
+    data.addColumn('number', 'networkTime' + i);
+  }
   var rowData = [];
   for (i = 0; i < experimentData.length; i++) {
-    rowData.push([experimentData[i].numCars, experimentData[i].networkTime]);
+    for (j = 0; j < experimentData[i].length; j++) {
+      var row = []
+      row.push(experimentData[i][j].numCars);
+      for (a = 0; a < i; a++) {
+        row.push(null);
+      }
+      row.push(experimentData[i][j].networkTime)
+      for (a = i + 1; a < experimentData.length; a++) {
+        row.push(null)
+      }
+      rowData.push(row)
+    }
   }
   data.addRows(rowData);
 
@@ -94,11 +130,23 @@ function drawNetworkTimeAgainstCarNumbers(experimentData) {
 function drawNetworkTimeAgainstTimestamp(experimentData) {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'Timestamp');
-  data.addColumn('number', 'networkTime');
-
+  for (i = 0; i < experimentData.length; i++) {
+    data.addColumn('number', 'networkTime' + i);
+  }
   var rowData = [];
   for (i = 0; i < experimentData.length; i++) {
-    rowData.push([experimentData[i].timestamp, experimentData[i].networkTime]);
+    for (j = 0; j < experimentData[i].length; j++) {
+      var row = []
+      row.push(experimentData[i][j].timestamp);
+      for (a = 0; a < i; a++) {
+        row.push(null);
+      }
+      row.push(experimentData[i][j].networkTime)
+      for (a = i + 1; a < experimentData.length; a++) {
+        row.push(null)
+      }
+      rowData.push(row)
+    }
   }
   data.addRows(rowData);
 
