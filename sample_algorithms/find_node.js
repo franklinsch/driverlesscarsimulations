@@ -77,9 +77,12 @@ const sc = scale(B, dot(A, B)/dot(B, B));
 const proj = add(sc, min_point);
 if (min2_i == min_i && Math.abs(min2_j - min_j) == 1) {
   const proj_distance = distance(proj, min_point);
+  console.error(point);
   if (proj_distance < 0.00001) {
+    console.error(min_point);
     console.log(min_point);
   } else {
+    console.error(proj);
     console.log(proj);
 
     j = min_j;

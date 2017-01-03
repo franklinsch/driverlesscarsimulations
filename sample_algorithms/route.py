@@ -44,14 +44,15 @@ def getProperties(inp, nstart, nend):
 #    props = json.load(data_file)
 #  return props
 
-def getRoute(inp, start, end):
+def getRoute(inp, star, en):
   t = time.time()
-  start = newPoint(getNearest(inp, start))
+  start = newPoint(getNearest(inp, star))
   print(time.time() - t)
-  end = newPoint(getNearest(inp, end))
+  end = newPoint(getNearest(inp, en))
   print(time.time() - t)
 
-  os.system("node route.js " + str(gjson.dumps(start).encode('utf8')) + " " + str(gjson.dumps(end).encode('utf8')) + " " + inp + " > path.json");
+  os.system("node route.js " + str(gjson.dumps(start).encode('utf8')) + " " + str(gjson.dumps(end).encode('utf8')) + " " + inp +
+                         " " + str(gjson.dumps(star) .encode('utf8')) + " " + str(gjson.dumps(en) .encode('utf8')) + " > path.json");
   path = None
   with open("path.json") as data_file:
     path = json.load(data_file)

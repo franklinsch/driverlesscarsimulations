@@ -32,8 +32,8 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     return '', ''
 
   def handleSimulationStart(self, initialParameters):
-    runSimulation(self, initialParameters)
-    #testInitialisation(initialParameters)
+    #runSimulation(self, initialParameters)
+    testInitialisation(initialParameters)
 
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
@@ -56,7 +56,8 @@ def testInitialisation(initialParameters):
   ts = 0
 
   updateCache(initialParameters['city']['bounds'])
-  global state
+  global state, timestamp
+  timestamp = 0
   for i in range(n):
     getFromCache()
     state = []
@@ -171,31 +172,37 @@ def get_bearing(start, end):
   return math.degrees(math.atan2(y, x))
 
 def preprocess(route):
-  for i in range(len(route)-1):
-    start = route[i]
-    end = route[i+1]
+  maxSpeed_km_h = MAX_SPEED_KM_H
+  i = 0
+  while i < len(route):
+    if (isinstance(route[i], list)):
+      if (i > 0):
+        start = route[i-1]
+        end = route[i]
 
-    props = R.getProperties(MAP_FILE, start, end)
-    maxSpeed_km_h = MAX_SPEED_KM_H
-    if 'maxspeed' in props:
-      try:
-        speeds = []
-        for speed in props['maxspeed'].split(';'):
-          text = speed.split('mph')
-          maxspeed = int(text[0])
-          if len(text) == 2:
-            maxspeed *= 1.61
-          speeds.append(maxspeed)
-        minSpeed = min(speeds[0], speeds[-1])
-        maxSpeed = max(speeds[0], speeds[-1])
-        maxSpeed_km_h = random.uniform(minSpeed, maxSpeed)
-      except Exception as err:
-        maxSpeed_km_h = MAX_SPEED_KM_H
-        print(err)
+        dist = get_distance(start, end)
+        time = dist/(maxSpeed_km_h*1000/3600)
+        end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed_km_h})
+      i += 1
+    else:
+      props = route[i]
+      del route[i]
 
-    dist = get_distance(start, end)
-    time = dist/(maxSpeed_km_h*1000/3600)
-    end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed_km_h})
+      if 'highway' in props and 'maxspeed' in props:
+        try:
+          speeds = []
+          for speed in props['maxspeed'].split(';'):
+            text = speed.split('mph')
+            maxspeed = int(text[0])
+            if len(text) == 2:
+              maxspeed *= 1.61
+            speeds.append(maxspeed)
+          minSpeed = min(speeds[0], speeds[-1])
+          maxSpeed = max(speeds[0], speeds[-1])
+          maxSpeed_km_h = random.uniform(minSpeed, maxSpeed)
+        except Exception as err:
+          maxSpeed_km_h = MAX_SPEED_KM_H
+          print(err)
 
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
