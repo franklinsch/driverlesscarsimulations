@@ -234,14 +234,16 @@ router.route('/framework_api')
         res.status(404).send('User not found');
         return;
       }
-      if(!user.validateAPIAccess(req.body.api_key)) {
+
+      let associatedSimulationID = user.validateAPIAccess(req.body.api_key);
+      if(!associatedSimulationID) {
         res.status(401).send('API key not valid');
       }
       const simID = req.body.simulationID;
       const ip = req.ip;
       authentication_token = user.generateAPIToken(simID, ip);
       res.status(200).json({
-        'simulationID': user.active_simulation,
+        'simulationID': associatedSimulationID,
         'token': authentication_token
       });
     });
