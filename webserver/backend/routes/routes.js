@@ -254,10 +254,24 @@ router.route('/framework_api')
           'token': authentication_token
         });
       });
+    });
   });
 
-
-
+router.route('/api_keys/list')
+  .get(auth, (req, res) => {
+    const userId = res._headers.token._id;
+    User.findOne({
+        _id: userId
+      })
+      .then((user) => {
+        res.json({
+          'api_keys': user.api_keys
+        });
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  });
 
 router.get('*', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
