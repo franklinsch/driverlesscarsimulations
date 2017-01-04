@@ -241,7 +241,7 @@ router.route('/framework_api')
       const ip = req.ip;
       authentication_token = user.generateAPIToken(simID, ip);
       res.status(200).json({
-        'activeSimulationID': user.active_simulation,
+        'simulationID': user.active_simulation,
         'token': authentication_token
       });
     });
