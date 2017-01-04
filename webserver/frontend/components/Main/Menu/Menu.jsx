@@ -352,7 +352,7 @@ export default class Menu extends React.Component {
                         className="collection-item"
                         key={index}
                       >
-                        {"Framework " + index}
+                        {index + ". " + (framework.name || "Framework")}
                       </li>
                     )
                   })

@@ -694,7 +694,8 @@ frameworkSocketServer.on('request', function(request) {
       },
       $push: {
         frameworks: {
-          connectionIndex: frameworkConnections.length
+          connectionIndex: frameworkConnections.length,
+          name: message.name
         }
       }
     }, { new: true }, function (error, simulation) {
