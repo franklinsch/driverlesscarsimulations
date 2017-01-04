@@ -1,3 +1,5 @@
+point = require('turf-point');
+
 const toDegrees = function(v) {
   return v * 180 / Math.PI;
 }
@@ -92,7 +94,8 @@ const getNormalIntersection = function(v0, v1, p) {
 
 const getNearest = function(p, pathFinder) {
   let min_dist = undefined, min_point, min_edge;
-  for (const edge of pathFinder._topo.edges) {
+  for (let i in pathFinder._topo.edges) {
+    const edge = pathFinder._topo.edges[i];
     const props = edge[2];
     if (props['highway']) {
       const v0 = pathFinder._topo.vertices[edge[0]];
@@ -136,10 +139,12 @@ const getNearest = function(p, pathFinder) {
       if (proj[0] <= mid) {
         if (proj[0] < min) {
           proj = left_edge;
+          i = undefined;
         }
       } else if (proj[0] > mid) {
         if (proj[0] > max) {
           proj = right_edge;
+          i = undefined;
         }
       }
 
@@ -147,16 +152,16 @@ const getNearest = function(p, pathFinder) {
       if (min_dist == undefined || m < min_dist) {
         min_dist = m;
         min_point = proj;
-        min_edge = edge;
+        min_edge_index = i;
       }
     }
   }
 
-  return [min_dist, min_point];
+  if (min_edge_index != undefined) {
+    pathFinder._addVertex(min_point, min_edge_index, getDistance);
+  }
+  return min_point;
 }
-
-point1 = JSON.parse(process.argv[5].substring(1));
-point2 = JSON.parse(process.argv[6].substring(1));
 
 start = JSON.parse(process.argv[2].substring(1));
 end = JSON.parse(process.argv[3].substring(1));
@@ -166,10 +171,10 @@ const geojson = JSON.parse(fs.readFileSync(process.argv[4], 'utf8'));
 var PathFinder = require('geojson-path-finder');
 
 var pathFinder = new PathFinder(geojson);
-console.error(getNearest(point1.geometry.coordinates, pathFinder));
-console.error(getNearest(point2.geometry.coordinates, pathFinder));
+start = getNearest(start.geometry.coordinates, pathFinder);
+end = getNearest(end.geometry.coordinates, pathFinder);
+var path = pathFinder.findPath(point(start), point(end));
+console.log(JSON.stringify(path));
 //fs.writeFile('pathfinder.dump', JSON.stringify(pathFinder), function (err) {
   //if (err) throw err;
 //});
-var path = pathFinder.findPath(start, end);
-console.log(JSON.stringify(path));
