@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const APIKey = require('./APIKey')
 const SALT_BYTES_LENGTH = 10;
 const HASH_ITERATIONS = 1000;
 const HASH_KEY_LENGTH = 64;
@@ -18,6 +19,7 @@ const userSchema = mongoose.Schema({
   api_id: String,
   api_key_hash: String,
   api_key_salt: String,
+  api_keys: [APIKey.schema],
   hash: String,
   salt: String,
   admin: Boolean,
