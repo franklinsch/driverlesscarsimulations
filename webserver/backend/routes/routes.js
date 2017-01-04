@@ -273,6 +273,64 @@ router.route('/api_keys/list')
       });
   });
 
+
+
+router.route('/api_keys/add')
+  .post(auth, (req, res) => {
+    User.findOne({
+        _id: userId
+      })
+      .then((user) => {
+        const title = req.body.title;
+        if (!title) {
+          res.status(400).send('Title is missing');
+          return;
+        }
+
+        const simulationID = req.body.simulationID;
+        if (!req.body.simulationID) {
+          res.status(400).send('Simulation ID is missing');
+          return;
+        }
+
+        // TODO: verify that simulation id actually exists
+
+        const key = uuidV4();
+        let hash = user.getAPIKeyHash(key);
+
+        // Create new API key
+        const apiKey = new APIKey({
+            title: title,
+            hash: hash,
+            simulationID: simulationID
+        });
+
+        const userID = res._headers.token._id;
+        const updateInfo = {
+          $push: {
+            api_keys: apiKey
+          }
+        };
+        const options = {
+          returnNewDocument: true
+        };
+        User.findOneAndUpdate({
+            _id: userID
+          }, updateInfo, options)
+          .then((result) => {
+            res.send({
+              id: apiKey._id,
+              title: title,
+              simulationID: simulationID,
+              apiKey: key
+            });
+          })
+          .catch((err) => {
+            res.send(err);
+          });
+      });
+  });
+
 router.get('*', auth, (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
