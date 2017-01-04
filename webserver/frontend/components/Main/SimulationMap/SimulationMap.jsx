@@ -324,8 +324,8 @@ export default class SimulationMap extends React.Component {
                         <dd>{ car.speed }</dd>
                       </dl>
                       <dl>
-                        <dt>Direction</dt>
-                        <dd>{ car.direction }</dd>
+                        <dt>Bearing</dt>
+                        <dd>{ car.bearing }</dd>
                       </dl>
                     </div>
                   </Popup>

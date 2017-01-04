@@ -43,7 +43,8 @@ export default class JourneyList extends React.Component {
                   pendingJourneys.map((journey, index) => {
                     return (
                       <li className="collection-item"
-                          key={index}>
+                          key={index}
+                      >
                         { "(Pending) " + index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" }
                       </li>
                     )

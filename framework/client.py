@@ -15,8 +15,9 @@ AUTHENTICATION_ROUTE = 'http://' + HOST_IP + ':3000' + '/framework_api'
 loop = asyncio.get_event_loop()
 
 class SAVNConnectionAssistant:
-  def __init__(self, simulationID=None):
+  def __init__(self, simulationID=None, name=None):
     self.simulationID = simulationID
+    self.name = name
     self.messageQueue = asyncio.Queue()
     self.frameworkID = 0
     self.shouldAwait = False
@@ -68,7 +69,7 @@ class SAVNConnectionAssistant:
     return message
 
   async def startConnection(self, timeslice):
-    packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'timeslice': timeslice}}
+    packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'name': self.name, 'timeslice': timeslice}}
     await self.send_packet(packet)
 
   async def send_packet(self, packet):

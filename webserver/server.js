@@ -33,12 +33,12 @@ Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, f
 function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
   const R = 6371; // Radius of the earth in km
   const dLat = deg2rad(lat2-lat1);  // deg2rad below
-  const dLon = deg2rad(lon2-lon1); 
-  const a = 
+  const dLon = deg2rad(lon2-lon1);
+  const a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2); 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   const d = R * c; // Distance in km
   return d;
 }
@@ -472,6 +472,7 @@ frontendSocketServer.on('request', function(request) {
           }
         }));
       })
+      sendFrameworkList(simulation, connection);
     })
   }
 
@@ -549,9 +550,9 @@ frontendSocketServer.on('request', function(request) {
               error: err
             }
           }));
-      } 
-      const id  = uuidV4(); 
-      const key = uuidV4(); 
+      }
+      const id  = uuidV4();
+      const key = uuidV4();
       user.setAPIAccess(id, key);
       user.save( (err) => {
         connection.send(JSON.stringify({
@@ -693,7 +694,8 @@ frameworkSocketServer.on('request', function(request) {
       },
       $push: {
         frameworks: {
-          connectionIndex: frameworkConnections.length
+          connectionIndex: frameworkConnections.length,
+          name: message.name
         }
       }
     }, { new: true }, function (error, simulation) {
@@ -732,6 +734,8 @@ frameworkSocketServer.on('request', function(request) {
           state: state
         }
       }));
+
+      sendFrameworkList(simulation);
     })
   }
 
@@ -918,17 +922,35 @@ frameworkSocketServer.on('request', function(request) {
       const simulationID = frameworkConnections[index]['simulationID'];
       delete frameworkConnections[index];
 
-      Simulation.update({_id: simulationID}, { $pull: { frameworks: { connectionIndex: index }}}, function (error, numAffected) {
-        if (error || !numAffected) {
+      Simulation.findByIdAndUpdate(simulationID, { $pull: { frameworks: { connectionIndex: index }}}, {new: true}, function (error, simulation) {
+        if (error || !simulation) {
           console.log("Could not find corresponding simulation for connection");
           return
         }
+        sendFrameworkList(simulation);
       });
     }
 
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
 });
+
+function sendFrameworkList(simulation, connection) {
+  const packet = {
+    type: "simulation-frameworks",
+    content: {
+      frameworks: simulation.frameworks
+    }
+  };
+  if (connection) {
+    connection.send(JSON.stringify(packet));
+  } else {
+    for (const frontend of simulation.frontends) {
+      frontendConnections[frontend.connectionIndex]['connection'].send(JSON.stringify(packet));
+    }
+  }
+  console.log("Sending frameworks\n");
+}
 
 function lookup(objs, eqF) {
   for (const i in objs) {

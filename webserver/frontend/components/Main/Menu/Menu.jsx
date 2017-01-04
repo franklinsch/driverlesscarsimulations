@@ -18,6 +18,7 @@ export default class Menu extends React.Component {
     userID: React.PropTypes.string,
     handlers: React.PropTypes.object,
     simulations: React.PropTypes.array,
+    frameworks: React.PropTypes.array,
     simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     activeSimulationID: React.PropTypes.string,
@@ -342,6 +343,21 @@ export default class Menu extends React.Component {
               <p hidden={benchmarkValue == undefined}>
                 {benchmarkValue} is the average speed to destination in km/s
               </p>
+              <ul className="collection">
+                {
+                  this.props.frameworks.map((framework, index) => {
+                    console.log(index);
+                    return (
+                      <li
+                        className="collection-item"
+                        key={index}
+                      >
+                        {index + ". " + (framework.name || "Framework")}
+                      </li>
+                    )
+                  })
+                }
+              </ul>
             </div>
           </div>
         </ul>

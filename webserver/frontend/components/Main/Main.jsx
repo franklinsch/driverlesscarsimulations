@@ -45,7 +45,8 @@ export default class Main extends React.Component {
       },
       pendingJourneys: [],
       simulationJourneys: [],
-      userSimulations: []
+      userSimulations: [],
+      frameworks: []
     }
 
     socket.onopen = (event) => {
@@ -83,7 +84,7 @@ export default class Main extends React.Component {
   _parseURLHash(newHash, oldHash){
       crossroads.parse(newHash);
   }
-  
+
   _registerRoutes() {
     crossroads.addRoute('/simulations/{simID}', (simID) => {
       this.setState({
@@ -268,6 +269,10 @@ export default class Main extends React.Component {
       this.setState({
         benchmarkValue: benchmarkValue
       });
+    } else if (messageData.type === "simulation-frameworks") {
+      this.setState({
+        frameworks: messageData.content.frameworks
+      });
     } else if (messageData.type === "user-api-access") {
       const id = messageData.content.api_id;
       const key = messageData.content.api_key;
@@ -275,7 +280,6 @@ export default class Main extends React.Component {
     } else if (messageData.type === "user-error") {
       alert(messageData.content.error);
     }
-
   }
 
   handleJoinSimulation(simulationID) {
@@ -532,14 +536,6 @@ export default class Main extends React.Component {
     })
   }
 
-  //_addDistance(point, direction, distance) {
-    //const LNG_SCL = 111.319e3;
-    //const LAT_SCL = 110.574e3;
-    //direction *= Math.PI / 180;
-    //latDeg = distance * Math.sin(direction)/(LAT_SCL*Math.cos(point[1]*Math.PI/180))
-    //lngDeg = distance * Math.cos(direction)/LNG_SCL
-    //return [point[0] + lngDeg, point[1] + latDeg]
-
   _addDistance(point, bearing, distance) {
     const R = 6371e3;
 
@@ -679,6 +675,7 @@ export default class Main extends React.Component {
           selectedCity        = {selectedCity}
           pendingJourneys     = {pendingJourneys}
           simulationJourneys  = {simulationJourneys}
+          frameworks          = {this.state.frameworks}
           objectTypes         = {this.state.objectTypes}
           objectKindInfo      = {this.state.objectKindInfo}
           benchmarkValue      = {this.state.benchmarkValue}
