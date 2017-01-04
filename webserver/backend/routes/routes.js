@@ -235,18 +235,25 @@ router.route('/framework_api')
         return;
       }
 
-      let associatedSimulationID = user.validateAPIAccess(req.body.api_key);
-      if(!associatedSimulationID) {
-        res.status(401).send('API key not valid');
-      }
-      const simID = req.body.simulationID;
-      const ip = req.ip;
-      authentication_token = user.generateAPIToken(simID, ip);
-      res.status(200).json({
-        'simulationID': associatedSimulationID,
-        'token': authentication_token
+      let hash = user.getAPIKeyHash(req.body.api_key);
+      user.api_keys.findOne({ hash: hash }, (err, api_key) => {
+        if (err) {
+          res.status(500).send('Internal error');
+          return;
+        }
+        if (!api_key) {
+          res.status(401).send('API key not valid');
+          return;
+        }
+
+        const simID = req.body.simulationID;
+        const ip = req.ip;
+        authentication_token = user.generateAPIToken(simID, ip);
+        res.status(200).json({
+          'simulationID': api_key.simulationID,
+          'token': authentication_token
+        });
       });
-    });
   });
 
 

@@ -37,10 +37,8 @@ userSchema.methods.setAPIAccess = function(id, key) {
   this.api_key_hash = crypto.pbkdf2Sync(key, this.api_key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
 }
 
-userSchema.methods.validateAPIAccess = function(key) {
-  const hash = crypto.pbkdf2Sync(key, this.api_key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
-  return this.api_key_hash === hash;
-
+userSchema.methods.getAPIKeyHash = function(key) {
+  return crypto.pbkdf2Sync(key, this.api_key_salt, HASH_ITERATIONS, HASH_KEY_LENGTH, DIGEST).toString('hex');
 }
 
 userSchema.methods.generateAPIToken = function(simulation, ip) {
