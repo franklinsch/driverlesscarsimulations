@@ -32,8 +32,8 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
     return '', ''
 
   def handleSimulationStart(self, initialParameters):
-    #runSimulation(self, initialParameters)
-    testInitialisation(initialParameters)
+    runSimulation(self, initialParameters)
+    #testInitialisation(initialParameters)
 
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
@@ -140,13 +140,13 @@ def translateDataToCameraData(car, data):
   return cameraData
 
 def addToState(journeys, state):
-  for journey in journeys:
+  for (i, journey) in enumerate(journeys):
     start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
     end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
     newRoute = R.getRoute(MAP_FILE, start, end)['path']
     preprocess(newRoute)
     state.append(createNewCar(len(state), journey['_id'], baseRoute=newRoute))
-    print('.')
+    print(str(i+1) + '.')
 
 def get_distance(start, end):
   lat1 = math.radians(start[1])
