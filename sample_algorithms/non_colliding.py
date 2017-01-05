@@ -301,10 +301,9 @@ def translate(state):
     res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
   return res
 
-if (len(sys.argv) < 2):
-  sys.exit(1)
-
-simulationID = sys.argv[1]
+simulationID = None
+if (len(sys.argv) >= 2):
+  simulationID = sys.argv[1]
 name = "Non-colliding " + str(int(time.time()) % 86400)
 if (len(sys.argv) >= 3):
   name = sys.argv[2]
