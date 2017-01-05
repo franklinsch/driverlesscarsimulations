@@ -257,24 +257,6 @@ router.route('/framework_api')
     });
   });
 
-router.route('/api_keys/list')
-  .get(auth, (req, res) => {
-    const userId = res._headers.token._id;
-    User.findOne({
-        _id: userId
-      })
-      .then((user) => {
-        res.json({
-          'api_keys': user.api_keys
-        });
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-  });
-
-
-
 router.route('/api_keys/add')
   .post(auth, (req, res) => {
     User.findOne({
