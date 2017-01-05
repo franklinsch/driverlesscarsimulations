@@ -1,9 +1,12 @@
+module.exports = {
+  _handleRequestEventUpdate: _handleRequestEventUpdate,
+  getDistanceLatLonInKm: getDistanceLatLonInKm,
+};
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-exports._handleRequestEventUpdate = _handleRequestEventUpdate;
 const routes = require('./backend/routes/routes');
 const session = require('express-session');
 const config = require('./backend/config');
