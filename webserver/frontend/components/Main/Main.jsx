@@ -65,10 +65,6 @@ export default class Main extends React.Component {
         ...UtilFunctions.socketMessage(),
         type:"request-object-kind-info"
       }))
-      socket.send(JSON.stringify({
-        ...UtilFunctions.socketMessage(),
-        type:"request-user-api-keys"
-      }))
       if (simID != "0") {
         this.handleJoinSimulation(simID);
       }
@@ -155,6 +151,14 @@ export default class Main extends React.Component {
               userSimulations: data.simulations
             });
           });
+
+          socket.send(JSON.stringify({
+            ...UtilFunctions.socketMessage(),
+            type: "request-user-api-keys",
+            content: {
+              userID: data.userID
+            }
+          }))
         })
         .catch(err => {
           console.log("error fetching user simulations");
