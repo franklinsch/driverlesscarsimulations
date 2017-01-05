@@ -9,4 +9,17 @@ describe('Benchmarking', function() {
       dist.should.be.closeTo(157.22543203807288, 0.001);
     });
   });
+  describe('#deg2rad(deg)', function() {
+    it('should convert degrees to radians', function() {
+      let rad = server.deg2rad(0);
+      rad.should.be.a('number');
+      rad.should.be.closeTo(0, 0.001);
+      rad = server.deg2rad(180);
+      rad.should.be.a('number');
+      rad.should.be.closeTo(Math.PI, 0.001);
+      rad = server.deg2rad(360);
+      rad.should.be.a('number');
+      rad.should.be.closeTo(2*Math.PI, 0.001);
+    });
+  });
 });

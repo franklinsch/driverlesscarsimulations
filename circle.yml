@@ -1,5 +1,5 @@
 machine:
-  timezone: 
+  timezone:
     Europe/London
   python:
     version: 3.5.2
@@ -10,7 +10,8 @@ dependencies:
 
 test:
   override:
-    - cd framework/test/ && python -m unittest client_test.py 
+    - cd framework/test/ && python -m unittest client_test.py
+    - cd webserver && npm test
 deployment:
   production:
     branch: master

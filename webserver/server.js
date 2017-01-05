@@ -1,6 +1,7 @@
 module.exports = {
   _handleRequestEventUpdate: _handleRequestEventUpdate,
   getDistanceLatLonInKm: getDistanceLatLonInKm,
+  deg2rad: deg2rad,
 };
 const express = require('express');
 const path = require('path');
