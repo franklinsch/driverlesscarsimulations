@@ -46,7 +46,8 @@ export default class Main extends React.Component {
       pendingJourneys: [],
       simulationJourneys: [],
       userSimulations: [],
-      frameworks: []
+      frameworks: [],
+      apiKeys: []
     }
 
     socket.onopen = (event) => {
@@ -63,6 +64,10 @@ export default class Main extends React.Component {
       socket.send(JSON.stringify({
         ...UtilFunctions.socketMessage(),
         type:"request-object-kind-info"
+      }))
+      socket.send(JSON.stringify({
+        ...UtilFunctions.socketMessage(),
+        type:"request-user-api-keys"
       }))
       if (simID != "0") {
         this.handleJoinSimulation(simID);
@@ -273,9 +278,14 @@ export default class Main extends React.Component {
       this.setState({
         frameworks: messageData.content.frameworks
       });
+    } else if (messageData.type === "user-api-keys") {
+      console.log(messageData.content.apiKeys);
+      this.setState({
+        apiKeys: messageData.content.apiKeys
+      });
     } else if (messageData.type === "user-api-access") {
       const id = messageData.content.api_id;
-      const key = messageData.content.api_key;
+      const key = messageData.content.apiKey;
       alert("Your API id is " + id + " and your API key is " + key);
     } else if (messageData.type === "user-error") {
       alert(messageData.content.error);
@@ -702,6 +712,7 @@ export default class Main extends React.Component {
           pendingJourneys     = {pendingJourneys}
           simulationJourneys  = {simulationJourneys}
           frameworks          = {this.state.frameworks}
+          apiKeys            = {this.state.apiKeys}
           objectTypes         = {this.state.objectTypes}
           objectKindInfo      = {this.state.objectKindInfo}
           benchmarkValues     = {this.state.benchmarkValues}

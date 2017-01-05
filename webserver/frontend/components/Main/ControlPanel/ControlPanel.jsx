@@ -19,7 +19,7 @@ export default class ControlPanel extends React.Component {
     handlers: React.PropTypes.object,
     simulations: React.PropTypes.array,
     frameworks: React.PropTypes.array,
-    api_keys: React.PropTypes.array,
+    apiKeys: React.PropTypes.array,
     simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     activeSimulationID: React.PropTypes.string,
@@ -92,13 +92,13 @@ export default class ControlPanel extends React.Component {
         }>
         <ul className="collection">
           {
-            this.props.api_keys.map((api_key, index) => {
+            this.props.apiKeys.map((apiKey, index) => {
               return (
                 <li
                   className="collection-item"
                   key={index}
                 >
-                  {index + ". " + api_key.title}
+                  {index + ". " + apiKey.title}
                 </li>
               )
             })

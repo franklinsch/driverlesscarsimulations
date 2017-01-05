@@ -604,7 +604,52 @@ frontendSocketServer.on('request', function(request) {
     });
   }
 
+  function _handleRequestUserAPIKeys(message) {
+    // TODO: Do proper auth here
+    const userID = message.userID;
+    User.findById(userID, function (error, user) {
+      if (error || !user) {
+        err = error ? error : "User not found"
+          connection.send(JSON.stringify({
+            type: "user-error",
+            content: {
+              error: err
+            }
+          }));
+      }
+      
+      this._sendUserAPIKeys(user);
+    });
+  }
 
+  function _sendUserAPIKeys(user) {
+    connection.send(JSON.stringify({
+      type: "user-api-keys",
+      content: user.api_keys
+    }));
+  }
+
+  function _handleRequestSimulationBenchmark(message) {
+    console.log("Request benchmark");
+    Simulation.findById(message.simulationID, function (error, simulation) {
+      console.log("found simulation");
+      if (error || !simulation) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.simulationID
+          }
+        }));
+        console.log("Could not find simulation with ID " + message.simulationID);
+        return
+      }
+      const journeys = {};
+      for (const journey of simulation.journeys) {
+        journeys[journey._id] = journey;
+      }
+      //benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
+      benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
+    }
 
 
   function _handleRequestFrameworkDisconnect(message) {
@@ -664,6 +709,9 @@ frontendSocketServer.on('request', function(request) {
           break;
         case "request-simulation-benchmark":
           _handleRequestSimulationBenchmark(messageContent, connection);
+          break;
+        case "request-user-api-keys":
+         _handleRequestUserAPIKeys(messageContent);
           break;
         case "request-user-api-access":
           _handleRequestAPIAccess(messageContent);
