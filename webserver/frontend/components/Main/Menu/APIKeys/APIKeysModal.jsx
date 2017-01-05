@@ -22,7 +22,7 @@ export default class APIKeysModal extends React.Component {
   }
 
   _addAPIKey() {
-      this.props.handlers.handleAddAPIKey(this.state.newAPIKeyTitle, 0);
+      this.props.handlers.handleAddAPIKey(this.state.newAPIKeyTitle, 1);
   }
 
   render() {

@@ -25,6 +25,7 @@ const app = express();
 
 
 const db = require('./backend/db');
+const APIKey = require('./backend/models/APIKey');
 const Journey = require('./backend/models/Journey');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
@@ -618,7 +619,90 @@ frontendSocketServer.on('request', function(request) {
           }));
       }
       
-      this._sendUserAPIKeys(user);
+      _sendUserAPIKeys(user);
+    });
+  }
+
+  function _handleRequestUserAPIKeyAdd(message) {
+    // TODO: Do proper auth here
+    const userID = message.userID;
+    User.findById(userID, function (error, user) {
+      if (error || !user) {
+        err = error ? error : "User not found"
+          connection.send(JSON.stringify({
+            type: "user-error",
+            content: {
+              error: err
+            }
+          }));
+      }
+      
+      const title = message.title;
+      if (!title) {
+        connection.send(JSON.stringify({
+          type: "user-api-key-error",
+          content: {
+            error: 'Title is missing'
+          }
+        }));
+        return;
+      }
+
+      const simulationID = message.simulationID;
+      if (!simulationID) {
+        connection.send(JSON.stringify({
+          type: "user-api-key-error",
+          content: {
+            error: 'Simulation ID is missing'
+          }
+        }));
+        return;
+      }
+
+      // TODO: verify that simulation id actually exists
+
+      const key = uuidV4();
+      let hash = user.getAPIKeyHash(key);
+
+      // Create new API key
+      const apiKey = new APIKey({
+          title: title,
+          hash: hash,
+          simulationID: simulationID
+      });
+
+      const updateInfo = {
+        $push: {
+          api_keys: apiKey
+        }
+      };
+      const options = {
+        returnNewDocument: true
+      };
+      User.findOneAndUpdate({
+          _id: userID
+        }, updateInfo, options)
+        .then((user) => {
+          connection.send(JSON.stringify({
+            type: "user-api-key-add",
+            content: {
+              _id: apiKey._id,
+              title: title,
+              simulationID: simulationID,
+              apiKey: key
+            }
+          }));
+        })
+        .catch((err) => {
+          connection.send(JSON.stringify({
+            type: "user-api-key-error",
+            content: {
+              error: err
+            }
+          }));
+        });
+
+      _sendUserAPIKeys(user);
     });
   }
 
@@ -712,6 +796,9 @@ frontendSocketServer.on('request', function(request) {
           break;
         case "request-user-api-keys":
          _handleRequestUserAPIKeys(messageContent);
+          break;
+        case "request-user-api-key-add":
+         _handleRequestUserAPIKeyAdd(messageContent);
           break;
         case "request-user-api-access":
           _handleRequestAPIAccess(messageContent);
