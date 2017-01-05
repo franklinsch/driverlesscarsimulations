@@ -14,6 +14,16 @@ export default class APIKeysModal extends React.Component {
     };
   }
 
+  _updateNewAPIKeyTitle(e) {
+    this.setState({
+      newAPIKeyTitle: e.target.value
+    });
+  }
+
+  _addAPIKey() {
+      alert('test');
+  }
+
   render() {
       return (
         <table>
@@ -41,11 +51,11 @@ export default class APIKeysModal extends React.Component {
             }
             <tr>
               <td>
-                <input placeholder="Title" id="new_api_key_title" type="text" class="validate" />
+                <input placeholder="Title" id="new_api_key_title" type="text" class="validate" onChange={::this._updateNewAPIKeyTitle} />
               </td>
               <td></td>
               <td></td>
-              <td><a class="waves-effect waves-light btn">Add</a></td>
+              <td><a class="waves-effect waves-light btn" onClick={::this._addAPIKey}>Add</a></td>
             </tr>
           </tbody>
         </table>
