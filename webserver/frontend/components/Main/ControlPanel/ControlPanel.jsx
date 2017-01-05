@@ -79,6 +79,10 @@ export default class ControlPanel extends React.Component {
     this.props.handlers.handleBenchmarkRequest();
   }
 
+  _handleAPIKeyAssignments(e) {
+    console.log(e);
+  }
+
   handleJourneysSubmit(journeys) {
     for (const journey of journeys) {
       this.props.handlers.handlePendingJourneyAdd(journey);
