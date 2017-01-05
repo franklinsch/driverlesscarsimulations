@@ -677,7 +677,7 @@ frontendSocketServer.on('request', function(request) {
         }
       };
       const options = {
-        returnNewDocument: true
+        new: true
       };
       User.findOneAndUpdate({
           _id: userID
@@ -692,6 +692,8 @@ frontendSocketServer.on('request', function(request) {
               apiKey: key
             }
           }));
+
+          _sendUserAPIKeys(user);
         })
         .catch((err) => {
           connection.send(JSON.stringify({
@@ -701,15 +703,15 @@ frontendSocketServer.on('request', function(request) {
             }
           }));
         });
-
-      _sendUserAPIKeys(user);
     });
   }
 
   function _sendUserAPIKeys(user) {
     connection.send(JSON.stringify({
       type: "user-api-keys",
-      content: user.api_keys
+      content: {
+        'apiKeys': user.api_keys
+      }
     }));
   }
 

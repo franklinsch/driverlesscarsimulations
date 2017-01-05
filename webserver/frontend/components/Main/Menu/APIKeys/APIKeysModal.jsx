@@ -4,7 +4,8 @@ export default class APIKeysModal extends React.Component {
 
   static propTypes = {
     handlers: React.PropTypes.object,
-    apiKeys: React.PropTypes.array
+    apiKeys: React.PropTypes.array,
+    newAPIKey: React.PropTypes.object,
   }
 
   constructor(props) {
@@ -26,6 +27,8 @@ export default class APIKeysModal extends React.Component {
   }
 
   render() {
+      const newAPIKey = this.props.newAPIKey;
+
       return (
         <table>
           <thead>
@@ -43,7 +46,7 @@ export default class APIKeysModal extends React.Component {
                 return (
                   <tr key={apiKey._id}>
                     <td>{apiKey.title}</td>
-                    <td></td>
+                    <td>{newAPIKey && newAPIKey._id == apiKey._id && newAPIKey.apiKey}</td>
                     <td>sim</td>
                     <td></td>
                   </tr>

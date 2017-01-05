@@ -21,6 +21,7 @@ export default class ControlPanel extends React.Component {
     simulations: React.PropTypes.array,
     frameworks: React.PropTypes.array,
     apiKeys: React.PropTypes.array,
+    newAPIKey: React.PropTypes.object,
     simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     activeSimulationID: React.PropTypes.string,
@@ -98,6 +99,7 @@ export default class ControlPanel extends React.Component {
         <APIKeysModal
           handlers={handlers}
           apiKeys={this.props.apiKeys}
+          newAPIKey={this.props.newAPIKey}
         />
       </Modal>;
   }

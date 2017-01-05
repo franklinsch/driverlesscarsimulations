@@ -47,7 +47,8 @@ export default class Main extends React.Component {
       simulationJourneys: [],
       userSimulations: [],
       frameworks: [],
-      apiKeys: []
+      apiKeys: [],
+      newAPIKey: undefined
     }
 
     socket.onopen = (event) => {
@@ -151,14 +152,6 @@ export default class Main extends React.Component {
               userSimulations: data.simulations
             });
           });
-
-          socket.send(JSON.stringify({
-            ...UtilFunctions.socketMessage(),
-            type: "request-user-api-keys",
-            content: {
-              userID: data.userID
-            }
-          }))
         })
         .catch(err => {
           console.log("error fetching user simulations");
@@ -283,9 +276,13 @@ export default class Main extends React.Component {
         frameworks: messageData.content.frameworks
       });
     } else if (messageData.type === "user-api-keys") {
-      console.log(messageData.content.apiKeys);
       this.setState({
         apiKeys: messageData.content.apiKeys
+      });
+    } else if (messageData.type === "user-api-key-add") {
+      console.log(messageData.content);
+      this.setState({
+        newAPIKey: messageData.content
       });
     } else if (messageData.type === "user-api-access") {
       const id = messageData.content.api_id;
@@ -623,13 +620,22 @@ export default class Main extends React.Component {
     $("#dummy-button").sideNav();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     const sessionToken = cookie.load('token');
     if (sessionToken && this.state.token) {
       cookie.save('token', sessionToken, {
         path: '/',
         maxAge: UtilFunctions.session_length,
       });
+    }
+
+    if (this.state.userID && prevState.userID != this.state.userID) {
+      const type = "request-user-api-keys";
+      const content = {
+        userID: this.state.userID
+      }
+
+      UtilFunctions.sendSocketMessage(this.state.socket, type, content);
     }
   }
 
@@ -732,7 +738,8 @@ export default class Main extends React.Component {
           pendingJourneys     = {pendingJourneys}
           simulationJourneys  = {simulationJourneys}
           frameworks          = {this.state.frameworks}
-          apiKeys            = {this.state.apiKeys}
+          apiKeys             = {this.state.apiKeys}
+          newAPIKey           = {this.state.newAPIKey}
           objectTypes         = {this.state.objectTypes}
           objectKindInfo      = {this.state.objectKindInfo}
           benchmarkValues     = {this.state.benchmarkValues}
