@@ -246,16 +246,6 @@ export default class Main extends React.Component {
         simulationJourneys: journeys,
         selectedCityID: selectedCityID
       });
-    } else if (messageData.type === "simulation-confirm-close") {
-      const newSimulationInfo = this.state.simulationInfo;
-      const path = window.location.pathname;
-
-      if (!/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
-        newSimulationInfo.id = "0";
-        this.setState({
-          simulationInfo: newSimulationInfo
-        });
-      }
     } else if (messageData.type === "default-object-types") {
       this.setState({
         objectTypes: messageData.content
@@ -395,10 +385,10 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
-  handleSimulationClose() {
+  handleDisconnectFrameworks() {
     const socket = this.state.socket;
     const simID = this.state.simulationInfo.id;
-    const type = "request-simulation-close";
+    const type = "request-simulation-disconnect-frameworks";
     const content = {
       simulationID: simID
     }
@@ -518,6 +508,18 @@ export default class Main extends React.Component {
     })
   }
 
+  handleRequestFrameworkDisconnect(connectionIndex) {
+    const socket = this.state.socket;
+
+    const type = "request-framework-disconnect";
+    const content = {
+      simulationID: this.state.simulationInfo.id,
+      connectionIndex: connectionIndex
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
   handleRequestAPIAccess() {
     const socket = this.state.socket;
     const user = this.state.userID;
@@ -553,7 +555,7 @@ export default class Main extends React.Component {
     };
   }
 
-  _handleToggleSmoothMotion() {
+  handleToggleSmoothMotion() {
     this.smoothMotion = !this.smoothMotion;
   }
 
@@ -616,24 +618,25 @@ export default class Main extends React.Component {
 
 
     const menuHandlers = {
-      handleJoinSimulation            : ::this.handleJoinSimulation,
-      handleCityChange                : ::this.handleCityChange,
-      handleTokenChange               : ::this.handleTokenChange,
-      handleRequestAPIAccess          : ::this.handleRequestAPIAccess,
-      handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
-      handleSimulationStart           : ::this.handleSimulationStart,
-      handleSimulationUpdate          : ::this.handleSimulationUpdate,
-      handleSimulationClose           : ::this.handleSimulationClose,
-      handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
-      handleSpeedChange               : ::this.handleSpeedChange,
-      handleToggleSmoothMotion        : ::this._handleToggleSmoothMotion,
-      handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
-      handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
-      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
-      handleSimulationActivate        : ::this.handleSimulationActivate,
-      handlePause                     : ::this.handlePause,
-      handleResume                    : ::this.handleResume,
-      handleScrub                     : ::this.handleScrub
+      handleJoinSimulation             : ::this.handleJoinSimulation,
+      handleCityChange                 : ::this.handleCityChange,
+      handleTokenChange                : ::this.handleTokenChange,
+      handleRequestAPIAccess           : ::this.handleRequestAPIAccess,
+      handleBenchmarkRequest           : ::this.handleBenchmarkRequest,
+      handleSimulationStart            : ::this.handleSimulationStart,
+      handleSimulationUpdate           : ::this.handleSimulationUpdate,
+      handleDisconnectFrameworks       : ::this.handleDisconnectFrameworks,
+      handleObjectTypeCreate           : ::this.handleObjectTypeCreate,
+      handleSpeedChange                : ::this.handleSpeedChange,
+      handleToggleSmoothMotion         : ::this.handleToggleSmoothMotion,
+      handlePendingJourneyAdd          : ::this.handlePendingJourneyAdd,
+      handleJourneyListItemMouseOver   : ::this.handleJourneyListItemMouseOver,
+      handleJourneyListItemMouseOut    : ::this.handleJourneyListItemMouseOut,
+      handleSimulationActivate         : ::this.handleSimulationActivate,
+      handlePause                      : ::this.handlePause,
+      handleResume                     : ::this.handleResume,
+      handleScrub                      : ::this.handleScrub,
+      handleRequestFrameworkDisconnect : ::this.handleRequestFrameworkDisconnect
     }
 
     const simulationMapHandlers = {

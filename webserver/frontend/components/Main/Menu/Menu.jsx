@@ -55,7 +55,7 @@ export default class Menu extends React.Component {
     e.preventDefault();
 
     if (started) {
-      this.props.handlers.handleSimulationClose();
+      this.props.handlers.handleDisconnectFrameworks();
 
       const path = window.location.pathname;
       if (/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
@@ -296,7 +296,7 @@ export default class Menu extends React.Component {
               >
                 { !allowSimulationStart &&
                 <span>Simulation Ended</span> || hasSimulationStarted  &&
-                <span>End Simulation</span> || <span>Start simulation</span>
+                <span>Disconnect Frameworks</span> || <span>Start simulation</span>
                 }
               </button>
               <p>Current simulation ID: {simID}</p>
@@ -353,6 +353,13 @@ export default class Menu extends React.Component {
                         key={index}
                       >
                         {index + ". " + (framework.name || "Framework")}
+                        <button
+                          className = "btn waves-effect waves-light"
+                          hidden    = {this.props.frameworks.length == 1}
+                          onClick   = {(e) => this.props.handlers.handleRequestFrameworkDisconnect(framework.connectionIndex)}
+                        >
+                          Disconnect
+                        </button>
                       </li>
                     )
                   })
