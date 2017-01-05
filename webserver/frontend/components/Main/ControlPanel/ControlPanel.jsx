@@ -83,6 +83,10 @@ export default class ControlPanel extends React.Component {
   }
 
   _renderAPIKeyAssignments() {
+    const handlers = {
+      'handleAddAPIKey': ::this.props.handlers.handleAddAPIKey
+    };
+
     return <Modal
         header='API Key Assignments'
         trigger={
@@ -92,6 +96,7 @@ export default class ControlPanel extends React.Component {
           </button>
         }>
         <APIKeysModal
+          handlers={handlers}
           apiKeys={this.props.apiKeys}
         />
       </Modal>;

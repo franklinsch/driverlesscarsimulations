@@ -556,6 +556,19 @@ export default class Main extends React.Component {
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
 
+  handleAddAPIKey(title, simulationID) {
+    const socket = this.state.socket;
+    const type = "request-user-api-key-add";
+    const userID = this.state.userID;
+    const content = {
+      userID: userID,
+      title: title,
+      simulationID: simulationID
+    }
+
+    UtilFunctions.sendSocketMessage(socket, type, content);
+  }
+
   clearPendingJourneys() {
     this.setState({
       pendingJourneys: []
@@ -641,23 +654,26 @@ export default class Main extends React.Component {
     const simulationRunning = simulationID != undefined && simulationID != 0;
 
     const controlPanelHandlers = {
-      handleJoinSimulation             : ::this.handleJoinSimulation,
-      handleCityChange                 : ::this.handleCityChange,
-      handleBenchmarkRequest           : ::this.handleBenchmarkRequest,
-      handleSimulationStart            : ::this.handleSimulationStart,
-      handleSimulationUpdate           : ::this.handleSimulationUpdate,
-      handleDisconnectFrameworks       : ::this.handleDisconnectFrameworks,
-      handleObjectTypeCreate           : ::this.handleObjectTypeCreate,
-      handleSpeedChange                : ::this.handleSpeedChange,
-      handleToggleSmoothMotion         : ::this.handleToggleSmoothMotion,
-      handlePendingJourneyAdd          : ::this.handlePendingJourneyAdd,
-      handleJourneyListItemMouseOver   : ::this.handleJourneyListItemMouseOver,
-      handleJourneyListItemMouseOut    : ::this.handleJourneyListItemMouseOut,
-      handleSimulationActivate         : ::this.handleSimulationActivate,
-      handlePause                      : ::this.handlePause,
-      handleResume                     : ::this.handleResume,
-      handleScrub                      : ::this.handleScrub,
+      handleJoinSimulation            : ::this.handleJoinSimulation,
+      handleCityChange                : ::this.handleCityChange,
+      handleTokenChange               : ::this.handleTokenChange,
+      handleRequestAPIAccess          : ::this.handleRequestAPIAccess,
+      handleBenchmarkRequest          : ::this.handleBenchmarkRequest,
+      handleSimulationStart           : ::this.handleSimulationStart,
+      handleSimulationUpdate          : ::this.handleSimulationUpdate,
+      handleSimulationClose           : ::this.handleSimulationClose,
+      handleObjectTypeCreate          : ::this.handleObjectTypeCreate,
+      handleSpeedChange               : ::this.handleSpeedChange,
+      handleToggleSmoothMotion        : ::this._handleToggleSmoothMotion,
+      handlePendingJourneyAdd         : ::this.handlePendingJourneyAdd,
+      handleJourneyListItemMouseOver  : ::this.handleJourneyListItemMouseOver,
+      handleJourneyListItemMouseOut   : ::this.handleJourneyListItemMouseOut,
+      handleSimulationActivate        : ::this.handleSimulationActivate,
+      handlePause                     : ::this.handlePause,
+      handleResume                    : ::this.handleResume,
+      handleScrub                     : ::this.handleScrub,
       handleRequestFrameworkDisconnect : ::this.handleRequestFrameworkDisconnect
+      handleAddAPIKey                 : ::this.handleAddAPIKey
     }
 
     const simulationMapHandlers = {

@@ -3,6 +3,7 @@ import React from 'react';
 export default class APIKeysModal extends React.Component {
 
   static propTypes = {
+    handlers: React.PropTypes.object,
     apiKeys: React.PropTypes.array
   }
 
@@ -21,7 +22,7 @@ export default class APIKeysModal extends React.Component {
   }
 
   _addAPIKey() {
-      alert('test');
+      this.props.handlers.handleAddAPIKey(this.state.newAPIKeyTitle, 0);
   }
 
   render() {
@@ -51,11 +52,11 @@ export default class APIKeysModal extends React.Component {
             }
             <tr>
               <td>
-                <input placeholder="Title" id="new_api_key_title" type="text" class="validate" onChange={::this._updateNewAPIKeyTitle} />
+                <input placeholder="Title" id="new_api_key_title" type="text" className="validate" onChange={::this._updateNewAPIKeyTitle} />
               </td>
               <td></td>
               <td></td>
-              <td><a class="waves-effect waves-light btn" onClick={::this._addAPIKey}>Add</a></td>
+              <td><a className="waves-effect waves-light btn" onClick={::this._addAPIKey}>Add</a></td>
             </tr>
           </tbody>
         </table>
