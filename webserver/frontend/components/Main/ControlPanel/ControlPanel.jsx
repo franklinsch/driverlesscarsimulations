@@ -7,6 +7,7 @@ import JourneyList from "./JourneyList/JourneyList.jsx";
 import JourneySettings from "./JourneySettings/JourneySettings.jsx";
 import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
 import ScrubTimer from "./ScrubTimer/ScrubTimer.jsx";
+import { Modal } from 'react-materialize';
 
 export default class ControlPanel extends React.Component {
 
@@ -18,6 +19,7 @@ export default class ControlPanel extends React.Component {
     handlers: React.PropTypes.object,
     simulations: React.PropTypes.array,
     frameworks: React.PropTypes.array,
+    api_keys: React.PropTypes.array,
     simulationJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     pendingJourneys: React.PropTypes.arrayOf(CustomPropTypes.simulationJourney),
     activeSimulationID: React.PropTypes.string,
@@ -79,8 +81,30 @@ export default class ControlPanel extends React.Component {
     this.props.handlers.handleBenchmarkRequest();
   }
 
-  _handleAPIKeyAssignments(e) {
-    console.log(e);
+  _renderAPIKeyAssignments() {
+    return <Modal
+        header='API Key Assignments'
+        trigger={
+          <button
+            className="btn waves-effect waves-light">
+            API Key Assignments
+          </button>
+        }>
+        <ul className="collection">
+          {
+            this.props.api_keys.map((api_key, index) => {
+              return (
+                <li
+                  className="collection-item"
+                  key={index}
+                >
+                  {index + ". " + api_key.title}
+                </li>
+              )
+            })
+          }
+        </ul>
+      </Modal>;
   }
 
   handleJourneysSubmit(journeys) {
