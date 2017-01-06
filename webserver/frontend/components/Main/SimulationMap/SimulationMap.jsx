@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Marker, TileLayer, Popup, GeoJson } from 'react-leaflet';
+import { Map, Marker, TileLayer, Popup, GeoJson, Rectangle } from 'react-leaflet';
 import L from 'leaflet'
 import CustomPropTypes from '../../Utils/CustomPropTypes.jsx'
 import RotatableMarker from './RotatableMarker/RotatableMarker.jsx'
@@ -52,14 +52,17 @@ export default class SimulationMap extends React.Component {
   _handleMapClick(e) {
     const lat = e.latlng.lat;
     const lng = e.latlng.lng;
+    const bounds = this.props.bounds;
 
     const position = {
       lat: lat,
       lng: lng
     }
 
-    this._updateMarker(position);
-
+    if (lat < bounds.northEast.lat && lng < bounds.northEast.lng &&
+        lat > bounds.southWest.lat && lng > bounds.southWest.lng) {
+      this._updateMarker(position);
+    }
     // If one clicks on the map, the currently clicked car isn't active anymore
     this.setState({
       clickedCar: null
@@ -249,11 +252,18 @@ export default class SimulationMap extends React.Component {
 
     const heightInVh = heightInPx / $(window).height() * 100;
     const widthInVh = widthInPx / $(window).width() * 100;
+
     const style = {
       height: heightInVh +'vh',
       width:  widthInVh + 'vw'
     }
 
+    let rectBounds = [];
+    if (this.props.bounds) {
+      rectBounds = [[this.props.bounds.southWest.lat, this.props.bounds.southWest.lng],
+                    [this.props.bounds.northEast.lat, this.props.bounds.northEast.lng]];
+    }
+    
     const cars = this.props.simulationState.objects;
 
     if (!this.props.bounds) {
@@ -368,6 +378,15 @@ export default class SimulationMap extends React.Component {
               {this._renderPopup()}
             </Marker>
           }
+          <Rectangle
+            key = {Math.random()}
+            bounds = {rectBounds}
+            fill = {false}
+            clickable = {false}
+            width = {'3'}
+            color = '#000'
+            colour = 'black'
+          />
         </Map>
       </div>
     );
