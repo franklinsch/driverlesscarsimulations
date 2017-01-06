@@ -48,10 +48,3 @@ def scale(point, scale):
 
 def equal(point1, point2):
   return point1[0] == point2[0] and point1[1] == point2[1]
-
-def getNearest(inp, point):
-  os.system("node find_node.js " + str(gjson.dumps(point).encode('utf8')) + " " + inp + " > find.json")
-  proj = None
-  with open("find.json") as data_file:
-    proj = json.load(data_file)
-  return proj
