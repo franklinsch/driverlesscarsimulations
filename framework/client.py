@@ -160,7 +160,7 @@ class SAVNConnectionAssistant:
     #The connection is officialy dead we need to terminate the handling loop,
     #to achieve this we populate the message queue with a confirmation packet
     packet = {'type': 'simulation-close', 'content': {'simulationID': self.simulationID}}
-    asyncio.run_coroutine_threadsafe(self.messageQueue.put(json.dumps(packet)),
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
     loop)
 
   def synchronize(self, sleepTime):
