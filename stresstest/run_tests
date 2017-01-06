@@ -6,6 +6,7 @@ mkdir logs || true
 for NUM_CARS in $(seq $1 $2)
   do
     SIM_ID=$(curl http://localhost:3000/create-simulation -X POST)
-    eval ../sample_algorithms/exec_sim $SIM_ID $NUM_CARS
-    killall -9 python
+    eval ../sample_algorithms/exec_sim $SIM_ID $NUM_CARS &
+    sleep $3
+    killall -9 Python
   done
