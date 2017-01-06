@@ -156,12 +156,14 @@ function _handleRequestEventUpdate(message, connection, callback) {
     }
   }, {new: true}, function (error, simulation) {
     if (error || !simulation) {
-      connection.send(JSON.stringify({
-        type: "simulation-error",
-        content: {
-          message: "Could not find simulation with ID " + message.simulationID
-        }
-      }));
+      if (connection) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.simulationID
+          }
+        }));
+      }
       console.log("Could not find simulation with ID " + message.simulationID);
       console.error(error);
       callback(error);
