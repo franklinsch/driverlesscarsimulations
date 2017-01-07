@@ -129,8 +129,8 @@ class SAVNConnectionAssistant:
     def isInitialParams():
       return packet["type"] == "simulation-start-parameters"
 
-    def isClose():
-      return packet["type"] == "simulation-close"
+    def isDisconnect():
+      return packet["type"] == "framework-disconnect"
 
     def isUpdate():
       return packet["type"] == "simulation-update"
@@ -150,7 +150,7 @@ class SAVNConnectionAssistant:
       print("\n\nReceived go-ahead at ", time.time())
       self.attempt(self.handleSimulationCommunication, packet)
       self.shouldAwait = False
-    elif isClose():
+    elif isDisconnect():
       self.attempt(self.handleSimulationStop, packet)
       self.endSimulation()
 
@@ -159,9 +159,8 @@ class SAVNConnectionAssistant:
     self.alive = False
     #The connection is officialy dead we need to terminate the handling loop,
     #to achieve this we populate the message queue with a confirmation packet
-    packet = {'type': 'simulation-close', 'content': {'simulationID': self.simulationID}}
-    asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
-    loop)
+    packet = {'type': 'framework-disconnect', 'content': {'simulationID': self.simulationID}}
+    asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet), loop)
 
   def synchronize(self, sleepTime):
     self.shouldAwait = True

@@ -516,7 +516,7 @@ frontendSocketServer.on('request', function(request) {
     }
   }
 
-  function _handleRequestSimulationClose(message) {
+  function _handleRequestSimulationDisconnectFrameworks(message) {
     Simulation.findById(message.simulationID, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
@@ -531,7 +531,7 @@ frontendSocketServer.on('request', function(request) {
 
       for (const framework of simulation.frameworks) {
         frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
-          type: "simulation-close",
+          type: "framework-disconnect",
           content: message
         }));
       }
@@ -596,6 +596,17 @@ frontendSocketServer.on('request', function(request) {
     });
   }
 
+  function _handleRequestFrameworkDisconnect(message) {
+    const index = message.connectionIndex;
+    const simulationID = message.simulationID;
+    console.log(index);
+
+    frameworkConnections[index]['connection'].send(JSON.stringify({
+      type: "framework-disconnect",
+      content: {}
+    }));
+  }
+
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       const messageData = JSON.parse(message.utf8Data);
@@ -637,14 +648,17 @@ frontendSocketServer.on('request', function(request) {
         case "request-simulation-timestamp-change":
           _handleRequestSimulationTimestampChange(messageContent);
           break;
-        case "request-simulation-close":
-          _handleRequestSimulationClose(messageContent);
+        case "request-simulation-disconnect-frameworks":
+          _handleRequestSimulationDisconnectFrameworks(messageContent);
           break;
         case "request-simulation-benchmark":
           _handleRequestSimulationBenchmark(messageContent);
           break;
         case "request-user-api-access":
           _handleRequestAPIAccess(messageContent);
+          break;
+        case "request-framework-disconnect":
+          _handleRequestFrameworkDisconnect(messageContent);
           break;
       }
     }
@@ -840,33 +854,6 @@ frameworkSocketServer.on('request', function(request) {
     });
   }
 
-  function _handleSimulationClose(message) {
-    console.log("Received close confirmation from framework");
-
-    const simulationID = message.simulationID;
-
-    Simulation.findOne({
-      _id: simulationID
-    }, (error, simulation) => {
-      if (error || !simulation) {
-        connection.send(JSON.stringify({
-          type: "simulation-error",
-          content: {
-            message: "Could not find simulation with ID " + simulationID
-          }
-        }))
-        console.log("Could not find simulation with ID " + simulationID);
-        return
-      }
-
-      for (const frontend of simulation.frontends) {
-        frontendConnections[frontend.connectionIndex]['connection'].send(JSON.stringify({
-          type: "simulation-confirm-close",
-        }));
-      }
-    });
-  }
-
   function _handleJourneyComplete(message) {
     const log = {
       duration: message.timestamp - message.journeyStart,
@@ -874,7 +861,7 @@ frameworkSocketServer.on('request', function(request) {
     };
     console.log(message);
     console.log("Logging " + message.simulationID);
-    Simulation.update({_id: message.simulationID}, { $push: { completionLogs: log}}, function (error, numAffected) {
+    Simulation.update({_id: message.simulationID}, {$push: { completionLogs: log}}, function (error, numAffected) {
       if (error || !numAffected) {
         console.log("Could not find corresponding simulation for connection");
         return
@@ -897,9 +884,6 @@ frameworkSocketServer.on('request', function(request) {
               break;
             case "simulation-state":
               _handleSimulationStateUpdate(messageContent);
-              break;
-            case "simulation-close":
-              _handleSimulationClose(messageContent);
               break;
             case "simulation-journey-complete":
               _handleJourneyComplete(messageContent);
@@ -949,7 +933,6 @@ function sendFrameworkList(simulation, connection) {
       frontendConnections[frontend.connectionIndex]['connection'].send(JSON.stringify(packet));
     }
   }
-  console.log("Sending frameworks\n");
 }
 
 function lookup(objs, eqF) {
