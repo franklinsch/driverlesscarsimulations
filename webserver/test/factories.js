@@ -43,9 +43,24 @@ const Benchmarking = function () {
     simID: _simID,
     simulation: _simulation,
   };
+}();
+
+const Routing = function() {
+  const _user = () => {
+    return {
+      _id: 'some_id',
+      username: 'some_user_name',
+      simulations: 'some_simulations',
+    }
+  };
+
+  return {
+    user: _user,
+  }
 
 }();
 
 module.exports = {
   benchmarking: Benchmarking,
+  routing: Routing,
 };

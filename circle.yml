@@ -7,6 +7,8 @@ machine:
 dependencies:
   override:
     - cd framework && python setup.py install
+    - nvm install stable && nvm alias default stable
+    - cd webserver && npm install
 
 test:
   override:

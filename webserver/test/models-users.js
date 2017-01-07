@@ -74,7 +74,7 @@ describe('User Accounts Schema', function() {
       it('should generate a valid token', function(done) {
         const simID = '1';
         const ip = '127.0.0.1'
-        token = user.generateAPIToken(simID, ip);
+        const token = user.generateAPIToken(simID, ip);
         jwt.verify(token, config.token_secret, function(err, decoded) {
           should.not.exist(err);
           decoded._id.should.equal(user._id.toString());
@@ -124,7 +124,7 @@ describe('User Accounts Schema', function() {
 
     describe('#generateJwt()', function() {
       it('should generate a valid token', function(done) {
-        token = user.generateJwt();
+        const token = user.generateJwt();
         jwt.verify(token, config.token_secret, function(err, decoded) {
           should.not.exist(err);
           decoded._id.should.equal(user._id.toString());
