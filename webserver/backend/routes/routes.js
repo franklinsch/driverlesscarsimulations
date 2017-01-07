@@ -24,7 +24,7 @@ router.route('/simulations')
           userID: result._id,
           username: result.username,
           simulations: result.simulations
-        }).end();
+        });
       })
       .catch((err) => {
         res.send(err);
