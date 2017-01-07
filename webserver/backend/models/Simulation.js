@@ -35,6 +35,7 @@ const simulationSchema = mongoose.Schema({
     participants: [String],
     frameworkStates: [{
       frameworkID: String,
+      timestamp: Number,
       objects: [{
         id: String,
         journeyID: String,

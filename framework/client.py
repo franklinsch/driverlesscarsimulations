@@ -23,7 +23,7 @@ class SAVNConnectionAssistant:
     self.shouldAwait = False
 
   def updateState(self, timestamp, state, sleepTime=1):
-    packet = {'type': 'simulation-state',
+    packet = {'type': 'simulation-state-update',
               'content':
                 {'simulationID': self.simulationID,
                  'timestamp': timestamp,
@@ -49,7 +49,7 @@ class SAVNConnectionAssistant:
   def getAPIKeys(self):
     pass
 
-  def handleSimulationStart(self, initialParameters):
+  def handleSimulationRun(self, initialParameters):
     pass
 
   def handleSimulationDataUpdate(self, updates):
@@ -69,7 +69,7 @@ class SAVNConnectionAssistant:
     return message
 
   async def startConnection(self, timeslice):
-    packet = {'type': 'simulation-start', 'content': {'simulationID': self.simulationID, 'name': self.name, 'timeslice': timeslice}}
+    packet = {'type': 'framework-connect', 'content': {'simulationID': self.simulationID, 'name': self.name, 'timeslice': timeslice}}
     await self.send_packet(packet)
 
   async def send_packet(self, packet):
@@ -142,7 +142,7 @@ class SAVNConnectionAssistant:
       self.failsafe(packet["content"])
     elif isInitialParams():
       self.frameworkID = packet["content"]["frameworkID"]
-      self.attempt(self.handleSimulationStart, packet)
+      self.attempt(self.handleSimulationRun, packet)
       self.endSimulation()
     elif isUpdate():
       self.attempt(self.handleSimulationDataUpdate, packet)

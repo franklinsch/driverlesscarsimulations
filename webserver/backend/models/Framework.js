@@ -4,7 +4,7 @@ const frameworkSchema = mongoose.Schema({
   connectionIndex: Number,
   name: String,
   timeslice: Number,
-  nextIndex: Number
+  nextTimestamp: Number
 });
 
 module.exports = mongoose.model('Framework', frameworkSchema);

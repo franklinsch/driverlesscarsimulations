@@ -31,7 +31,7 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
       return api_id, api_key
     return '', ''
 
-  def handleSimulationStart(self, initialParameters):
+  def handleSimulationRun(self, initialParameters):
     runSimulation(self, initialParameters)
     #testInitialisation(initialParameters)
 
