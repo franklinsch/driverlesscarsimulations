@@ -3425,7 +3425,7 @@ small {
   overflow-y: hidden;
   height: 48px;
   width: 100%;
-  background-color: #2f496e;
+  background-color: #fff;
   margin: 0 auto;
   white-space: nowrap; }
   .tabs.tabs-transparent {
@@ -6381,5 +6381,9 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 #search-results {
   position: fixed;
   z-index: 10; }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0; }
 
 /*# sourceMappingURL=main.css.map */
