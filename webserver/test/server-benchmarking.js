@@ -60,9 +60,10 @@ describe('Benchmarking', function() {
 
     it('should send the benchmark value to the frontend', function() {
       Simulation.findById.yields(null, sample.simulation());
-      const message = { simulationID: sample.simID() };
+      const simID = sample.simID()
+      const message = { simulationID: simID };
       server._handleRequestSimulationBenchmark(message, connection);
-      Simulation.findById.should.have.been.calledWith(sample.simID());
+      Simulation.findById.should.have.been.calledWith(simID);
       const benchmarkReturnMessage = JSON.stringify({
         type: "simulation-benchmark",
         content: {
