@@ -66,7 +66,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
 
   def test_simulationStop(self):
     self.connection.handleSimulationStop = Mock()
-    packet = {'type': 'simulation-close', 'content': {}}
+    packet = {'type': 'framework-disconnect', 'content': {}}
     self.connection.onMessage(packet)
     self.connection.handleSimulationStop.assert_called_with(packet['content'])
 
