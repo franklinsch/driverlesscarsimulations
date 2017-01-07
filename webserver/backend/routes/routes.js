@@ -21,10 +21,10 @@ router.route('/simulations')
       })
       .then((result) => {
         res.json({
-          userID: userId,
+          userID: result._id,
           username: result.username,
           simulations: result.simulations
-        });
+        }).end();
       })
       .catch((err) => {
         res.send(err);

@@ -3,7 +3,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-exports._handleRequestEventUpdate = _handleRequestEventUpdate;
 const routes = require('./backend/routes/routes');
 const session = require('express-session');
 const config = require('./backend/config');
@@ -44,7 +43,7 @@ function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
 }
 
 function deg2rad(deg) {
-  return deg * (Math.PI/180)
+  return deg * (Math.PI/180);
 }
 
 function averageSpeedToDestination(journeys, completionLogs) {
@@ -52,7 +51,6 @@ function averageSpeedToDestination(journeys, completionLogs) {
   let totalDistance = 0;
 
   for (const log of completionLogs) {
-    console.log(log);
     totalTime += log.duration;
 
     const journey = journeys[log['journeyID']];
@@ -102,7 +100,37 @@ const frameworkConnections = []
 
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
-function _handleRequestEventUpdate(message, callback) {
+function _handleRequestSimulationBenchmark(message, connection) {
+  console.log("Request benchmark");
+  Simulation.findById(message.simulationID, function (error, simulation) {
+    console.log("found simulation");
+    if (error || !simulation) {
+      connection.send(JSON.stringify({
+        type: "simulation-error",
+        content: {
+          message: "Could not find simulation with ID " + message.simulationID
+        }
+      }));
+      console.log("Could not find simulation with ID " + message.simulationID);
+      return
+    }
+    const journeys = {};
+    for (const journey of simulation.journeys) {
+      journeys[journey._id] = journey;
+    }
+    //benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
+    benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
+
+    connection.send(JSON.stringify({
+      type: "simulation-benchmark",
+      content: {
+        value: benchmarkValue
+      }
+    }));
+  });
+}
+
+function _handleRequestEventUpdate(message, connection, callback) {
   const simulationID = message.simulationID;
 
   // We need to create Journey models so that the ids will be correctly assigned by mongoose
@@ -120,12 +148,14 @@ function _handleRequestEventUpdate(message, callback) {
     }
   }, {new: true}, function (error, simulation) {
     if (error || !simulation) {
-      connection.send(JSON.stringify({
-        type: "simulation-error",
-        content: {
-          message: "Could not find simulation with ID " + message.simulationID
-        }
-      }));
+      if (connection) {
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + message.simulationID
+          }
+        }));
+      }
       console.log("Could not find simulation with ID " + message.simulationID);
       console.error(error);
       callback(error);
@@ -566,35 +596,8 @@ frontendSocketServer.on('request', function(request) {
     });
   }
 
-  function _handleRequestSimulationBenchmark(message) {
-    console.log("Request benchmark");
-    Simulation.findById(message.simulationID, function (error, simulation) {
-      console.log("found simulation");
-      if (error || !simulation) {
-        connection.send(JSON.stringify({
-          type: "simulation-error",
-          content: {
-            message: "Could not find simulation with ID " + message.simulationID
-          }
-        }));
-        console.log("Could not find simulation with ID " + message.simulationID);
-        return
-      }
-      const journeys = {};
-      for (const journey of simulation.journeys) {
-        journeys[journey._id] = journey;
-      }
-      //benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
-      benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
 
-      connection.send(JSON.stringify({
-        type: "simulation-benchmark",
-        content: {
-          value: benchmarkValue
-        }
-      }));
-    });
-  }
+
 
   function _handleRequestFrameworkDisconnect(message) {
     const index = message.connectionIndex;
@@ -640,7 +643,7 @@ frontendSocketServer.on('request', function(request) {
           _handleRequestSimulationJoin(messageContent);
           break;
         case "request-simulation-update":
-          _handleRequestEventUpdate(messageContent, () => {});
+          _handleRequestEventUpdate(messageContent, connection, () => {});
           break;
         case "request-simulation-speed-change":
           _handleRequestSimulationSpeedChange(messageContent);
@@ -652,7 +655,7 @@ frontendSocketServer.on('request', function(request) {
           _handleRequestSimulationDisconnectFrameworks(messageContent);
           break;
         case "request-simulation-benchmark":
-          _handleRequestSimulationBenchmark(messageContent);
+          _handleRequestSimulationBenchmark(messageContent, connection);
           break;
         case "request-user-api-access":
           _handleRequestAPIAccess(messageContent);
@@ -945,3 +948,12 @@ function lookup(objs, eqF) {
 }
 
 fserver.listen(9000);
+
+module.exports = {
+  _handleRequestSimulationBenchmark: _handleRequestSimulationBenchmark,
+  _handleRequestEventUpdate: _handleRequestEventUpdate,
+  getDistanceLatLonInKm: getDistanceLatLonInKm,
+  deg2rad: deg2rad,
+  averageSpeedToDestination: averageSpeedToDestination,
+  address: server.address(),
+};

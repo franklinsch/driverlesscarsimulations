@@ -1,5 +1,5 @@
 machine:
-  timezone: 
+  timezone:
     Europe/London
   python:
     version: 3.5.2
@@ -7,10 +7,13 @@ machine:
 dependencies:
   override:
     - cd framework && python setup.py install
+    - nvm install stable && nvm alias default stable
+    - cd webserver && npm install
 
 test:
   override:
-    - cd framework/test/ && python -m unittest client_test.py 
+    - cd framework/test/ && python -m unittest client_test.py
+    - cd webserver && npm test
 deployment:
   production:
     branch: master
