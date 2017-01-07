@@ -9,7 +9,7 @@ import JourneySettings from "./JourneySettings/JourneySettings.jsx";
 import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
 import ScrubTimer from "./ScrubTimer/ScrubTimer.jsx";
 
-export default class Menu extends React.Component {
+export default class ControlPanel extends React.Component {
 
   static propTypes = {
     enabled: React.PropTypes.bool,
@@ -154,7 +154,7 @@ export default class Menu extends React.Component {
 
     return (
       <div>
-        <ul id ="slide-out" className="side-nav">
+        <ul>
           <div className="row">
             <div className="col s12">
               <ul className="tabs">

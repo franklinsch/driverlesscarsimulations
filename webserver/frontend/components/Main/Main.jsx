@@ -2,10 +2,11 @@ import React from 'react';
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
 import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
-import Menu from './Menu/Menu.jsx';
+import ControlPanel from './ControlPanel/ControlPanel.jsx';
 import cookie from 'react-cookie';
 import crossroads from 'crossroads';
 import hasher from 'hasher';
+import { Modal } from 'react-materialize';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
@@ -27,7 +28,7 @@ export default class Main extends React.Component {
 
     const initialToken = cookie.load('token') || '';
     this.state = {
-      showMenu: false,
+      showControlPanel: false,
       token: initialToken,
       userID: '',
       activeUser: '',
@@ -142,7 +143,7 @@ export default class Main extends React.Component {
 
   handleMenuButtonClick() {
 
-    if (this.state.showMenu) {
+    if (this.state.showControlPanel) {
       $('.nav-wrapper').animate({paddingLeft: '0px'}, 'fast');
       $('#dummy-button').sideNav('hide')
     }
@@ -151,7 +152,7 @@ export default class Main extends React.Component {
       $('#dummy-button').sideNav('show')
     }
     this.setState({
-      showMenu: !this.state.showMenu
+      showControlPanel: !this.state.showControlPanel
     })
   }
 
@@ -616,7 +617,6 @@ export default class Main extends React.Component {
 
     const simulationRunning = simulationID != undefined && simulationID != 0;
 
-
     const menuHandlers = {
       handleJoinSimulation             : ::this.handleJoinSimulation,
       handleCityChange                 : ::this.handleCityChange,
@@ -654,8 +654,32 @@ export default class Main extends React.Component {
           <div className="nav-wrapper z-depth-3">
             <div className="row">
               <div className="col s1">
-                <a href="#" onClick={::this.handleMenuButtonClick}><i className="material-icons">menu</i></a>
-                <a id="dummy-button" href="#" data-activates="slide-out" hidden><i className="material-icons">menu</i></a>
+                <Modal
+                  header='Control Center'
+                  bottomSheet
+                  trigger={
+                    <a href="#"><i className="material-icons">menu</i></a>
+                  }>
+                  <ControlPanel
+                    enabled             = {!simulationRunning}
+                    availableCities     = {availableCities}
+                    token               = {token}
+                    userID              = {userID}
+                    activeUser          = {activeUser}
+                    simulations         = {userSimulations}
+                    activeSimulationID  = {simulationID}
+                    simulationState     = {simulationState}
+                    selectedCity        = {selectedCity}
+                    pendingJourneys     = {pendingJourneys}
+                    simulationJourneys  = {simulationJourneys}
+                    frameworks          = {this.state.frameworks}
+                    objectTypes         = {this.state.objectTypes}
+                    objectKindInfo      = {this.state.objectKindInfo}
+                    benchmarkValue      = {this.state.benchmarkValue}
+                    currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
+                    handlers            = {controlPanelHandlers}
+                  />
+                </Modal>
               </div>
               <div className="col s11">
                 <LandmarkSearch
@@ -666,26 +690,8 @@ export default class Main extends React.Component {
             </div>
           </div>
         </nav>
-        <Menu
-          enabled             = {!simulationRunning}
-          availableCities     = {availableCities}
-          token               = {token}
-          userID              = {userID}
-          activeUser          = {activeUser}
-          simulations         = {userSimulations}
-          activeSimulationID  = {simulationID}
-          simulationState     = {simulationState}
-          selectedCity        = {selectedCity}
-          pendingJourneys     = {pendingJourneys}
-          simulationJourneys  = {simulationJourneys}
-          frameworks          = {this.state.frameworks}
-          objectTypes         = {this.state.objectTypes}
-          objectKindInfo      = {this.state.objectKindInfo}
-          benchmarkValue      = {this.state.benchmarkValue}
-          currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
-          handlers            = {menuHandlers}
 
-        />
+        
         <div id="simulation-map">
           <SimulationMap
             simulationID               = {simulationID}
