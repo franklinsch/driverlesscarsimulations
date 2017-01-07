@@ -160,30 +160,22 @@ export default class ControlPanel extends React.Component {
               <ul className="tabs">
                 <li className="tab col s3">
                   <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="account" href="#account">
-                      <span className="center-align">
-                        <i className="material-icons">account_box</i>
-                    </span>
+                    Account
                   </a>
                 </li>
                 <li className="tab col s3">
                   <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="global settings" href="#settings">
-                      <span className="center-align">
-                        <i className="material-icons">settings</i>
-                    </span>
+                    Settings
                   </a>
                 </li>
                 <li className="tab col s3">
                   <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="create journeys"  href="#journeys">
-                      <span className="center-align">
-                        <i className="material-icons">directions_car</i>
-                    </span>
+                    Journeys
                   </a>
                 </li>
                 <li className="tab col s3">
-                  <a  className="tooltipped" data-position="top" data-delay="50" data-tooltip="run simulation" href="#run">
-                      <span className="center-align">
-                        <i className="material-icons">play_arrow</i>
-                    </span>
+                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="run simulation" href="#run">
+                    Simulation
                   </a>
                 </li>
               </ul>
