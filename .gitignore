@@ -100,4 +100,4 @@ stresstest/plots/charts
 uploads/*
 
 #scss cache
-.sass-cache/*
+.sass-cache
