@@ -4,6 +4,7 @@ const frameworkSchema = mongoose.Schema({
   connectionIndex: Number,
   name: String,
   timeslice: Number,
+  startTimestamp: Number,
   nextTimestamp: Number
 });
 
