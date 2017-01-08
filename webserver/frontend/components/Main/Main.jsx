@@ -1,4 +1,5 @@
 import React from 'react';
+import LoginForm from "./ControlPanel/LoginForm/LoginForm.jsx";
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
 import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
@@ -620,7 +621,6 @@ export default class Main extends React.Component {
     const controlPanelHandlers = {
       handleJoinSimulation             : ::this.handleJoinSimulation,
       handleCityChange                 : ::this.handleCityChange,
-      handleTokenChange                : ::this.handleTokenChange,
       handleRequestAPIAccess           : ::this.handleRequestAPIAccess,
       handleBenchmarkRequest           : ::this.handleBenchmarkRequest,
       handleSimulationStart            : ::this.handleSimulationStart,
@@ -647,6 +647,10 @@ export default class Main extends React.Component {
       handlePositionAdd : ::this.handlePositionPreview
     }
 
+    const loginButtonHandlers = {
+      handleTokenChange : this.handleTokenChange
+    }
+
 
     return (
       <div>
@@ -654,9 +658,11 @@ export default class Main extends React.Component {
           <div className="nav-wrapper z-depth-3">
             <div className="nav-wrapper">
               <a href="#" className="brand-logo">SAVN</a>
-              <ul id="nav-mobile" className="right hide-on-med-and-down">
-                <li><a href="tets">User</a></li>
-              </ul>
+              <LoginForm
+                token      = {token}
+                activeUser = {activeUser}
+                handlers   = {loginButtonHandlers}
+              />
             </div>
           </div>
         </nav>

@@ -2,7 +2,6 @@ import React from "react";
 import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
 import Dropdown from "./Dropdown/Dropdown.jsx";
 import JoinSimulationForm from "./JoinSimulationForm/JoinSimulationForm.jsx";
-import LoginForm from "./LoginForm/LoginForm.jsx";
 import SimulationList from "./SimulationList/SimulationList.jsx";
 import JourneyList from "./JourneyList/JourneyList.jsx";
 import JourneySettings from "./JourneySettings/JourneySettings.jsx";
@@ -161,10 +160,6 @@ export default class ControlPanel extends React.Component {
       handleSubmit : this.props.handlers.handleJoinSimulation
     }
 
-    const loginButtonHandlers = {
-      handleTokenChange : this.props.handlers.handleTokenChange
-    }
-
     const journeyListHandlers = {
       handleJourneyMouseOver : this.props.handlers.handleJourneyListItemMouseOver,
       handleJourneyMouseOut  : this.props.handlers.handleJourneyListItemMouseOut
@@ -269,11 +264,6 @@ export default class ControlPanel extends React.Component {
               </ul>
             </div>
             <div id="account" className="col s12">
-              <LoginForm
-                token      = {this.props.token}
-                activeUser = {this.props.activeUser}
-                handlers   = {loginButtonHandlers}
-              />
               <li>
                 {
                   this.props.token ?
