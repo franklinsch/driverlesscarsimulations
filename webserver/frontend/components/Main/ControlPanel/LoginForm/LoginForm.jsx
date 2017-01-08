@@ -114,20 +114,24 @@ export default class LoginButton extends React.Component {
                     />
                   </li>
                   <li>
-                    <button
+                    <div>
+                    <a
                       onClick={::this._handleRequestAPIAccess}
                       className="btn waves-effect waves-light">
                       API Keys
-                    </button>
+                    </a>
+                    </div>
                   </li>
                   <li>
-                    <button
+                  <div>
+                    <a
                       type="submit"
                       value= 'logout'
                       onClick={::this._handleFormSubmit}
                       className="btn waves-effect waves-light">
                       Log Out
-                    </button>
+                    </a>
+                    </div>
                   </li>
               </ul>
             </form>
