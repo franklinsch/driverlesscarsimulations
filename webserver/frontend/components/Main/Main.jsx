@@ -673,40 +673,26 @@ export default class Main extends React.Component {
           />
         </div>
 
-        <nav className="bottom-nav">
-            <div className="nav-wrapper z-depth-3">
-              <div className="row">
-                <div className="col s1">
-                  <Modal
-                    header='Control Center'
-                    bottomSheet
-                    trigger={
-                      <a href="#"><i className="material-icons">menu</i></a>
-                    }>
-                    <ControlPanel
-                      enabled             = {!simulationRunning}
-                      availableCities     = {availableCities}
-                      token               = {token}
-                      userID              = {userID}
-                      activeUser          = {activeUser}
-                      simulations         = {userSimulations}
-                      activeSimulationID  = {simulationID}
-                      simulationState     = {simulationState}
-                      selectedCity        = {selectedCity}
-                      pendingJourneys     = {pendingJourneys}
-                      simulationJourneys  = {simulationJourneys}
-                      frameworks          = {this.state.frameworks}
-                      objectTypes         = {this.state.objectTypes}
-                      objectKindInfo      = {this.state.objectKindInfo}
-                      benchmarkValue      = {this.state.benchmarkValue}
-                      currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
-                      handlers            = {controlPanelHandlers}
-                    />
-                  </Modal>
-                </div>
-              </div>
-            </div>
-          </nav>
+        
+        <ControlPanel
+          enabled             = {!simulationRunning}
+          availableCities     = {availableCities}
+          token               = {token}
+          userID              = {userID}
+          activeUser          = {activeUser}
+          simulations         = {userSimulations}
+          activeSimulationID  = {simulationID}
+          simulationState     = {simulationState}
+          selectedCity        = {selectedCity}
+          pendingJourneys     = {pendingJourneys}
+          simulationJourneys  = {simulationJourneys}
+          frameworks          = {this.state.frameworks}
+          objectTypes         = {this.state.objectTypes}
+          objectKindInfo      = {this.state.objectKindInfo}
+          benchmarkValue      = {this.state.benchmarkValue}
+          currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
+          handlers            = {controlPanelHandlers}
+        />         
       </div>
     )
   }

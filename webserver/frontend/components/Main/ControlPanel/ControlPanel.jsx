@@ -154,7 +154,45 @@ export default class ControlPanel extends React.Component {
 
     return (
       <div>
-        <ul>
+        <nav className="bottom-nav">
+          <div className="nav-wrapper z-depth-3">
+              {
+                hasSimulationStarted ?
+                  <div className="row">
+                    <div className="col s1">
+                      <ScrubTimer
+                        timestamp          = {this.props.simulationState.timestamp}
+                        latestTimestamp    = {this.props.simulationState.latestTimestamp}
+                        handlers           = {scrubHandlers}
+                      />
+                    </div>
+                  </div>
+                :
+                  <div className="row">
+                    <div className="col s4">                    
+                      <JoinSimulationForm
+                        handlers = {joinSimulationFormHandlers}
+                      />
+                    </div>
+                    <div className="col s6">
+                      <Dropdown
+                        enabled  = {this.props.enabled}
+                        items    = {cities}
+                        handlers = {dropdownHandlers}
+                      />                  
+                      <button
+                          className = "btn  waves-effect waves-light"
+                          onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                        >
+                        <span>Start new Simulation</span>
+                      </button>
+                    </div>
+                  </div>
+              }
+          </div>
+        </nav>
+                    
+        <ul id ="slide-out" className="side-nav">
           <div className="row">
             <div className="col s12">
               <ul className="tabs">
@@ -217,16 +255,9 @@ export default class ControlPanel extends React.Component {
                   <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
               </li>
               <li>
-                <Dropdown
-                  enabled  = {this.props.enabled}
-                  items    = {cities}
-                  handlers = {dropdownHandlers}
-                />
               </li>
               <li>
-                <JoinSimulationForm
-                  handlers = {joinSimulationFormHandlers}
-                />
+                
               </li>
             </div>
             <div id="journeys" className="col s12">
@@ -304,11 +335,7 @@ export default class ControlPanel extends React.Component {
                   :
                   ''
               }
-              <ScrubTimer
-                timestamp          = {this.props.simulationState.timestamp}
-                latestTimestamp    = {this.props.simulationState.latestTimestamp}
-                handlers           = {scrubHandlers}
-              />
+              
               <button
                 id        = "update-button"
                 className = "btn waves-effect waves-light"
