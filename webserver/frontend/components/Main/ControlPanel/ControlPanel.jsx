@@ -237,11 +237,6 @@ export default class ControlPanel extends React.Component {
             <div className="col s12">
               <ul className="tabs">
                 <li className="tab col s3">
-                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="global settings" href="#settings">
-                    Settings
-                  </a>
-                </li>
-                <li className="tab col s3">
                   <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="create journeys"  href="#journeys">
                     Journeys
                   </a>
@@ -252,23 +247,6 @@ export default class ControlPanel extends React.Component {
                   </a>
                 </li>
               </ul>
-            </div>
-            <div id="settings" className="col s12">
-              <div className="row">
-              </div>
-              <li>
-                  <input
-                    type     = "checkbox"
-                    id       = "smooth-motion"
-                    onChange = {::this.props.handlers.handleToggleSmoothMotion}
-                  />
-                  <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
-              </li>
-              <li>
-              </li>
-              <li>
-                
-              </li>
             </div>
             <div id="journeys" className="col s12">
               <div className="row">
@@ -321,6 +299,12 @@ export default class ControlPanel extends React.Component {
             </div>
             <div id="run" className="col s12">
               <div className="row">
+                  <input
+                    type     = "checkbox"
+                    id       = "smooth-motion"
+                    onChange = {::this.props.handlers.handleToggleSmoothMotion}
+                  />
+                  <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
               </div>
               <button
                 className = "btn  waves-effect waves-light"
