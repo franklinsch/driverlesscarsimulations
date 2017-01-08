@@ -220,7 +220,7 @@ export default class ControlPanel extends React.Component {
                         <li>
                           <a
                               className = "btn  waves-effect waves-light"
-                              onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                              href="#/"
                             >
                             <span>Exit Simulation</span>
                           </a>
@@ -295,7 +295,7 @@ export default class ControlPanel extends React.Component {
                 hidden    = {!hasSimulationStarted}
                 onClick   = {::this._handleSimulationUpdate}
               >
-                Update simulation
+                Update Simulation
               </button>
               <div className="row">
                 <input

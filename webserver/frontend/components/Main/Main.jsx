@@ -88,6 +88,23 @@ export default class Main extends React.Component {
   }
 
   _registerRoutes() {
+    crossroads.addRoute('/', () => {
+      this.setState({
+        selectedJourneyID: "0",
+        simulationInfo: {
+          id: "0",
+          cityID: this.state.simulationInfo.cityID
+        },
+        simulationState: {
+          timestamp: 0,
+          latestTimestamp: 0,
+          objects: []
+        },
+        pendingJourneys: [],
+        simulationJourneys: []
+      });
+    });
+
     crossroads.addRoute('/simulations/{simID}', (simID) => {
       this.setState({
         selectedJourneyID: "0",
