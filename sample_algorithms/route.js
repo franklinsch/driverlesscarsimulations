@@ -163,18 +163,17 @@ const getNearest = function(p, pathFinder) {
   return min_point;
 }
 
-start = JSON.parse(process.argv[2].substring(1));
-end = JSON.parse(process.argv[3].substring(1));
-var fs = require('fs');
-const geojson = JSON.parse(fs.readFileSync(process.argv[4], 'utf8'));
+const fs = require('fs');
+const PathFinder = require('geojson-path-finder');
 
-var PathFinder = require('geojson-path-finder');
+const pairs = JSON.parse(process.argv[2].substring(1));
+const geojson = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 
-var pathFinder = new PathFinder(geojson);
-start = getNearest(start.geometry.coordinates, pathFinder);
-end = getNearest(end.geometry.coordinates, pathFinder);
-var path = pathFinder.findPath(point(start), point(end));
-console.log(JSON.stringify(path));
-//fs.writeFile('pathfinder.dump', JSON.stringify(pathFinder), function (err) {
-  //if (err) throw err;
-//});
+const pathFinder = new PathFinder(geojson);
+
+const paths = pairs.map(function(pair) {
+  const start = getNearest(pair[0], pathFinder);
+  const end = getNearest(pair[1], pathFinder);
+  return pathFinder.findPath(point(start), point(end))['path'];
+});
+console.log(JSON.stringify(paths));

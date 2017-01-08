@@ -12,9 +12,9 @@ def saveGeojson(bottom, left, top, right, output):
   f = open(output, 'w')
   f.write(gjson.dumps(response))
 
-def getRoute(inp, start, end):
-  os.system("node route.js " + str(gjson.dumps(start).encode('utf8')) + " " + str(gjson.dumps(end).encode('utf8')) + " " + inp + " > path.json");
-  path = None
+def getRoutes(inp, pairs):
+  os.system("node route.js " + str(gjson.dumps(pairs).encode('utf8')) + " " + inp + " > path.json");
+  paths = None
   with open("path.json") as data_file:
-    path = json.load(data_file)
-  return path
+    paths = json.load(data_file)
+  return paths
