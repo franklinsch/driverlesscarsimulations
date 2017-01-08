@@ -148,7 +148,7 @@ router.route('/simulations/:simulationID/journeys')
     server._handleRequestEventUpdate({
       simulationID: id,
       journeys: journeys
-    }, (error, simulation) => {
+    }, null, (error, simulation) => {
       if (error || !simulation) {
         res.send(error);
       } else {
