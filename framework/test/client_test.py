@@ -26,7 +26,7 @@ class TestFrameworkClientMethods(unittest.TestCase):
   def test_updateState(self):
     state = {"car": 1}
     timestamp = 0
-    packet = {'type': 'simulation-state',
+    packet = {'type': 'simulation-state-update',
               'content':
                 {'simulationID': self.connection.simulationID,
                  'timestamp': timestamp,
@@ -58,11 +58,11 @@ class TestFrameworkClientMethods(unittest.TestCase):
     self.loop.run_until_complete(self.connection.handler())
     self.connection.send_packet.assert_called_with(msg)
 
-  def test_simulationStart(self):
-    self.connection.handleSimulationStart = Mock()
+  def test_simulationRun(self):
+    self.connection.handleSimulationRun = Mock()
     packet = {'type': 'simulation-start-parameters', 'content': {'frameworkID': 0}}
     self.connection.onMessage(packet)
-    self.connection.handleSimulationStart.assert_called_with(packet['content'])
+    self.connection.handleSimulationRun.assert_called_with(packet['content'])
 
   def test_simulationStop(self):
     self.connection.handleSimulationStop = Mock()

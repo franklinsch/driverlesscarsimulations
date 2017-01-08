@@ -398,7 +398,6 @@ frontendSocketServer.on('request', function(request) {
       simulationData = {
         city: data.selectedCity,
         createdAt: Date.now(),
-        latestTimestamp: 0,
         hotspots: hotspots,
         journeys: journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
@@ -479,11 +478,8 @@ frontendSocketServer.on('request', function(request) {
         console.log("Could not find simulation with ID " + simulationID);
         return;
       }
-      const numStates = simulation.simulationStates.length;
-      let latestTimestamp = 0;
-      if (numStates > 0) {
-        latestTimestamp = simulation.simulationStates[numStates-1]['timestamp'];
-      }
+
+      let latestTimestamp = simulation.latestTimestamp || 0;
       frontendConnections.push({connection: connection, simulationID: simulationID, timestamp: latestTimestamp, speed: null});
 
       City.findOne({name: simulation.city.name}, (error, city) => {
@@ -705,17 +701,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.simulationID;
 
-    Simulation.findByIdAndUpdate(simulationID, {
-      $set: {
-        timeslice: message.timeslice,
-      },
-      $push: {
-        frameworks: {
-          connectionIndex: frameworkConnections.length,
-          name: message.name
-        }
-      }
-    }, { new: true }, function (error, simulation) {
+    Simulation.findById(simulationID, function(error, simulation) {
       if (error || !simulation) {
         console.error(error);
         connection.send(JSON.stringify({
@@ -728,61 +714,76 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      const frameworkIndex = simulation.frameworks.length - 1;
-      const frameworkID = simulation.frameworks[frameworkIndex]._id;
+      if (message.timeslice <= 0) {
+        console.log('\t\tError');
+        console.log('\t\tError');
+        console.log('\t\tError');
+        console.log('\t\tError');
+      }
 
-      frameworkConnections.push({connection: connection, simulationID: simulation._id});
+      if (message.timeslice < simulation.timeslice && simulation.latestTimestamp != undefined) {
+        console.log("Was:");
+        console.log(simulation.latestTimestamp);
+        console.log(simulation.timeslice);
+        simulation.simulationStates = createNewSimulationStates(simulation, message.timeslice);
+        simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / message.timeslice) * message.timeslice;
+        simulation.timeslice = message.timeslice;
+        console.log("Is:");
+        console.log(simulation.latestTimestamp);
+        console.log(simulation.timeslice);
+        console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
+        console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
+      }
 
-      //for (const frontend of simulation.frontends) {
-      //  frontendConnections[frontend.connectionIndex]['timestamp'] = 0;
-      //}
+      let nextIndex = 0;
+      if (simulation.latestTimestamp) {
+        nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice)
+      } else if (simulation.frameworks.length == 0) {
+        simulation.timeslice = message.timeslice;
+      }
 
-      const latestTimestamp = simulation.latestTimestamp || 0;
-      const numStates = simulation.simulationStates.length;
-      const state = (numStates > 0) ? simulation.simulationStates[numStates - 1] : [];
+      const startTimestamp = nextIndex * simulation.timeslice;
+      simulation.frameworks.push({
+        connectionIndex: frameworkConnections.length,
+        timeslice: message.timeslice,
+        startTimestamp: startTimestamp,
+        nextTimestamp: startTimestamp
+      });
 
-      connection.send(JSON.stringify({
-        type: "simulation-start-parameters",
-        content: {
-          frameworkID: frameworkID,
-          city: simulation.city,
-          journeys: simulation.journeys,
-          timestamp: latestTimestamp,
-          state: state
+      simulation.save((error, simulation) => {
+        if (error || !simulation) {
+          return console.error(error);
         }
-      }));
 
-      sendFrameworkList(simulation);
+        const frameworkIndex = simulation.frameworks.length - 1;
+        const frameworkID = simulation.frameworks[frameworkIndex]._id;
+
+        frameworkConnections.push({connection: connection, simulationID: simulation._id});
+
+        const currIndex = Math.floor(simulation.latestTimestamp / simulation.timeslice);
+        const state = simulation.simulationStates[currIndex] || [];
+
+        connection.send(JSON.stringify({
+          type: "simulation-start-parameters",
+          content: {
+            frameworkID: frameworkID,
+            city: simulation.city,
+            journeys: simulation.journeys,
+            timestamp: startTimestamp,
+            state: state
+          }
+        }));
+        sendFrameworkList(simulation);
+      });
     })
   }
 
   function _handleSimulationStateUpdate(message) {
-    function _filterState(state, frameworkID) {
-      const objects = state.objects.filter((object, index) => {
-        if (object.frameworkID == undefined) {
-          // If the object hasn't been set with a frameworkID, set it to the ID of
-          // the framework which sent it.
-          state.objects[index] = frameworkID;
-          return true;
-        } else if (object.frameworkID == frameworkID) {
-          return true;
-        } else {
-          console.log("Framework with ID "+ frameworkID + " tried to update a simulation object it doesn't own");
-          return false;
-        }
-      })
-
-      state.objects = objects;
-      return state;
-    }
-
     console.log("Received simulation-update from framework");
-    //console.log(message);
 
     const simulationID = message.simulationID;
     const frameworkID = message.frameworkID;
 
-    //const newState = _filterState(message.content, frameworkID); TODO: Check if works
     const newState = message;
 
     Simulation.findById(simulationID, function(error, simulation) {
@@ -797,62 +798,43 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
-      if (message.timestamp > simulation.latestTimestamp) {
-        simulation.latestTimestamp = message.timestamp;
+      const simulationStateIndex = Math.ceil(message.timestamp / simulation.timeslice);
+
+      for (const framework of simulation.frameworks) { //TODO: Figure better access method
+        if (framework._id == frameworkID) {
+          if (message.timestamp != framework.nextTimestamp) {
+            console.log('\tError');
+            console.log('\tError');
+            console.log('\tError');
+            console.log('\tError');
+          }
+
+          framework.nextTimestamp = message.timestamp + framework.timeslice;
+          const nextIndex = Math.ceil(framework.nextTimestamp / simulation.timeslice);
+          for (let i = simulationStateIndex; i < nextIndex; i++) {
+            if (simulation.simulationStates.length == i) {
+              simulation.simulationStates.push({
+                communicated: false,
+                timestamp: i * simulation.timeslice,
+                participants: [],
+                frameworkStates: [newState]
+              });
+            } else {
+              simulation.simulationStates[i].frameworkStates.push(newState);
+            }
+          }
+          simulation.simulationStates[simulationStateIndex].participants.push(frameworkID);
+        }
       }
-      const simulationStateIndex = Math.floor(message.timestamp / simulation.timeslice);
-      if (simulation.simulationStates.length == simulationStateIndex) {
-        simulation.simulationStates.push({timestamp: message.timestamp, frameworkstates: []});
-      }
-      simulation.simulationStates[simulationStateIndex].frameworkStates.push(newState);
+
+      const simulationState = simulation.simulationStates[simulationStateIndex];
+      updateConnectionsWithState(simulation, simulationState);
 
       simulation.save((error, simulation) => {
         if (error || !simulation) {
           return console.error(error);
         }
-
         console.log("Updated simulationState");
-
-        const numStates = simulation.simulationStates.length;
-        //Check if the number of framework states of the latest timestamp is equal to the number of frameworks connected
-        const latestFrameworkStates = simulation.simulationStates[numStates-1].frameworkStates;
-        if (latestFrameworkStates.length == simulation.frameworks.length) {
-          for (const framework of simulation.frameworks) {
-            const specifiedSimulationState = latestFrameworkStates.filter((frameworkState) => frameworkState.frameworkID != framework._id);
-            frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
-              type: "simulation-communicate",
-              content: specifiedSimulationState
-            }))
-          }
-
-          for (const frontend of simulation.frontends) {
-            const index = frontend.connectionIndex;
-            if (frontendConnections[index]['speed'] != undefined) {
-              frontendConnections[index]['timestamp'] += frontendConnections[index]['speed']
-              if (frontendConnections[index]['timestamp'] > message.timestamp) {
-                frontendConnections[index]['timestamp'] = message.timestamp;
-              }
-            } else {
-              frontendConnections[index]['timestamp'] = message.timestamp;
-            }
-            const stateIndex = Math.floor(frontendConnections[index]['timestamp'] / simulation.timeslice);
-            const state = simulation.simulationStates[stateIndex];
-            frontendConnections[index]['connection'].send(JSON.stringify({
-              type: "simulation-state",
-              content: {
-                state: state,
-                latestTimestamp: message.timestamp
-              }
-            }))
-          }
-        } else if (simulation.simulationStates[simulationStateIndex].frameworkStates.length >= simulation.frameworks.length) {
-          console.log("Error");
-          const specifiedSimulationState = simulation.simulationStates[simulationStateIndex].frameworkStates.filter((frameworkState) => frameworkState.frameworkID != newState.frameworkID);
-          connection.send(JSON.stringify({
-            type: "simulation-communicate",
-            content: specifiedSimulationState
-          }))
-        }
       });
     });
   }
@@ -882,10 +864,10 @@ frameworkSocketServer.on('request', function(request) {
         if (messageContent.simulationID === decoded.sid) {
           console.log("Received valid JSON packet from:" + decoded.cip);
           switch(messageData.type) {
-            case "simulation-start":
+            case "framework-connect":
               _handleSimulationStart(messageContent);
               break;
-            case "simulation-state":
+            case "simulation-state-update":
               _handleSimulationStateUpdate(messageContent);
               break;
             case "simulation-journey-complete":
@@ -915,12 +897,122 @@ frameworkSocketServer.on('request', function(request) {
           return
         }
         sendFrameworkList(simulation);
+
+        let min_timeslice = undefined;
+        for (const framework of simulation.frameworks) {
+          if (min_timeslice == undefined || framework.timeslice < min_timeslice) {
+            min_timeslice = framework.timeslice;
+          }
+        }
+        if (min_timeslice > simulation.timeslice) {
+          console.log("Was:");
+          console.log(simulation.latestTimestamp);
+          console.log(simulation.timeslice);
+          simulation.simulationStates = createNewSimulationStates(simulation, min_timeslice);
+          simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / min_timeslice) * min_timeslice;
+          simulation.timeslice = min_timeslice;
+          console.log("Is:");
+          console.log(simulation.latestTimestamp);
+          console.log(simulation.timeslice);
+          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
+          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
+        }
+
+        const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
+        updateConnectionsWithState(simulation, simulation.simulationStates[nextIndex]);
       });
     }
 
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
 });
+
+function createNewSimulationStates(simulation, newTimeslice) {
+  const newSimulationStates = [];
+  let newTimestamp = 0;
+  for (const framework of simulation.frameworks) {
+    const newStartIndex = Math.ceil(framework.startTimestamp / newTimeslice);
+    let time = 0;
+    if (newStartIndex <= newSimulationStates.length) {
+      time = framework.startTimestamp;
+    }
+    while (time < framework.nextTimestamp) {
+      const oldIndex = Math.ceil(time / simulation.timeslice);
+      const simulationState = simulation.simulationStates[oldIndex];
+
+      let frameworkState = undefined;
+      for (const fState of simulationState.frameworkStates) {
+        if (fState.frameworkID == framework._id) {
+          frameworkState = fState;
+          break;
+        }
+      }
+
+      const newIndex = Math.ceil(time / newTimeslice);
+
+      const nextTime = time + framework.timeslice;
+      const nextNewIndex = Math.ceil(nextTime / newTimeslice);
+      for (let i = newIndex; i < nextNewIndex; i++) {
+        if (newSimulationStates.length == i) {
+          const newFrameworkState = frameworkState ? [frameworkState] : [];
+          const timestamp = i * newTimeslice;
+          newSimulationStates.push({
+            communicated: timestamp <= simulation.latestTimestamp,
+            timestamp: timestamp,
+            participants: [],
+            frameworkStates: newFrameworkState
+          });
+        } else if (frameworkState) {
+          newSimulationStates[i].frameworkStates.push(frameworkState);
+        }
+      }
+      if (frameworkState && time > simulation.latestTimestamp) {
+        newSimulationStates[newIndex].participants.push(framework._id);
+      }
+      time = nextTime;
+    }
+  }
+  return newSimulationStates;
+}
+
+function updateConnectionsWithState(simulation, simulationState) {
+  if (simulationState.frameworkStates.length >= simulation.frameworks.length) {
+    if (!simulationState.communicated) {
+      simulation.latestTimestamp = simulation.latestTimestamp + simulation.timeslice || 0; //message.timestamp; //TODO: this might not work for all cases
+      simulationState.communicated = true;
+      for (const framework of simulation.frameworks) {
+        if (simulationState.participants.indexOf(framework._id) != -1) {
+          const specifiedFrameworkStates = simulationState.frameworkStates.filter((frameworkState) => frameworkState.frameworkID != framework._id);
+          frameworkConnections[framework.connectionIndex]['connection'].send(JSON.stringify({
+            type: "simulation-communicate",
+            content: specifiedFrameworkStates
+          }))
+        }
+      }
+
+      for (const frontend of simulation.frontends) {
+        const index = frontend.connectionIndex;
+        if (frontendConnections[index]['speed'] != undefined) {
+          frontendConnections[index]['timestamp'] += frontendConnections[index]['speed'];
+          if (frontendConnections[index]['timestamp'] > simulation.latestTimestamp) {
+            frontendConnections[index]['timestamp'] = simulation.latestTimestamp;
+          }
+        } else {
+          frontendConnections[index]['timestamp'] = simulation.latestTimestamp;
+        }
+        const stateIndex = Math.floor(frontendConnections[index]['timestamp'] / simulation.timeslice);
+        const state = simulation.simulationStates[stateIndex];
+        frontendConnections[index]['connection'].send(JSON.stringify({
+          type: "simulation-state",
+          content: {
+            state: state,
+            latestTimestamp: simulation.latestTimestamp
+          }
+        }))
+      }
+    }
+  }
+}
 
 function sendFrameworkList(simulation, connection) {
   const packet = {

@@ -30,9 +30,12 @@ const simulationSchema = mongoose.Schema({
   }],
   frameworks: [Framework.schema],
   simulationStates: [{
+    communicated: Boolean,
     timestamp: Number,
+    participants: [String],
     frameworkStates: [{
       frameworkID: String,
+      timestamp: Number,
       objects: [{
         id: String,
         journeyID: String,
