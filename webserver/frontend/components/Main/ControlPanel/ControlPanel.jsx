@@ -175,17 +175,24 @@ export default class ControlPanel extends React.Component {
                       />
                     </div>
                     <div className="col s6">
-                      <Dropdown
-                        enabled  = {this.props.enabled}
-                        items    = {cities}
-                        handlers = {dropdownHandlers}
-                      />                  
-                      <button
-                          className = "btn  waves-effect waves-light"
-                          onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
-                        >
-                        <span>Start new Simulation</span>
-                      </button>
+                          <Dropdown
+                            enabled  = {this.props.enabled}
+                            items    = {cities}
+                            handlers = {dropdownHandlers}
+                          /> 
+                          <button
+                            className = "btn  waves-effect waves-light"
+                            onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                          >
+                            <span>Journeys and Object Types</span>
+                          </button>            
+                          <button
+                              className = "btn  waves-effect waves-light"
+                              onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                            >
+                            <span>Start new Simulation</span>
+                          </button>
+                          
                     </div>
                   </div>
               }

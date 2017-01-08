@@ -41,7 +41,7 @@ export default class JoinSimulationForm extends React.Component {
                 <input
                   className   = "validate"
                   type        = "text"
-                  placeholder = "Simulation ID"
+                  placeholder = "Joinable Simulation ID"
                   value       = {simulationID}
                   onChange    = {::this._handleSimulationIDChange}
                 />
