@@ -7,7 +7,6 @@ import ControlPanel from './ControlPanel/ControlPanel.jsx';
 import cookie from 'react-cookie';
 import crossroads from 'crossroads';
 import hasher from 'hasher';
-import { Modal } from 'react-materialize';
 import 'whatwg-fetch';
 
 export default class Main extends React.Component {
