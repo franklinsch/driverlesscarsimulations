@@ -621,7 +621,6 @@ export default class Main extends React.Component {
     const controlPanelHandlers = {
       handleJoinSimulation             : ::this.handleJoinSimulation,
       handleCityChange                 : ::this.handleCityChange,
-      handleRequestAPIAccess           : ::this.handleRequestAPIAccess,
       handleBenchmarkRequest           : ::this.handleBenchmarkRequest,
       handleSimulationStart            : ::this.handleSimulationStart,
       handleSimulationUpdate           : ::this.handleSimulationUpdate,
@@ -648,7 +647,8 @@ export default class Main extends React.Component {
     }
 
     const loginButtonHandlers = {
-      handleTokenChange : this.handleTokenChange
+     handleRequestAPIAccess           : ::this.handleRequestAPIAccess,
+     handleTokenChange                : ::this.handleTokenChange
     }
 
 
@@ -661,6 +661,7 @@ export default class Main extends React.Component {
               <LoginForm
                 token      = {token}
                 activeUser = {activeUser}
+                simulations = {userSimulations}
                 handlers   = {loginButtonHandlers}
               />
             </div>

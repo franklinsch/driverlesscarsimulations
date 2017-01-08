@@ -89,11 +89,6 @@ export default class ControlPanel extends React.Component {
     this.props.handlers.handleCityChange(city._id);
   }
 
-  _handleRequestAPIAccess(e) {
-    e.preventDefault();
-    this.props.handlers.handleRequestAPIAccess();
-  }
-
   componentDidMount() {
     $('ul.tabs').tabs();
     $('.tooltipped').tooltip({delay: 50});
@@ -242,11 +237,6 @@ export default class ControlPanel extends React.Component {
             <div className="col s12">
               <ul className="tabs">
                 <li className="tab col s3">
-                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="account" href="#account">
-                    Account
-                  </a>
-                </li>
-                <li className="tab col s3">
                   <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="global settings" href="#settings">
                     Settings
                   </a>
@@ -262,26 +252,6 @@ export default class ControlPanel extends React.Component {
                   </a>
                 </li>
               </ul>
-            </div>
-            <div id="account" className="col s12">
-              <li>
-                {
-                  this.props.token ?
-                    <SimulationList
-                      simulations = {userSimulations}
-                    /> : ''
-                }
-              </li>
-              <li>
-                {
-                  this.props.token &&
-                  <button
-                    onClick={::this._handleRequestAPIAccess}
-                    className="btn waves-effect waves-light">
-                    Request Api Access
-                  </button>
-                }
-              </li>
             </div>
             <div id="settings" className="col s12">
               <div className="row">

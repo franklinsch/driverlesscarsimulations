@@ -1,5 +1,6 @@
 import React from 'react';
 import cookie from 'react-cookie';
+import SimulationList from "../SimulationList/SimulationList.jsx";
 import UtilFunctions from '../../../Utils/UtilFunctions.jsx';
 import 'whatwg-fetch';
 
@@ -8,7 +9,8 @@ export default class LoginButton extends React.Component {
   static propTypes = {
     token: React.PropTypes.string,
     activeUser: React.PropTypes.string,
-    handlers: React.PropTypes.object
+    handlers: React.PropTypes.object,
+    simulations: React.PropTypes.array
   }
 
   constructor(props) {
@@ -18,6 +20,11 @@ export default class LoginButton extends React.Component {
       password: '',
       token: this.props.token
     };
+  }
+
+  _handleRequestAPIAccess(e) {
+    e.preventDefault();
+    this.props.handlers.handleRequestAPIAccess();
   }
 
   _handleUserChange(e) {
@@ -100,6 +107,18 @@ export default class LoginButton extends React.Component {
               <ul id="nav-mobile" className="right hide-on-med-and-down">
                 <li>
                     Hello {this.props.activeUser}!
+                  </li>
+                  <li>
+                    <SimulationList
+                      simulations = {this.props.simulations}
+                    />
+                  </li>
+                  <li>
+                    <button
+                      onClick={::this._handleRequestAPIAccess}
+                      className="btn waves-effect waves-light">
+                      API Keys
+                    </button>
                   </li>
                   <li>
                     <button
