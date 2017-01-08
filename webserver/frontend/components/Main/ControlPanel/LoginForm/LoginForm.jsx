@@ -96,16 +96,24 @@ export default class LoginButton extends React.Component {
       <div>
           {   
             this.state.token ? 
+            <form>
               <ul id="nav-mobile" className="right hide-on-med-and-down">
                 <li>
                     Hello {this.props.activeUser}!
                   </li>
                   <li>
-                    <a onClick={::this._handleFormSubmit}>Logout</a>
+                    <button
+                      type="submit"
+                      value= 'logout'
+                      onClick={::this._handleFormSubmit}
+                      className="btn waves-effect waves-light">
+                      Log Out
+                    </button>
                   </li>
               </ul>
-            
+            </form>
             :
+            <form>
              <ul id="nav-mobile" className="right hide-on-med-and-down">
               <li>
                 <input
@@ -144,6 +152,7 @@ export default class LoginButton extends React.Component {
                 </button> 
               </li>
           </ul>
+          </form>
         }
       </div>
     )
