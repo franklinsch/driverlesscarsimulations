@@ -36,6 +36,8 @@ export default class ControlPanel extends React.Component {
       journeys: [],
       allowSimulationStart: true,
       hotspotFile: null,
+      showJourneyPanel: false,
+      shwoSimulationPanel: false
     }
   }
 
@@ -96,14 +98,30 @@ export default class ControlPanel extends React.Component {
   componentDidMount() {
     $('ul.tabs').tabs();
     $('.tooltipped').tooltip({delay: 50});
-
-
+    $("#journey-button").sideNav({
+      edge: 'right'
+    });
   }
 
   componentDidUpdate() {
     $('ul.tabs').tabs();
     $('.tooltipped').tooltip({delay: 50});
 
+  }
+
+  _handleJourneyButton() {
+    if (this.state.showJourneyPanel) {
+      $('#journey-button').sideNav('hide');
+    }
+    else {
+      console.log('test');
+      $('#journey-button').sideNav('show');
+      console.log($('#journey-button'), $('#journey-slide-out'));
+    }
+
+    this.setState({
+      showJourneyPanel: !this.state.showJourneyPanel
+    })
   }
 
   render() {
@@ -159,12 +177,35 @@ export default class ControlPanel extends React.Component {
               {
                 hasSimulationStarted ?
                   <div className="row">
-                    <div className="col s1">
+                    <div className="col s3">
+                      Simulation ID: {simID}
+                    </div>
+                    <div className="col s3">
                       <ScrubTimer
                         timestamp          = {this.props.simulationState.timestamp}
                         latestTimestamp    = {this.props.simulationState.latestTimestamp}
                         handlers           = {scrubHandlers}
                       />
+                    </div>
+                    <div className="col s6">
+                          <button
+                            className = "btn  waves-effect waves-light"
+                            onClick   = {(e) => this._handleJourneyButton(e)}
+                          >
+                            <span>Journeys</span>
+                          </button>            
+                          <button
+                              className = "btn  waves-effect waves-light"
+                              onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                            >
+                            <span>Simulation Settings</span>
+                          </button>
+                          <button
+                              className = "btn  waves-effect waves-light"
+                              onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                            >
+                            <span>Exit Simulation</span>
+                          </button>
                     </div>
                   </div>
                 :
@@ -184,7 +225,7 @@ export default class ControlPanel extends React.Component {
                             className = "btn  waves-effect waves-light"
                             onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
                           >
-                            <span>Journeys and Object Types</span>
+                            <span>Journeys</span>
                           </button>            
                           <button
                               className = "btn  waves-effect waves-light"
@@ -198,8 +239,10 @@ export default class ControlPanel extends React.Component {
               }
           </div>
         </nav>
+
+        <a id="journey-button" href="#" data-activates="journey-slide-out" hidden><i className="material-icons">menu</i></a>
                     
-        <ul id ="slide-out" className="side-nav">
+        <ul id ="journey-slide-out" className="side-nav">
           <div className="row">
             <div className="col s12">
               <ul className="tabs">

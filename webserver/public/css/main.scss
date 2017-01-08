@@ -44,4 +44,8 @@
 .bottom-nav {
   position: fixed;
   bottom: 0;
+
+  .dropdown-cities-div {
+    display: inline-block;
+  }
 }

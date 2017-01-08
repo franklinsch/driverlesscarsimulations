@@ -6385,5 +6385,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 .bottom-nav {
   position: fixed;
   bottom: 0; }
+  .bottom-nav .dropdown-cities-div {
+    display: inline-block; }
 
 /*# sourceMappingURL=main.css.map */
