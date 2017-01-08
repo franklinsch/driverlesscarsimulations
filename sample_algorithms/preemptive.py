@@ -1,11 +1,12 @@
 import sys
 import time
 import math
+import random
 sys.path.append('../framework')
 
 import client
 import route as R
-import geojson
+import json
 import os.path
 
 from copy import deepcopy
@@ -13,18 +14,26 @@ from copy import deepcopy
 state = []
 locked_nodes = []
 
-SLEEP_TIME = 3
-TIMESLICE = 5
+SLEEP_TIME = 1
+TIMESLICE = 1
 MAX_SPEED_KM_H = 60
-INP_FILE = 'map.geojson'
+MAP_FILE = 'map.geojson'
+CACHE_MAP_FILE = 'cache.geojson'
+CACHE_INFO_FILE = 'cache.info'
+API_KEYS_FILE = 'api_keys'
 
 class ConnectionAssistant(client.SAVNConnectionAssistant):
-  def handleSimulationStart(self, initialParameters):
-    try: #TODO: Users should not need to try-except their code to get error messages
-      runSimulation(self, initialParameters)
-      #testInitialisation(initialParameters)
-    except Exception as err:
-      print(err)
+  def getAPIKeys(self):
+    with open(API_KEYS_FILE) as data:
+      data = data.read().split('\n')
+      api_id = data[0]
+      api_key = data[1]
+      return api_id, api_key
+    return '', ''
+
+  def handleSimulationRun(self, initialParameters):
+    runSimulation(self, initialParameters)
+    #testInitialisation(initialParameters)
 
   def handleSimulationDataUpdate(self, update):
     addToState(update['journeys'], state)
@@ -35,23 +44,21 @@ class ConnectionAssistant(client.SAVNConnectionAssistant):
   def handleSimulationStop(self, info):
     pass
 
+  def handleSimulationFailure(self, error):
+    print('Error:')
+    print(error)
+
 def postParams(initialParameters):
   print(initialParameters)
 
 def testInitialisation(initialParameters):
-  global INP_FILE
   n = 100
   ts = 0
 
-  south = initialParameters['city']['bounds']['southWest']['lat']
-  west = initialParameters['city']['bounds']['southWest']['lng']
-  north = initialParameters['city']['bounds']['northEast']['lat']
-  east = initialParameters['city']['bounds']['northEast']['lng']
-  R.saveGeojson(south, west, north, east, INP_FILE)
-  INP_FILE = 'cpmap.geojson'
+  updateCache(initialParameters['city']['bounds'])
   global state
   for i in range(n):
-    os.system("cp map.geojson " + INP_FILE);
+    getFromCache()
     state = []
     t = time.time()
     addToState(initialParameters['journeys'], state)
@@ -61,16 +68,14 @@ def testInitialisation(initialParameters):
   print('Average time: ' + str(ts / n))
 
 def runSimulation(savn, initialParameters):
-  south = initialParameters['city']['bounds']['southWest']['lat']
-  west = initialParameters['city']['bounds']['southWest']['lng']
-  north = initialParameters['city']['bounds']['northEast']['lat']
-  east = initialParameters['city']['bounds']['northEast']['lng']
   print('Initialising geographical data')
-  R.saveGeojson(south, west, north, east, INP_FILE)
+  updateCache(initialParameters['city']['bounds'])
+  getFromCache()
   print('\t\t\t... Done')
 
   print('Creating initial state')
-  global state
+  global state, timestamp
+  timestamp = initialParameters['timestamp']
   #state = initialParameters['state']
 
   print('Preprocessing routes')
@@ -78,7 +83,6 @@ def runSimulation(savn, initialParameters):
   print('\t\t\t... Done')
 
   print('Starting simulation:')
-  timestamp = initialParameters['timestamp']
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
@@ -89,6 +93,29 @@ def runSimulation(savn, initialParameters):
     state = executeGlobalAlgorithm(state)
     timestamp += TIMESLICE
   #useApiToEnd()
+
+def getFromCache():
+  os.system("cp " + CACHE_MAP_FILE + " " + MAP_FILE);
+
+def updateCache(bounds):
+  if (os.path.isfile(CACHE_INFO_FILE) and os.path.isfile(CACHE_MAP_FILE)):
+    with open(CACHE_INFO_FILE) as cache_info:
+      try:
+        info = json.load(cache_info)
+        if bounds == info:
+          return
+      except:
+        pass
+
+  south = bounds['southWest']['lat']
+  west = bounds['southWest']['lng']
+  north = bounds['northEast']['lat']
+  east = bounds['northEast']['lng']
+
+  info = open(CACHE_INFO_FILE, 'w')
+  info.write(json.dumps(bounds))
+
+  R.saveGeojson(south, west, north, east, CACHE_MAP_FILE)
 
 def analyseData(data):
   for frameworkState in data:
@@ -108,8 +135,8 @@ def translateDataToCameraData(car, data):
   for frameworkState in data:
     for obj in frameworkState['objects']:
       distance = get_distance(car['position'], obj['position'])
-      direction = get_direction(car['position'], obj['position'])
-      if 'position' in obj and distance <= cameraSensorRadius and abs(direction - car['direction']) <= cameraSensorFOVAngle / 2 :
+      bearing = get_bearing(car['position'], obj['position'])
+      if distance <= cameraSensorRadius and abs(bearing - car['bearing']) <= cameraSensorFOVAngle / 2 :
         cameraData.append(obj)
   if len(cameraData) > 0:
     print(cameraData)
@@ -119,7 +146,7 @@ def addToState(journeys, state):
   for journey in journeys:
     start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
     end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
-    newRoute = R.getRoute(INP_FILE, start, end)['path']
+    newRoute = R.getRoute(MAP_FILE, start, end)['path']
     preprocess(newRoute)
     state.append(createNewCar(len(state), journey['_id'], baseRoute=newRoute))
     print('.')
@@ -137,7 +164,7 @@ def get_distance(start, end):
 
   return R*c
 
-def get_direction(start, end):
+def get_bearing(start, end):
   lat1 = math.radians(start[1])
   lng1 = math.radians(start[0])
   lat2 = math.radians(end[1])
@@ -145,18 +172,27 @@ def get_direction(start, end):
   d_lng = lng2-lng1
   y = math.sin(d_lng)*math.cos(lat2)
   x = math.cos(lat1)*math.sin(lat2)-math.sin(lat1)*math.cos(lat2)*math.cos(d_lng)
-  return (math.degrees(math.atan2(y, x))+270)%360
+  return math.degrees(math.atan2(y, x))
 
 def preprocess(route):
   for i in range(len(route)-1):
     start = route[i]
     end = route[i+1]
 
-    props = R.getProperties(INP_FILE, start, end)
+    props = R.getProperties(MAP_FILE, start, end)
     maxSpeed_km_h = MAX_SPEED_KM_H
     if 'maxspeed' in props:
       try:
-        maxSpeed_km_h = int(props['maxspeed']) #TODO: Will break with mph or any suffix
+        speeds = []
+        for speed in props['maxspeed'].split(';'):
+          text = speed.split('mph')
+          maxspeed = int(text[0])
+          if len(text) == 2:
+            maxspeed *= 1.61
+          speeds.append(maxspeed)
+        minSpeed = min(speeds[0], speeds[-1])
+        maxSpeed = max(speeds[0], speeds[-1])
+        maxSpeed_km_h = random.uniform(minSpeed, maxSpeed)
       except Exception as err:
         maxSpeed_km_h = MAX_SPEED_KM_H
         print(err)
@@ -178,9 +214,10 @@ def scheduleNewRoute(car):
   start = car['baseRoute'][0]
   if (isNodeLocked(start)):
     return False
+  car['journeyStart'] = timestamp
   car['route'] = deepcopy(car['baseRoute'])
   car['position'] = car['baseRoute'][0]
-  car['direction'] = get_direction(car['route'][0], car['route'][1])
+  car['bearing'] = get_bearing(car['route'][0], car['route'][1])
   car['lockedNode'] = start
   return True
 
@@ -227,7 +264,7 @@ def moveCar(car):
         start = end
         end = car['route'][1]
         car['speed'] = end[2]['maxSpeed']
-        car['direction'] = get_direction(start, end)
+        car['bearing'] = get_bearing(start, end)
 
         if (not switchNodeLock(car, start, end)):
           car['speed'] = 0
@@ -237,6 +274,7 @@ def moveCar(car):
       timeLeft = 0
   if(car['route'] == None):
     car['position'] = end
+    savn.completeObjectJourney(timestamp, car['journeyStart'], car['journeyID'])
     scheduleNewRoute(car)
   else:
     timeLeft = end[2]['timeLeft']
@@ -249,22 +287,26 @@ def executeGlobalAlgorithm(state):
   return state
 
 def createNewCar(i, journeyID, baseRoute):
-  car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'direction': 0,
-      'route': None, 'sensorData': {}, 'baseRoute': baseRoute, 'lockedNode': None}
+  car = {'id': i, 'journeyID': journeyID, 'type': 'car', 'position': None, 'speed': 0, 'bearing': 0,
+      'route': None, 'sensorData': {}, 'baseRoute': baseRoute, 'lockedNode': None, 'journeyStart': None}
   scheduleNewRoute(car)
   return car
 
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'direction': car['direction'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
+    res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
   return res
 
-if(len(sys.argv) != 2):
+if (len(sys.argv) < 2):
   sys.exit(1)
 
 simulationID = sys.argv[1]
-savn = ConnectionAssistant(simulationID)
+name = "Non-colliding " + str(int(time.time()) % 86400)
+if (len(sys.argv) >= 3):
+  name = sys.argv[2]
+
+savn = ConnectionAssistant(simulationID, name)
 savn.initSession(TIMESLICE)
 
 sys.exit(0)
