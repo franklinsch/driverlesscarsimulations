@@ -84,7 +84,7 @@ export default class ScrubTimer extends React.Component {
 
     return (
       <div id="scrub-timer">
-        <p> Simulation time: { formattedTimestamp } ({ d }) </p>
+        <strong>Simulation Time</strong>: { formattedTimestamp } ({ d })
         <form>
           <div className="input-field">
             <p className="range-field">

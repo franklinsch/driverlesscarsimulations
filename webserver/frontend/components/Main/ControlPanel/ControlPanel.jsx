@@ -69,6 +69,10 @@ export default class ControlPanel extends React.Component {
     }
   }
 
+  _handleSimulationExit(e, started) {
+      // TODO
+  }
+
   _handleSimulationUpdate(e) {
     this.props.handlers.handleSimulationUpdate();
   }
@@ -116,7 +120,8 @@ export default class ControlPanel extends React.Component {
     }
 
     this.setState({
-      showJourneyPanel: !this.state.showJourneyPanel
+      showJourneyPanel: !this.state.showJourneyPanel,
+      showSimulationPanel: this.state.showJourneyPanel
     })
   }
 
@@ -130,7 +135,8 @@ export default class ControlPanel extends React.Component {
     }
 
     this.setState({
-      showSimulationPanel: !this.state.showSimulationPanel
+      showSimulationPanel: !this.state.showSimulationPanel,
+      showJourneyPanel: this.state.showSimulationPanel
     })
   }
 
@@ -184,7 +190,7 @@ export default class ControlPanel extends React.Component {
                 hasSimulationStarted ?
                   <div className="row">
                     <div className="col s3">
-                      Simulation ID: {simID}
+                      <strong>Simulation ID</strong>: {simID}
                     </div>
                     <div className="col s3">
                       <ScrubTimer
@@ -194,24 +200,32 @@ export default class ControlPanel extends React.Component {
                       />
                     </div>
                     <div className="col s6">
-                          <button
+                      <ul className="right">
+                        <li>
+                          <a
                             className = "btn  waves-effect waves-light"
                             onClick   = {(e) => this._handleJourneyButton(e)}
                           >
                             <span>Journeys</span>
-                          </button>            
-                          <button
+                          </a>  
+                        </li>
+                        <li>          
+                          <a
                               className = "btn  waves-effect waves-light"
                               onClick   = {(e) => this._handleSimulationSettingsButton(e)}
                             >
                             <span>Simulation Settings</span>
-                          </button>
-                          <button
+                          </a>
+                        </li>
+                        <li>
+                          <a
                               className = "btn  waves-effect waves-light"
                               onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
                             >
                             <span>Exit Simulation</span>
-                          </button>
+                          </a>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 :
@@ -221,25 +235,32 @@ export default class ControlPanel extends React.Component {
                         handlers = {joinSimulationFormHandlers}
                       />
                     </div>
-                    <div className="col s6">
+                    <div className="col s8">
+                      <ul className="right">
+                        <li>
                           <Dropdown
                             enabled  = {this.props.enabled}
                             items    = {cities}
                             handlers = {dropdownHandlers}
-                          /> 
-                          <button
+                          />
+                        </li>
+                        <li>
+                          <a
                             className = "btn  waves-effect waves-light"
-                            onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                            onClick   = {(e) => this._handleJourneyButton(e)}
                           >
                             <span>Journeys</span>
-                          </button>            
-                          <button
+                          </a>   
+                        </li>
+                        <li>         
+                          <a
                               className = "btn  waves-effect waves-light"
                               onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
                             >
                             <span>Start new Simulation</span>
-                          </button>
-                          
+                          </a>
+                        </li>
+                      </ul>
                     </div>
                   </div>
               }
@@ -252,6 +273,7 @@ export default class ControlPanel extends React.Component {
         <ul id ="journey-slide-out" className="side-nav">
             <div id="journeys" className="col s12">
               <div className="row">
+                <h5>Journeys and Object Types</h5>
               </div>
               <JourneyList
                 pendingJourneys     = {pendingJourneys}
@@ -266,7 +288,15 @@ export default class ControlPanel extends React.Component {
                 objectKindInfo      = {this.props.objectKindInfo}
                 handlers            = {journeySettingsHandlers}
                 activeSimulationID  = {simID}
-              />
+              />           
+              <button
+                id        = "update-button"
+                className = "btn waves-effect waves-light"
+                hidden    = {!hasSimulationStarted}
+                onClick   = {::this._handleSimulationUpdate}
+              >
+                Update simulation
+              </button>
               <div className="row">
                 <input
                   type     = "checkbox"
@@ -303,6 +333,9 @@ export default class ControlPanel extends React.Component {
           <ul id ="simulation-slide-out" className="side-nav">
             <div id="run" className="col s12">
               <div className="row">
+                <h5>Simulation Settings</h5>
+              </div>
+              <div className="row">
                   <input
                     type     = "checkbox"
                     id       = "smooth-motion"
@@ -320,7 +353,7 @@ export default class ControlPanel extends React.Component {
                 <span>Disconnect Frameworks</span> || <span>Start simulation</span>
                 }
               </button>
-              <p>Current simulation ID: {simID}</p>
+
               {
                 simID !== '0' ?
                   <button
@@ -333,17 +366,9 @@ export default class ControlPanel extends React.Component {
                   :
                   ''
               }
-              
-              <button
-                id        = "update-button"
-                className = "btn waves-effect waves-light"
-                hidden    = {!hasSimulationStarted}
-                onClick   = {::this._handleSimulationUpdate}
-              >
-                Update simulation
-              </button>
 
               <div className="row">
+                <p><strong>Simulation Speed:</strong></p>
                 <SpeedSetting
                   currentSpeed = {currentSpeed}
                   hidden   = {!hasSimulationStarted}

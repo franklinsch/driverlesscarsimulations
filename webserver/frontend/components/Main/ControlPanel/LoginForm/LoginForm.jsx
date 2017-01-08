@@ -123,15 +123,15 @@ export default class LoginButton extends React.Component {
                     </div>
                   </li>
                   <li>
-                  <div>
-                    <a
-                      type="submit"
-                      value= 'logout'
-                      onClick={::this._handleFormSubmit}
-                      className="btn waves-effect waves-light">
-                      Log Out
-                    </a>
-                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        value= 'logout'
+                        onClick={::this._handleFormSubmit}
+                        className="btn waves-effect waves-light">
+                        Log Out
+                      </button>
+                   </div>
                   </li>
               </ul>
             </form>
