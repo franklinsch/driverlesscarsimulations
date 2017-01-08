@@ -23,6 +23,13 @@
   color: $secondary-color;
 }
 
+.side-nav {
+  margin-top: 7.5vh;
+  margin-bottom: 7.5vh;
+  z-index: 1001;
+  padding: 10px;
+}
+
 .side-nav .btn {
   width: 100%;
   margin-bottom: 20px;
@@ -44,6 +51,7 @@
 .bottom-nav {
   position: fixed;
   bottom: 0;
+  z-index: 1002;
 
   .dropdown-cities-div {
     display: inline-block;

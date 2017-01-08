@@ -6368,6 +6368,12 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 #slide-out {
   color: #ededed; }
 
+.side-nav {
+  margin-top: 7.5vh;
+  margin-bottom: 7.5vh;
+  z-index: 1001;
+  padding: 10px; }
+
 .side-nav .btn, .side-nav .btn-large {
   width: 100%;
   margin-bottom: 20px; }
@@ -6384,7 +6390,8 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 .bottom-nav {
   position: fixed;
-  bottom: 0; }
+  bottom: 0;
+  z-index: 1002; }
   .bottom-nav .dropdown-cities-div {
     display: inline-block; }
 
