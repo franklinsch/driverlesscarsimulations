@@ -10,13 +10,14 @@ const mongoose = require('mongoose');
 const sample = require('./factories').routing;
 const User = require('../backend/models/User');
 const server = require('../server');
+const config = require('../backend/config');
 
 chai.use(sinonChai);
 const should = chai.should();
 
 describe('Routing', function() {
 
-  const url = 'http://localhost:' + server.address.port;
+  const url = 'http://localhost:' + config.port;
   const mockFindById = {
     exec: sinon.stub()
   };

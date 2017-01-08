@@ -1,3 +1,11 @@
+module.exports = {
+  _handleRequestSimulationBenchmark: _handleRequestSimulationBenchmark,
+  _handleRequestEventUpdate: _handleRequestEventUpdate,
+  getDistanceLatLonInKm: getDistanceLatLonInKm,
+  deg2rad: deg2rad,
+  averageSpeedToDestination: averageSpeedToDestination
+};
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -1040,12 +1048,3 @@ function lookup(objs, eqF) {
 }
 
 fserver.listen(9000);
-
-module.exports = {
-  _handleRequestSimulationBenchmark: _handleRequestSimulationBenchmark,
-  _handleRequestEventUpdate: _handleRequestEventUpdate,
-  getDistanceLatLonInKm: getDistanceLatLonInKm,
-  deg2rad: deg2rad,
-  averageSpeedToDestination: averageSpeedToDestination,
-  address: server.address(),
-};

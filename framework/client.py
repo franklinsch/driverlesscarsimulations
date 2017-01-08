@@ -179,6 +179,7 @@ class SAVNConnectionAssistant:
       data = r.json()
       if not self.simulationID:
         self.simulationID = data['activeSimulationID']
+        print('Connecting to simulation ' + self.simulationID)
       self.token = data['token']
       return True
     else:
