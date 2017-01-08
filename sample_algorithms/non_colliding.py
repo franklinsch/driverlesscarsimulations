@@ -140,12 +140,16 @@ def translateDataToCameraData(car, data):
   return cameraData
 
 def addToState(journeys, state):
-  for (i, journey) in enumerate(journeys):
-    start = {"geometry": {"type": "Point", "coordinates": [journey['origin']['lng'], journey['origin']['lat']]}, "type": "Feature", "properties": {}}
-    end = {"geometry": {"type": "Point", "coordinates": [journey['destination']['lng'], journey['destination']['lat']]}, "type": "Feature", "properties": {}}
-    newRoute = R.getRoute(MAP_FILE, start, end)['path']
-    preprocess(newRoute)
-    state.append(createNewCar(len(state), journey['_id'], baseRoute=newRoute))
+  pairs = []
+  for journey in journeys:
+    start = [journey['origin']['lng'], journey['origin']['lat']]
+    end = [journey['destination']['lng'], journey['destination']['lat']]
+    pairs.append([start, end])
+
+  routes = R.getRoutes(MAP_FILE, pairs)
+  for (i, route) in enumerate(routes):
+    preprocess(route)
+    state.append(createNewCar(len(state), journeys[i]['_id'], baseRoute=route))
     print(str(i+1) + '.')
 
 def get_distance(start, end):
