@@ -864,20 +864,9 @@ frameworkSocketServer.on('request', function(request) {
       const simulationStateTimestamp = simulationStateIndex * simulation.timeslice;
       const nextFrameworkTimestamp = message.timestamp + framework.timeslice;
       const nextIndex = Math.ceil(nextFrameworkTimestamp / simulation.timeslice);
-      const epochAtUpdate = (new Date).getTime();
+      const epochAfterAccess = (new Date).getTime();
 
-      const dump = {
-        'numCars': newState.objects.length,
-        'timestamp': message.timestamp,
-        'networkTime': epochAtReception - epochAtSend,
-        'dbTime': epochAtUpdate - epochAtReception
-      };
-      fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", sep + JSON.stringify(dump, null, 2), function(err) {
-        if (err) throw err;
-      });
-      if (!sep) {
-        sep = ',';
-      }
+      const simulationStateIndex = Math.ceil(message.timestamp / simulation.timeslice);
 
       const pushIndexInfo = {};
       for (let i = simulationStateIndex; i < simulation.numSimulationStates; i++) {
@@ -897,6 +886,7 @@ frameworkSocketServer.on('request', function(request) {
       const latestTimestamp = simulation.latestTimestamp;
       const timeslice = simulation.timeslice;
 
+      const epochBeforeSave = (new Date).getTime();
       Simulation.update({
         _id: simulationID,
       }, {$push: pushIndexInfo}, function(error, numAffected) {
@@ -916,7 +906,23 @@ frameworkSocketServer.on('request', function(request) {
           },{
             $push: {'simulationStates.$.participants': frameworkID}
           }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
+            const epochAfterSave = (new Date).getTime();
             updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
+
+            const dump = {
+              'numCars': newState.objects.length,
+              'timestamp': message.timestamp,
+              'networkTime': epochAtReception - epochAtSend,
+              'accessTime': epochAfterAccess - epochAtReception,
+              'saveTime': epochAfterSave - epochBeforeSave,
+              'processTime': epochBeforeSave - epochAfterAccess
+            };
+            fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", sep + JSON.stringify(dump, null, 2), function(err) {
+              if (err) throw err;
+            });
+            if (!sep) {
+              sep = ',';
+            }
           });
         });
       });
