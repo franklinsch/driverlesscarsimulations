@@ -897,6 +897,29 @@ frameworkSocketServer.on('request', function(request) {
           return
         }
         sendFrameworkList(simulation);
+
+        let min_timeslice = undefined;
+        for (const framework of simulation.frameworks) {
+          if (min_timeslice == undefined || framework.timeslice < min_timeslice) {
+            min_timeslice = framework.timeslice;
+          }
+        }
+        if (min_timeslice > simulation.timeslice) {
+          console.log("Was:");
+          console.log(simulation.latestTimestamp);
+          console.log(simulation.timeslice);
+          simulation.simulationStates = createNewSimulationStates(simulation, min_timeslice);
+          simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / min_timeslice) * min_timeslice;
+          simulation.timeslice = min_timeslice;
+          console.log("Is:");
+          console.log(simulation.latestTimestamp);
+          console.log(simulation.timeslice);
+          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
+          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
+        }
+
+        const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
+        updateConnectionsWithState(simulation, simulation.simulationStates[nextIndex]);
       });
     }
 
@@ -949,6 +972,7 @@ function createNewSimulationStates(simulation, newTimeslice) {
       time = nextTime;
     }
   }
+  return newSimulationStates;
 }
 
 function updateConnectionsWithState(simulation, simulationState) {
