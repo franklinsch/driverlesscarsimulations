@@ -6368,6 +6368,9 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 #slide-out {
   color: #ededed; }
 
+.brand-logo {
+  margin-left: 20px; }
+
 .side-nav {
   margin-top: 7.5vh;
   margin-bottom: 7.5vh;
