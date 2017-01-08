@@ -77,7 +77,7 @@ class SAVNConnectionAssistant:
     await self.send_packet(packet)
 
   async def send_packet(self, packet):
-    clock_val = time.time()
+    clock_val = int(time.time()*1000)
     packet['token'] = self.token
     packet['content']['epochAtSend'] = clock_val
     await self.ws.send(json.dumps(packet))
