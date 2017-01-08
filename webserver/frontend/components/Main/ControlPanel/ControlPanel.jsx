@@ -36,7 +36,7 @@ export default class ControlPanel extends React.Component {
       allowSimulationStart: true,
       hotspotFile: null,
       showJourneyPanel: false,
-      shwoSimulationPanel: false
+      showSimulationPanel: false
     }
   }
 
@@ -95,6 +95,9 @@ export default class ControlPanel extends React.Component {
     $("#journey-button").sideNav({
       edge: 'right'
     });
+    $("#simulation-button").sideNav({
+      edge: 'right'
+    });
   }
 
   componentDidUpdate() {
@@ -108,13 +111,26 @@ export default class ControlPanel extends React.Component {
       $('#journey-button').sideNav('hide');
     }
     else {
-      console.log('test');
+      $('#simulation-button').sideNav('hide');
       $('#journey-button').sideNav('show');
-      console.log($('#journey-button'), $('#journey-slide-out'));
     }
 
     this.setState({
       showJourneyPanel: !this.state.showJourneyPanel
+    })
+  }
+
+  _handleSimulationSettingsButton() {
+    if (this.state.showSimulationPanel) {
+      $('#simulation-button').sideNav('hide');
+    }
+    else {
+      $('#journey-button').sideNav('hide');
+      $('#simulation-button').sideNav('show');
+    }
+
+    this.setState({
+      showSimulationPanel: !this.state.showSimulationPanel
     })
   }
 
@@ -186,7 +202,7 @@ export default class ControlPanel extends React.Component {
                           </button>            
                           <button
                               className = "btn  waves-effect waves-light"
-                              onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                              onClick   = {(e) => this._handleSimulationSettingsButton(e)}
                             >
                             <span>Simulation Settings</span>
                           </button>
@@ -231,23 +247,9 @@ export default class ControlPanel extends React.Component {
         </nav>
 
         <a id="journey-button" href="#" data-activates="journey-slide-out" hidden><i className="material-icons">menu</i></a>
+        <a id="simulation-button" href="#" data-activates="simulation-slide-out" hidden><i className="material-icons">menu</i></a>
                     
         <ul id ="journey-slide-out" className="side-nav">
-          <div className="row">
-            <div className="col s12">
-              <ul className="tabs">
-                <li className="tab col s3">
-                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="create journeys"  href="#journeys">
-                    Journeys
-                  </a>
-                </li>
-                <li className="tab col s3">
-                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="run simulation" href="#run">
-                    Simulation
-                  </a>
-                </li>
-              </ul>
-            </div>
             <div id="journeys" className="col s12">
               <div className="row">
               </div>
@@ -297,6 +299,8 @@ export default class ControlPanel extends React.Component {
                 }
               </div>
             </div>
+          </ul>
+          <ul id ="simulation-slide-out" className="side-nav">
             <div id="run" className="col s12">
               <div className="row">
                   <input
@@ -379,8 +383,7 @@ export default class ControlPanel extends React.Component {
                 }
               </ul>
             </div>
-          </div>
-        </ul>
+          </ul>
       </div>
     )
   }
