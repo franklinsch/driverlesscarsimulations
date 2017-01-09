@@ -1,13 +1,13 @@
 #!/bin/bash
 
 cd $(dirname $0)
-mkdir logs || true
+mkdir -p logs
 
-test $4 && SIM_ID=$4 || SIM_ID=$(curl http://localhost:3000/create-simulation -X POST | tr -d '"')
+test $4 && SIM_ID=$4 || SIM_ID=$(curl http://localhost:3000/create-simulation -X POST)
 rm logs/stress_test_$SIM_ID.log
 for NUM_CARS in $(seq $1 $2)
   do
-    ../sample_algorithms/exec_sim $SIM_ID Experiment $NUM_CARS $3
+    eval ../sample_algorithms/exec_sim $SIM_ID Experiment $NUM_CARS $3
   done
-echo Expriment simulation ID:
+echo Experiment simulation ID:
 echo $SIM_ID

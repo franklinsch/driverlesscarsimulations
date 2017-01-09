@@ -755,7 +755,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.simulationID;
 
-    fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", "[", function(err) {
+    fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", ",\n[", function(err) {
       if (err) throw err;
     });
     Simulation.findById(simulationID, {timeslice: 1, latestTimestamp: 1, simulationStates: 1, frameworks: 1, frontends: 1, journeys: 1, city: 1}, function(error, simulation) {
@@ -981,7 +981,7 @@ frameworkSocketServer.on('request', function(request) {
 
     if (index >= 0) {
       const simulationID = frameworkConnections[index]['simulationID'];
-      fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", "]\n,", function(err) {
+      fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", "]\n", function(err) {
         if (err) throw err;
       });
       delete frameworkConnections[index];

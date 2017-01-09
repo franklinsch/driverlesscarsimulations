@@ -333,7 +333,7 @@ if (len(sys.argv) >= 3):
   name = sys.argv[2]
 maxTimestamp = None
 if (len(sys.argv) >= 4):
-  maxTimestamp = int(sys.argv[2])
+  maxTimestamp = int(sys.argv[3])
 
 savn = ConnectionAssistant(simulationID, name)
 savn.initSession(TIMESLICE)
