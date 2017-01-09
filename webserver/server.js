@@ -927,7 +927,10 @@ frameworkSocketServer.on('request', function(request) {
         }
 
         const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
-        updateConnectionsWithState(simulation, simulation.simulationStates[nextIndex]);
+        const simulationState = simulation.simulationStates[nextIndex];
+        if (simulationState) {
+          updateConnectionsWithState(simulation, simulationState);
+        }
       });
     }
 
