@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cd $(dirname $0)
+
+SIM_ID=$1
+INPUT_FILE=logs/stress_test_$SIM_ID.log
+OUTPUT_DIR=plots/chart$2
+DATA_FILE=$OUTPUT_DIR/data.json
+
+echo mkdir -p $OUTPUT_DIR
+
+echo cp plots/chart.js $OUTPUT_DIR/chart.js
+echo cp plots/chart.html $OUTPUT_DIR/chart.html
+
+echo echo "[" $DATA_FILE
+echo cat $INPUT_FILE $DATA_FILE
+echo echo "]" $DATA_FILE
+
+echo open $OUTPUT_DIR/chart.html

@@ -981,7 +981,7 @@ frameworkSocketServer.on('request', function(request) {
 
     if (index >= 0) {
       const simulationID = frameworkConnections[index]['simulationID'];
-      fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", "]", function(err) {
+      fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", "]\n,", function(err) {
         if (err) throw err;
       });
       delete frameworkConnections[index];

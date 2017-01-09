@@ -87,7 +87,7 @@ def runSimulation(savn, initialParameters):
 
   print('\tSending data every ' + str(SLEEP_TIME) + ' seconds')
 
-  while savn.alive:
+  while savn.alive and (maxTimestamp == None or timestamp <= maxTimestamp):
     print("Sending", timestamp)
     savn.updateState(timestamp, translate(state))
     print("Working on next: Sent", timestamp)
@@ -331,6 +331,9 @@ if (len(sys.argv) >= 2):
 name = "Non-colliding " + str(int(time.time()) % 86400)
 if (len(sys.argv) >= 3):
   name = sys.argv[2]
+maxTimestamp = None
+if (len(sys.argv) >= 4):
+  maxTimestamp = int(sys.argv[2])
 
 savn = ConnectionAssistant(simulationID, name)
 savn.initSession(TIMESLICE)

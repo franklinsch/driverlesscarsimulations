@@ -11,4 +11,4 @@ if [ $3 ]; then
   ./batch_journeys $1 $3
 fi
 
-python3 non_colliding.py $1 $2
+python3 non_colliding.py $1 $2 $4
