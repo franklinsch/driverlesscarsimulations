@@ -92,12 +92,15 @@ const getNormalIntersection = function(v0, v1, p) {
   return getIntersectionPoint(v0, ang, p, theta);
 }
 
+const ignore_values = ["bus_stop","crossing","elevator","emergency_access_point","give_way","phone","mini_roundabout","motorway_junction","passing_place","rest_area","speed_camera","street_lamp","services","stop","traffic_signals","turning_circle","proposed","construction","cycleway","path","steps","bridleway","footway","road","raceway","escape","bus_guideway","track","pedestrian","service"];
 const getNearest = function(p, pathFinder) {
   let min_dist = undefined, min_point, min_edge;
   for (let i in pathFinder._topo.edges) {
     const edge = pathFinder._topo.edges[i];
     const props = edge[2];
-    if (props['highway']) {
+
+
+    if (props['highway'] && ignore_values.indexOf(props['highway']) == -1) {
       const v0 = pathFinder._topo.vertices[edge[0]];
       const v1 = pathFinder._topo.vertices[edge[1]];
 
@@ -171,9 +174,11 @@ const geojson = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
 
 const pathFinder = new PathFinder(geojson);
 
-const paths = pairs.map(function(pair) {
+const paths = pairs.map(function(pair, index) {
+  console.error('.' + index)
   const start = getNearest(pair[0], pathFinder);
   const end = getNearest(pair[1], pathFinder);
-  return pathFinder.findPath(point(start), point(end))['path'];
+  const res = pathFinder.findPath(point(start), point(end));
+  return res['path'];
 });
 console.log(JSON.stringify(paths));
