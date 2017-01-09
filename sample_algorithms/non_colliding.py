@@ -237,7 +237,7 @@ def isEqualNodes(node1, node2):
 
 def isNodeLocked(node):
   for car in state:
-    if isEqualNodes(car['lockedNode'], node):
+    if car['lockedNode'] != None and isEqualNodes(car['lockedNode'], node):
       return True
   return False
 
@@ -247,12 +247,17 @@ def switchNodeLock(car, start, end):
       return False
 
     car['lockedNode'] = end
-  return True
+    return True
+  return False
 
 def executeLocalAlgorithm(car):
   moveCar(car)
 
 def moveCar(car):
+  if (car['route'] == None):
+    if not scheduleNewRoute(car):
+      return
+
   timeLeft = TIMESLICE
   start = car['route'][0]
   end = car['route'][1]
@@ -306,7 +311,8 @@ def createNewCar(i, journeyID, baseRoute):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
+    if (car['position'] != None):
+      res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}}]#, 'route': car['baseRoute']}]
   return res
 
 simulationID = None

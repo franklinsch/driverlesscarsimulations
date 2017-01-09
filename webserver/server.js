@@ -697,7 +697,7 @@ frontendSocketServer.on('request', function(request) {
 });
 
 const fserver = require('http').createServer();
-const frameworkSocketServer = new WebSocketServer({ httpServer: fserver });
+const frameworkSocketServer = new WebSocketServer({ httpServer: fserver, maxReceivedFrameSize: 128 * 1024 });
 
 frameworkSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
