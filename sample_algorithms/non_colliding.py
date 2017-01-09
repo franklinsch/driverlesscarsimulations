@@ -311,7 +311,8 @@ def createNewCar(i, journeyID, baseRoute):
 def translate(state):
   res = []
   for car in state:
-    res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
+    if (car['position'] != None):
+      res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}}]#, 'route': car['baseRoute']}]
   return res
 
 simulationID = None
