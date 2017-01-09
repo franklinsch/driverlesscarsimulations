@@ -929,7 +929,7 @@ frameworkSocketServer.on('request', function(request) {
         const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
         const simulationState = simulation.simulationStates[nextIndex];
         if (simulationState) {
-          updateConnectionsWithState(simulation, simulation.simulationStates[nextIndex]);
+          updateConnectionsWithState(simulation, simulationState);
         }
       });
     }
