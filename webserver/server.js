@@ -140,7 +140,7 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 function _handleRequestSimulationBenchmark(message, connection) {
   console.log("Request benchmark for " + message.simulationID);
-  Simulation.findById(message.simulationID, function (error, simulation) {
+  Simulation.findById(message.simulationID, { completionLogs: 1 }, function (error, simulation) {
     console.log("found simulation");
     if (error || !simulation) {
       connection.send(JSON.stringify({
@@ -196,7 +196,8 @@ function _handleRequestEventUpdate(message, connection, callback) {
     $push: {
       journeys: { $each: newJourneys }
     }
-  }, {new: true}, function (error, simulation) {
+  }, {new: true, select: { frameworks: 1, frontends: 1, journeys: 1 } }, function (error, simulation) {
+
     if (error || !simulation) {
       if (connection) {
         connection.send(JSON.stringify({
@@ -517,7 +518,7 @@ frontendSocketServer.on('request', function(request) {
           connectionIndex: frontendConnections.length
         }
       }
-    }, { new: true }, function (error, simulation) {
+    }, { new: true, select: { lastestTimestamp: 1, city: 1, journeys: 1 } }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -568,7 +569,7 @@ frontendSocketServer.on('request', function(request) {
     });
 
     if (index >= 0) {
-      Simulation.findById(message.simulationID, function (error, simulation) {
+      Simulation.findById(message.simulationID, { timeslice: 1, simulationStates: 1 }, function (error, simulation) {
         if (error || !simulation) {
           connection.send(JSON.stringify({
             type: "simulation-error",
@@ -593,7 +594,7 @@ frontendSocketServer.on('request', function(request) {
   }
 
   function _handleRequestSimulationDisconnectFrameworks(message) {
-    Simulation.findById(message.simulationID, function (error, simulation) {
+    Simulation.findById(message.simulationID, { frameworks: 1 }, function (error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
