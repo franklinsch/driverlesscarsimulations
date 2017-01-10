@@ -1,5 +1,6 @@
 import json
 import asyncio
+import threading
 import websockets
 import sys
 import time
@@ -20,7 +21,7 @@ class SAVNConnectionAssistant:
     self.name = name
     self.messageQueue = asyncio.Queue()
     self.frameworkID = 0
-    self.shouldAwait = False
+    self.syncCondition = threading.Condition()
 
   def updateState(self, timestamp, state, sleepTime=1):
     packet = {'type': 'simulation-state-update',
@@ -115,7 +116,8 @@ class SAVNConnectionAssistant:
     except Exception as err:
       print('handleSimulationFailure failed')
       print(err)
-    self.shouldAwait = False
+    if self.syncCondition.acquire(blocking=False):
+      self.syncCondition.notify()
     self.alive = False
 
   def attempt(self, function, packet):
@@ -144,14 +146,17 @@ class SAVNConnectionAssistant:
       self.failsafe(packet["content"])
     elif isInitialParams():
       self.frameworkID = packet["content"]["frameworkID"]
+      self.syncCondition.acquire()
       self.attempt(self.handleSimulationRun, packet)
       self.endSimulation()
     elif isUpdate():
       self.attempt(self.handleSimulationDataUpdate, packet)
     elif isCommunication():
+      self.syncCondition.acquire()
       print("\n\nReceived go-ahead at ", time.time())
       self.attempt(self.handleSimulationCommunication, packet)
-      self.shouldAwait = False
+      self.syncCondition.notify()
+      self.syncCondition.release()
     elif isDisconnect():
       self.attempt(self.handleSimulationStop, packet)
       self.endSimulation()
@@ -165,9 +170,7 @@ class SAVNConnectionAssistant:
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet), loop)
 
   def synchronize(self, sleepTime):
-    self.shouldAwait = True
-    while (self.shouldAwait): #TODO: Is there a better way to freeze this thread?
-      time.sleep(sleepTime)
+    self.syncCondition.wait()
 
   def authenticate(self):
     api_id, api_key = self.getAPIKeys()
