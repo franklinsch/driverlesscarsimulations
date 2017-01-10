@@ -28,8 +28,8 @@ const getDistance = function(p1, p2) {
   const dlat = lat2-lat1;
   const dlng = lng2-lng1;
 
-  const a = Math.sin(dlat/2)**2 +
-            Math.cos(lat1)*Math.cos(lat2)*Math.sin(dlng/2)**2;
+  const a = Math.pow(Math.sin(dlat/2), 2) +
+            Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin(dlng/2), 2);
   const c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
   return R*c;
@@ -50,7 +50,7 @@ const getIntersectionPoint = function(p1, b1, p2, b2) {
   const dlat = lat2 - lat1;
   const dlng = lng2 - lng1;
 
-  const delta12 = 2 * Math.asin(Math.sqrt(Math.sin(dlat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dlng/2)**2));
+  const delta12 = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(dlat/2), 2) + Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin(dlng/2), 2)));
   const theta_a = Math.acos((Math.sin(lat2) - Math.sin(lat1)*Math.cos(delta12)) /
                             (Math.sin(delta12)*Math.cos(lat1)));
   const theta_b = Math.acos((Math.sin(lat1) - Math.sin(lat2)*Math.cos(delta12)) /

@@ -2,14 +2,13 @@ import React from "react";
 import CustomPropTypes from "../../Utils/CustomPropTypes.jsx";
 import Dropdown from "./Dropdown/Dropdown.jsx";
 import JoinSimulationForm from "./JoinSimulationForm/JoinSimulationForm.jsx";
-import LoginForm from "./LoginForm/LoginForm.jsx";
 import SimulationList from "./SimulationList/SimulationList.jsx";
 import JourneyList from "./JourneyList/JourneyList.jsx";
 import JourneySettings from "./JourneySettings/JourneySettings.jsx";
 import SpeedSetting from "./SpeedSetting/SpeedSetting.jsx";
 import ScrubTimer from "./ScrubTimer/ScrubTimer.jsx";
 
-export default class Menu extends React.Component {
+export default class ControlPanel extends React.Component {
 
   static propTypes = {
     enabled: React.PropTypes.bool,
@@ -36,6 +35,8 @@ export default class Menu extends React.Component {
       journeys: [],
       allowSimulationStart: true,
       hotspotFile: null,
+      showJourneyPanel: false,
+      showSimulationPanel: false
     }
   }
 
@@ -88,22 +89,51 @@ export default class Menu extends React.Component {
     this.props.handlers.handleCityChange(city._id);
   }
 
-  _handleRequestAPIAccess(e) {
-    e.preventDefault();
-    this.props.handlers.handleRequestAPIAccess();
-  }
-
   componentDidMount() {
     $('ul.tabs').tabs();
     $('.tooltipped').tooltip({delay: 50});
-
-
+    $("#journey-button").sideNav({
+      edge: 'right'
+    });
+    $("#simulation-button").sideNav({
+      edge: 'right'
+    });
   }
 
   componentDidUpdate() {
     $('ul.tabs').tabs();
     $('.tooltipped').tooltip({delay: 50});
 
+  }
+
+  _handleJourneyButton() {
+    if (this.state.showJourneyPanel) {
+      $('#journey-button').sideNav('hide');
+    }
+    else {
+      $('#simulation-button').sideNav('hide');
+      $('#journey-button').sideNav('show');
+    }
+
+    this.setState({
+      showJourneyPanel: !this.state.showJourneyPanel,
+      showSimulationPanel: this.state.showJourneyPanel
+    })
+  }
+
+  _handleSimulationSettingsButton() {
+    if (this.state.showSimulationPanel) {
+      $('#simulation-button').sideNav('hide');
+    }
+    else {
+      $('#journey-button').sideNav('hide');
+      $('#simulation-button').sideNav('show');
+    }
+
+    this.setState({
+      showSimulationPanel: !this.state.showSimulationPanel,
+      showJourneyPanel: this.state.showSimulationPanel
+    })
   }
 
   render() {
@@ -143,10 +173,6 @@ export default class Menu extends React.Component {
       handleSubmit : this.props.handlers.handleJoinSimulation
     }
 
-    const loginButtonHandlers = {
-      handleTokenChange : this.props.handlers.handleTokenChange
-    }
-
     const journeyListHandlers = {
       handleJourneyMouseOver : this.props.handlers.handleJourneyListItemMouseOver,
       handleJourneyMouseOut  : this.props.handlers.handleJourneyListItemMouseOut
@@ -154,91 +180,96 @@ export default class Menu extends React.Component {
 
     return (
       <div>
-        <ul id ="slide-out" className="side-nav">
-          <div className="row">
-            <div className="col s12">
-              <ul className="tabs">
-                <li className="tab col s3">
-                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="account" href="#account">
-                      <span className="center-align">
-                        <i className="material-icons">account_box</i>
-                    </span>
-                  </a>
-                </li>
-                <li className="tab col s3">
-                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="global settings" href="#settings">
-                      <span className="center-align">
-                        <i className="material-icons">settings</i>
-                    </span>
-                  </a>
-                </li>
-                <li className="tab col s3">
-                  <a className="tooltipped" data-position="top" data-delay="50" data-tooltip="create journeys"  href="#journeys">
-                      <span className="center-align">
-                        <i className="material-icons">directions_car</i>
-                    </span>
-                  </a>
-                </li>
-                <li className="tab col s3">
-                  <a  className="tooltipped" data-position="top" data-delay="50" data-tooltip="run simulation" href="#run">
-                      <span className="center-align">
-                        <i className="material-icons">play_arrow</i>
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div id="account" className="col s12">
-              <LoginForm
-                token      = {this.props.token}
-                activeUser = {this.props.activeUser}
-                handlers   = {loginButtonHandlers}
-              />
-              <li>
-                {
-                  this.props.token ?
-                    <SimulationList
-                      simulations = {userSimulations}
-                    /> : ''
-                }
-              </li>
-              <li>
-                {
-                  this.props.token &&
-                  <button
-                    onClick={::this._handleRequestAPIAccess}
-                    className="btn waves-effect waves-light">
-                    Request Api Access
-                  </button>
-                }
-              </li>
-            </div>
-            <div id="settings" className="col s12">
-              <div className="row">
-              </div>
-              <li>
-                  <input
-                    type     = "checkbox"
-                    id       = "smooth-motion"
-                    onChange = {::this.props.handlers.handleToggleSmoothMotion}
-                  />
-                  <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
-              </li>
-              <li>
-                <Dropdown
-                  enabled  = {this.props.enabled}
-                  items    = {cities}
-                  handlers = {dropdownHandlers}
-                />
-              </li>
-              <li>
-                <JoinSimulationForm
-                  handlers = {joinSimulationFormHandlers}
-                />
-              </li>
-            </div>
+        <nav className="bottom-nav">
+          <div className="nav-wrapper z-depth-3">
+              {
+                hasSimulationStarted ?
+                  <div className="row">
+                    <div className="col s3">
+                      <strong>Simulation ID</strong>: {simID}
+                    </div>
+                    <div className="col s3">
+                      <ScrubTimer
+                        timestamp          = {this.props.simulationState.timestamp}
+                        latestTimestamp    = {this.props.simulationState.latestTimestamp}
+                        handlers           = {scrubHandlers}
+                      />
+                    </div>
+                    <div className="col s6">
+                      <ul className="right">
+                        <li>
+                          <a
+                            className = "btn  waves-effect waves-light"
+                            onClick   = {(e) => this._handleJourneyButton(e)}
+                          >
+                            <span>Journeys</span>
+                          </a>  
+                        </li>
+                        <li>          
+                          <a
+                              className = "btn  waves-effect waves-light"
+                              onClick   = {(e) => this._handleSimulationSettingsButton(e)}
+                            >
+                            <span>Simulation Settings</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                              className = "btn  waves-effect waves-light"
+                              href="#/"
+                            >
+                            <span>Exit Simulation</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                :
+                  <div className="row">
+                    <div className="col s4">                    
+                      <JoinSimulationForm
+                        handlers = {joinSimulationFormHandlers}
+                      />
+                    </div>
+                    <div className="col s8">
+                      <ul className="right">
+                        <li>
+                          <Dropdown
+                            enabled  = {this.props.enabled}
+                            items    = {cities}
+                            handlers = {dropdownHandlers}
+                          />
+                        </li>
+                        <li>
+                          <a
+                            className = "btn  waves-effect waves-light"
+                            onClick   = {(e) => this._handleJourneyButton(e)}
+                          >
+                            <span>Journeys</span>
+                          </a>   
+                        </li>
+                        <li>         
+                          <a
+                              className = "btn  waves-effect waves-light"
+                              onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+                            >
+                            <span>Start new Simulation</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+              }
+          </div>
+        </nav>
+
+        <a id="journey-button" href="#" data-activates="journey-slide-out" hidden><i className="material-icons">menu</i></a>
+        <a id="simulation-button" href="#" data-activates="simulation-slide-out" hidden><i className="material-icons">menu</i></a>
+                    
+        <ul id ="journey-slide-out" className="side-nav">
             <div id="journeys" className="col s12">
               <div className="row">
+                <h5>Journeys and Object Types</h5>
               </div>
               <JourneyList
                 pendingJourneys     = {pendingJourneys}
@@ -253,7 +284,15 @@ export default class Menu extends React.Component {
                 objectKindInfo      = {this.props.objectKindInfo}
                 handlers            = {journeySettingsHandlers}
                 activeSimulationID  = {simID}
-              />
+              />           
+              <button
+                id        = "update-button"
+                className = "btn waves-effect waves-light"
+                hidden    = {!hasSimulationStarted}
+                onClick   = {::this._handleSimulationUpdate}
+              >
+                Update Simulation
+              </button>
               <div className="row">
                 <input
                   type     = "checkbox"
@@ -286,8 +325,19 @@ export default class Menu extends React.Component {
                 }
               </div>
             </div>
+          </ul>
+          <ul id ="simulation-slide-out" className="side-nav">
             <div id="run" className="col s12">
               <div className="row">
+                <h5>Simulation Settings</h5>
+              </div>
+              <div className="row">
+                  <input
+                    type     = "checkbox"
+                    id       = "smooth-motion"
+                    onChange = {::this.props.handlers.handleToggleSmoothMotion}
+                  />
+                  <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
               </div>
               <button
                 className = "btn  waves-effect waves-light"
@@ -299,7 +349,7 @@ export default class Menu extends React.Component {
                 <span>Disconnect Frameworks</span> || <span>Start simulation</span>
                 }
               </button>
-              <p>Current simulation ID: {simID}</p>
+
               {
                 simID !== '0' ?
                   <button
@@ -312,21 +362,9 @@ export default class Menu extends React.Component {
                   :
                   ''
               }
-              <ScrubTimer
-                timestamp          = {this.props.simulationState.timestamp}
-                latestTimestamp    = {this.props.simulationState.latestTimestamp}
-                handlers           = {scrubHandlers}
-              />
-              <button
-                id        = "update-button"
-                className = "btn waves-effect waves-light"
-                hidden    = {!hasSimulationStarted}
-                onClick   = {::this._handleSimulationUpdate}
-              >
-                Update simulation
-              </button>
 
               <div className="row">
+                <p><strong>Simulation Speed:</strong></p>
                 <SpeedSetting
                   currentSpeed = {currentSpeed}
                   hidden   = {!hasSimulationStarted}
@@ -366,8 +404,7 @@ export default class Menu extends React.Component {
                 }
               </ul>
             </div>
-          </div>
-        </ul>
+          </ul>
       </div>
     )
   }
