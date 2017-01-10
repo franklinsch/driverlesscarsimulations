@@ -247,8 +247,7 @@ def switchNodeLock(car, start, end):
       return False
 
     car['lockedNode'] = end
-    return True
-  return False
+  return True
 
 def executeLocalAlgorithm(car):
   moveCar(car)
