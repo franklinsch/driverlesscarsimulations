@@ -28,7 +28,6 @@ export default class Main extends React.Component {
 
     const initialToken = cookie.load('token') || '';
     this.state = {
-      showControlPanel: false,
       token: initialToken,
       userID: '',
       activeUser: '',
@@ -156,21 +155,6 @@ export default class Main extends React.Component {
           console.log("error fetching user simulations");
         })
     }
-  }
-
-  handleMenuButtonClick() {
-
-    if (this.state.showControlPanel) {
-      $('.nav-wrapper').animate({paddingLeft: '0px'}, 'fast');
-      $('#dummy-button').sideNav('hide')
-    }
-    else {
-      $('.nav-wrapper').animate({paddingLeft: '300px'}, 'fast');
-      $('#dummy-button').sideNav('show')
-    }
-    this.setState({
-      showControlPanel: !this.state.showControlPanel
-    })
   }
 
   handlePendingJourneyAdd(pendingJourney) {
