@@ -3425,7 +3425,7 @@ small {
   overflow-y: hidden;
   height: 48px;
   width: 100%;
-  background-color: #fff;
+  background-color: #2f496e;
   margin: 0 auto;
   white-space: nowrap; }
   .tabs.tabs-transparent {
@@ -6375,7 +6375,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   margin-top: 7.5vh;
   margin-bottom: 7.5vh;
   z-index: 1001;
-  padding: 10px !important;
+  padding: 10px 10px 7.5vh 10px !important;
   color: white; }
 
 nav input {
