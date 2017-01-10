@@ -239,6 +239,15 @@ function _handleRequestEventUpdate(message, connection, callback) {
 frontendSocketServer.on('request', function(request) {
   const connection = request.accept(null, request.origin);
 
+  Simulation.findOne({_id: '586f7106dcdd770e050abefa', 'simulationStates.timestamp': 2}, {'simulationStates.$': 1}, (error, simulation) => {
+    console.log(simulation.simulationStates);
+    simulation.simulationStates[0] = { "timestamp" : 5, "frameworkStates" : [ { "frameworkID" : "586f710fdcdd770e050abefc", "objects" : [ ] } ] }
+    simulation.update((err, simulation) => {
+      console.log(err)
+      console.log(simulation.simulationStates[2])
+    })
+  });
+
   console.log((new Date()) + ' Frontend Connection accepted.');
 
   function _handleRequestAvailableCities() {
@@ -838,7 +847,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const newState = message;
 
-    Simulation.findById(simulationID, function(error, simulation) {
+    Simulation.findOne({_id: simulationID, 'simulationStates.timestamp': {$gt: , function(error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -861,27 +870,25 @@ frameworkSocketServer.on('request', function(request) {
             console.log('\tError');
           }
 
+          const pushObjects = [];
+
           framework.nextTimestamp = message.timestamp + framework.timeslice;
           const nextIndex = Math.ceil(framework.nextTimestamp / simulation.timeslice);
-          for (let i = simulationStateIndex; i < nextIndex; i++) {
-            if (simulation.simulationStates.length == i) {
-              simulation.simulationStates.push({
-                communicated: false,
-                timestamp: i * simulation.timeslice,
-                participants: [],
-                frameworkStates: [newState]
-              });
-            } else {
-              simulation.simulationStates[i].frameworkStates.push(newState);
-            }
+          for (let i = simulation.simulationStates.length; i < nextIndex; i++) {
+            pushObjects.push({
+              communicated: false,
+              timestamp: i * simulation.timeslice,
+              participants: [],
+              frameworkStates: [newState]
+            });
           }
           simulation.simulationStates[simulationStateIndex].participants.push(frameworkID);
         }
       }
 
-      const simulationState = simulation.simulationStates[simulationStateIndex];
-      updateConnectionsWithState(simulation, simulationState);
+      simulation.update({$push: {'simulationStates.$.frameworkStates': newState, {simulationStates: {$each: pushObjects}}}});
 
+      updateConnectionsWithState(simulation, simulationState);
       simulation.save((error, simulation) => {
         if (error || !simulation) {
           return console.error(error);
