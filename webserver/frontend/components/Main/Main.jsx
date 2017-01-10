@@ -181,6 +181,10 @@ export default class Main extends React.Component {
     Materialize.toast($('<span>New journey created</span>'), 1000);
   }
 
+  _updateURLBySimulationID(simulationID) {
+    hasher.setHash('simulations/'+simulationID);
+  }
+
   handleMessageReceive(message) {
     const messageData = JSON.parse(message.data);
 
@@ -194,6 +198,8 @@ export default class Main extends React.Component {
         simulationInfo: messageData.content.simulationInfo,
         simulationJourneys: messageData.content.journeys
       });
+
+      this._updateURLBySimulationID(this.state.simulationInfo.id);
     } else if (messageData.type === "simulation-journeys-update") {
       this.setState({
         simulationJourneys: messageData.content.journeys
@@ -264,6 +270,8 @@ export default class Main extends React.Component {
         simulationJourneys: journeys,
         selectedCityID: selectedCityID
       });
+
+      this._updateURLBySimulationID(messageData.content.simID);
     } else if (messageData.type === "default-object-types") {
       this.setState({
         objectTypes: messageData.content
