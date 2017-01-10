@@ -6398,9 +6398,9 @@ nav ul button.btn, nav ul button.btn-large {
   z-index: 10; }
 
 #scrub-timer {
-  margin-top: -15px; }
-  #scrub-timer form {
-    display: inline-block; }
+  line-height: normal; }
+  #scrub-timer .scrub-time-div, #scrub-timer .range-field {
+    margin-top: 20%; }
 
 .bottom-nav {
   position: fixed;

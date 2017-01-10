@@ -60,10 +60,10 @@ nav ul button.btn {
 }
 
 #scrub-timer {
-  margin-top: -15px;
+  line-height: normal;
 
-  form {
-    display: inline-block;
+  .scrub-time-div, .range-field {
+    margin-top: 20%;
   }
 }
 

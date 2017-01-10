@@ -84,23 +84,29 @@ export default class ScrubTimer extends React.Component {
 
     return (
       <div id="scrub-timer">
-        <strong>Simulation Time</strong>: { formattedTimestamp } ({ d })
-        <form>
-          <div className="input-field">
-            <p className="range-field">
-              <input
-                type        = "range"
-                min         = {0}
-                max         = {maxTimestamp}
-                step        = {1}
-                value       = {scrubTime}
-                onMouseDown = {::this._handlePause}
-                onMouseUp   = {::this._handleResume}
-                onChange    = {::this._handleScrubTimeChange}
-              />
-              </p>
+        <div className="row">
+            <div className="col s6 scrub-time-div"> 
+              <strong>Simulation Time</strong>: <div className="scrub-time">{ formattedTimestamp } ({ d })</div>
+            </div>
+            <div className="col s6"> 
+              <form>
+                <div className="input-field">
+                  <p className="range-field">
+                    <input
+                      type        = "range"
+                      min         = {0}
+                      max         = {maxTimestamp}
+                      step        = {1}
+                      value       = {scrubTime}
+                      onMouseDown = {::this._handlePause}
+                      onMouseUp   = {::this._handleResume}
+                      onChange    = {::this._handleScrubTimeChange}
+                    />
+                    </p>
+                </div>
+              </form>
+            </div>
           </div>
-        </form>
       </div>
     )
   }
