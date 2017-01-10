@@ -66,9 +66,14 @@ nav ul button.btn {
 }
 
 #scrub-timer {
-  line-height: normal;
+  text-align: right;
 
-  .scrub-time-div, .range-field {
+  .scrub-time {
+    display: inline;
+  }
+
+  .range-field {
+    margin-top: 9px;
   }
 }
 

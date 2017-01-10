@@ -6403,7 +6403,11 @@ nav ul button.btn, nav ul button.btn-large {
   z-index: 10; }
 
 #scrub-timer {
-  line-height: normal; }
+  text-align: right; }
+  #scrub-timer .scrub-time {
+    display: inline; }
+  #scrub-timer .range-field {
+    margin-top: 9px; }
 
 .bottom-nav {
   position: fixed;

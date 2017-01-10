@@ -86,7 +86,7 @@ export default class ScrubTimer extends React.Component {
       <div id="scrub-timer">
         <div className="row">
             <div className="col s6 scrub-time-div"> 
-              <strong>Simulation Time</strong>: <div className="scrub-time">{ formattedTimestamp } ({ d })</div>
+              <strong>Time</strong>: <div className="scrub-time">{ formattedTimestamp } ({ d })</div>
             </div>
             <div className="col s6"> 
               <form>
