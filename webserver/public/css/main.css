@@ -6378,6 +6378,11 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   padding: 10px !important;
   color: white; }
 
+nav input {
+  margin: 0 !important;
+  width: 95% !important;
+  height: 2rem !important; }
+
 nav ul button.btn, nav ul button.btn-large {
   margin-top: -2px;
   margin-left: 15px;
@@ -6399,8 +6404,6 @@ nav ul button.btn, nav ul button.btn-large {
 
 #scrub-timer {
   line-height: normal; }
-  #scrub-timer .scrub-time-div, #scrub-timer .range-field {
-    margin-top: 20%; }
 
 .bottom-nav {
   position: fixed;
