@@ -69,10 +69,6 @@ export default class ControlPanel extends React.Component {
     }
   }
 
-  _handleSimulationExit(e, started) {
-      // TODO
-  }
-
   _handleSimulationUpdate(e) {
     this.props.handlers.handleSimulationUpdate();
   }
