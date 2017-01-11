@@ -55,19 +55,24 @@ function deg2rad(deg) {
 }
 
 function averageSpeedToDestination(journeys, completionLogs) {
-  let totalTime = 0;
-  let totalDistance = 0;
-
+  const values = {};
   for (const log of completionLogs) {
-    totalTime += log.duration;
+    if (!values[log.frameworkID]) {
+      values[log.frameworkID] = {totalTime: 0, totalDistance: 0}
+    }
+    values[log.frameworkID].totalTime += log.duration;
 
-    const journey = journeys[log['journeyID']];
-    totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
+    const journey = journeys[log.journeyID];
+    values[log.frameworkID].totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
   }
-  if (totalTime == 0) {
-    totalTime++;
-  }
-  return totalDistance / totalTime * 60 * 60;
+
+  return Object.keys(values).reduce(function(result, key) {
+    if (values[key].totalTime == 0) {
+      values[key].totalTime++;
+    }
+    result[key] = values[key].totalDistance / values[key].totalTime * 60 * 60;
+    return result;
+  }, {});
 }
 
 //
@@ -126,13 +131,12 @@ function _handleRequestSimulationBenchmark(message, connection) {
     for (const journey of simulation.journeys) {
       journeys[journey._id] = journey;
     }
-    //benchmarkValue = averageSpeedToDestination(journeys, simulation.simulationStates);
-    benchmarkValue = averageSpeedToDestination(journeys, simulation.completionLogs);
+    const benchmarkValues = averageSpeedToDestination(journeys, simulation.completionLogs);
 
     connection.send(JSON.stringify({
       type: "simulation-benchmark",
       content: {
-        value: benchmarkValue
+        value: benchmarkValues
       }
     }));
   });
@@ -850,7 +854,8 @@ frameworkSocketServer.on('request', function(request) {
   function _handleJourneyComplete(message) {
     const log = {
       duration: message.timestamp - message.journeyStart,
-      journeyID: message.journeyID
+      journeyID: message.journeyID,
+      frameworkID: message.frameworkID
     };
     console.log(message);
     console.log("Logging " + message.simulationID);
