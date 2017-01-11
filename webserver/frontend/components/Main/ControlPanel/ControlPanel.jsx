@@ -25,6 +25,8 @@ export default class ControlPanel extends React.Component {
     selectedCity: CustomPropTypes.city,
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
+    benchmarkValues: React.PropTypes.object,
+    comparedBenchmarkValues: React.PropTypes.object
   }
 
   constructor(props) {
@@ -76,7 +78,20 @@ export default class ControlPanel extends React.Component {
   _handleBenchmarkRequest(e) {
     e.preventDefault();
 
-    this.props.handlers.handleBenchmarkRequest();
+    this.setState({
+      benchmarkRequested: true
+    })
+
+    const simID = this.props.activeSimulationID;
+    this.props.handlers.handleBenchmarkRequest(simID);
+  }
+
+  _handleEnableBenchmarkCompare(e) {
+    e.preventDefault()
+
+    this.setState({
+      enableComparison: !this.state.enableComparison
+    })
   }
 
   handleJourneysSubmit(journeys) {
@@ -87,6 +102,47 @@ export default class ControlPanel extends React.Component {
 
   handleCityChange(city) {
     this.props.handlers.handleCityChange(city._id);
+  }
+
+  compareBenchmarks(ours, theirs) {
+    if (!ours || !theirs || !Object.keys(ours) || !Object.keys(theirs)) {
+      return
+    }
+
+    const ourNumFrameworks = Object.keys(ours).length;
+    const theirNumFrameworks = Object.keys(theirs).length;
+
+    if (ourNumFrameworks != 1 || theirNumFrameworks != 1) {
+      return
+    }
+
+    const ourData = ours[Object.keys(ours)];
+    const theirData = theirs[Object.keys(theirs)];
+
+    let comparison = {};
+
+    for (const benchmarkName in ourData) {
+      if (!ourData.hasOwnProperty(benchmarkName)) continue;
+      if (!theirData.hasOwnProperty(benchmarkName)) continue;
+
+      const ourValue = ourData[benchmarkName];
+      const theirValue = theirData[benchmarkName];
+
+      const rawDifference = (theirValue - ourValue + "").substring(0,4);
+
+      const rawPercentDifference = rawDifference / ourValue * 100;
+      let percentDifference = (rawPercentDifference + "").substring(0,4) + "%";
+
+      if (rawPercentDifference > 0) {
+        percentDifference = "+" + percentDifference;
+      } else if (rawPercentDifference == 0) {
+        percentDifference = "±" + percentDifference;
+      }
+  
+      comparison[benchmarkName] = percentDifference + " (" + rawDifference + ")";
+    }
+
+    return comparison;
   }
 
   componentDidMount() {
@@ -154,6 +210,89 @@ export default class ControlPanel extends React.Component {
     this.setState({
       showSimulationPanel: !this.state.showSimulationPanel
     })
+  }
+
+  _handleComparingSimulationChange(simulationName) {
+    this.setState({
+      comparedSimulationID: simulationName
+    })
+
+    this.props.handlers.handleBenchmarkRequest(simulationName, true);
+  }
+
+  _renderBenchmarkCompareButton() {
+    return (
+      <button
+        className = "btn waves-effect waves-light"
+        style     = {!this.state.benchmarkRequested && {display: 'none'} || {}}
+        onClick   = {::this._handleEnableBenchmarkCompare}
+      >
+        Compare
+      </button>
+    )
+  }
+
+  _renderBenchmarkCompare() {
+    const benchmarkValues = this.props.benchmarkValues;
+    const comparedBenchmarkValues = this.props.comparedBenchmarkValues;
+
+    let comparison = this.compareBenchmarks(benchmarkValues, comparedBenchmarkValues);
+
+    if (!this.state.enableComparison) {
+      this.props.handlers.handleBenchmarkRequest(this.props.simulations[0], true);
+      return <div/>
+    }
+
+    const simulations = this.props.simulations.filter((elem) => {
+      return elem != this.props.activeSimulationID;
+    })
+
+    return (
+      <div>
+        <select 
+          className="browser-default"
+          value={this.state.comparedSimulationID} 
+          onChange={(e) => { this._handleComparingSimulationChange(e.target.value) }}
+        >
+          {
+            simulations.map((simulation, index) => {
+              return (
+                <option
+                  value={simulation}
+                  key={index}
+                >{simulation}</option>
+              )
+            })
+          }
+        </select>
+        <table>
+          <thead>
+            <tr>
+              <th data-field="id">Journey Completion Speed (km/h)</th>
+              <th data-field="name">Journey Completion Speed Variance</th>
+              <th data-field="price">Slowest Journey Completion Speed (km/h)</th>
+              <th data-field="price">Total Travel Time (hrs)</th>
+              <th data-field="price">Average Travel Time (min)</th>
+              <th data-field="price">Total Travel Distance (km)</th>
+              <th data-field="price">Average Speed (km/h)</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              {
+                comparison && 
+                  Object.keys(comparison).map(function(key) {
+                    return (
+                      <td>{comparison[key]}</td>
+                    );
+                  })
+              }
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    )
   }
 
   render() {
@@ -449,8 +588,8 @@ export default class ControlPanel extends React.Component {
                 <thead>
                   <tr>
                     <th data-field="id">Framework Name</th>
-                    <th data-field="id">Journey Coompletion Speed (km/h)</th>
-                    <th data-field="name">Jounrney Completion Speed Variance</th>
+                    <th data-field="id">Journey Completion Speed (km/h)</th>
+                    <th data-field="name">Journey Completion Speed Variance</th>
                     <th data-field="price">Slowest Journey Completion Speed (km/h)</th>
                     <th data-field="price">Total Travel Time (hrs)</th>
                     <th data-field="price">Average Travel Time (min)</th>
@@ -479,6 +618,8 @@ export default class ControlPanel extends React.Component {
                   }
                 </tbody>
               </table>
+              {this._renderBenchmarkCompareButton()}
+              {this._renderBenchmarkCompare()}
             </div>
             }
           </div>

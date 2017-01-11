@@ -65,6 +65,18 @@ export default class JourneyList extends React.Component {
                 <tbody>
                   {
                     simulationJourneys.map((journey,index) => {
+                      const originLatString = journey.origin.lat + ""
+                      const originLat = originLatString.substring(0, 6)
+
+                      const originLngString = journey.origin.lng + ""
+                      const originLng = originLngString.substring(0, 6)
+
+                      const destinationLatString = journey.destination.lat + ""
+                      const destinationLat = destinationLatString.substring(0, 6)
+
+                      const destinationLngString = journey.destination.lng + ""
+                      const destinationLng = destinationLngString.substring(0, 6)
+
                       return (
                         <tr
                           onMouseEnter={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
