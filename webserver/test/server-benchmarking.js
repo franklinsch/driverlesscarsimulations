@@ -34,14 +34,18 @@ describe('Benchmarking', function() {
 
   describe('#averageSpeedToDestination(journeys, completionLogs)', function() {
     it('should return the average speed to destination of all the completed journeys', function() {
+      const frameworkID = sample.frameworkID();
       let journeys = {};
       for (const journey of sample.journeys()) {
         journeys[journey._id] = journey;
       }
       const cLogs = sample.completionLogs();
       const avg = server.averageSpeedToDestination(journeys, cLogs);
-      avg.should.be.a('number');
-      avg.should.be.closeTo(sample.benchmark(), 0.001);
+      avg.should.be.an('object');
+      avg.should.have.key(frameworkID);
+      avg[frameworkID].should.be.a('number');
+      console.log(sample.benchmark());
+      avg[frameworkID].should.be.closeTo(sample.benchmark()[frameworkID], 0.001);
     });
   });
 
