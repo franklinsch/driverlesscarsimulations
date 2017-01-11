@@ -131,7 +131,6 @@ function _handleRequestSimulationBenchmark(message, connection) {
     for (const journey of simulation.journeys) {
       journeys[journey._id] = journey;
     }
-
     const benchmarkValues = averageSpeedToDestination(journeys, simulation.completionLogs);
     simulation.benchmarkValues = benchmarkValues
 
