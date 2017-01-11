@@ -158,6 +158,14 @@ function _handleRequestSimulationBenchmark(message, connection) {
     }
     const benchmarkValues = getBenchmarks(journeys, simulation.completionLogs);
 
+    simulation.benchmarkValues = benchmarkValues
+
+    simulation.save((error, simulation) => {
+      if (error) {
+        console.error(error);
+      }
+    });
+
     connection.send(JSON.stringify({
       type: "simulation-benchmark",
       content: {
