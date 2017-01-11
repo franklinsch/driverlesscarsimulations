@@ -50,7 +50,8 @@ const simulationSchema = mongoose.Schema({
         }
       }]
     }]
-  }]
+  }],
+  benchmarkValues: Object
 });
 
 module.exports = mongoose.model('Simulation', simulationSchema);
