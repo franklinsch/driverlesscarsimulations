@@ -862,7 +862,7 @@ frameworkSocketServer.on('request', function(request) {
     });
   }
 
-  function _handleGetJourneyEnd(message) {
+  function _handleRequestJourney(message) {
     const simulationID = message.simulationID;
 
     Simulation.findById(simulationID, function(error, simulation) {
@@ -880,6 +880,16 @@ frameworkSocketServer.on('request', function(request) {
 
       const bounds = simulation.city.bounds;
 
+      let origin = message.origin;
+      if (!origin) {
+        const originLat = Math.random() * (bounds.northEast.lat - bounds.southWest.lat) + bounds.southWest.lat;
+        const originLng = Math.random() * (bounds.northEast.lng - bounds.southWest.lng) + bounds.southWest.lng;
+        origin = {
+          lat: originLat,
+          lng: originLng
+        }
+      }
+
       const destinationLat = Math.random() * (bounds.northEast.lat - bounds.southWest.lat) + bounds.southWest.lat;
       const destinationLng = Math.random() * (bounds.northEast.lng - bounds.southWest.lng) + bounds.southWest.lng;
 
@@ -889,102 +899,103 @@ frameworkSocketServer.on('request', function(request) {
       }
 
       const newJourney = {
-        origin: message.origin,
+        origin: origin,
         destination: destination
       };
+
       simulation.journeys.push(newJourney)
       simulation.save((error, simulation) => {
         if (error || !simulation) {
-        return console.error(error);
+          return console.error(error);
         }
       });
       connection.send(JSON.stringify({
-        type: "simulation-new-journey",
+        type: "simulation-journey",
         content: {
-          journeys: newJourney
+          journey: newJourney
         }
       }));
     });
+  }
+
+  connection.on('message', function(message) {
+    if (message.type === 'utf8') {
+      const messageData = JSON.parse(message.utf8Data);
+      const messageContent = messageData.content;
+      const token = messageData.token
+      jwt.verify(token, config.token_secret, function(err, decoded) {
+        if (err) { return err; }
+        if (messageContent.simulationID === decoded.sid) {
+          console.log("Received valid JSON packet from:" + decoded.cip);
+          switch(messageData.type) {
+            case "framework-connect":
+              _handleSimulationStart(messageContent);
+              break;
+            case "simulation-state-update":
+              _handleSimulationStateUpdate(messageContent);
+              break;
+            case "simulation-journey-complete":
+              _handleJourneyComplete(messageContent);
+              break;
+            case "simulation-request-journey":
+              _handleRequestJourney(messageContent)
+          }
+        }
+      });
+    }
+    else if (message.type === 'binary') {
+      console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+      connection.sendBytes(message.binaryData);
+    }
+  });
+
+  connection.on('close', function(reasonCode, description) {
+    const index = lookup(frameworkConnections, function(obj) {
+      return obj['connection'] == connection;
+    });
+
+    if (index >= 0) {
+      const simulationID = frameworkConnections[index]['simulationID'];
+      delete frameworkConnections[index];
+
+      Simulation.findByIdAndUpdate(simulationID, { $pull: { frameworks: { connectionIndex: index }}}, {new: true}, function (error, simulation) {
+        if (error || !simulation) {
+          console.log("Could not find corresponding simulation for connection");
+          return
+        }
+        sendFrameworkList(simulation);
+
+        let min_timeslice = undefined;
+        for (const framework of simulation.frameworks) {
+          if (min_timeslice == undefined || framework.timeslice < min_timeslice) {
+            min_timeslice = framework.timeslice;
+          }
+        }
+        if (min_timeslice > simulation.timeslice) {
+          console.log("Was:");
+          console.log(simulation.latestTimestamp);
+          console.log(simulation.timeslice);
+          simulation.simulationStates = createNewSimulationStates(simulation, min_timeslice);
+          simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / min_timeslice) * min_timeslice;
+          simulation.timeslice = min_timeslice;
+          console.log("Is:");
+          console.log(simulation.latestTimestamp);
+          console.log(simulation.timeslice);
+          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
+          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
+        }
+
+        const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
+        const simulationState = simulation.simulationStates[nextIndex];
+        if (simulationState) {
+          updateConnectionsWithState(simulation, simulationState);
+        }
+      });
     }
 
-    connection.on('message', function(message) {
-      if (message.type === 'utf8') {
-        const messageData = JSON.parse(message.utf8Data);
-        const messageContent = messageData.content;
-        const token = messageData.token
-        jwt.verify(token, config.token_secret, function(err, decoded) {
-          if (err) { return err; }
-          if (messageContent.simulationID === decoded.sid) {
-            console.log("Received valid JSON packet from:" + decoded.cip);
-            switch(messageData.type) {
-              case "framework-connect":
-                _handleSimulationStart(messageContent);
-                break;
-              case "simulation-state-update":
-                _handleSimulationStateUpdate(messageContent);
-                break;
-              case "simulation-journey-complete":
-                _handleJourneyComplete(messageContent);
-                break;
-              case "simulation-get-journey-end":
-                _handleGetJourneyEnd(messageContent)
-            }
-          }
-        });
-      }
-      else if (message.type === 'binary') {
-        console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-        connection.sendBytes(message.binaryData);
-      }
-    });
-
-    connection.on('close', function(reasonCode, description) {
-      const index = lookup(frameworkConnections, function(obj) {
-        return obj['connection'] == connection;
-      });
-
-      if (index >= 0) {
-        const simulationID = frameworkConnections[index]['simulationID'];
-        delete frameworkConnections[index];
-
-        Simulation.findByIdAndUpdate(simulationID, { $pull: { frameworks: { connectionIndex: index }}}, {new: true}, function (error, simulation) {
-          if (error || !simulation) {
-            console.log("Could not find corresponding simulation for connection");
-            return
-          }
-          sendFrameworkList(simulation);
-
-          let min_timeslice = undefined;
-          for (const framework of simulation.frameworks) {
-            if (min_timeslice == undefined || framework.timeslice < min_timeslice) {
-              min_timeslice = framework.timeslice;
-            }
-          }
-          if (min_timeslice > simulation.timeslice) {
-            console.log("Was:");
-            console.log(simulation.latestTimestamp);
-            console.log(simulation.timeslice);
-            simulation.simulationStates = createNewSimulationStates(simulation, min_timeslice);
-            simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / min_timeslice) * min_timeslice;
-            simulation.timeslice = min_timeslice;
-            console.log("Is:");
-            console.log(simulation.latestTimestamp);
-            console.log(simulation.timeslice);
-            console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
-            console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
-          }
-
-          const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
-          const simulationState = simulation.simulationStates[nextIndex];
-          if (simulationState) {
-            updateConnectionsWithState(simulation, simulationState);
-          }
-        });
-      }
-
-      console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
+    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
   });
+});
 
 function createNewSimulationStates(simulation, newTimeslice) {
   const newSimulationStates = [];
