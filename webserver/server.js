@@ -89,18 +89,18 @@ app.use(session({
 // Catch unauthorised errors
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
-    res.status(401);
-    res.json({
-      "message": err.name + ": " + err.message
-    });
-  }
+  res.status(401);
+  res.json({
+    "message": err.name + ": " + err.message
+  });
+}
 });
 
 app.use('/', routes);
 
 const server = app.listen(config.port, () => {
-  const {address, port} = server.address();
-  console.log(`The server is running at http://localhost:${port}/`);
+    const {address, port} = server.address();
+console.log(`The server is running at http://localhost:${port}/`);
 });
 
 const frontendConnections = []
@@ -201,11 +201,11 @@ frontendSocketServer.on('request', function(request) {
   function _handleRequestAvailableCities() {
     City.find()
       .then((response) => {
-        connection.send(JSON.stringify({
-          type: "available-cities",
-          content: response
-        }));
-      });
+      connection.send(JSON.stringify({
+      type: "available-cities",
+      content: response
+    }));
+  });
   }
 
   function _handleRequestDefaultObjectTypes() {
@@ -234,48 +234,48 @@ frontendSocketServer.on('request', function(request) {
       content: [{
         name: "Vehicle",
         parameters: [
-        {
-          name: "Average Speed",
-          kind: "text"
-        },
-        {
-          name: "Top Speed",
-          kind: "text"
-        },
-        {
-          name: "Weight",
-          kind: "text"
-        },
-        {
-          name: "Length",
-          kind: "text"
-        }
+          {
+            name: "Average Speed",
+            kind: "text"
+          },
+          {
+            name: "Top Speed",
+            kind: "text"
+          },
+          {
+            name: "Weight",
+            kind: "text"
+          },
+          {
+            name: "Length",
+            kind: "text"
+          }
         ]
       },
-      {
-        name: "Creature",
-        parameters: [
         {
-          name: "Type",
-          kind: "predefined",
-          allowedValues: ["unicorn", "dog"]
-        }
-        ]
-      },
-      {
-        name: "Road Hazard",
-        parameters: [
-        {
-          name: "Type",
-          kind: "predefined",
-          allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+          name: "Creature",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["unicorn", "dog"]
+            }
+          ]
         },
         {
-          name: "Slowdown factor",
-          kind: "text"
-        }
-        ]
-      }]
+          name: "Road Hazard",
+          parameters: [
+            {
+              name: "Type",
+              kind: "predefined",
+              allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
+            },
+            {
+              name: "Slowdown factor",
+              kind: "text"
+            }
+          ]
+        }]
     }));
   }
 
@@ -321,7 +321,7 @@ frontendSocketServer.on('request', function(request) {
     };
     //check point in bbox
     if (bounds.southWest.lat <= point.lat && point.lat <= bounds.northEast.lat &&
-        bounds.southWest.lng <= point.lng && point.lng <= bounds.northEast.lng) {
+      bounds.southWest.lng <= point.lng && point.lng <= bounds.northEast.lng) {
       return point;
     }
     return _generatePoint(hotspotCoords, maxDistance, bounds);
@@ -392,7 +392,7 @@ frontendSocketServer.on('request', function(request) {
 
       for (const i in hotspotData) {
         if (bounds.southWest.lat <= hotspotData[i].coordinates.lat && hotspotData[i].coordinates.lat <= bounds.northEast.lat &&
-            bounds.southWest.lng <= hotspotData[i].coordinates.lng && hotspotData[i].coordinates.lng <= bounds.northEast.lng) {
+          bounds.southWest.lng <= hotspotData[i].coordinates.lng && hotspotData[i].coordinates.lng <= bounds.northEast.lng) {
           hotspots.push(hotspotData[i]);
         }
       }
@@ -431,20 +431,20 @@ frontendSocketServer.on('request', function(request) {
           active_simulation: simulation._id
         }
       };
-      const options = {
-        upsert: true
-      };
-      User.findOneAndUpdate({
-        _id: userID
-      }, updateInfo, options)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
-    });
+    const options = {
+      upsert: true
+    };
+    User.findOneAndUpdate({
+      _id: userID
+    }, updateInfo, options)
+      .then((result) => {
+      console.log(result);
+  })
+  .catch((err) => {
+      console.log(err);
+  });
+    frontendConnections.push({connection: connection, simulationID: simulation._id, timestamp: 0, speed: null});
+  });
 
     callback(null, simulation._id, simulationData.city._id, simulation.journeys);
   }
@@ -492,20 +492,20 @@ frontendSocketServer.on('request', function(request) {
 
       City.findOne({name: simulation.city.name}, (error, city) => {
         if (error || !city) {
-          console.error("Error when trying to retrieve city ID");
-          console.error(error);
-          return;
-        }
+        console.error("Error when trying to retrieve city ID");
+        console.error(error);
+        return;
+      }
 
-        connection.send(JSON.stringify({
-          type: "simulation-start-parameters",
-          content: {
-            simID: simulationID,
-            cityID: city._id,
-            journeys: simulation.journeys
-          }
-        }));
-      })
+      connection.send(JSON.stringify({
+        type: "simulation-start-parameters",
+        content: {
+          simID: simulationID,
+          cityID: city._id,
+          journeys: simulation.journeys
+        }
+      }));
+    })
       sendFrameworkList(simulation, connection);
     })
   }
@@ -578,25 +578,25 @@ frontendSocketServer.on('request', function(request) {
     User.findById(userID, function (error, user) {
       if (error || !user) {
         err = error ? error : "User not found"
-          connection.send(JSON.stringify({
-            type: "user-error",
-            content: {
-              error: err
-            }
-          }));
+        connection.send(JSON.stringify({
+          type: "user-error",
+          content: {
+            error: err
+          }
+        }));
       }
       const id  = uuidV4();
       const key = uuidV4();
       user.setAPIAccess(id, key);
       user.save( (err) => {
         connection.send(JSON.stringify({
-          type: "user-api-access",
-          content: {
-            api_id: id,
-            api_key: key
-          }
-        }));
-      });
+        type: "user-api-access",
+        content: {
+          api_id: id,
+          api_key: key
+        }
+      }));
+    });
     });
   }
 
@@ -632,42 +632,42 @@ frontendSocketServer.on('request', function(request) {
         case "request-simulation-start":
           _handleRequestSimulationStart(messageContent, (err, simID, cityID, journeys) => {
             connection.send(JSON.stringify({
-              type: "simulation-id",
-              content: {
-                simulationInfo: {
-                  id: simID,
-                  cityID: cityID
-                },
-                journeys: journeys
-              }
-            }));
-          });
-          break;
-        case "request-simulation-join":
-          _handleRequestSimulationJoin(messageContent);
-          break;
-        case "request-simulation-update":
-          _handleRequestEventUpdate(messageContent, connection, () => {});
-          break;
-        case "request-simulation-speed-change":
-          _handleRequestSimulationSpeedChange(messageContent);
-          break;
-        case "request-simulation-timestamp-change":
-          _handleRequestSimulationTimestampChange(messageContent);
-          break;
-        case "request-simulation-disconnect-frameworks":
-          _handleRequestSimulationDisconnectFrameworks(messageContent);
-          break;
-        case "request-simulation-benchmark":
-          _handleRequestSimulationBenchmark(messageContent, connection);
-          break;
-        case "request-user-api-access":
-          _handleRequestAPIAccess(messageContent);
-          break;
-        case "request-framework-disconnect":
-          _handleRequestFrameworkDisconnect(messageContent);
-          break;
-      }
+            type: "simulation-id",
+            content: {
+              simulationInfo: {
+                id: simID,
+                cityID: cityID
+              },
+              journeys: journeys
+            }
+          }));
+      });
+      break;
+    case "request-simulation-join":
+      _handleRequestSimulationJoin(messageContent);
+      break;
+    case "request-simulation-update":
+      _handleRequestEventUpdate(messageContent, connection, () => {});
+      break;
+    case "request-simulation-speed-change":
+      _handleRequestSimulationSpeedChange(messageContent);
+      break;
+    case "request-simulation-timestamp-change":
+      _handleRequestSimulationTimestampChange(messageContent);
+      break;
+    case "request-simulation-disconnect-frameworks":
+      _handleRequestSimulationDisconnectFrameworks(messageContent);
+      break;
+    case "request-simulation-benchmark":
+      _handleRequestSimulationBenchmark(messageContent, connection);
+      break;
+    case "request-user-api-access":
+      _handleRequestAPIAccess(messageContent);
+      break;
+    case "request-framework-disconnect":
+      _handleRequestFrameworkDisconnect(messageContent);
+      break;
+    }
     }
     else if (message.type === 'binary') {
       console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
@@ -760,29 +760,29 @@ frameworkSocketServer.on('request', function(request) {
 
       simulation.save((error, simulation) => {
         if (error || !simulation) {
-          return console.error(error);
+        return console.error(error);
+      }
+
+      const frameworkIndex = simulation.frameworks.length - 1;
+      const frameworkID = simulation.frameworks[frameworkIndex]._id;
+
+      frameworkConnections.push({connection: connection, simulationID: simulation._id});
+
+      const currIndex = Math.floor(simulation.latestTimestamp / simulation.timeslice);
+      const state = simulation.simulationStates[currIndex] || [];
+
+      connection.send(JSON.stringify({
+        type: "simulation-start-parameters",
+        content: {
+          frameworkID: frameworkID,
+          city: simulation.city,
+          journeys: simulation.journeys,
+          timestamp: startTimestamp,
+          state: state
         }
-
-        const frameworkIndex = simulation.frameworks.length - 1;
-        const frameworkID = simulation.frameworks[frameworkIndex]._id;
-
-        frameworkConnections.push({connection: connection, simulationID: simulation._id});
-
-        const currIndex = Math.floor(simulation.latestTimestamp / simulation.timeslice);
-        const state = simulation.simulationStates[currIndex] || [];
-
-        connection.send(JSON.stringify({
-          type: "simulation-start-parameters",
-          content: {
-            frameworkID: frameworkID,
-            city: simulation.city,
-            journeys: simulation.journeys,
-            timestamp: startTimestamp,
-            state: state
-          }
-        }));
-        sendFrameworkList(simulation);
-      });
+      }));
+      sendFrameworkList(simulation);
+    });
     })
   }
 
@@ -840,10 +840,10 @@ frameworkSocketServer.on('request', function(request) {
 
       simulation.save((error, simulation) => {
         if (error || !simulation) {
-          return console.error(error);
-        }
-        console.log("Updated simulationState");
-      });
+        return console.error(error);
+      }
+      console.log("Updated simulationState");
+    });
     });
   }
 
@@ -862,81 +862,124 @@ frameworkSocketServer.on('request', function(request) {
     });
   }
 
-  connection.on('message', function(message) {
-    if (message.type === 'utf8') {
-      const messageData = JSON.parse(message.utf8Data);
-      const messageContent = messageData.content;
-      const token = messageData.token
-      jwt.verify(token, config.token_secret, function(err, decoded) {
-        if (err) { return err; }
-        if (messageContent.simulationID === decoded.sid) {
-          console.log("Received valid JSON packet from:" + decoded.cip);
-          switch(messageData.type) {
-            case "framework-connect":
-              _handleSimulationStart(messageContent);
-              break;
-            case "simulation-state-update":
-              _handleSimulationStateUpdate(messageContent);
-              break;
-            case "simulation-journey-complete":
-              _handleJourneyComplete(messageContent);
+  function _handleGetJourneyEnd(message) {
+    const simulationID = message.simulationID;
+
+    Simulation.findById(simulationID, function(error, simulation) {
+      if (error || !simulation) {
+        console.error(error);
+        connection.send(JSON.stringify({
+          type: "simulation-error",
+          content: {
+            message: "Could not find simulation with ID " + simulationID
           }
+        }));
+        console.log("Could not find simulation with ID " + simulationID);
+        return
+      }
+
+      const bounds = simulation.city.bounds;
+
+      const destinationLat = Math.random() * (bounds.northEast.lat - bounds.southWest.lat) + bounds.southWest.lat;
+      const destinationLng = Math.random() * (bounds.northEast.lng - bounds.southWest.lng) + bounds.southWest.lng;
+
+      const destination = {
+        lat: destinationLat,
+        lng: destinationLng
+      }
+
+      const newJourney = {
+        origin: message.origin,
+        destination: destination
+      };
+      simulation.journeys.push(newJourney)
+      simulation.save((error, simulation) => {
+        if (error || !simulation) {
+        return console.error(error);
         }
       });
-    }
-    else if (message.type === 'binary') {
-      console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-      connection.sendBytes(message.binaryData);
-    }
-  });
 
-  connection.on('close', function(reasonCode, description) {
-    const index = lookup(frameworkConnections, function(obj) {
-      return obj['connection'] == connection;
+    });
+    }
+
+    connection.on('message', function(message) {
+      if (message.type === 'utf8') {
+        const messageData = JSON.parse(message.utf8Data);
+        const messageContent = messageData.content;
+        const token = messageData.token
+        jwt.verify(token, config.token_secret, function(err, decoded) {
+          if (err) { return err; }
+          if (messageContent.simulationID === decoded.sid) {
+            console.log("Received valid JSON packet from:" + decoded.cip);
+            switch(messageData.type) {
+              case "framework-connect":
+                _handleSimulationStart(messageContent);
+                break;
+              case "simulation-state-update":
+                _handleSimulationStateUpdate(messageContent);
+                break;
+              case "simulation-journey-complete":
+                _handleJourneyComplete(messageContent);
+                break;
+              case "simulation-get-journey-end":
+                _handleGetJourneyEnd(messageContent)
+            }
+          }
+        });
+      }
+      else if (message.type === 'binary') {
+        console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+        connection.sendBytes(message.binaryData);
+      }
     });
 
-    if (index >= 0) {
-      const simulationID = frameworkConnections[index]['simulationID'];
-      delete frameworkConnections[index];
-
-      Simulation.findByIdAndUpdate(simulationID, { $pull: { frameworks: { connectionIndex: index }}}, {new: true}, function (error, simulation) {
-        if (error || !simulation) {
-          console.log("Could not find corresponding simulation for connection");
-          return
-        }
-        sendFrameworkList(simulation);
-
-        let min_timeslice = undefined;
-        for (const framework of simulation.frameworks) {
-          if (min_timeslice == undefined || framework.timeslice < min_timeslice) {
-            min_timeslice = framework.timeslice;
-          }
-        }
-        if (min_timeslice > simulation.timeslice) {
-          console.log("Was:");
-          console.log(simulation.latestTimestamp);
-          console.log(simulation.timeslice);
-          simulation.simulationStates = createNewSimulationStates(simulation, min_timeslice);
-          simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / min_timeslice) * min_timeslice;
-          simulation.timeslice = min_timeslice;
-          console.log("Is:");
-          console.log(simulation.latestTimestamp);
-          console.log(simulation.timeslice);
-          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
-          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
-        }
-
-        const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
-        const simulationState = simulation.simulationStates[nextIndex];
-        if (simulationState) {
-          updateConnectionsWithState(simulation, simulationState);
-        }
+    connection.on('close', function(reasonCode, description) {
+      const index = lookup(frameworkConnections, function(obj) {
+        return obj['connection'] == connection;
       });
-    }
 
-    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+      if (index >= 0) {
+        const simulationID = frameworkConnections[index]['simulationID'];
+        delete frameworkConnections[index];
+
+        Simulation.findByIdAndUpdate(simulationID, { $pull: { frameworks: { connectionIndex: index }}}, {new: true}, function (error, simulation) {
+          if (error || !simulation) {
+            console.log("Could not find corresponding simulation for connection");
+            return
+          }
+          sendFrameworkList(simulation);
+
+          let min_timeslice = undefined;
+          for (const framework of simulation.frameworks) {
+            if (min_timeslice == undefined || framework.timeslice < min_timeslice) {
+              min_timeslice = framework.timeslice;
+            }
+          }
+          if (min_timeslice > simulation.timeslice) {
+            console.log("Was:");
+            console.log(simulation.latestTimestamp);
+            console.log(simulation.timeslice);
+            simulation.simulationStates = createNewSimulationStates(simulation, min_timeslice);
+            simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / min_timeslice) * min_timeslice;
+            simulation.timeslice = min_timeslice;
+            console.log("Is:");
+            console.log(simulation.latestTimestamp);
+            console.log(simulation.timeslice);
+            console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
+            console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
+          }
+
+          const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
+          const simulationState = simulation.simulationStates[nextIndex];
+          if (simulationState) {
+            updateConnectionsWithState(simulation, simulationState);
+          }
+        });
+      }
+
+      console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+    });
   });
-});
 
 function createNewSimulationStates(simulation, newTimeslice) {
   const newSimulationStates = [];
