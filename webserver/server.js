@@ -169,7 +169,8 @@ function _handleRequestSimulationBenchmark(message, connection) {
     connection.send(JSON.stringify({
       type: "simulation-benchmark",
       content: {
-        value: benchmarkValues
+        value: benchmarkValues,
+        simulationID: message.simulationID
       }
     }));
   });
