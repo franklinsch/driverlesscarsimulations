@@ -139,7 +139,7 @@ const frameworkConnections = []
 const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 function _handleRequestSimulationBenchmark(message, connection) {
-  console.log("Request benchmark");
+  console.log("Request benchmark for " + message.simulationID);
   Simulation.findById(message.simulationID, function (error, simulation) {
     console.log("found simulation");
     if (error || !simulation) {
@@ -156,15 +156,19 @@ function _handleRequestSimulationBenchmark(message, connection) {
     for (const journey of simulation.journeys) {
       journeys[journey._id] = journey;
     }
-    const benchmarkValues = getBenchmarks(journeys, simulation.completionLogs);
 
-    simulation.benchmarkValues = benchmarkValues
+    let benchmarkValues = simulation.benchmarkValues;
 
-    simulation.save((error, simulation) => {
-      if (error) {
-        console.error(error);
-      }
-    });
+    if (!message.doNotRecompute) {
+      benchmarkValues = getBenchmarks(journeys, simulation.completionLogs);
+      simulation.benchmarkValues = benchmarkValues
+
+      simulation.save((error, simulation) => {
+        if (error) {
+          console.error(error);
+        }
+      });
+    }
 
     connection.send(JSON.stringify({
       type: "simulation-benchmark",

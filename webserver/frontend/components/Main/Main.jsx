@@ -269,7 +269,7 @@ export default class Main extends React.Component {
       const simID = this.state.simulationInfo.id;
 
       console.log("received");
-      console.log(simID);
+      console.log(messageData.content.simulationID);
       console.log(benchmarkValues);
 
       if (messageData.content.simulationID === simID) {
@@ -502,7 +502,7 @@ export default class Main extends React.Component {
       })
   }
 
-  handleBenchmarkRequest(simID) {
+  handleBenchmarkRequest(simID, doNotRecompute) {
     const socket = this.state.socket;
 
     const hasSimulationStarted = simID !== "0";
@@ -515,9 +515,11 @@ export default class Main extends React.Component {
     const type = "request-simulation-benchmark";
     const content = {
       simulationID: simID,
+      doNotRecompute: doNotRecompute
     }
 
     console.log("Requested benchmark " + simID)
+    console.log("No recompute " + doNotRecompute)
 
     UtilFunctions.sendSocketMessage(socket, type, content);
   }

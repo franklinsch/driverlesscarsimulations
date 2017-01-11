@@ -90,7 +90,7 @@ export default class ControlPanel extends React.Component {
     e.preventDefault()
 
     this.setState({
-      enableComparison: true
+      enableComparison: !this.state.enableComparison
     })
   }
 
@@ -110,7 +110,6 @@ export default class ControlPanel extends React.Component {
     }
 
     const ourNumFrameworks = Object.keys(ours).length;
-    console.log(Object.keys(theirs));
     const theirNumFrameworks = Object.keys(theirs).length;
 
     if (ourNumFrameworks != 1 || theirNumFrameworks != 1) {
@@ -213,14 +212,12 @@ export default class ControlPanel extends React.Component {
     })
   }
 
-  _handleComparingSimulationChange(e) {
-    e.preventDefault();
-
+  _handleComparingSimulationChange(simulationName) {
     this.setState({
-      comparedSimulationID: e.target.value
+      comparedSimulationID: simulationName
     })
 
-    this.props.handlers.handleBenchmarkRequest(e.target.value);
+    this.props.handlers.handleBenchmarkRequest(simulationName, true);
   }
 
   _renderBenchmarkCompareButton() {
@@ -241,15 +238,24 @@ export default class ControlPanel extends React.Component {
 
     let comparison = this.compareBenchmarks(benchmarkValues, comparedBenchmarkValues);
 
+    if (!this.state.enableComparison) {
+      this.props.handlers.handleBenchmarkRequest(this.props.simulations[0], true);
+      return <div/>
+    }
+
+    const simulations = this.props.simulations.filter((elem) => {
+      return elem != this.props.activeSimulationID;
+    })
+
     return (
       <div>
         <select 
           className="browser-default"
           value={this.state.comparedSimulationID} 
-          onChange={::this._handleComparingSimulationChange}
+          onChange={(e) => { this._handleComparingSimulationChange(e.target.value) }}
         >
           {
-            this.props.simulations.map((simulation, index) => {
+            simulations.map((simulation, index) => {
               return (
                 <option
                   value={simulation}
@@ -262,9 +268,8 @@ export default class ControlPanel extends React.Component {
         <table>
           <thead>
             <tr>
-              <th data-field="id">Framework Name</th>
-              <th data-field="id">Journey Coompletion Speed (km/h)</th>
-              <th data-field="name">Jounrney Completion Speed Variance</th>
+              <th data-field="id">Journey Completion Speed (km/h)</th>
+              <th data-field="name">Journey Completion Speed Variance</th>
               <th data-field="price">Slowest Journey Completion Speed (km/h)</th>
               <th data-field="price">Total Travel Time (hrs)</th>
               <th data-field="price">Average Travel Time (min)</th>
@@ -277,11 +282,11 @@ export default class ControlPanel extends React.Component {
             <tr>
               {
                 comparison && 
-                Object.keys(comparison).map(function(key) {
-                  return (
-                    <td>{comparison[key]}</td>
-                  );
-                })
+                  Object.keys(comparison).map(function(key) {
+                    return (
+                      <td>{comparison[key]}</td>
+                    );
+                  })
               }
             </tr>
           </tbody>
@@ -583,8 +588,8 @@ export default class ControlPanel extends React.Component {
                 <thead>
                   <tr>
                     <th data-field="id">Framework Name</th>
-                    <th data-field="id">Journey Coompletion Speed (km/h)</th>
-                    <th data-field="name">Jounrney Completion Speed Variance</th>
+                    <th data-field="id">Journey Completion Speed (km/h)</th>
+                    <th data-field="name">Journey Completion Speed Variance</th>
                     <th data-field="price">Slowest Journey Completion Speed (km/h)</th>
                     <th data-field="price">Total Travel Time (hrs)</th>
                     <th data-field="price">Average Travel Time (min)</th>
