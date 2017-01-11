@@ -25,32 +25,60 @@ export default class JourneyList extends React.Component {
               Show current journeys
             </div>
             <div className="collapsible-body">
-              <ul className="collection">
-                {
-                  simulationJourneys.map((journey, index) => {
-                    return (
-                      <li className="collection-item"
-                          key={index}
+              <table className="striped">
+                <thead>
+                  <tr>
+                    <th data-field="origin">Origin</th>
+                    <th data-field="destination">Destination</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    pendingJourneys.map((journey,index) => {
+                      const originLatString = journey.origin.lat + ""
+                      const originLat = originLatString.substring(0, 6)
+
+                      const originLngString = journey.origin.lng + ""
+                      const originLng = originLngString.substring(0, 6)
+
+                      const destinationLatString = journey.destination.lat + ""
+                      const destinationLat = destinationLatString.substring(0, 6)
+
+                      const destinationLngString = journey.destination.lng + ""
+                      const destinationLng = destinationLngString.substring(0, 6)
+
+                      return (
+                        <tr
                           onMouseEnter={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
                           onMouseLeave={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
-                      >
-                        { index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" }
-                      </li>
-                    )
-                  })
-                }
-                {
-                  pendingJourneys.map((journey, index) => {
-                    return (
-                      <li className="collection-item"
                           key={index}
-                      >
-                        { "(Pending) " + index + ": (" + journey.origin.lat + ", " + journey.origin.lng + ") -> (" + journey.destination.lat + ", " + journey.destination.lng + ")" }
-                      </li>
-                    )
-                  })
-                }
-              </ul>
+                        >
+                          <td key={index+"o"}>{"(" + originLat + ", " + originLng + ")"}</td> 
+                          <td key={index+"d"}>{"(" + destinationLat + ", " + destinationLng + ")"}</td> 
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </table>
+              <table className="striped">
+                <tbody>
+                  {
+                    simulationJourneys.map((journey,index) => {
+                      return (
+                        <tr
+                          onMouseEnter={(e) => this.props.handlers.handleJourneyMouseOver(journey, e)}
+                          onMouseLeave={(e) => this.props.handlers.handleJourneyMouseOut(journey, e)}
+                          key={index}
+                        >
+                          <td key={index+"o"}>{"(" + originLat + ", " + originLng + ")"}</td> 
+                          <td key={index+"d"}>{"(" + destinationLat + ", " + destinationLng + ")"}</td> 
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </table>
             </div>
           </li>
         </ul>
