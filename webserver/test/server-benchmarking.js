@@ -32,7 +32,7 @@ describe('Benchmarking', function() {
     });
   });
 
-  describe('#averageSpeedToDestination(journeys, completionLogs)', function() {
+  describe('#getBenchmarks(journeys, completionLogs)', function() {
     it('should return the average speed to destination of all the completed journeys', function() {
       const frameworkID = sample.frameworkID();
       let journeys = {};
@@ -40,12 +40,12 @@ describe('Benchmarking', function() {
         journeys[journey._id] = journey;
       }
       const cLogs = sample.completionLogs();
-      const avg = server.averageSpeedToDestination(journeys, cLogs);
+      const avg = server.getBenchmarks(journeys, cLogs);
       avg.should.be.an('object');
       avg.should.have.key(frameworkID);
-      avg[frameworkID].should.be.a('number');
-      console.log(sample.benchmark());
-      avg[frameworkID].should.be.closeTo(sample.benchmark()[frameworkID], 0.001);
+      avg[frameworkID].should.be.an('object');
+      avg[frameworkID].should.have.key('completionSpeed');
+      avg[frameworkID].completionSpeed.should.be.closeTo(sample.benchmark()[frameworkID], 0.001);
     });
   });
 

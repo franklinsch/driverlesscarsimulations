@@ -3,7 +3,7 @@ module.exports = {
   _handleRequestEventUpdate: _handleRequestEventUpdate,
   getDistanceLatLonInKm: getDistanceLatLonInKm,
   deg2rad: deg2rad,
-  averageSpeedToDestination: averageSpeedToDestination
+  getBenchmarks: getBenchmarks
 };
 
 const express = require('express');
@@ -54,23 +54,48 @@ function deg2rad(deg) {
   return deg * (Math.PI/180);
 }
 
-function averageSpeedToDestination(journeys, completionLogs) {
+function getBenchmarks(journeys, completionLogs) {
   const values = {};
   for (const log of completionLogs) {
     if (!values[log.frameworkID]) {
-      values[log.frameworkID] = {totalTime: 0, totalDistance: 0}
+      values[log.frameworkID] = {totalTime: 0, totalDistance: 0, totalJourneyDistance: 0, mean: 0, variance: 0, slowest: 0, num: 0}
     }
     values[log.frameworkID].totalTime += log.duration;
+    values[log.frameworkID].totalJourneyDistance += log.distance / 1000;
 
     const journey = journeys[log.journeyID];
     values[log.frameworkID].totalDistance += getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
   }
-
-  return Object.keys(values).reduce(function(result, key) {
+  Object.keys(values).forEach(function(key, index) {
     if (values[key].totalTime == 0) {
       values[key].totalTime++;
     }
-    result[key] = values[key].totalDistance / values[key].totalTime * 60 * 60;
+    values[key].totalTime /= 60 * 60;
+    values[key].mean = values[key].totalDistance / values[key].totalTime;
+  });
+
+  for(const log of completionLogs) {
+    const journey = journeys[log.journeyID];
+    const distance = getDistanceLatLonInKm(journey.origin.lat, journey.origin.lng, journey.destination.lat, journey.destination.lng);
+    const speed = distance / log.duration * 60 * 60;
+    values[log.frameworkID].variance += Math.pow(speed - values[log.frameworkID].mean, 2);
+    const slowest = values[log.frameworkID].slowest;
+    values[log.frameworkID].slowest = !slowest || speed < slowest ? speed : slowest;
+    values[log.frameworkID].num++;
+  }
+
+  return Object.keys(values).reduce(function(result, key) {
+    values[key].variance /= values[key].num;
+    console.log(values[key].totalJourneyDistance);
+    result[key] = {
+      completionSpeed: values[key].mean,
+      completionSpeedVariance: values[key].variance,
+      slowestJourney: values[key].slowest,
+      totalTime: values[key].totalTime,
+      averageTime: (values[key].totalTime * 60) / values[key].num,
+      totalDistance: values[key].totalJourneyDistance,
+      averageSpeed: values[key].totalJourneyDistance / values[key].totalTime
+    };
     return result;
   }, {});
 }
@@ -131,7 +156,7 @@ function _handleRequestSimulationBenchmark(message, connection) {
     for (const journey of simulation.journeys) {
       journeys[journey._id] = journey;
     }
-    const benchmarkValues = averageSpeedToDestination(journeys, simulation.completionLogs);
+    const benchmarkValues = getBenchmarks(journeys, simulation.completionLogs);
 
     connection.send(JSON.stringify({
       type: "simulation-benchmark",
@@ -854,6 +879,7 @@ frameworkSocketServer.on('request', function(request) {
   function _handleJourneyComplete(message) {
     const log = {
       duration: message.timestamp - message.journeyStart,
+      distance: message.journeyDistance,
       journeyID: message.journeyID,
       frameworkID: message.frameworkID
     };

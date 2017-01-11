@@ -270,6 +270,7 @@ export default class Main extends React.Component {
         benchmarkValues: benchmarkValues
       });
     } else if (messageData.type === "simulation-frameworks") {
+      console.log(messageData.content);
       this.setState({
         frameworks: messageData.content.frameworks
       });

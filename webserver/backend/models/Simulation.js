@@ -26,6 +26,7 @@ const simulationSchema = mongoose.Schema({
   frontends: [Frontend.schema],
   completionLogs: [{
     duration: Number,
+    distance: Number,
     journeyID: String,
     frameworkID: String
   }],
