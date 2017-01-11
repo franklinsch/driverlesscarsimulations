@@ -145,7 +145,7 @@ export default class ControlPanel extends React.Component {
     const bounds = selectedCity ? selectedCity.bounds : null;
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
-    const benchmarkValue = this.props.benchmarkValue;
+    const benchmarkValues = this.props.benchmarkValues;
     const currentSpeed = this.props.currentSpeed;
     const allowSimulationStart = this.state.allowSimulationStart;
     const usingRealData = this.state.useRealData;
@@ -380,6 +380,7 @@ export default class ControlPanel extends React.Component {
               <ul className="collection">
                 {
                   this.props.frameworks.map((framework, index) => {
+                    const benchmarkValue = benchmarkValues && benchmarkValues[framework._id];
                     return (
                       <li
                         className="collection-item"
@@ -393,6 +394,11 @@ export default class ControlPanel extends React.Component {
                         >
                           Disconnect
                         </button>
+                        { benchmarkValues &&
+                          (benchmarkValue ?
+                            <div> {benchmarkValue} km/h is the <u>ultimate</u> metric </div> :
+                            "No metric available as of yet")
+                        }
                       </li>
                     );
                   })
