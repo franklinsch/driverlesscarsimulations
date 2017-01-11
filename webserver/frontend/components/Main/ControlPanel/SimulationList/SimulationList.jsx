@@ -15,16 +15,17 @@ export default class SimulationList extends React.Component {
           My Simulations
         </a>
         <ul id="dropdown" className="dropdown-content">
-            {
-              simulations.map((simulation, index) => {
-                const link = '#/simulations/' + simulation.simID;
-                return (
-                  <li key={ index }>
-                    <a href={ link }> { simulation.simTitle ? simulation.simTitle : simulation.simID }</a>
-                  </li>
-                );
-              })
-            }
+          { simulations.length ? '' : <li><h5>No simulations</h5></li> }
+          {
+            simulations.map((simulation, index) => {
+              const link = '#/simulations/' + simulation.simID;
+              return (
+                <li key={ index }>
+                  <a href={ link }> { simulation.simTitle ? simulation.simTitle : simulation.simID }</a>
+                </li>
+              );
+            })
+          }
         </ul>
       </div>
     );
