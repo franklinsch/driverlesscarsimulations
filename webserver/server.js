@@ -898,7 +898,12 @@ frameworkSocketServer.on('request', function(request) {
         return console.error(error);
         }
       });
-
+      connection.send(JSON.stringify({
+        type: "simulation-new-journey",
+        content: {
+          journeys: newJourney
+        }
+      }));
     });
     }
 
