@@ -111,13 +111,16 @@ export default class ControlPanel extends React.Component {
       $('#journey-button').sideNav('hide');
     }
     else {
+      this.setState({
+          showSimulationPanel: false,
+      });
+
       $('#simulation-button').sideNav('hide');
       $('#journey-button').sideNav('show');
     }
 
     this.setState({
-      showJourneyPanel: !this.state.showJourneyPanel,
-      showSimulationPanel: this.state.showJourneyPanel
+      showJourneyPanel: !this.state.showJourneyPanel
     })
   }
 
@@ -126,13 +129,16 @@ export default class ControlPanel extends React.Component {
       $('#simulation-button').sideNav('hide');
     }
     else {
+      this.setState({
+          showJourneyPanel: false,
+      });
+
       $('#journey-button').sideNav('hide');
       $('#simulation-button').sideNav('show');
     }
 
     this.setState({
-      showSimulationPanel: !this.state.showSimulationPanel,
-      showJourneyPanel: this.state.showSimulationPanel
+      showSimulationPanel: !this.state.showSimulationPanel
     })
   }
 
