@@ -103,7 +103,7 @@ export default class ControlPanel extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     $('ul.tabs').tabs();
     $('.tooltipped').tooltip({delay: 50});
-    console.log(this.state.showSimulationPanel, prevState.showSimulationPanel);
+
     if (this.state.showSimulationPanel != prevState.showSimulationPanel) {
       if (this.state.showSimulationPanel) {
         $('#simulation-button').sideNav('show');
@@ -112,7 +112,6 @@ export default class ControlPanel extends React.Component {
         $('#simulation-button').sideNav('hide');
       }
     }
-    console.log(this.state.showJourneyPanel, prevState.showJourneyPanel);
 
     if (this.state.showJourneyPanel != prevState.showJourneyPanel) {
       if (this.state.showJourneyPanel) {
