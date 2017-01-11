@@ -33,9 +33,13 @@ router.route('/simulations')
   .post(auth, (req, res) => {
     const userID = res._headers.token._id;
     const simulationID = req.body.simulationID;
+    const simulationTitle = req.body.simulationTitle || '';
     const updateInfo = {
       $push: {
-        simulations: simulationID
+        simulations: {
+          simID: simulationID,
+          simTitle: simulationTitle
+        }
       }
     };
     const options = {
@@ -127,7 +131,6 @@ router.route('/simulations/activate')
 
 router.route('/simulations/name')
   .post(auth, (req, res) => {
-    console.log();
     const userID = res._headers.token._id;
     const newName = req.body.newName;
     const simulationID = req.body.simulationID;
