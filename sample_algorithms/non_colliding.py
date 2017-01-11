@@ -137,7 +137,8 @@ def translateDataToCameraData(car, data):
     for obj in frameworkState['objects']:
       distance = get_distance(car['position'], obj['position'])
       bearing = get_bearing(car['position'], obj['position'])
-      if distance <= cameraSensorRadius and abs(bearing - car['bearing']) <= cameraSensorFOVAngle / 2 :
+      if (distance <= cameraSensorRadius and
+          abs(bearing_diff(bearing, car['bearing'])) <= cameraSensorFOVAngle / 2):
         cameraData.append(obj)
   if len(cameraData) > 0:
     print(cameraData)
@@ -212,6 +213,9 @@ def preprocess(route):
           maxSpeed_km_h = MAX_SPEED_KM_H
           print(err)
 
+def bearing_diff(b1, b2):
+  return (b1 - b2 + 180) % 360 - 180
+
 def add(v1, v2):
   return [v1[0]+v2[0], v1[1]+v2[1]]
 
@@ -223,7 +227,7 @@ def scale(v, s):
 
 def scheduleNewRoute(car):
   start = car['baseRoute'][0]
-  if (isNodeLocked(start)):
+  if (isNodeLocked(start, car['bearing'])):
     return False
   car['journeyStart'] = timestamp
   car['route'] = deepcopy(car['baseRoute'])
@@ -235,15 +239,18 @@ def scheduleNewRoute(car):
 def isEqualNodes(node1, node2):
   return node1[0] == node2[0] and node1[1] == node2[1]
 
-def isNodeLocked(node):
+def isNodeLocked(node, bearing):
+  angle_epsilon = 5
   for car in state:
-    if car['lockedNode'] != None and isEqualNodes(car['lockedNode'], node):
+    if (car['lockedNode'] != None and
+        isEqualNodes(car['lockedNode'], node) and
+        abs(bearing_diff(car['bearing'], bearing + 180)) > angle_epsilon):
       return True
   return False
 
 def switchNodeLock(car, start, end):
   if (isEqualNodes(car['lockedNode'], start)):
-    if (isNodeLocked(end)):
+    if (isNodeLocked(end, car['bearing'])):
       return False
 
     car['lockedNode'] = end
@@ -311,7 +318,7 @@ def translate(state):
   res = []
   for car in state:
     if (car['position'] != None):
-      res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}}]#, 'route': car['baseRoute']}]
+      res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
   return res
 
 simulationID = None
