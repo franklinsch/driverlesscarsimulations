@@ -329,6 +329,7 @@ export default class Main extends React.Component {
       userID: userID,
       activeUser: username
     });
+    this.updateUserSimulations();
   }
 
   handlePositionPreview(position) {
