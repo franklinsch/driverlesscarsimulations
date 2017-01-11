@@ -42,7 +42,7 @@ export default class LoginButton extends React.Component {
       cookie.remove('token', { path: '/' });
       window.sessionStorage.removeItem('token');
       this.setState({ token: '' });
-      this.props.handlers.handleTokenChange('', '');
+      this.props.handlers.handleTokenChange('', '', '', []);
       return;
     }
     const url = "/" + action;
@@ -82,7 +82,7 @@ export default class LoginButton extends React.Component {
             token: data.token,
             loggedInUsername: data.username
           });
-          this.props.handlers.handleTokenChange(data.token, data.userID, data.username);
+          this.props.handlers.handleTokenChange(data.token, data.userID, data.username, data.simulations);
         });
       })
       .catch((err) => {
@@ -101,8 +101,8 @@ export default class LoginButton extends React.Component {
   render() {
     return (
       <div>
-          {   
-            this.state.token ? 
+          {
+            this.state.token ?
             <form>
               <ul id="nav-mobile" className="right hide-on-med-and-down">
                 <li>
@@ -172,7 +172,7 @@ export default class LoginButton extends React.Component {
                   onClick={::this._handleFormSubmit}
                     className="btn waves-effect waves-light">
                   Register
-                </button> 
+                </button>
               </li>
           </ul>
           </form>

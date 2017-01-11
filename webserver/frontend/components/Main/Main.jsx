@@ -323,11 +323,12 @@ export default class Main extends React.Component {
   }
 
 
-  handleTokenChange(newToken, userID, username) {
+  handleTokenChange(newToken, userID, username, simulations) {
     this.setState({
       token: newToken,
       userID: userID,
-      activeUser: username
+      activeUser: username,
+      userSimulations: simulations
     });
   }
 

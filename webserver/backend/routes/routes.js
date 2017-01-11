@@ -247,7 +247,8 @@ router.route('/register')
       res.json({
         "token": token,
         "userID": user._id,
-        "username": user.username
+        "username": user.username,
+        "simulations": user.simulations,
       });
     });
   });
@@ -270,7 +271,8 @@ router.route('/login')
         res.json({
           "token": token,
           "userID": user._id,
-          "username": user.username
+          "username": user.username,
+          "simulations": user.simulations,
         });
       } else {
         // If user is not found
