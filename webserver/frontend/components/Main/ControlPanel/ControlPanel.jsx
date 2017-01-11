@@ -150,6 +150,14 @@ export default class ControlPanel extends React.Component {
     const allowSimulationStart = this.state.allowSimulationStart;
     const usingRealData = this.state.useRealData;
 
+    // Find current simulation's title
+    let simTitle = '';
+    for (let sim of userSimulations) {
+      if (sim.simID == simID) {
+        simTitle = sim.simTitle;
+      }
+    }
+
     const journeySettingsHandlers = {
       handleJourneysFileImport : ::this.handleJourneysSubmit,
       handleObjectCreate       : this.props.handlers.handleObjectTypeCreate
@@ -186,7 +194,7 @@ export default class ControlPanel extends React.Component {
                 hasSimulationStarted ?
                   <div className="row">
                     <div className="col s3">
-                      <strong>Simulation ID</strong>: {simID}
+                      <strong>Simulation ID</strong>: {simTitle ? simTitle : simID}
                     </div>
                     <div className="col s3">
                       <ScrubTimer
@@ -352,6 +360,21 @@ export default class ControlPanel extends React.Component {
                   ''
               }
 
+              <div className="row">
+                <p><strong>Simulation Title:</strong></p>
+                <input
+                  type     = "text"
+                  id       = "simulation-title"
+                  ref       = "titleInput"
+                  placeholder = "Enter new simulation title"
+                />
+                <button
+                  className = "btn waves-effect waves-light"
+                  onClick   = {(e) => this.props.handlers.handleTitleChange(this.refs.titleInput.value)}
+                >
+                  Change simulation title
+                </button>
+              </div>
               <div className="row">
                 <p><strong>Simulation Speed:</strong></p>
                 <SpeedSetting

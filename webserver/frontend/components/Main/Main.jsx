@@ -487,6 +487,32 @@ export default class Main extends React.Component {
       })
   }
 
+  handleTitleChange(newTitle) {
+    const url = '/simulations/name';
+    const simID = this.state.simulationInfo.id;
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "token": this.state.token,
+      },
+      body: JSON.stringify({
+        simulationID: simID,
+        newName: newTitle,
+      })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          console.log("error authenticating user");
+          return;
+        }
+      })
+      .catch(err => {
+        console.log("error updating simulation title");
+      })
+  }
+
   handleBenchmarkRequest() {
     const socket = this.state.socket;
 
@@ -640,6 +666,7 @@ export default class Main extends React.Component {
       handleJourneyListItemMouseOver   : ::this.handleJourneyListItemMouseOver,
       handleJourneyListItemMouseOut    : ::this.handleJourneyListItemMouseOut,
       handleSimulationActivate         : ::this.handleSimulationActivate,
+      handleTitleChange                : ::this.handleTitleChange,
       handlePause                      : ::this.handlePause,
       handleResume                     : ::this.handleResume,
       handleScrub                      : ::this.handleScrub,

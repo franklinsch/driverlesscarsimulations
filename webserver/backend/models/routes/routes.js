@@ -33,9 +33,12 @@ router.route('/simulations')
   .post(auth, (req, res) => {
     const userID = res._headers.token._id;
     const simulationID = req.body.simulationID;
+    const simulationTitle = req.body.simulationTitle || '';
     const updateInfo = {
       $push: {
-        simulations: simulationID
+        simulations: {
+          simID: simulationID,
+          simTitle: simulationTitle
       }
     };
     const options = {
@@ -127,11 +130,10 @@ router.route('/simulations/activate')
 
 router.route('/simulations/name')
   .post(auth, (req, res) => {
-    console.log();
     const userID = res._headers.token._id;
     const newName = req.body.newName;
     const simulationID = req.body.simulationID;
-    const simUpdateInfo = {
+    const updateInfo = {
       title: newName
     };
     const options = {
@@ -140,26 +142,9 @@ router.route('/simulations/name')
     };
     Simulation.findOneAndUpdate({
         _id: simulationID
-      }, simUpdateInfo, options)
+      }, updateInfo, options)
       .then((result) => {
-        // carry on with user simulation updates
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-    User.findById(userID)
-      .then((user) => {
-        let updatedSimulations = user.simulations;
-        for (let sim of updatedSimulations) {
-          if (sim.simID == simulationID) {
-            sim.simTitle = newName;
-          }
-        }
-        user.simulations = updatedSimulations;
-        user.save()
-          .then((user) => {
-            res.send(user);
-          })
+        res.send(result);
       })
       .catch((err) => {
         res.send(err);

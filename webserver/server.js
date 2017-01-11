@@ -429,7 +429,10 @@ frontendSocketServer.on('request', function(request) {
       }
       const updateInfo = {
         $push: {
-          simulations: simulation._id
+          simulations: {
+            simID: simulation._id,
+            simTitle: simulation.title
+          }
         },
         $set: {
           active_simulation: simulation._id

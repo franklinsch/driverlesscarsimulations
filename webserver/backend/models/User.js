@@ -24,8 +24,11 @@ const userSchema = mongoose.Schema({
   created_at: Date,
   active_simulation: String,
   simulations: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Simulation'
+    simID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Simulation'
+    },
+    simTitle: String
   }]
 });
 

@@ -18,6 +18,10 @@ const simulationSchema = mongoose.Schema({
       }
     }
   },
+  title: {
+    type: String,
+    default: '',
+  },
   createdAt: Date,
   timeslice: Number,
   hotspots: [Hotspot.schema],
