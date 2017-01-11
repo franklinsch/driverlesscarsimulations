@@ -25,6 +25,8 @@ export default class ControlPanel extends React.Component {
     selectedCity: CustomPropTypes.city,
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
+    benchmarkValues: React.PropTypes.object,
+    comparedBenchmarkValues: React.PropTypes.object
   }
 
   constructor(props) {
@@ -87,6 +89,43 @@ export default class ControlPanel extends React.Component {
 
   handleCityChange(city) {
     this.props.handlers.handleCityChange(city._id);
+  }
+
+  compareBenchmarks(ours, theirs) {
+    const ourNumFrameworks = Object.keys(ours).length;
+    const theirNumFrameworks = Object.keys(theirs).length;
+
+    if (ourNumFrameworks != 1 || theirNumFrameworks != 1) {
+      return
+    }
+
+    const ourData = ours[Object.keys(ours)];
+    const theirData = theirs[Object.keys(theirs)];
+
+    let comparison = {};
+
+    for (const benchmarkName in ourData) {
+      if (!ourData.hasOwnProperty(benchmarkName)) continue;
+      if (!theirData.hasOwnProperty(benchmarkName)) continue;
+
+      const ourValue = ourData[benchmarkName];
+      const theirValue = theirData[benchmarkName];
+
+      const rawDifference = (theirValue - ourValue + "").substring(0,4);
+
+      const rawPercentDifference = rawDifference / ourValue * 100;
+      let percentDifference = (rawPercentDifference + "").substring(0,4) + "%";
+
+      if (rawPercentDifference > 0) {
+        percentDifference = "+" + percentDifference;
+      } else if (rawPercentDifference == 0) {
+        percentDifference = "±" + percentDifference;
+      }
+  
+      comparison[benchmarkName] = percentDifference + " (" + rawDifference + ")";
+    }
+
+    return comparison;
   }
 
   componentDidMount() {
