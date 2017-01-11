@@ -100,39 +100,59 @@ export default class ControlPanel extends React.Component {
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     $('ul.tabs').tabs();
     $('.tooltipped').tooltip({delay: 50});
 
+    if (this.state.showSimulationPanel != prevState.showSimulationPanel) {
+      if (this.state.showSimulationPanel) {
+        $('#simulation-button').sideNav('show');
+      }
+      else {
+        $('#simulation-button').sideNav('hide');
+      }
+    }
+
+    if (this.state.showJourneyPanel != prevState.showJourneyPanel) {
+      if (this.state.showJourneyPanel) {
+        $('#journey-button').sideNav('show');
+      }
+      else {
+        $('#journey-button').sideNav('hide');
+      }
+    }
+
+    if (this.props.activeSimulationID != prevProps.activeSimulationID) {
+      if (this.props.activeSimulationID == "0") {
+        this.setState({
+            showSimulationPanel: false,
+            showJourneyPanel: false
+        })
+      }
+    }
   }
 
   _handleJourneyButton() {
-    if (this.state.showJourneyPanel) {
-      $('#journey-button').sideNav('hide');
-    }
-    else {
-      $('#simulation-button').sideNav('hide');
-      $('#journey-button').sideNav('show');
+    if (!this.state.showJourneyPanel) {
+      this.setState({
+          showSimulationPanel: false,
+      });
     }
 
     this.setState({
-      showJourneyPanel: !this.state.showJourneyPanel,
-      showSimulationPanel: this.state.showJourneyPanel
+      showJourneyPanel: !this.state.showJourneyPanel
     })
   }
 
   _handleSimulationSettingsButton() {
-    if (this.state.showSimulationPanel) {
-      $('#simulation-button').sideNav('hide');
-    }
-    else {
-      $('#journey-button').sideNav('hide');
-      $('#simulation-button').sideNav('show');
+    if (!this.state.showSimulationPanel) {
+      this.setState({
+          showJourneyPanel: false,
+      });
     }
 
     this.setState({
-      showSimulationPanel: !this.state.showSimulationPanel,
-      showJourneyPanel: this.state.showSimulationPanel
+      showSimulationPanel: !this.state.showSimulationPanel
     })
   }
 

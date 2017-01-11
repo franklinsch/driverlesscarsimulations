@@ -11,7 +11,7 @@ export default class SimulationList extends React.Component {
     const simulations = this.props.simulations || [];
     return (
       <div>
-        <a className="btn waves-effect waves-light dropdown-button" href="#dropdown" data-activates="dropdown">
+        <a className="btn waves-effect waves-light dropdown-button" data-activates="dropdown">
           My Simulations
         </a>
         <ul id="dropdown" className="dropdown-content">
