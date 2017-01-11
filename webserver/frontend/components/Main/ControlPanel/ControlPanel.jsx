@@ -78,7 +78,19 @@ export default class ControlPanel extends React.Component {
   _handleBenchmarkRequest(e) {
     e.preventDefault();
 
-    this.props.handlers.handleBenchmarkRequest();
+    this.setState({
+      benchmarkRequested: true
+    })
+
+    const simID = this.props.activeSimulationID;
+    this.props.handlers.handleBenchmarkRequest(simID);
+  }
+
+  _handleBenchmarkCompare(e) {
+    e.preventDefault()
+
+    const simID = this.state.comparedSimulationID;
+    this.props.handlers.handleBenchmarkRequest(simID);
   }
 
   handleJourneysSubmit(journeys) {
@@ -193,6 +205,74 @@ export default class ControlPanel extends React.Component {
     this.setState({
       showSimulationPanel: !this.state.showSimulationPanel
     })
+  }
+
+  _renderBenchmarkCompareButton() {
+    return (
+      <button
+        className = "btn waves-effect waves-light"
+        style     = {this.state.benchmarkRequested && {display: 'none'} || {}}
+        onClick   = {::this._handleBenchmarkCompare}
+      >
+        Compare
+      </button>
+    )
+  }
+
+  _renderBenchmarkCompare() {
+    const benchmarkValues = this.props.benchmarkValues;
+    const comparedBenchmarkValues = this.props.comparedBenchmarkValues;
+
+    if (!comparedBenchmarkValues) {
+      return (
+        <p> Comparison is not available </p>
+      )
+    }
+
+    const comparison = this.compareBenchmarks(benchmarkValues, comparedBenchmarkValues);
+
+    return (
+      <div>
+        <select 
+          value={this.state.comparedSimulationID} 
+          onChange={(e) => this.setState({comparedSimulationID: e.target.value})}
+        >
+          {
+            this.props.simulations.map((simulation) => {
+              return (
+                <option>{simulation._id}</option>
+              )
+            })
+          }
+        </select>
+        <table>
+          <thead>
+            <tr>
+              <th data-field="id">Framework Name</th>
+              <th data-field="id">Journey Coompletion Speed (km/h)</th>
+              <th data-field="name">Jounrney Completion Speed Variance</th>
+              <th data-field="price">Slowest Journey Completion Speed (km/h)</th>
+              <th data-field="price">Total Travel Time (hrs)</th>
+              <th data-field="price">Average Travel Time (min)</th>
+              <th data-field="price">Total Travel Distance (km)</th>
+              <th data-field="price">Average Speed (km/h)</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              {
+                Object.keys(comparison).map(function(key) {
+                  return (
+                    <td>{comparison[key]}</td>
+                  );
+                })
+              }
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    )
   }
 
   render() {
@@ -518,6 +598,8 @@ export default class ControlPanel extends React.Component {
                   }
                 </tbody>
               </table>
+              {this._renderBenchmarkCompareButton()}
+              {this._renderBenchmarkCompare()}
             </div>
             }
           </div>
