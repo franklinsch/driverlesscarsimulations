@@ -34,13 +34,15 @@ class SAVNConnectionAssistant:
     if (sleepTime > 0):
       self.synchronize(sleepTime)
 
-  def completeObjectJourney(self, timestamp, journeyStart, journeyID):
+  def completeObjectJourney(self, timestamp, journeyStart, journeyID,
+      journeyDistance):
     packet = {'type': 'simulation-journey-complete',
               'content':
                 {'simulationID': self.simulationID,
                  'timestamp': timestamp,
                  'journeyStart': journeyStart,
                  'journeyID': journeyID,
+                 'journeyDistance': journeyDistance,
                  'frameworkID': self.frameworkID}}
     asyncio.run_coroutine_threadsafe(self.messageQueue.put(packet),
       loop)

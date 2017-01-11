@@ -234,6 +234,7 @@ def scheduleNewRoute(car):
   car['position'] = car['baseRoute'][0]
   car['bearing'] = get_bearing(car['route'][0], car['route'][1])
   car['lockedNode'] = start
+  car['distanceTravelled'] = 0
   return True
 
 def isEqualNodes(node1, node2):
@@ -278,6 +279,7 @@ def moveCar(car):
     if(end[2]['timeLeft'] <= timeLeft):
       timeLeft -= end[2]['timeLeft']
       end[2]['timeLeft'] = 0
+      car['distanceTravelled'] += get_distance(start, end)
       del car['route'][0]
       if(len(car['route']) == 1):
         timeLeft = 0
@@ -296,7 +298,8 @@ def moveCar(car):
       timeLeft = 0
   if(car['route'] == None):
     car['position'] = end
-    savn.completeObjectJourney(timestamp, car['journeyStart'], car['journeyID'])
+    savn.completeObjectJourney(timestamp, car['journeyStart'], car['journeyID'],
+        car['distanceTravelled'])
     scheduleNewRoute(car)
   else:
     timeLeft = end[2]['timeLeft']

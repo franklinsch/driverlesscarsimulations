@@ -178,6 +178,13 @@ export default class ControlPanel extends React.Component {
       handleJourneyMouseOut  : this.props.handlers.handleJourneyListItemMouseOut
     };
 
+    const names = {};
+    if (benchmarkValues) {
+      this.props.frameworks.forEach(function(framework) {
+        names[framework._id] = framework.name || 'Framework';
+      });
+    }
+
     return (
       <div>
         <nav className="bottom-nav">
@@ -267,145 +274,198 @@ export default class ControlPanel extends React.Component {
         <a id="simulation-button" href="#" data-activates="simulation-slide-out" hidden><i className="material-icons">menu</i></a>
 
         <ul id ="journey-slide-out" className="side-nav">
-            <div id="journeys" className="col s12">
-              <div className="row">
-                <h5>Journeys and Object Types</h5>
-              </div>
-              <JourneyList
-                pendingJourneys     = {pendingJourneys}
-                simulationJourneys  = {simulationJourneys}
-                handlers            = {journeyListHandlers}
+          <div id="journeys" className="col s12">
+            <div className="row">
+              <h5>Journeys and Object Types</h5>
+            </div>
+            <JourneyList
+              pendingJourneys     = {pendingJourneys}
+              simulationJourneys  = {simulationJourneys}
+              handlers            = {journeyListHandlers}
+            />
+            <JourneySettings
+              bounds              = {bounds}
+              simulationJourneys  = {simulationJourneys}
+              pendingJourneys     = {pendingJourneys}
+              objectTypes         = {this.props.objectTypes}
+              objectKindInfo      = {this.props.objectKindInfo}
+              handlers            = {journeySettingsHandlers}
+              activeSimulationID  = {simID}
+            />
+            <button
+              id        = "update-button"
+              className = "btn waves-effect waves-light"
+              onClick   = {::this._handleSimulationUpdate}
+              style     = {!hasSimulationStarted && {display: 'none'} || {}}
+            >
+              Update Simulation
+            </button>
+            <div className="row">
+              <input
+                type     = "checkbox"
+                id       = "real-data"
+                disabled = {hasSimulationStarted}
+                onChange = {::this._handleRealDataCheckboxChange}
               />
-              <JourneySettings
-                bounds              = {bounds}
-                simulationJourneys  = {simulationJourneys}
-                pendingJourneys     = {pendingJourneys}
-                objectTypes         = {this.props.objectTypes}
-                objectKindInfo      = {this.props.objectKindInfo}
-                handlers            = {journeySettingsHandlers}
-                activeSimulationID  = {simID}
-              />
-              <button
-                id        = "update-button"
-                className = "btn waves-effect waves-light"
-                onClick   = {::this._handleSimulationUpdate}
-                style     = {!hasSimulationStarted && {display: 'none'} || {}}
-              >
-                Update Simulation
-              </button>
-              <div className="row">
+              <label htmlFor="real-data"> Use real world data </label>
+              {
+                usingRealData &&
+                <form>
+                  <div className="input-field">
+                    <input
+                      type="number"
+                      placeholder="Number of real world journeys"
+                      disabled={hasSimulationStarted}
+                      onChange={::this._handleRealWorldJourneyNumChange}
+                    />
+                  </div>
+                  <div className="file-field input-field">
+                    <div className="btn waves-effect waves-light">
+                      <span>Upload Hotspots</span>
+                      <input type="file" onChange={::this._handleFileUpload}/>
+                    </div>
+                    <div className="file-path-wrapper">
+                      <input className="file-path validate" type="text"/>
+                    </div>
+                  </div>
+                </form>
+              }
+            </div>
+          </div>
+        </ul>
+        <ul id ="simulation-slide-out" className="side-nav">
+          <div id="run" className="col s12">
+            <div className="row">
+              <h5>Simulation Settings</h5>
+            </div>
+            <div className="row">
                 <input
                   type     = "checkbox"
-                  id       = "real-data"
-                  disabled = {hasSimulationStarted}
-                  onChange = {::this._handleRealDataCheckboxChange}
+                  id       = "smooth-motion"
+                  onChange = {::this.props.handlers.handleToggleSmoothMotion}
                 />
-                <label htmlFor="real-data"> Use real world data </label>
-                {
-                  usingRealData &&
-                  <form>
-                    <div className="input-field">
-                      <input
-                        type="number"
-                        placeholder="Number of real world journeys"
-                        disabled={hasSimulationStarted}
-                        onChange={::this._handleRealWorldJourneyNumChange}
-                      />
-                    </div>
-                    <div className="file-field input-field">
-                      <div className="btn waves-effect waves-light">
-                        <span>Upload Hotspots</span>
-                        <input type="file" onChange={::this._handleFileUpload}/>
-                      </div>
-                      <div className="file-path-wrapper">
-                        <input className="file-path validate" type="text"/>
-                      </div>
-                    </div>
-                  </form>
-                }
-              </div>
+                <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
             </div>
-          </ul>
-          <ul id ="simulation-slide-out" className="side-nav">
-            <div id="run" className="col s12">
-              <div className="row">
-                <h5>Simulation Settings</h5>
-              </div>
-              <div className="row">
-                  <input
-                    type     = "checkbox"
-                    id       = "smooth-motion"
-                    onChange = {::this.props.handlers.handleToggleSmoothMotion}
-                  />
-                  <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
-              </div>
-              {
-                simID !== '0' ?
-                  <button
-                    className = "btn waves-effect waves-light"
-                    style     = {!simID && {display: 'none'} || {}}
-                    onClick   = {(e) => this.props.handlers.handleSimulationActivate(simID)}
-                  >
-                    Activate simulation
-                  </button>
-                  :
-                  ''
-              }
+            {
+              simID !== '0' ?
+                <button
+                  className = "btn waves-effect waves-light"
+                  style     = {!simID && {display: 'none'} || {}}
+                  onClick   = {(e) => this.props.handlers.handleSimulationActivate(simID)}
+                >
+                  Activate simulation
+                </button>
+                :
+                ''
+            }
 
-              <div className="row">
-                <p><strong>Simulation Speed:</strong></p>
-                <SpeedSetting
-                  currentSpeed = {currentSpeed}
-                  hidden       = {!hasSimulationStarted}
-                  handlers     = {speedSettingHandlers}
-                />
-              </div>
-              <button
-                className = "btn  waves-effect waves-light"
-                disabled  = {!allowSimulationStart}
-                onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
-              >
-                { !allowSimulationStart &&
-                <span>Simulation Ended</span> || hasSimulationStarted  &&
-                <span>Disconnect Frameworks</span> || <span>Start simulation</span>
-                }
-              </button>
-              <button
-                className = "btn waves-effect waves-light"
-                style     = {!hasSimulationStarted && allowSimulationStart && {display: 'none'} || {}}
-                onClick   = {::this._handleBenchmarkRequest}
-              >
-                Request benchmark
-              </button>
-              <ul className="collection">
-                {
-                  this.props.frameworks.map((framework, index) => {
-                    const benchmarkValue = benchmarkValues && benchmarkValues[framework._id];
-                    return (
-                      <li
-                        className="collection-item"
-                        key={index}
-                      >
-                        {index + ". " + (framework.name || "Framework")}
-                        <button
-                          className = "btn waves-effect waves-light"
-                          style     = {this.props.frameworks.length == 1 && {display: 'none'} || {}}
-                          onClick   = {(e) => this.props.handlers.handleRequestFrameworkDisconnect(framework.connectionIndex)}
-                        >
-                          Disconnect
-                        </button>
-                        { benchmarkValues &&
-                          (benchmarkValue ?
-                            <div> {benchmarkValue} km/h is the <u>ultimate</u> metric </div> :
-                            "No metric available as of yet")
-                        }
-                      </li>
-                    );
-                  })
-                }
-              </ul>
+            <div className="row">
+              <p><strong>Simulation Speed:</strong></p>
+              <SpeedSetting
+                currentSpeed = {currentSpeed}
+                hidden       = {!hasSimulationStarted}
+                handlers     = {speedSettingHandlers}
+              />
             </div>
-          </ul>
+            <button
+              className = "btn  waves-effect waves-light"
+              disabled  = {!allowSimulationStart}
+              onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+            >
+              { !allowSimulationStart &&
+              <span>Simulation Ended</span> || hasSimulationStarted  &&
+              <span>Disconnect Frameworks</span> || <span>Start simulation</span>
+              }
+            </button>
+            <button
+              className = "btn waves-effect waves-light"
+              style     = {!hasSimulationStarted && allowSimulationStart && {display: 'none'} || {}}
+              onClick   = {::this._handleBenchmarkRequest}
+            >
+              Request Benchmark
+            </button>
+            <a
+              className = "btn waves-effect waves-light"
+              href      = "#benchmarks"
+              style     = {!benchmarkValues && {display: 'none'} || {}}
+            >
+              More Metrics
+            </a>
+            <ul className="collection">
+              {
+                this.props.frameworks.map((framework, index) => {
+                  const benchmarkValue = benchmarkValues && benchmarkValues[framework._id];
+                  return (
+                    <li
+                      className="collection-item"
+                      key={index}
+                    >
+                      {index + ". " + (framework.name || "Framework")}
+                      <button
+                        className = "btn waves-effect waves-light"
+                        style     = {this.props.frameworks.length == 1 && {display: 'none'} || {}}
+                        onClick   = {(e) => this.props.handlers.handleRequestFrameworkDisconnect(framework.connectionIndex)}
+                      >
+                        Disconnect
+                      </button>
+                      { benchmarkValues &&
+                        (benchmarkValue ?
+                          <div> {benchmarkValue.completionSpeed} km/h is the journey completion speed </div> :
+                          "No metric available as of yet")
+                      }
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </div>
+        </ul>
+        <div id="benchmarks" className="modal bottom-sheet black-text">
+          <div className="modal-content">
+            <h4>Benchmarks</h4>
+            { benchmarkValues &&
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th data-field="id">Framework Name</th>
+                    <th data-field="id">Journey Coompletion Speed (km/h)</th>
+                    <th data-field="name">Jounrney Completion Speed Variance</th>
+                    <th data-field="price">Slowest Journey Completion Speed (km/h)</th>
+                    <th data-field="price">Total Travel Time (hrs)</th>
+                    <th data-field="price">Average Travel Time (min)</th>
+                    <th data-field="price">Total Travel Distance (km)</th>
+                    <th data-field="price">Average Speed (km/h)</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {
+                    Object.keys(benchmarkValues).map(function(key) {
+                      const benchmarkValue = benchmarkValues[key];
+                      return (
+                        <tr key={key}>
+                          <td>{names[key]}</td>
+                          <td>{benchmarkValue.completionSpeed}</td>
+                          <td>{benchmarkValue.completionSpeedVariance}</td>
+                          <td>{benchmarkValue.slowestJourney}</td>
+                          <td>{benchmarkValue.totalTime}</td>
+                          <td>{benchmarkValue.averageTime}</td>
+                          <td>{benchmarkValue.totalDistance}</td>
+                          <td>{benchmarkValue.averageSpeed}</td>
+                        </tr>
+                      );
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+            }
+          </div>
+          <div className="modal-footer">
+            <a href="#!" className=" modal-action modal-close waves-effect waves-green btn-flat">close</a>
+          </div>
+        </div>
       </div>
     )
   }
