@@ -86,11 +86,12 @@ export default class ControlPanel extends React.Component {
     this.props.handlers.handleBenchmarkRequest(simID);
   }
 
-  _handleBenchmarkCompare(e) {
+  _handleEnableBenchmarkCompare(e) {
     e.preventDefault()
 
-    const simID = this.state.comparedSimulationID;
-    this.props.handlers.handleBenchmarkRequest(simID);
+    this.setState({
+      enableComparison: true
+    })
   }
 
   handleJourneysSubmit(journeys) {
@@ -104,7 +105,12 @@ export default class ControlPanel extends React.Component {
   }
 
   compareBenchmarks(ours, theirs) {
+    if (!ours || !theirs || !Object.keys(ours) || !Object.keys(theirs)) {
+      return
+    }
+
     const ourNumFrameworks = Object.keys(ours).length;
+    console.log(Object.keys(theirs));
     const theirNumFrameworks = Object.keys(theirs).length;
 
     if (ourNumFrameworks != 1 || theirNumFrameworks != 1) {
@@ -207,12 +213,22 @@ export default class ControlPanel extends React.Component {
     })
   }
 
+  _handleComparingSimulationChange(e) {
+    e.preventDefault();
+
+    this.setState({
+      comparedSimulationID: e.target.value
+    })
+
+    this.props.handlers.handleBenchmarkRequest(e.target.value);
+  }
+
   _renderBenchmarkCompareButton() {
     return (
       <button
         className = "btn waves-effect waves-light"
-        style     = {this.state.benchmarkRequested && {display: 'none'} || {}}
-        onClick   = {::this._handleBenchmarkCompare}
+        style     = {!this.state.benchmarkRequested && {display: 'none'} || {}}
+        onClick   = {::this._handleEnableBenchmarkCompare}
       >
         Compare
       </button>
@@ -223,24 +239,22 @@ export default class ControlPanel extends React.Component {
     const benchmarkValues = this.props.benchmarkValues;
     const comparedBenchmarkValues = this.props.comparedBenchmarkValues;
 
-    if (!comparedBenchmarkValues) {
-      return (
-        <p> Comparison is not available </p>
-      )
-    }
-
-    const comparison = this.compareBenchmarks(benchmarkValues, comparedBenchmarkValues);
+    let comparison = this.compareBenchmarks(benchmarkValues, comparedBenchmarkValues);
 
     return (
       <div>
         <select 
+          className="browser-default"
           value={this.state.comparedSimulationID} 
-          onChange={(e) => this.setState({comparedSimulationID: e.target.value})}
+          onChange={::this._handleComparingSimulationChange}
         >
           {
-            this.props.simulations.map((simulation) => {
+            this.props.simulations.map((simulation, index) => {
               return (
-                <option>{simulation._id}</option>
+                <option
+                  value={simulation}
+                  key={index}
+                >{simulation}</option>
               )
             })
           }
@@ -262,6 +276,7 @@ export default class ControlPanel extends React.Component {
           <tbody>
             <tr>
               {
+                comparison && 
                 Object.keys(comparison).map(function(key) {
                   return (
                     <td>{comparison[key]}</td>

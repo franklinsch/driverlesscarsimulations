@@ -268,6 +268,10 @@ export default class Main extends React.Component {
       const benchmarkValues = messageData.content.value;
       const simID = this.state.simulationInfo.id;
 
+      console.log("received");
+      console.log(simID);
+      console.log(benchmarkValues);
+
       if (messageData.content.simulationID === simID) {
         this.setState({
           benchmarkValues: benchmarkValues
@@ -498,10 +502,9 @@ export default class Main extends React.Component {
       })
   }
 
-  handleBenchmarkRequest() {
+  handleBenchmarkRequest(simID) {
     const socket = this.state.socket;
 
-    const simID = this.state.simulationInfo.id;
     const hasSimulationStarted = simID !== "0";
 
     if (!hasSimulationStarted) {
@@ -513,6 +516,8 @@ export default class Main extends React.Component {
     const content = {
       simulationID: simID,
     }
+
+    console.log("Requested benchmark " + simID)
 
     UtilFunctions.sendSocketMessage(socket, type, content);
   }
