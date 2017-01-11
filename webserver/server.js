@@ -29,12 +29,119 @@ const Journey = require('./backend/models/Journey');
 const Simulation = require('./backend/models/Simulation');
 const City = require('./backend/models/City');
 const User = require('./backend/models/User');
+const Kind = require('./backend/models/Kind');
+const Type = require('./backend/models/Type');
 
 Simulation.update({}, { $set: {frontends: [], frameworks: []}}, {multi: true}, function(err, numAffected) {
   if (err) {
     return;
   }
   console.log("Initial check successful");
+});
+
+Kind.remove({}, function(err) {});
+Type.remove({}, function(err) {});
+
+const Vehicle = new Kind({
+  name: 'Vehicle',
+  library: true,
+  json_schema: {
+    type: 'object',
+    properties: {
+      'Average Speed': {
+        'type': 'number'
+      },
+      'Top Speed': {
+        'type': 'number'
+      },
+      'Weight': {
+        'type': 'number'
+      },
+      'Length': {
+        'type': 'number'
+      }
+    }
+  }
+});
+
+Vehicle.save(function(err, obj) {
+  if (err) {
+    console.log('Fail to save the Vehicle kind');
+    return;
+  }
+  console.log('Succesfully saved the Vehicle kind');
+});
+
+const Creature = new Kind({
+  name: 'Creature',
+  library: true,
+  json_schema: {
+    type: 'object',
+    properties: {
+      'Type': {
+        'enum': [
+          'unicorn',
+          'dog'
+        ]
+      }
+    }
+  }
+});
+
+Creature.save(function(err, obj) {
+  if (err) {
+    console.log('Fail to save the Creature kind.');
+    return;
+  }
+  console.log('Succesfully saved the Creature kind');
+});
+
+const RoadHazard = new Kind({
+  name: 'Road Hazard',
+  library: true,
+  json_schema: {
+    type: 'object',
+    properties: {
+      'Type': {
+        'enum': [
+          'Shattered glass',
+          'Traffic cone',
+          'Ghost driver'
+        ]
+      },
+      'Slowdown factor': {
+        type: 'number'
+      }
+    }
+  }
+});
+
+RoadHazard.save(function(err, obj) {
+  if (err) {
+    console.log('Failed to save the Road Hazard kind.');
+    return;
+  }
+  console.log('Successfully saved the Road Hazard kind.');
+});
+
+const Car = new Type({
+  name: 'Car',
+  library: true,
+  kind: Vehicle._id,
+  properties: {
+    'Average Speed': 50,
+    'Top Speed': 120,
+    'Length': 450,
+    'Weight': 1355
+  }
+});
+
+Car.save(function(err, obj) {
+  if (err) {
+    console.log('Failed to save the Car type.');
+    return;
+  }
+  console.log('Successfully saved the Car type.');
 });
 
 function getDistanceLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -242,16 +349,7 @@ frontendSocketServer.on('request', function(request) {
 
     connection.send(JSON.stringify({
       type: "default-object-types",
-      content: [{
-        name: "Car",
-        kindName: "vehicle",
-        parameters: {
-          "Average Speed": "50",
-          "Top Speed": "120",
-          "Length": "450",
-          "Weight": "1355"
-        }
-      }]
+      content: Car.properties
     }));
   }
 
@@ -261,49 +359,9 @@ frontendSocketServer.on('request', function(request) {
     connection.send(JSON.stringify({
       type: "object-kind-info",
       content: [{
-        name: "Vehicle",
-        parameters: [
-        {
-          name: "Average Speed",
-          kind: "text"
-        },
-        {
-          name: "Top Speed",
-          kind: "text"
-        },
-        {
-          name: "Weight",
-          kind: "text"
-        },
-        {
-          name: "Length",
-          kind: "text"
-        }
-        ]
-      },
-      {
-        name: "Creature",
-        parameters: [
-        {
-          name: "Type",
-          kind: "predefined",
-          allowedValues: ["unicorn", "dog"]
-        }
-        ]
-      },
-      {
-        name: "Road Hazard",
-        parameters: [
-        {
-          name: "Type",
-          kind: "predefined",
-          allowedValues: ["Shattered glass", "Traffic cone", "Ghost driver"]
-        },
-        {
-          name: "Slowdown factor",
-          kind: "text"
-        }
-        ]
+        'Vehicle': Vehicle.json_schema,
+        'Creature': Creature.json_schema,
+        'Road Hazard': RoadHazard.json_schema
       }]
     }));
   }

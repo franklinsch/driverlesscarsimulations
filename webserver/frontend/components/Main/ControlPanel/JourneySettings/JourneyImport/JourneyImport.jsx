@@ -49,7 +49,7 @@ export default class JourneyImport extends React.Component {
       return
     }
 
-    const reader = new FileReader(); 
+    const reader = new FileReader();
 
     reader.onloadend = () => {
       const journeys = this._toJourneys(reader.result);
@@ -60,7 +60,7 @@ export default class JourneyImport extends React.Component {
   }
 
   _toggleView(e) {
-    e.preventDefault(); 
+    e.preventDefault();
 
     this.setState({
       showView: !this.state.showView
@@ -88,7 +88,7 @@ export default class JourneyImport extends React.Component {
     return (
       <div id="journeys-import">
         <button className="btn waves-effect waves-light" onClick={::this._toggleView}>Import/Export Journeys</button>
-        { this.state.showView && 
+        { this.state.showView &&
           <div>
             <form>
               <div className="file-field input-field">

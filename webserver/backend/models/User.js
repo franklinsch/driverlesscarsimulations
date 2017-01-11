@@ -8,7 +8,6 @@ const HASH_KEY_LENGTH = 64;
 const DIGEST = 'sha1';
 
 
-
 const userSchema = mongoose.Schema({
   username: {
     type: String,
@@ -26,7 +25,7 @@ const userSchema = mongoose.Schema({
   simulations: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Simulation'
-  }]
+  }],
 });
 
 userSchema.methods.setAPIAccess = function(id, key) {
