@@ -145,7 +145,7 @@ export default class ControlPanel extends React.Component {
     const bounds = selectedCity ? selectedCity.bounds : null;
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
-    const benchmarkValue = this.props.benchmarkValue;
+    const benchmarkValues = this.props.benchmarkValues;
     const currentSpeed = this.props.currentSpeed;
     const allowSimulationStart = this.state.allowSimulationStart;
     const usingRealData = this.state.useRealData;
@@ -203,9 +203,9 @@ export default class ControlPanel extends React.Component {
                             onClick   = {(e) => this._handleJourneyButton(e)}
                           >
                             <span>Journeys</span>
-                          </a>  
+                          </a>
                         </li>
-                        <li>          
+                        <li>
                           <a
                               className = "btn  waves-effect waves-light"
                               onClick   = {(e) => this._handleSimulationSettingsButton(e)}
@@ -226,7 +226,7 @@ export default class ControlPanel extends React.Component {
                   </div>
                 :
                   <div className="row">
-                    <div className="col s4">                    
+                    <div className="col s4">
                       <JoinSimulationForm
                         handlers = {joinSimulationFormHandlers}
                       />
@@ -246,9 +246,9 @@ export default class ControlPanel extends React.Component {
                             onClick   = {(e) => this._handleJourneyButton(e)}
                           >
                             <span>Journeys</span>
-                          </a>   
+                          </a>
                         </li>
-                        <li>         
+                        <li>
                           <a
                               className = "btn  waves-effect waves-light"
                               onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
@@ -265,7 +265,7 @@ export default class ControlPanel extends React.Component {
 
         <a id="journey-button" href="#" data-activates="journey-slide-out" hidden><i className="material-icons">menu</i></a>
         <a id="simulation-button" href="#" data-activates="simulation-slide-out" hidden><i className="material-icons">menu</i></a>
-                    
+
         <ul id ="journey-slide-out" className="side-nav">
             <div id="journeys" className="col s12">
               <div className="row">
@@ -284,12 +284,12 @@ export default class ControlPanel extends React.Component {
                 objectKindInfo      = {this.props.objectKindInfo}
                 handlers            = {journeySettingsHandlers}
                 activeSimulationID  = {simID}
-              />           
+              />
               <button
                 id        = "update-button"
                 className = "btn waves-effect waves-light"
-                hidden    = {!hasSimulationStarted}
                 onClick   = {::this._handleSimulationUpdate}
+                style     = {!hasSimulationStarted && {display: 'none'} || {}}
               >
                 Update Simulation
               </button>
@@ -339,22 +339,11 @@ export default class ControlPanel extends React.Component {
                   />
                   <label htmlFor="smooth-motion"> Toggle predictive motion smoothening</label>
               </div>
-              <button
-                className = "btn  waves-effect waves-light"
-                disabled  = {!allowSimulationStart}
-                onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
-              >
-                { !allowSimulationStart &&
-                <span>Simulation Ended</span> || hasSimulationStarted  &&
-                <span>Disconnect Frameworks</span> || <span>Start simulation</span>
-                }
-              </button>
-
               {
                 simID !== '0' ?
                   <button
                     className = "btn waves-effect waves-light"
-                    hidden    = {!simID}
+                    style     = {!simID && {display: 'none'} || {}}
                     onClick   = {(e) => this.props.handlers.handleSimulationActivate(simID)}
                   >
                     Activate simulation
@@ -367,24 +356,31 @@ export default class ControlPanel extends React.Component {
                 <p><strong>Simulation Speed:</strong></p>
                 <SpeedSetting
                   currentSpeed = {currentSpeed}
-                  hidden   = {!hasSimulationStarted}
-                  handlers = {speedSettingHandlers}
+                  hidden       = {!hasSimulationStarted}
+                  handlers     = {speedSettingHandlers}
                 />
               </div>
               <button
+                className = "btn  waves-effect waves-light"
+                disabled  = {!allowSimulationStart}
+                onClick   = {(e) => this._handleSimulationButton(e, hasSimulationStarted)}
+              >
+                { !allowSimulationStart &&
+                <span>Simulation Ended</span> || hasSimulationStarted  &&
+                <span>Disconnect Frameworks</span> || <span>Start simulation</span>
+                }
+              </button>
+              <button
                 className = "btn waves-effect waves-light"
-                hidden    = {!hasSimulationStarted && allowSimulationStart}
+                style     = {!hasSimulationStarted && allowSimulationStart && {display: 'none'} || {}}
                 onClick   = {::this._handleBenchmarkRequest}
               >
                 Request benchmark
               </button>
-              <p hidden={benchmarkValue == undefined}>
-                {benchmarkValue} is the average speed to destination in km/s
-              </p>
               <ul className="collection">
                 {
                   this.props.frameworks.map((framework, index) => {
-                    console.log(index);
+                    const benchmarkValue = benchmarkValues && benchmarkValues[framework._id];
                     return (
                       <li
                         className="collection-item"
@@ -393,13 +389,18 @@ export default class ControlPanel extends React.Component {
                         {index + ". " + (framework.name || "Framework")}
                         <button
                           className = "btn waves-effect waves-light"
-                          hidden    = {this.props.frameworks.length == 1}
+                          style     = {this.props.frameworks.length == 1 && {display: 'none'} || {}}
                           onClick   = {(e) => this.props.handlers.handleRequestFrameworkDisconnect(framework.connectionIndex)}
                         >
                           Disconnect
                         </button>
+                        { benchmarkValues &&
+                          (benchmarkValue ?
+                            <div> {benchmarkValue} km/h is the <u>ultimate</u> metric </div> :
+                            "No metric available as of yet")
+                        }
                       </li>
-                    )
+                    );
                   })
                 }
               </ul>

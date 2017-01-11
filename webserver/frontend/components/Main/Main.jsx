@@ -265,9 +265,9 @@ export default class Main extends React.Component {
         objectKindInfo: messageData.content
       })
     } else if (messageData.type === "simulation-benchmark") {
-      const benchmarkValue = messageData.content.value;
+      const benchmarkValues = messageData.content.value;
       this.setState({
-        benchmarkValue: benchmarkValue
+        benchmarkValues: benchmarkValues
       });
     } else if (messageData.type === "simulation-frameworks") {
       this.setState({
@@ -675,7 +675,7 @@ export default class Main extends React.Component {
             </div>
           </div>
         </nav>
-        
+
         <div id="simulation-map">
           <SimulationMap
             simulationID               = {simulationID}
@@ -688,7 +688,7 @@ export default class Main extends React.Component {
           />
         </div>
 
-        
+
         <ControlPanel
           enabled             = {!simulationRunning}
           availableCities     = {availableCities}
@@ -704,10 +704,10 @@ export default class Main extends React.Component {
           frameworks          = {this.state.frameworks}
           objectTypes         = {this.state.objectTypes}
           objectKindInfo      = {this.state.objectKindInfo}
-          benchmarkValue      = {this.state.benchmarkValue}
+          benchmarkValues     = {this.state.benchmarkValues}
           currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
           handlers            = {controlPanelHandlers}
-        />         
+        />
       </div>
     )
   }
