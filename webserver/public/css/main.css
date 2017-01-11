@@ -6361,12 +6361,32 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 #simulation-map {
   background-color: #f8f5f2;
-  height: 92.5vh;
+  height: 85vh;
   width: 100vw;
   z-index: 1000; }
 
 #slide-out {
   color: #ededed; }
+
+.brand-logo {
+  margin-left: 20px; }
+
+.side-nav {
+  margin-top: 7.5vh;
+  margin-bottom: 7.5vh;
+  z-index: 1001;
+  padding: 10px 10px 7.5vh 10px !important;
+  color: white; }
+
+nav input {
+  margin: 0 !important;
+  width: 95% !important;
+  height: 2rem !important; }
+
+nav ul button.btn, nav ul button.btn-large {
+  margin-top: -2px;
+  margin-left: 15px;
+  margin-right: 15px; }
 
 .side-nav .btn, .side-nav .btn-large {
   width: 100%;
@@ -6381,5 +6401,19 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 #search-results {
   position: fixed;
   z-index: 10; }
+
+#scrub-timer {
+  text-align: right; }
+  #scrub-timer .scrub-time {
+    display: inline; }
+  #scrub-timer .range-field {
+    margin-top: 9px; }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  z-index: 1002; }
+  .bottom-nav .dropdown-cities-div {
+    display: inline-block; }
 
 /*# sourceMappingURL=main.css.map */

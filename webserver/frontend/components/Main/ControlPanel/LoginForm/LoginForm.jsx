@@ -1,5 +1,6 @@
 import React from 'react';
 import cookie from 'react-cookie';
+import SimulationList from "../SimulationList/SimulationList.jsx";
 import UtilFunctions from '../../../Utils/UtilFunctions.jsx';
 import 'whatwg-fetch';
 
@@ -8,7 +9,8 @@ export default class LoginButton extends React.Component {
   static propTypes = {
     token: React.PropTypes.string,
     activeUser: React.PropTypes.string,
-    handlers: React.PropTypes.object
+    handlers: React.PropTypes.object,
+    simulations: React.PropTypes.array
   }
 
   constructor(props) {
@@ -18,6 +20,11 @@ export default class LoginButton extends React.Component {
       password: '',
       token: this.props.token
     };
+  }
+
+  _handleRequestAPIAccess(e) {
+    e.preventDefault();
+    this.props.handlers.handleRequestAPIAccess();
   }
 
   _handleUserChange(e) {
@@ -94,25 +101,44 @@ export default class LoginButton extends React.Component {
   render() {
     return (
       <div>
-
-        {
-          this.state.token &&
-          <h5>
-            Hello {this.props.activeUser}!
-          </h5>
-        }
-        {
-          this.state.token?
-            <button
-              type="submit"
-              value= 'logout'
-              onClick={::this._handleFormSubmit}
-              className="btn waves-effect waves-light">
-              Log Out
-            </button>
+          {   
+            this.state.token ? 
+            <form>
+              <ul id="nav-mobile" className="right hide-on-med-and-down">
+                <li>
+                    Hello {this.props.activeUser}!
+                  </li>
+                  <li>
+                    <SimulationList
+                      simulations = {this.props.simulations}
+                    />
+                  </li>
+                  <li>
+                    <div>
+                    <a
+                      onClick={::this._handleRequestAPIAccess}
+                      className="btn waves-effect waves-light">
+                      API Keys
+                    </a>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <button
+                        type="submit"
+                        value= 'logout'
+                        onClick={::this._handleFormSubmit}
+                        className="btn waves-effect waves-light">
+                        Log Out
+                      </button>
+                   </div>
+                  </li>
+              </ul>
+            </form>
             :
-          <form className="col s12">
-              <div className="input-field">
+            <form>
+             <ul id="nav-mobile" className="right hide-on-med-and-down">
+              <li>
                 <input
                   type="text"
                   value={this.state.username}
@@ -120,8 +146,8 @@ export default class LoginButton extends React.Component {
                   className="validate"
                   placeholder="Username"
                 />
-              </div>
-              <div className="input-field">
+              </li>
+              <li>
                 <input
                   type="password"
                   value={this.state.password}
@@ -129,25 +155,29 @@ export default class LoginButton extends React.Component {
                   className="validate"
                   placeholder="Password"
                 />
-            </div>
-            <button
-              type="submit"
-              value= 'login'
-              onClick={::this._handleFormSubmit}
-              className="btn waves-effect waves-light">
-              Log In
-            </button>
-            <button
-              type="submit"
-              value="register"
-              onClick={::this._handleFormSubmit}
-                className="btn waves-effect waves-light">
-              Register
-            </button> 
+              </li>
+              <li>
+                <button
+                  type="submit"
+                  value= 'login'
+                  onClick={::this._handleFormSubmit}
+                  className="btn waves-effect waves-light">
+                  Log In
+                </button>
+              </li>
+              <li>
+                <button
+                  type="submit"
+                  value="register"
+                  onClick={::this._handleFormSubmit}
+                    className="btn waves-effect waves-light">
+                  Register
+                </button> 
+              </li>
+          </ul>
           </form>
         }
       </div>
-
     )
   }
 }

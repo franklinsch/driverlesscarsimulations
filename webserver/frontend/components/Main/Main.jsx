@@ -1,8 +1,9 @@
 import React from 'react';
+import LoginForm from "./ControlPanel/LoginForm/LoginForm.jsx";
 import SimulationMap from './SimulationMap/SimulationMap.jsx';
 import UtilFunctions from '../Utils/UtilFunctions.jsx';
 import LandmarkSearch from "./LandmarkSearch/LandmarkSearch.jsx";
-import Menu from './Menu/Menu.jsx';
+import ControlPanel from './ControlPanel/ControlPanel.jsx';
 import cookie from 'react-cookie';
 import crossroads from 'crossroads';
 import hasher from 'hasher';
@@ -27,7 +28,6 @@ export default class Main extends React.Component {
 
     const initialToken = cookie.load('token') || '';
     this.state = {
-      showMenu: false,
       token: initialToken,
       userID: '',
       activeUser: '',
@@ -86,6 +86,23 @@ export default class Main extends React.Component {
   }
 
   _registerRoutes() {
+    crossroads.addRoute('/', () => {
+      this.setState({
+        selectedJourneyID: "0",
+        simulationInfo: {
+          id: "0",
+          cityID: this.state.simulationInfo.cityID
+        },
+        simulationState: {
+          timestamp: 0,
+          latestTimestamp: 0,
+          objects: []
+        },
+        pendingJourneys: [],
+        simulationJourneys: []
+      });
+    });
+
     crossroads.addRoute('/simulations/{simID}', (simID) => {
       this.setState({
         selectedJourneyID: "0",
@@ -140,27 +157,16 @@ export default class Main extends React.Component {
     }
   }
 
-  handleMenuButtonClick() {
-
-    if (this.state.showMenu) {
-      $('.nav-wrapper').animate({paddingLeft: '0px'}, 'fast');
-      $('#dummy-button').sideNav('hide')
-    }
-    else {
-      $('.nav-wrapper').animate({paddingLeft: '300px'}, 'fast');
-      $('#dummy-button').sideNav('show')
-    }
-    this.setState({
-      showMenu: !this.state.showMenu
-    })
-  }
-
   handlePendingJourneyAdd(pendingJourney) {
     const pendingJourneys = this.state.pendingJourneys || [];
     this.setState({
       pendingJourneys: pendingJourneys.concat([pendingJourney])
     })
     Materialize.toast($('<span>New journey created</span>'), 1000);
+  }
+
+  _updateURLBySimulationID(simulationID) {
+    hasher.setHash('simulations/'+simulationID);
   }
 
   handleMessageReceive(message) {
@@ -176,6 +182,8 @@ export default class Main extends React.Component {
         simulationInfo: messageData.content.simulationInfo,
         simulationJourneys: messageData.content.journeys
       });
+
+      this._updateURLBySimulationID(this.state.simulationInfo.id);
     } else if (messageData.type === "simulation-journeys-update") {
       this.setState({
         simulationJourneys: messageData.content.journeys
@@ -246,6 +254,8 @@ export default class Main extends React.Component {
         simulationJourneys: journeys,
         selectedCityID: selectedCityID
       });
+
+      this._updateURLBySimulationID(messageData.content.simID);
     } else if (messageData.type === "default-object-types") {
       this.setState({
         objectTypes: messageData.content
@@ -255,9 +265,9 @@ export default class Main extends React.Component {
         objectKindInfo: messageData.content
       })
     } else if (messageData.type === "simulation-benchmark") {
-      const benchmarkValue = messageData.content.value;
+      const benchmarkValues = messageData.content.value;
       this.setState({
-        benchmarkValue: benchmarkValue
+        benchmarkValues: benchmarkValues
       });
     } else if (messageData.type === "simulation-frameworks") {
       this.setState({
@@ -616,12 +626,9 @@ export default class Main extends React.Component {
 
     const simulationRunning = simulationID != undefined && simulationID != 0;
 
-
-    const menuHandlers = {
+    const controlPanelHandlers = {
       handleJoinSimulation             : ::this.handleJoinSimulation,
       handleCityChange                 : ::this.handleCityChange,
-      handleTokenChange                : ::this.handleTokenChange,
-      handleRequestAPIAccess           : ::this.handleRequestAPIAccess,
       handleBenchmarkRequest           : ::this.handleBenchmarkRequest,
       handleSimulationStart            : ::this.handleSimulationStart,
       handleSimulationUpdate           : ::this.handleSimulationUpdate,
@@ -647,26 +654,42 @@ export default class Main extends React.Component {
       handlePositionAdd : ::this.handlePositionPreview
     }
 
+    const loginButtonHandlers = {
+     handleRequestAPIAccess           : ::this.handleRequestAPIAccess,
+     handleTokenChange                : ::this.handleTokenChange
+    }
+
 
     return (
       <div>
         <nav>
           <div className="nav-wrapper z-depth-3">
-            <div className="row">
-              <div className="col s1">
-                <a href="#" onClick={::this.handleMenuButtonClick}><i className="material-icons">menu</i></a>
-                <a id="dummy-button" href="#" data-activates="slide-out" hidden><i className="material-icons">menu</i></a>
-              </div>
-              <div className="col s11">
-                <LandmarkSearch
-                  boundLimit = {bounds}
-                  handlers   = {landmarkSearchHandlers}
-                />
-              </div>
+            <div className="nav-wrapper">
+              <a href="#" className="brand-logo">SAVN</a>
+              <LoginForm
+                token      = {token}
+                activeUser = {activeUser}
+                simulations = {userSimulations}
+                handlers   = {loginButtonHandlers}
+              />
             </div>
           </div>
         </nav>
-        <Menu
+
+        <div id="simulation-map">
+          <SimulationMap
+            simulationID               = {simulationID}
+            bounds                     = {bounds}
+            simulationState            = {simulationState}
+            previewMarkerPosition      = {previewMarkerPosition}
+            objectTypes                = {this.state.objectTypes}
+            selectedJourneyID          = {this.state.selectedJourneyID}
+            handlers                   = {simulationMapHandlers}
+          />
+        </div>
+
+
+        <ControlPanel
           enabled             = {!simulationRunning}
           availableCities     = {availableCities}
           token               = {token}
@@ -681,22 +704,10 @@ export default class Main extends React.Component {
           frameworks          = {this.state.frameworks}
           objectTypes         = {this.state.objectTypes}
           objectKindInfo      = {this.state.objectKindInfo}
-          benchmarkValue      = {this.state.benchmarkValue}
+          benchmarkValues     = {this.state.benchmarkValues}
           currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
-          handlers            = {menuHandlers}
-
+          handlers            = {controlPanelHandlers}
         />
-        <div id="simulation-map">
-          <SimulationMap
-            simulationID               = {simulationID}
-            bounds                     = {bounds}
-            simulationState            = {simulationState}
-            previewMarkerPosition      = {previewMarkerPosition}
-            objectTypes                = {this.state.objectTypes}
-            selectedJourneyID          = {this.state.selectedJourneyID}
-            handlers                   = {simulationMapHandlers}
-          />
-        </div>
       </div>
     )
   }
