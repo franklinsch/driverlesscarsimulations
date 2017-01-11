@@ -25,6 +25,8 @@ export default class ControlPanel extends React.Component {
     selectedCity: CustomPropTypes.city,
     objectTypes: React.PropTypes.arrayOf(CustomPropTypes.typeInfo),
     objectKindInfo: React.PropTypes.arrayOf(CustomPropTypes.kindInfo),
+    benchmarkValues: React.PropTypes.object,
+    comparedBenchmarkValues: React.PropTypes.object
   }
 
   constructor(props) {
@@ -76,7 +78,23 @@ export default class ControlPanel extends React.Component {
   _handleBenchmarkRequest(e) {
     e.preventDefault();
 
-    this.props.handlers.handleBenchmarkRequest();
+    this.setState({
+      requestedBenchmark: true
+    })
+
+    const simID = this.props.activeSimulationID;
+    this.props.handlers.handleBenchmarkRequest(simID);
+  }
+
+  _handleBenchmarkCompare(e) {
+    e.preventDefault()
+
+    this.setState({
+      showBenchmarkCompare: true
+    })
+
+    const simID = this.state.comparedSimulationID;
+    this.props.handlers.handleBenchmarkRequest(simID);
   }
 
   handleJourneysSubmit(journeys) {
@@ -136,6 +154,112 @@ export default class ControlPanel extends React.Component {
     })
   }
 
+  _renderFrameworkList(frameworks, enableDisconnect) {
+    const benchmarkValues = this.props.benchmarkValues;
+
+    return (
+      <ul className="collection">
+        {
+          frameworks.map((framework, index) => {
+            const benchmarkValue = benchmarkValues && benchmarkValues[framework._id];
+            return (
+              <li
+                className="collection-item"
+                key={index}
+              >
+                {index + ". " + (framework.name || "Framework")}
+                { enableDisconnect && 
+                    <button
+                      className = "btn waves-effect waves-light"
+                      style     = {frameworks.length == 1 && {display: 'none'} || {}}
+                      onClick   = {(e) => this.props.handlers.handleRequestFrameworkDisconnect(framework.connectionIndex)}
+                    >
+                      Disconnect
+                    </button>
+                }
+                { benchmarkValues &&
+                    (benchmarkValue ?
+                      <div> {benchmarkValue} km/h is the <u>ultimate</u> metric </div> :
+                      "No metric available as of yet")
+                }
+              </li>
+            );
+          })
+        }
+      </ul>
+    )
+  }
+
+  _renderBenchmarkCompare() {
+    const otherSimulations = this.props.simulations;
+    // All compared benchmarks, for each framework (there should be only one).
+    const allComparedBenchmarks = this.props.comparedBenchmarkValues;
+
+    if (!allComparedBenchmarks) {
+      return <div/>
+    }
+
+    const comparedNumFrameworks = Object.keys(allComparedBenchmarks).length;
+    const numFrameworks = this.props.frameworks.length;
+
+    if (comparedNumFrameworks != 1 || numFrameworks != 1) {
+      return (
+        <div>
+          Unsupported
+        </div>
+        //<div>
+          //{ this._renderFrameworkList(comparedSimulation.frameworks, false) }
+        //</div>
+      )
+    }
+
+    const allBenchmarks = this.props.benchmarkValues;
+    const benchmarkData = allBenchmarks[Object.keys(allBenchmarks)[0]];
+
+    if (!comparedBenchmarkData) {
+      return (
+        <p>
+          { "No benchmark data is available for " + this.state.comparedSimulationID }
+        </p>
+      )
+    }
+
+    let comparison = {};
+
+    for (const benchmarkName in benchmarkData) {
+      if (!benchmarkData.hasOwnProperty(benchmarkName)) continue;
+
+      const value = benchmarkData[benchmarkName];
+      const comparedValue = comparedBenchmarkData[benchmarkName];
+
+      if (!comparedValue) {
+        comparison[benchmarkName] = "N/A"
+        return
+      }
+
+      const rawDifference = value - comparedValue;
+      const changeRate = (rawDifference / value) * 100;
+      comparison[benchmarkName] = changeRate + " (" + rawDifference + ") ";
+    }
+
+    return (
+      <ul className="collection">
+        {
+          Object.keys(comparison).map((benchmarkName, index) => {
+            return (
+              <li
+                className="collection-item"
+                key={index}
+              >
+                { benchmarkName + ": " + comparison[benchmarkName] }
+              </li>
+            )
+          })
+        }
+      </ul>
+    )
+  }
+
   render() {
     const cities = this.props.availableCities || [];
     const simulationJourneys = this.props.simulationJourneys || [];
@@ -145,7 +269,6 @@ export default class ControlPanel extends React.Component {
     const bounds = selectedCity ? selectedCity.bounds : null;
     const simID = this.props.activeSimulationID;
     const hasSimulationStarted = simID !== "0";
-    const benchmarkValues = this.props.benchmarkValues;
     const currentSpeed = this.props.currentSpeed;
     const allowSimulationStart = this.state.allowSimulationStart;
     const usingRealData = this.state.useRealData;
@@ -377,33 +500,17 @@ export default class ControlPanel extends React.Component {
               >
                 Request benchmark
               </button>
-              <ul className="collection">
-                {
-                  this.props.frameworks.map((framework, index) => {
-                    const benchmarkValue = benchmarkValues && benchmarkValues[framework._id];
-                    return (
-                      <li
-                        className="collection-item"
-                        key={index}
-                      >
-                        {index + ". " + (framework.name || "Framework")}
-                        <button
-                          className = "btn waves-effect waves-light"
-                          style     = {this.props.frameworks.length == 1 && {display: 'none'} || {}}
-                          onClick   = {(e) => this.props.handlers.handleRequestFrameworkDisconnect(framework.connectionIndex)}
-                        >
-                          Disconnect
-                        </button>
-                        { benchmarkValues &&
-                          (benchmarkValue ?
-                            <div> {benchmarkValue} km/h is the <u>ultimate</u> metric </div> :
-                            "No metric available as of yet")
-                        }
-                      </li>
-                    );
-                  })
-                }
-              </ul>
+
+              { this._renderFrameworkList(this.props.frameworks, true) }
+
+              <button
+                className = "btn waves-effect waves-light"
+                style     = {!this.state.requestedBenchmark && {display: 'none'} || {}}
+                onClick   = {::this._handleBenchmarkCompare}
+              >
+                Compare
+              </button>
+              {this.state.showBenchmarkCompare && this._renderBenchmarkCompare()}
             </div>
           </ul>
       </div>

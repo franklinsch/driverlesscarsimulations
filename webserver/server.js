@@ -133,8 +133,7 @@ function _handleRequestSimulationBenchmark(message, connection) {
     }
 
     const benchmarkValues = averageSpeedToDestination(journeys, simulation.completionLogs);
-
-    simulation.benchmarkValues = benchmarkValues[message.simulationID]
+    simulation.benchmarkValues = benchmarkValues
 
     simulation.save((err, sim) => {
       if (err) {
@@ -145,6 +144,7 @@ function _handleRequestSimulationBenchmark(message, connection) {
     connection.send(JSON.stringify({
       type: "simulation-benchmark",
       content: {
+        simulationID: message.simulationID,
         value: benchmarkValues
       }
     }));

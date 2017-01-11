@@ -266,9 +266,20 @@ export default class Main extends React.Component {
       })
     } else if (messageData.type === "simulation-benchmark") {
       const benchmarkValues = messageData.content.value;
-      this.setState({
-        benchmarkValues: benchmarkValues
-      });
+
+      const simulationID = this.state.simulationInfo.id;
+
+      console.log(benchmarkValues);
+
+      if (messageData.content.simulationID == simulationID) {
+        this.setState({
+          benchmarkValues: benchmarkValues,
+        });
+      } else {
+        this.setState({
+          comparedBenchmarkValues: benchmarkValues
+        })
+      }
     } else if (messageData.type === "simulation-frameworks") {
       this.setState({
         frameworks: messageData.content.frameworks
@@ -487,10 +498,9 @@ export default class Main extends React.Component {
       })
   }
 
-  handleBenchmarkRequest() {
+  handleBenchmarkRequest(simID) {
     const socket = this.state.socket;
 
-    const simID = this.state.simulationInfo.id;
     const hasSimulationStarted = simID !== "0";
 
     if (!hasSimulationStarted) {
@@ -690,23 +700,24 @@ export default class Main extends React.Component {
 
 
         <ControlPanel
-          enabled             = {!simulationRunning}
-          availableCities     = {availableCities}
-          token               = {token}
-          userID              = {userID}
-          activeUser          = {activeUser}
-          simulations         = {userSimulations}
-          activeSimulationID  = {simulationID}
-          simulationState     = {simulationState}
-          selectedCity        = {selectedCity}
-          pendingJourneys     = {pendingJourneys}
-          simulationJourneys  = {simulationJourneys}
-          frameworks          = {this.state.frameworks}
-          objectTypes         = {this.state.objectTypes}
-          objectKindInfo      = {this.state.objectKindInfo}
-          benchmarkValues     = {this.state.benchmarkValues}
-          currentSpeed        = {this.state.currentSpeed || this.state.pausedSpeed || 1}
-          handlers            = {controlPanelHandlers}
+          enabled                 = {!simulationRunning}
+          availableCities         = {availableCities}
+          token                   = {token}
+          userID                  = {userID}
+          activeUser              = {activeUser}
+          simulations             = {userSimulations}
+          activeSimulationID      = {simulationID}
+          simulationState         = {simulationState}
+          selectedCity            = {selectedCity}
+          pendingJourneys         = {pendingJourneys}
+          simulationJourneys      = {simulationJourneys}
+          frameworks              = {this.state.frameworks}
+          objectTypes             = {this.state.objectTypes}
+          objectKindInfo          = {this.state.objectKindInfo}
+          benchmarkValues         = {this.state.benchmarkValues}
+          comparedBenchmarkValues = {this.state.comparedBenchmarkValues}
+          currentSpeed            = {this.state.currentSpeed || this.state.pausedSpeed || 1}
+          handlers                = {controlPanelHandlers}
         />
       </div>
     )
