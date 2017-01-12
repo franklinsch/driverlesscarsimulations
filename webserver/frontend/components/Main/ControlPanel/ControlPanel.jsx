@@ -59,13 +59,6 @@ export default class ControlPanel extends React.Component {
 
     if (started) {
       this.props.handlers.handleDisconnectFrameworks();
-
-      const path = window.location.pathname;
-      if (/^\/simulations\/([a-z]|[0-9])+/.test(path)) {
-        this.setState({
-          allowSimulationStart: false
-        })
-      }
     } else {
       this.props.handlers.handleSimulationStart(this.state.useRealData, this.state.realWorldJourneyNum, this.state.hotspotFile);
     }
