@@ -15,7 +15,7 @@ function drawGraphs() {
 
   var numCars = {key: 'numCars', descriptor: 'Number of Cars'};
   var timestamp = {key: 'timestamp', descriptor: 'Timestamp'};
-  var hAxes = [numCars, timestamp];
+  var hAxes = [timestamp];
 
   var accessTime = {key: 'accessTime', descriptor: 'Access Time'};
   var saveTime = {key: 'saveTime', descriptor: 'Save Time'};
