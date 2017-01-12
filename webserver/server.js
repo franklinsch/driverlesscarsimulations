@@ -838,6 +838,7 @@ frameworkSocketServer.on('request', function(request) {
     const newState = message;
 
     Simulation.findById(simulationID, function(error, simulation) {
+      console.log('callback');
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -879,12 +880,12 @@ frameworkSocketServer.on('request', function(request) {
       }
 
       const simulationState = simulation.simulationStates[simulationStateIndex];
-      updateConnectionsWithState(simulation, simulationState);
 
       simulation.save((error, simulation) => {
         if (error || !simulation) {
           return console.error(error);
         }
+        updateConnectionsWithState(simulation, simulationState);
         console.log("Updated simulationState");
       });
     });
