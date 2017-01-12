@@ -16,7 +16,7 @@ export default class Dropdown extends React.Component {
   }
 
   componentDidMount() {
-    $('.dropdown-button').dropdown({
+    $('#dropdown-cities-button').dropdown({
         inDuration: 300,
         outDuration: 225,
         constrain_width: true, // Does not change width of dropdown to that of the activator
@@ -29,7 +29,7 @@ export default class Dropdown extends React.Component {
   }
 
   componentDidUpdate() {
-    $('.dropdown-button').dropdown({
+    $('#dropdown-cities-button').dropdown({
         inDuration: 300,
         outDuration: 225,
         constrain_width: true, // Does not change width of dropdown to that of the activator
@@ -50,7 +50,7 @@ export default class Dropdown extends React.Component {
     //TODO: Replace with map below
     return (
       <div className="dropdown-cities-div">
-        <a className='dropdown-button btn waves-effect waves-light' href='#' data-activates='dropdown-cities'>Select city</a>
+        <a className='dropdown-button btn waves-effect waves-light' id="dropdown-cities-button" data-activates='dropdown-cities'>Select city</a>
         <ul id='dropdown-cities' className='dropdown-content'>
           {items}
         </ul>
