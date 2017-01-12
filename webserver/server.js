@@ -852,6 +852,8 @@ frameworkSocketServer.on('request', function(request) {
         return
       }
 
+      const epochAfterAccess = (new Date).getTime();
+
       const framework = simulation.frameworks[0];
       if (message.timestamp != framework.nextTimestamp) {
         console.log('\tError');
@@ -864,7 +866,6 @@ frameworkSocketServer.on('request', function(request) {
       const simulationStateTimestamp = simulationStateIndex * simulation.timeslice;
       const nextFrameworkTimestamp = message.timestamp + framework.timeslice;
       const nextIndex = Math.ceil(nextFrameworkTimestamp / simulation.timeslice);
-      const epochAfterAccess = (new Date).getTime();
 
       const simulationStateIndex = Math.ceil(message.timestamp / simulation.timeslice);
 
@@ -908,14 +909,16 @@ frameworkSocketServer.on('request', function(request) {
           }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
             const epochAfterSave = (new Date).getTime();
             updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
+            const epochAfterUpdate = (new Date).getTime();
 
             const dump = {
               'numCars': newState.objects.length,
               'timestamp': message.timestamp,
               'networkTime': epochAtReception - epochAtSend,
               'accessTime': epochAfterAccess - epochAtReception,
+              'processTime': epochBeforeSave - epochAfterAccess + epochAfterUpdate - epochAfterSave
               'saveTime': epochAfterSave - epochBeforeSave,
-              'processTime': epochBeforeSave - epochAfterAccess
+              'totalTime': epochAfterUpdate - epochAtSend,
             };
             fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", sep + JSON.stringify(dump, null, 2), function(err) {
               if (err) throw err;
