@@ -356,13 +356,6 @@ export default class ControlPanel extends React.Component {
                     </div>
                     <div className="col s6">
                       <ul className="right">
-                      <li>
-                          <Dropdown
-                            enabled  = {this.props.enabled}
-                            items    = {cities}
-                            handlers = {dropdownHandlers}
-                          />
-                        </li>
                         <li>
                           <a
                             className = "btn  waves-effect waves-light"
