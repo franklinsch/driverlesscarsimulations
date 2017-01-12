@@ -105,8 +105,8 @@ function getBenchmarks(journeys, completionLogs) {
 // -----------------------------------------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(passport.initialize());
 // Use the session middleware
 app.use(session({
@@ -739,7 +739,7 @@ frontendSocketServer.on('request', function(request) {
 });
 
 const fserver = require('http').createServer();
-const frameworkSocketServer = new WebSocketServer({ httpServer: fserver, maxReceivedFrameSize: 128 * 1024 });
+const frameworkSocketServer = new WebSocketServer({ httpServer: fserver, maxReceivedFrameSize: 256 * 1024 });
 
 frameworkSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
