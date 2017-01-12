@@ -795,6 +795,7 @@ frameworkSocketServer.on('request', function(request) {
       const startTimestamp = nextIndex * simulation.timeslice;
       simulation.frameworks.push({
         connectionIndex: frameworkConnections.length,
+        name: message.name,
         timeslice: message.timeslice,
         startTimestamp: startTimestamp,
         nextTimestamp: startTimestamp
