@@ -867,8 +867,6 @@ frameworkSocketServer.on('request', function(request) {
       const nextFrameworkTimestamp = message.timestamp + framework.timeslice;
       const nextIndex = Math.ceil(nextFrameworkTimestamp / simulation.timeslice);
 
-      const simulationStateIndex = Math.ceil(message.timestamp / simulation.timeslice);
-
       const pushIndexInfo = {};
       for (let i = simulationStateIndex; i < simulation.numSimulationStates; i++) {
         pushIndexInfo['simulationStates.'+i+'.frameworkStates'] = newState;
@@ -916,9 +914,9 @@ frameworkSocketServer.on('request', function(request) {
               'timestamp': message.timestamp,
               'networkTime': epochAtReception - epochAtSend,
               'accessTime': epochAfterAccess - epochAtReception,
-              'processTime': epochBeforeSave - epochAfterAccess + epochAfterUpdate - epochAfterSave
+              'processTime': epochBeforeSave - epochAfterAccess + epochAfterUpdate - epochAfterSave,
               'saveTime': epochAfterSave - epochBeforeSave,
-              'totalTime': epochAfterUpdate - epochAtSend,
+              'totalTime': epochAfterUpdate - epochAtSend
             };
             fs.appendFile("../stresstest/logs/stress_test_"+simulationID+".log", sep + JSON.stringify(dump, null, 2), function(err) {
               if (err) throw err;
