@@ -25,13 +25,15 @@ db.simulations.insert({
   frameworks: [],
   simulationStates: [],
   benchmarkValues: {
-    "averageSpeed" : 47.11,
-    "totalDistance" : 42.94,
-    "averageTime" : 12.54,
-    "totalTime" : 54.21,
-    "slowestJourney" : 26.94,
-    "completionSpeedVariance" : 92.54,
-    "completionSpeed" : 37.39
+    "5876ae86ea41895612d3220a" : {
+      "averageSpeed" : 47.11,
+      "totalDistance" : 42.94,
+      "averageTime" : 12.54,
+      "totalTime" : 54.21,
+      "slowestJourney" : 26.94,
+      "completionSpeedVariance" : 92.54,
+      "completionSpeed" : 37.39
+    }
   }
 }
 
@@ -61,12 +63,61 @@ db.simulations.insert({
   frameworks: [],
   simulationStates: [],
   benchmarkValues: {
-    "averageSpeed" : 30.11,
-    "totalDistance" : 42.94,
-    "averageTime" : 9.54,
-    "totalTime" : 92.21,
-    "slowestJourney" : 24.94,
-    "completionSpeedVariance" : 19.54,
-    "completionSpeed" : 29.39
+    "5876ae86ea41895612d3220a" : {
+      "averageSpeed" : 30.11,
+      "totalDistance" : 42.94,
+      "averageTime" : 9.54,
+      "totalTime" : 92.21,
+      "slowestJourney" : 24.94,
+      "completionSpeedVariance" : 19.54,
+      "completionSpeed" : 29.39
+    }
+  }
+}
+
+db.simulations.insert({
+  _id: ObjectId('1738ae52ea41895612d32205'),
+  city: {
+    name: 'Central London',
+    bounds: {
+      southWest: {
+        lat: 51.4696,
+        lng: -0.2307
+      },
+      northEast: {
+        lat: 51.5153,
+        lng: -0.1376
+      }
+    }
+  },
+  createdAt: ISODate("2017-01-06T10:27:18.108Z"),
+  timeslice: 1,
+  hotspots: [],
+  latestTimestamp: 0,
+  journeys: [],
+  frontends: [],
+  completionLogs: [],
+  numSimulationStates: 0,
+  frameworks: [],
+  simulationStates: [],
+  benchmarkValues: {
+    "1738ae86ea41895612d3220a" : {
+      "averageSpeed" : 30.11,
+      "totalDistance" : 42.94,
+      "averageTime" : 9.54,
+      "totalTime" : 92.21,
+      "slowestJourney" : 24.94,
+      "completionSpeedVariance" : 19.54,
+      "completionSpeed" : 29.39
+    },
+    "2410ae86ea41895612d3220a" : {
+      "averageSpeed" : 47.11,
+      "totalDistance" : 42.94,
+      "averageTime" : 12.54,
+      "totalTime" : 54.21,
+      "slowestJourney" : 26.94,
+      "completionSpeedVariance" : 92.54,
+      "completionSpeed" : 37.39
+    }
   }
 }
