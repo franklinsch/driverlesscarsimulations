@@ -85,6 +85,8 @@ export default class ControlPanel extends React.Component {
     this.setState({
       enableComparison: !this.state.enableComparison
     })
+
+    this.props.handlers.handleBenchmarkRequest(this.props.simulations[0], true);
   }
 
   handleJourneysSubmit(journeys) {
@@ -131,7 +133,7 @@ export default class ControlPanel extends React.Component {
       } else if (rawPercentDifference == 0) {
         percentDifference = "±" + percentDifference;
       }
-  
+
       comparison[benchmarkName] = percentDifference + " (" + rawDifference + ")";
     }
 
@@ -232,7 +234,6 @@ export default class ControlPanel extends React.Component {
     let comparison = this.compareBenchmarks(benchmarkValues, comparedBenchmarkValues);
 
     if (!this.state.enableComparison) {
-      this.props.handlers.handleBenchmarkRequest(this.props.simulations[0], true);
       return <div/>
     }
 
@@ -242,9 +243,9 @@ export default class ControlPanel extends React.Component {
 
     return (
       <div>
-        <select 
+        <select
           className="browser-default"
-          value={this.state.comparedSimulationID} 
+          value={this.state.comparedSimulationID}
           onChange={(e) => { this._handleComparingSimulationChange(e.target.value) }}
         >
           {
@@ -274,7 +275,7 @@ export default class ControlPanel extends React.Component {
           <tbody>
             <tr>
               {
-                comparison && 
+                comparison &&
                   Object.keys(comparison).map(function(key) {
                     return (
                       <td>{comparison[key]}</td>

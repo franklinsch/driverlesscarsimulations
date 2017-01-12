@@ -1,2 +1,2 @@
 use carSimulationApp
-db.simulations.update({}, {$set: {simulationStates: [], frameworks: [], completionLogs: []}, $unset: {latestTimestamp: ""}}, {multi: true})
+db.simulations.update({}, {$set: {simulationStates: [], numSimulationStates: 0, frameworks: [], completionLogs: []}, $unset: {latestTimestamp: ""}}, {multi: true})
