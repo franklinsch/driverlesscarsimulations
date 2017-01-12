@@ -140,7 +140,7 @@ const frontendSocketServer = new WebSocketServer({ httpServer : server });
 
 function _handleRequestSimulationBenchmark(message, connection) {
   console.log("Request benchmark for " + message.simulationID);
-  Simulation.findById(message.simulationID, { completionLogs: 1 }, function (error, simulation) {
+  Simulation.findById(message.simulationID, { journeys: 1, benchmarkValues: 1, completionLogs: 1 }, function (error, simulation) {
     console.log("found simulation");
     if (error || !simulation) {
       connection.send(JSON.stringify({
@@ -161,9 +161,7 @@ function _handleRequestSimulationBenchmark(message, connection) {
 
     if (!message.doNotRecompute) {
       benchmarkValues = getBenchmarks(journeys, simulation.completionLogs);
-      simulation.benchmarkValues = benchmarkValues
-
-      simulation.save((error, simulation) => {
+      simulation.update({_id: message.simulationID}, {$set: {benchmarkValues: benchmarkValues}}, function (error, numAffected) {
         if (error) {
           console.error(error);
         }
@@ -237,14 +235,6 @@ function _handleRequestEventUpdate(message, connection, callback) {
 
 frontendSocketServer.on('request', function(request) {
   const connection = request.accept(null, request.origin);
-
-  Simulation.findOne({_id: '586604c0384b424044f72e5d', 'simulationStates.timestamp': 2}, {'simulationStates.$': 1, count: {$size: 'simulationStates'}}, (error, simulation) => {
-    //simulation.simulationStates[0] = { "timestamp" : 5, "frameworkStates" : [ { "frameworkID" : "586f710fdcdd770e050abefc", "objects" : [ ] } ] }
-    //simulation.update((err, simulation) => {
-      //console.log(err)
-      //console.log(simulation.simulationStates[2])
-    //})
-  });
 
   console.log((new Date()) + ' Frontend Connection accepted.');
 
@@ -460,6 +450,7 @@ frontendSocketServer.on('request', function(request) {
         journeys: journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
         completionLogs: [],
+        numSimulationStates: 0,
         frameworks: [],
         simulationStates: []
       };
@@ -510,6 +501,7 @@ frontendSocketServer.on('request', function(request) {
         journeys: message.journeys,
         frontends: [{connectionIndex: frontendConnections.length}],
         completionLogs: [],
+        numSimulationStates: 0,
         frameworks: [],
         simulationStates: []
       };
@@ -556,7 +548,7 @@ frontendSocketServer.on('request', function(request) {
           }
         }));
       })
-      sendFrameworkList(simulationFrameworks, null, connection);
+      sendFrameworkList(simulation.frameworks, null, connection);
     })
   }
 
@@ -763,7 +755,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const simulationID = message.simulationID;
 
-    Simulation.findById(simulationID, {timeslice: 1, latestTimestamp: 1}, function(error, simulation) {
+    Simulation.findById(simulationID, {timeslice: 1, latestTimestamp: 1, simulationStates: 1, frameworks: 1, frontends: 1, journeys: 1, city: 1}, function(error, simulation) {
       if (error || !simulation) {
         console.error(error);
         connection.send(JSON.stringify({
@@ -786,8 +778,6 @@ frameworkSocketServer.on('request', function(request) {
         console.log("Is:");
         console.log(simulation.latestTimestamp);
         console.log(simulation.timeslice);
-        console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
-        console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
       }
 
       let nextIndex = 0;
@@ -829,7 +819,7 @@ frameworkSocketServer.on('request', function(request) {
             state: state
           }
         }));
-        sendFrameworkList(simulation);
+        sendFrameworkList(simulation.frameworks, simulation.frontends);
       });
     })
   }
@@ -842,7 +832,7 @@ frameworkSocketServer.on('request', function(request) {
 
     const newState = message;
 
-    Simulation.findOne({_id: simulationID, 'frameworks._id': frameworkID}, {'frameworks.$': 1, timeslice: 1, numSimulationStates: 1}, function(error, simulation) {
+    Simulation.findOne({_id: simulationID, 'frameworks._id': frameworkID}, {'frameworks.$': 1, timeslice: 1, latestTimestamp: 1, numSimulationStates: 1}, function(error, simulation) {
       if (error || !simulation) {
         connection.send(JSON.stringify({
           type: "simulation-error",
@@ -882,21 +872,29 @@ frameworkSocketServer.on('request', function(request) {
         });
       }
 
+      const latestTimestamp = simulation.latestTimestamp;
+      const timeslice = simulation.timeslice;
+
       Simulation.update({
         _id: simulationID,
       }, {$push: pushIndexInfo}, function(error, numAffected) {
         Simulation.update({
           _id: simulationID,
-        }, {$push: {simulationStates: {$each: pushObjects}}}, function(error, numAffected) {
+          'frameworks._id': frameworkID
+        }, {
+          $push: {simulationStates: {$each: pushObjects}},
+          $set: {
+            numSimulationStates: simulation.numSimulationStates + pushObjects.length,
+            'frameworks.$.nextTimestamp': nextFrameworkTimestamp
+          }
+        }, function(error, numAffected) {
           Simulation.findOneAndUpdate({
             _id: simulationID,
             'simulationStates.timestamp': simulationStateTimestamp,
-            'frameworks._id': frameworkID
           },{
-            $push: {'simulationStates.$.participants': frameworkID},
-            $set: {'frameworks.$.nextTimestamp': nextFrameworkTimestamp}
-          }, {new: true, select: {frameworks: 1, 'simulationStates.$': 1}}, function(error, simulation) {
-            updateConnectionsWithState(simulation.frameworks, simulation.simulationStates[0]);
+            $push: {'simulationStates.$.participants': frameworkID}
+          }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
+            updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
           });
         });
       });
@@ -958,12 +956,12 @@ frameworkSocketServer.on('request', function(request) {
       delete frameworkConnections[index];
 
       Simulation.findByIdAndUpdate(simulationID, { $pull: { frameworks: { connectionIndex: index }}},
-        {new: true, select: {frameworks: 1, frontends: 1, timeslice: 1, latestTimestamp: 1}}, function (error, simulation) {
+        {new: true, select: {frameworks: 1, frontends: 1, timeslice: 1, latestTimestamp: 1, simulationStates: 1}}, function (error, simulation) {
         if (error || !simulation) {
           console.log("Could not find corresponding simulation for connection");
           return
         }
-        sendFrameworkList(simulation);
+        sendFrameworkList(simulation.frameworks, simulation.frontends);
 
         let min_timeslice = undefined;
         for (const framework of simulation.frameworks) {
@@ -981,14 +979,12 @@ frameworkSocketServer.on('request', function(request) {
           console.log("Is:");
           console.log(simulation.latestTimestamp);
           console.log(simulation.timeslice);
-          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice]);
-          console.log(simulation.simulationStates[simulation.latestTimestamp/simulation.timeslice+1]);
         }
 
         const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
-        const simulationState = simulation.simulationStates[nextIndex];
+        const simulationState = !isNaN(nextIndex) && simulation.simulationStates[nextIndex];
         if (simulationState) {
-          updateConnectionsWithState(simulation, simulationState);
+          updateConnectionsWithState(simulation._id, simulation.frameworks, simulationState, simulation.latestTimestamp, simulation.timeslice);
         }
       });
     }
@@ -1044,23 +1040,23 @@ function createNewSimulationStates(simulationID, newTimeslice) {
       }
     }
     return newSimulationStates;
-  }
+  });
 }
 
-function updateConnectionsWithState(simulationID, simulationFrameworks, simulationState) {
+function updateConnectionsWithState(simulationID, simulationFrameworks, simulationState, latestTimestamp, timeslice) {
   if (simulationState.frameworkStates.length >= simulationFrameworks.length && !simulationState.communicated) {
     Simulation.update({
       _id: simulationID,
       'simulationStates.timestamp': simulationState.timestamp
     },{
       $set: {
-        latestTimestamp: simulation.latestTimestamp + simulation.timeslice || 0,
+        latestTimestamp: latestTimestamp + timeslice || 0,
         'simulationStates.$.communicated': true
       }
     }, function (error, numAffected) {
       updateFrameworksWithState(simulationID, simulationFrameworks, simulationState);
       updateFrontendsWithState(simulationID, simulationState);
-    }
+    });
   }
 }
 
@@ -1102,7 +1098,7 @@ function updateFrontendsWithState(simulationID, simulationState) {
         }))
       });
     }
-  }
+  });
 }
 
 function sendFrameworkList(simulationFrameworks, simulationFrontends, connection) {

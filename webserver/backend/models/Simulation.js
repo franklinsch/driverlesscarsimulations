@@ -30,6 +30,7 @@ const simulationSchema = mongoose.Schema({
     journeyID: String,
     frameworkID: String
   }],
+  numSimulationStates: Number,
   frameworks: [Framework.schema],
   simulationStates: [{
     communicated: Boolean,
