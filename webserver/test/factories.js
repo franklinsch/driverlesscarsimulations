@@ -17,14 +17,22 @@ const Benchmarking = function () {
 
   const _completionLogs= () => {
     const frameworkID = _frameworkID();
-    return [{duration: 1, journeyID: '1', frameworkID: frameworkID},
-            {duration: 2, journeyID: '2', frameworkID: frameworkID},
-            {duration: 3, journeyID: '3', frameworkID: frameworkID}];
+    return [{duration: 1, distance: 200,  journeyID: '1', frameworkID: frameworkID},
+            {duration: 2, distance: 200, journeyID: '2', frameworkID: frameworkID},
+            {duration: 3, distance: 200, journeyID: '3', frameworkID: frameworkID}];
   }
 
   const _benchmark = () => {
     const benchmark = {};
-    benchmark[_frameworkID()] = ((3 * _dist()) / (1 + 2 + 3)) * 60 * 60;
+    benchmark[_frameworkID()] = {
+      completionSpeed: ((3 * _dist()) / (1 + 2 + 3)) * 60 * 60,
+      completionSpeedVariance: 0,
+      slowestJourney: _dist() / 3 * 60 * 60,
+      totalTime: 6 / (60 * 60),
+      averageTime: 2 / (60 * 60),
+      totalDistance: 3 * 200,
+      averageSpeed: 100
+    }
     return benchmark;
   };
 
