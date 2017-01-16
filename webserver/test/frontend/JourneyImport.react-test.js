@@ -7,10 +7,10 @@ test('Valid journeys can be imported', () => {
     <JourneyImport/>
   );
 
-  let tree = component.toJSON();
+  const tree = component.toJSON();
   expect(tree).toMatchSnapshot();
   
-  var journeys = [{
+  const journeys = [{
     objectID: 0,
     origin: {
       lat: 0,  
@@ -33,4 +33,23 @@ test('Valid journeys can be imported', () => {
   }]
 
   expect(_toJourneys(journeys)).to.not.throw(Error);
+})
+
+test('Invalid journeys cannot be imported', () => {
+  const component = render.create(
+    <JourneyImport/>
+  );
+
+  let tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+
+  const journeys = [{
+    objectID: 0,
+    foo: {
+      lat: 2,
+      lng: 2
+    }
+  }]
+
+  expect(_toJourneys(journeys)).to.throw(Error);
 })
