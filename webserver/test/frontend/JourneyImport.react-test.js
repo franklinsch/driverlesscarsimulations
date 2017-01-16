@@ -35,7 +35,7 @@ test('Valid journeys can be imported', () => {
   expect(_toJourneys(journeys)).to.not.throw(Error);
 })
 
-test('Invalid journeys cannot be imported', () => {
+test('Journeys with invalid properties cannot be imported', () => {
   const component = render.create(
     <JourneyImport/>
   );
@@ -46,6 +46,44 @@ test('Invalid journeys cannot be imported', () => {
   const journeys = [{
     objectID: 0,
     foo: {
+      lat: 2,
+      lng: 2
+    }
+  }]
+
+  expect(_toJourneys(journeys)).to.throw(Error);
+})
+
+test('Journeys with missing origin cannot be imported', () => {
+  const component = render.create(
+    <JourneyImport/>
+  );
+
+  let tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+
+  const journeys = [{
+    objectID: 0,
+    destination: {
+      lat: 2,
+      lng: 2
+    }
+  }]
+
+  expect(_toJourneys(journeys)).to.throw(Error);
+})
+
+test('Journeys with missing destination cannot be imported', () => {
+  const component = render.create(
+    <JourneyImport/>
+  );
+
+  let tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+
+  const journeys = [{
+    objectID: 0,
+    origin: {
       lat: 2,
       lng: 2
     }
