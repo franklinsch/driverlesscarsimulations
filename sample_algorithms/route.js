@@ -160,10 +160,11 @@ const getNearest = function(p, pathFinder) {
     }
   }
 
+  let vs = [];
   if (min_edge_index != undefined) {
-    pathFinder._addVertex(min_point, min_edge_index, getDistance);
+    vs = pathFinder._addVertex(min_point, min_edge_index, getDistance);
   }
-  return min_point;
+  return [min_point, min_edge_index, vs];
 }
 
 const fs = require('fs');
@@ -176,9 +177,30 @@ const pathFinder = new PathFinder(geojson);
 
 const paths = pairs.map(function(pair, index) {
   console.error('.' + index)
-  const start = getNearest(pair[0], pathFinder);
-  const end = getNearest(pair[1], pathFinder);
-  const res = pathFinder.findPath(point(start), point(end));
-  return res['path'];
+  const nearests = [
+    getNearest(pair[0], pathFinder),
+    getNearest(pair[1], pathFinder)
+  ];
+  const start = nearests[0][0];
+  const end = nearests[1][0];
+  const path = pathFinder.findPath(point(start), point(end))['path'];
+
+  if (nearests[0][1] != undefined) {
+    svs = pathFinder._removeVertex(nearests[0][1], nearests[0][2][0], nearests[0][2][1]);
+    if (path[2] == svs[1]);
+      path[1] = svs[0];
+    } else {
+      path[1] = svs[1];
+    }
+  }
+  if (nearests[1][1] != undefined) {
+    evs = pathFinder._removeVertex(nearests[1][1], nearests[1][2][0], nearests[1][2][1]);
+    if (path[path.length - 2] == evs[1]) {
+      path[path.length - 1] = evs[0];
+    } else {
+      path[path.length - 1] = evs[1];
+    }
+  }
+  return [path, start, end];
 });
 console.log(JSON.stringify(paths));
