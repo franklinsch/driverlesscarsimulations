@@ -739,185 +739,185 @@ frontendSocketServer.on('request', function(request) {
 const fserver = require('http').createServer();
 const frameworkSocketServer = new WebSocketServer({ httpServer: fserver, maxReceivedFrameSize: 256 * 1024 });
 
+function _handleFrameworkConnect(message, connection) {
+  console.log("Received simulation-start from framework");
+
+  if (message.timeslice <= 0) {
+    console.log('\t\tError');
+    console.log('\t\tError');
+    console.log('\t\tError');
+    console.log('\t\tError');
+  }
+
+  const simulationID = message.simulationID;
+
+  Simulation.findById(simulationID, {timeslice: 1, latestTimestamp: 1, simulationStates: 1, frameworks: 1, frontends: 1, journeys: 1, city: 1}, function(error, simulation) {
+    if (error || !simulation) {
+      console.error(error);
+      connection.send(JSON.stringify({
+        type: "simulation-error",
+        content: {
+          message: "Could not find simulation with ID " + simulationID
+        }
+      }));
+      console.log("Could not find simulation with ID " + simulationID);
+      return
+    }
+
+    if (message.timeslice < simulation.timeslice && simulation.latestTimestamp != undefined) {
+      console.log("Was:");
+      console.log(simulation.latestTimestamp);
+      console.log(simulation.timeslice);
+      simulation.simulationStates = createNewSimulationStates(simulationID, message.timeslice);
+      simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / message.timeslice) * message.timeslice;
+      simulation.timeslice = message.timeslice;
+      console.log("Is:");
+      console.log(simulation.latestTimestamp);
+      console.log(simulation.timeslice);
+    }
+
+    let nextIndex = 0;
+    if (simulation.latestTimestamp) {
+      nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice)
+    } else if (simulation.frameworks.length == 0) {
+      simulation.timeslice = message.timeslice;
+    }
+
+    const startTimestamp = nextIndex * simulation.timeslice;
+    simulation.frameworks.push({
+      connectionIndex: frameworkConnections.length,
+      name: message.name,
+      timeslice: message.timeslice,
+      startTimestamp: startTimestamp,
+      nextTimestamp: startTimestamp
+    });
+
+    simulation.save((error, simulation) => {
+      if (error || !simulation) {
+        return console.error(error);
+      }
+
+      const frameworkIndex = simulation.frameworks.length - 1;
+      const frameworkID = simulation.frameworks[frameworkIndex]._id;
+
+      frameworkConnections.push({connection: connection, simulationID: simulation._id});
+
+      const currIndex = Math.floor(simulation.latestTimestamp / simulation.timeslice);
+      const state = simulation.simulationStates[currIndex] || [];
+
+      connection.send(JSON.stringify({
+        type: "simulation-start-parameters",
+        content: {
+          frameworkID: frameworkID,
+          city: simulation.city,
+          journeys: simulation.journeys,
+          timestamp: startTimestamp,
+          state: state
+        }
+      }));
+      sendFrameworkList(simulation.frameworks, simulation.frontends);
+    });
+  })
+}
+
+function _handleSimulationStateUpdate(message, connection) {
+  console.log("Received simulation-update from framework");
+
+  const simulationID = message.simulationID;
+  const frameworkID = message.frameworkID;
+
+  const newState = message;
+
+  Simulation.findOne({_id: simulationID, 'frameworks._id': frameworkID}, {'frameworks.$': 1, timeslice: 1, latestTimestamp: 1, numSimulationStates: 1}, function(error, simulation) {
+    if (error || !simulation) {
+      connection.send(JSON.stringify({
+        type: "simulation-error",
+        content: {
+          message: "Could not find simulation with ID " + simulationID
+        }
+      }))
+      console.log("Could not find simulation with ID " + simulationID);
+      return
+    }
+
+    const framework = simulation.frameworks[0];
+    if (message.timestamp != framework.nextTimestamp) {
+      console.log('\tError');
+      console.log('\tError');
+      console.log('\tError');
+      console.log('\tError');
+    }
+
+    const simulationStateIndex = Math.ceil(message.timestamp / simulation.timeslice);
+    const simulationStateTimestamp = simulationStateIndex * simulation.timeslice;
+    const nextFrameworkTimestamp = message.timestamp + framework.timeslice;
+    const nextIndex = Math.ceil(nextFrameworkTimestamp / simulation.timeslice);
+
+    const pushIndexInfo = {};
+    for (let i = simulationStateIndex; i < simulation.numSimulationStates; i++) {
+      pushIndexInfo['simulationStates.'+i+'.frameworkStates'] = newState;
+    }
+
+    const pushObjects = [];
+    for (let i = simulation.numSimulationStates; i < nextIndex; i++) {
+      pushObjects.push({
+        communicated: false,
+        timestamp: i * simulation.timeslice,
+        participants: [],
+        frameworkStates: [newState]
+      });
+    }
+
+    const latestTimestamp = simulation.latestTimestamp;
+    const timeslice = simulation.timeslice;
+
+    Simulation.update({
+      _id: simulationID,
+    }, {$push: pushIndexInfo}, function(error, numAffected) {
+      Simulation.update({
+        _id: simulationID,
+        'frameworks._id': frameworkID
+      }, {
+        $push: {simulationStates: {$each: pushObjects}},
+        $set: {
+          numSimulationStates: simulation.numSimulationStates + pushObjects.length,
+          'frameworks.$.nextTimestamp': nextFrameworkTimestamp
+        }
+      }, function(error, numAffected) {
+        Simulation.findOneAndUpdate({
+          _id: simulationID,
+          'simulationStates.timestamp': simulationStateTimestamp,
+        },{
+          $push: {'simulationStates.$.participants': frameworkID}
+        }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
+          updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
+        });
+      });
+    });
+  });
+}
+
+function _handleJourneyComplete(message, connection) {
+  const log = {
+    duration: message.timestamp - message.journeyStart,
+    distance: message.journeyDistance,
+    journeyID: message.journeyID,
+    frameworkID: message.frameworkID
+  };
+  console.log(message);
+  console.log("Logging " + message.simulationID);
+  Simulation.update({_id: message.simulationID}, {$push: { completionLogs: log}}, function (error, numAffected) {
+    if (error || !numAffected) {
+      console.log("Could not find corresponding simulation for connection");
+      return
+    }
+  });
+}
+
 frameworkSocketServer.on('request', function(request) {
   var connection = request.accept(null, request.origin);
 
   console.log((new Date()) + ' Connection accepted.');
-
-  function _handleFrameworkConnect(message) {
-    console.log("Received simulation-start from framework");
-
-    if (message.timeslice <= 0) {
-      console.log('\t\tError');
-      console.log('\t\tError');
-      console.log('\t\tError');
-      console.log('\t\tError');
-    }
-
-    const simulationID = message.simulationID;
-
-    Simulation.findById(simulationID, {timeslice: 1, latestTimestamp: 1, simulationStates: 1, frameworks: 1, frontends: 1, journeys: 1, city: 1}, function(error, simulation) {
-      if (error || !simulation) {
-        console.error(error);
-        connection.send(JSON.stringify({
-          type: "simulation-error",
-          content: {
-            message: "Could not find simulation with ID " + simulationID
-          }
-        }));
-        console.log("Could not find simulation with ID " + simulationID);
-        return
-      }
-
-      if (message.timeslice < simulation.timeslice && simulation.latestTimestamp != undefined) {
-        console.log("Was:");
-        console.log(simulation.latestTimestamp);
-        console.log(simulation.timeslice);
-        simulation.simulationStates = createNewSimulationStates(simulationID, message.timeslice);
-        simulation.latestTimestamp = Math.floor(simulation.latestTimestamp / message.timeslice) * message.timeslice;
-        simulation.timeslice = message.timeslice;
-        console.log("Is:");
-        console.log(simulation.latestTimestamp);
-        console.log(simulation.timeslice);
-      }
-
-      let nextIndex = 0;
-      if (simulation.latestTimestamp) {
-        nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice)
-      } else if (simulation.frameworks.length == 0) {
-        simulation.timeslice = message.timeslice;
-      }
-
-      const startTimestamp = nextIndex * simulation.timeslice;
-      simulation.frameworks.push({
-        connectionIndex: frameworkConnections.length,
-        name: message.name,
-        timeslice: message.timeslice,
-        startTimestamp: startTimestamp,
-        nextTimestamp: startTimestamp
-      });
-
-      simulation.save((error, simulation) => {
-        if (error || !simulation) {
-          return console.error(error);
-        }
-
-        const frameworkIndex = simulation.frameworks.length - 1;
-        const frameworkID = simulation.frameworks[frameworkIndex]._id;
-
-        frameworkConnections.push({connection: connection, simulationID: simulation._id});
-
-        const currIndex = Math.floor(simulation.latestTimestamp / simulation.timeslice);
-        const state = simulation.simulationStates[currIndex] || [];
-
-        connection.send(JSON.stringify({
-          type: "simulation-start-parameters",
-          content: {
-            frameworkID: frameworkID,
-            city: simulation.city,
-            journeys: simulation.journeys,
-            timestamp: startTimestamp,
-            state: state
-          }
-        }));
-        sendFrameworkList(simulation.frameworks, simulation.frontends);
-      });
-    })
-  }
-
-  function _handleSimulationStateUpdate(message) {
-    console.log("Received simulation-update from framework");
-
-    const simulationID = message.simulationID;
-    const frameworkID = message.frameworkID;
-
-    const newState = message;
-
-    Simulation.findOne({_id: simulationID, 'frameworks._id': frameworkID}, {'frameworks.$': 1, timeslice: 1, latestTimestamp: 1, numSimulationStates: 1}, function(error, simulation) {
-      if (error || !simulation) {
-        connection.send(JSON.stringify({
-          type: "simulation-error",
-          content: {
-            message: "Could not find simulation with ID " + simulationID
-          }
-        }))
-        console.log("Could not find simulation with ID " + simulationID);
-        return
-      }
-
-      const framework = simulation.frameworks[0];
-      if (message.timestamp != framework.nextTimestamp) {
-        console.log('\tError');
-        console.log('\tError');
-        console.log('\tError');
-        console.log('\tError');
-      }
-
-      const simulationStateIndex = Math.ceil(message.timestamp / simulation.timeslice);
-      const simulationStateTimestamp = simulationStateIndex * simulation.timeslice;
-      const nextFrameworkTimestamp = message.timestamp + framework.timeslice;
-      const nextIndex = Math.ceil(nextFrameworkTimestamp / simulation.timeslice);
-
-      const pushIndexInfo = {};
-      for (let i = simulationStateIndex; i < simulation.numSimulationStates; i++) {
-        pushIndexInfo['simulationStates.'+i+'.frameworkStates'] = newState;
-      }
-
-      const pushObjects = [];
-      for (let i = simulation.numSimulationStates; i < nextIndex; i++) {
-        pushObjects.push({
-          communicated: false,
-          timestamp: i * simulation.timeslice,
-          participants: [],
-          frameworkStates: [newState]
-        });
-      }
-
-      const latestTimestamp = simulation.latestTimestamp;
-      const timeslice = simulation.timeslice;
-
-      Simulation.update({
-        _id: simulationID,
-      }, {$push: pushIndexInfo}, function(error, numAffected) {
-        Simulation.update({
-          _id: simulationID,
-          'frameworks._id': frameworkID
-        }, {
-          $push: {simulationStates: {$each: pushObjects}},
-          $set: {
-            numSimulationStates: simulation.numSimulationStates + pushObjects.length,
-            'frameworks.$.nextTimestamp': nextFrameworkTimestamp
-          }
-        }, function(error, numAffected) {
-          Simulation.findOneAndUpdate({
-            _id: simulationID,
-            'simulationStates.timestamp': simulationStateTimestamp,
-          },{
-            $push: {'simulationStates.$.participants': frameworkID}
-          }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
-            updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
-          });
-        });
-      });
-    });
-  }
-
-  function _handleJourneyComplete(message) {
-    const log = {
-      duration: message.timestamp - message.journeyStart,
-      distance: message.journeyDistance,
-      journeyID: message.journeyID,
-      frameworkID: message.frameworkID
-    };
-    console.log(message);
-    console.log("Logging " + message.simulationID);
-    Simulation.update({_id: message.simulationID}, {$push: { completionLogs: log}}, function (error, numAffected) {
-      if (error || !numAffected) {
-        console.log("Could not find corresponding simulation for connection");
-        return
-      }
-    });
-  }
 
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
@@ -930,13 +930,13 @@ frameworkSocketServer.on('request', function(request) {
           console.log("Received valid JSON packet from:" + decoded.cip);
           switch(messageData.type) {
             case "framework-connect":
-              _handleFrameworkConnect(messageContent);
+              _handleFrameworkConnect(messageContent, connection);
               break;
             case "simulation-state-update":
-              _handleSimulationStateUpdate(messageContent);
+              _handleSimulationStateUpdate(messageContent, connection);
               break;
             case "simulation-journey-complete":
-              _handleJourneyComplete(messageContent);
+              _handleJourneyComplete(messageContent, connection);
           }
         }
       });
