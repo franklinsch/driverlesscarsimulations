@@ -2,14 +2,8 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 require('sinon-as-promised');
-const request = require('supertest');
-const express = require('express');
-const app = express();
-const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const User = require('../backend/models/User');
 const server = require('../server');
-const config = require('../backend/config');
 
 const City = require('../backend/models/City');
 
