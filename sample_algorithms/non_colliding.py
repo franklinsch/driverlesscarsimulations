@@ -12,7 +12,6 @@ import os.path
 from copy import deepcopy
 
 state = []
-locked_nodes = []
 
 SLEEP_TIME = 1
 TIMESLICE = 1
@@ -154,7 +153,7 @@ def addToState(journeys, state):
   routes = R.getRoutes(MAP_FILE, pairs)
   for (i, route) in enumerate(routes):
     preprocess(route)
-    state.append(createNewCar(len(state), journeys[i]['_id'], baseRoute=route))
+    state.append(createNewCar(len(state), journeys[i]['_id'], baseRoute=route[0]))
     print(str(i+1) + '.')
 
 def get_distance(start, end):
@@ -183,6 +182,10 @@ def get_bearing(start, end):
 def preprocess(route):
   maxSpeed_km_h = MAX_SPEED_KM_H
   i = 0
+  startNode = route[1]
+  endNode = route[2]
+  route = route[0]
+  route[1].append({'node': startNode})
   while i < len(route):
     if (isinstance(route[i], list)):
       if (i > 0):
@@ -191,7 +194,11 @@ def preprocess(route):
 
         dist = get_distance(start, end)
         time = dist/(maxSpeed_km_h*1000/3600)
-        end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed_km_h})
+
+        node = [end[0], end[1]]
+        if (i == len(route) - 1):
+          node = endNode
+        end.append({'timeLeft': time, 'totalTime': time, 'maxSpeed': maxSpeed_km_h, 'node': node})
       i += 1
     else:
       props = route[i]
@@ -227,13 +234,13 @@ def scale(v, s):
 
 def scheduleNewRoute(car):
   start = car['baseRoute'][0]
-  if (isNodeLocked(start, car['bearing'])):
+  if (isNodeLocked(start[2]['node'], car['bearing'])):
     return False
   car['journeyStart'] = timestamp
   car['route'] = deepcopy(car['baseRoute'])
-  car['position'] = car['baseRoute'][0]
+  car['position'] = start
   car['bearing'] = get_bearing(car['route'][0], car['route'][1])
-  car['lockedNode'] = start
+  car['lockedNode'] = start[2]['node']
   car['distanceTravelled'] = 0
   return True
 
@@ -250,11 +257,11 @@ def isNodeLocked(node, bearing):
   return False
 
 def switchNodeLock(car, start, end):
-  if (isEqualNodes(car['lockedNode'], start)):
-    if (isNodeLocked(end, car['bearing'])):
+  if (isEqualNodes(car['lockedNode'], start[2]['node'])):
+    if (isNodeLocked(end[2]['node'], car['bearing'])):
       return False
 
-    car['lockedNode'] = end
+    car['lockedNode'] = end[2]['node']
   return True
 
 def executeLocalAlgorithm(car):
@@ -321,7 +328,7 @@ def translate(state):
   res = []
   for car in state:
     if (car['position'] != None):
-      res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}}]#, 'route': car['baseRoute']}]
+      res += [{'id': str(car['id']), 'journeyID': car['journeyID'], 'objectType': car['type'], 'speed': car['speed'], 'bearing': car['bearing'], 'position': {'lat': car['position'][1], 'lng': car['position'][0]}, 'route': car['baseRoute']}]
   return res
 
 simulationID = None

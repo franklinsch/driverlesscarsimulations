@@ -139,6 +139,8 @@ const getNearest = function(p, pathFinder) {
         left_edge = v1;
       }
       const mid = (min + max) / 2;
+
+      i = Number(i)
       if (proj[0] <= mid) {
         if (proj[0] < min) {
           proj = left_edge;
@@ -185,22 +187,24 @@ const paths = pairs.map(function(pair, index) {
   const end = nearests[1][0];
   const path = pathFinder.findPath(point(start), point(end))['path'];
 
-  if (nearests[0][1] != undefined) {
-    svs = pathFinder._removeVertex(nearests[0][1], nearests[0][2][0], nearests[0][2][1]);
-    if (path[2] == svs[1]);
-      path[1] = svs[0];
-    } else {
-      path[1] = svs[1];
-    }
-  }
+  let ev = path[path.length - 1];
   if (nearests[1][1] != undefined) {
-    evs = pathFinder._removeVertex(nearests[1][1], nearests[1][2][0], nearests[1][2][1]);
+    const evs = pathFinder._removeVertex(nearests[1][1], nearests[1][2][0], nearests[1][2][1]);
     if (path[path.length - 2] == evs[1]) {
-      path[path.length - 1] = evs[0];
+      ev = evs[0];
     } else {
-      path[path.length - 1] = evs[1];
+      ev = evs[1];
     }
   }
-  return [path, start, end];
+  let sv = path[1];
+  if (nearests[0][1] != undefined) {
+    const svs = pathFinder._removeVertex(nearests[0][1], nearests[0][2][0], nearests[0][2][1]);
+    if (path[2] == svs[1]) {
+      sv = svs[0];
+    } else {
+      sv = svs[1];
+    }
+  }
+  return [path, sv, ev];
 });
 console.log(JSON.stringify(paths));
