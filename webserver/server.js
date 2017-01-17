@@ -6,7 +6,9 @@ module.exports = {
   getBenchmarks: getBenchmarks,
   _handleRequestSimulationBenchmark: _handleRequestSimulationBenchmark,
   _handleRequestEventUpdate: _handleRequestEventUpdate,
-  _handleRequestAvailableCities: _handleRequestAvailableCities
+  _handleRequestAvailableCities: _handleRequestAvailableCities,
+  _handleRequestDefaultObjectTypes: _handleRequestDefaultObjectTypes,
+  _handleRequestObjectKinds: _handleRequestObjectKinds
 };
 
 const express = require('express');

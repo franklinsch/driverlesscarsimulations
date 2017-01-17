@@ -32,6 +32,6 @@ describe('Sending available cities to the frontend', function() {
     connection.send.should.have.been.calledWith(JSON.stringify({
       type: "available-cities",
       content: {}
-    })); 
+    }));
   })
 })
