@@ -335,13 +335,16 @@ function _handleRequestEventUpdate(message, connection, callback) {
 }
 
 function _handleRequestAvailableCities(connection) {
-  City.find()
-    .then((response) => {
-      connection.send(JSON.stringify({
-        type: "available-cities",
-        content: response
-      }));
-    });
+  City.find((err, response) => {
+    if (err) {
+      console.error(err);
+    }
+
+    connection.send(JSON.stringify({
+      type: "available-cities",
+      content: response
+    }));
+  })
 }
 
 function _handleRequestDefaultObjectTypes(connection) {
