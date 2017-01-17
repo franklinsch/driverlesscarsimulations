@@ -169,6 +169,78 @@ const getNearest = function(p, pathFinder) {
   return [min_point, min_edge_index, vs];
 }
 
+const getNearest2 = function(p, pathFinder, posEdge) {
+  let dist, point, edge_index;
+  for (let i in pathFinder._topo.edges) {
+    const edge = pathFinder._topo.edges[i];
+    const props = edge[2];
+    const v0 = pathFinder._topo.vertices[edge[0]];
+    const v1 = pathFinder._topo.vertices[edge[1]];
+
+
+    if (posEdge[0] == v0 && posEdge[1] == v1) {
+      let point = getNormalIntersection(v0, v1, p);
+      const Ax = v0[0];
+      const Ay = v0[1];
+      const Bx = v1[0];
+      const By = v1[1];
+      const x  = p[0];
+      const y  = p[1];
+
+      const eps = pathFinder._precision;
+
+      let min = -eps, max = eps, left_edge, right_edge;
+      if (Ax == Bx) {
+        if (Ay < By) {
+          min += Ay;
+          max += By;
+          left_edge = v0;
+          right_edge = v1;
+        } else {
+          min += By;
+          max += Ay;
+          right_edge = v0;
+          left_edge = v1;
+        }
+      } else if (Ax < Bx) {
+        min += Ax;
+        max += Bx;
+        left_edge = v0;
+        right_edge = v1;
+      } else {
+        min += Bx;
+        max += Ax;
+        right_edge = v0;
+        left_edge = v1;
+      }
+      const mid = (min + max) / 2;
+
+      i = Number(i)
+      if (point[0] <= mid) {
+        if (point[0] < min) {
+          point = left_edge;
+          i = undefined;
+        }
+      } else if (point[0] > mid) {
+        if (point[0] > max) {
+          point = right_edge;
+          i = undefined;
+        }
+      }
+
+      dist = getDistance(point, p);
+      edge_index = i;
+      break;
+    }
+  }
+
+  let vs = [];
+  if (min_edge_index != undefined) {
+    vs = pathFinder._addVertex(min_point, min_edge_index, getDistance);
+  }
+  return [min_point, min_edge_index, vs];
+}
+
 const fs = require('fs');
 const PathFinder = require('geojson-path-finder');
 
@@ -179,9 +251,10 @@ const pathFinder = new PathFinder(geojson);
 
 const paths = pairs.map(function(pair, index) {
   console.error('.' + index)
+  const nearestF = pair.length == 3 ? getNearest2 : getNearest;
   const nearests = [
-    getNearest(pair[0], pathFinder),
-    getNearest(pair[1], pathFinder)
+    nearestF(pair[0], pathFinder, pair[2]),
+    nearestF(pair[1], pathFinder, pair[2])
   ];
   const start = nearests[0][0];
   const end = nearests[1][0];
