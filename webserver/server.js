@@ -3,7 +3,10 @@ module.exports = {
   _handleRequestEventUpdate: _handleRequestEventUpdate,
   getDistanceLatLonInKm: getDistanceLatLonInKm,
   deg2rad: deg2rad,
-  getBenchmarks: getBenchmarks
+  getBenchmarks: getBenchmarks,
+  _handleRequestSimulationBenchmark: _handleRequestSimulationBenchmark,
+  _handleRequestEventUpdate: _handleRequestEventUpdate,
+  _handleRequestAvailableCities: _handleRequestAvailableCities
 };
 
 const express = require('express');
