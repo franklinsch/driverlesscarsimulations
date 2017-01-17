@@ -3,7 +3,10 @@ module.exports = {
   _handleRequestEventUpdate: _handleRequestEventUpdate,
   getDistanceLatLonInKm: getDistanceLatLonInKm,
   deg2rad: deg2rad,
-  getBenchmarks: getBenchmarks
+  getBenchmarks: getBenchmarks,
+  _handleRequestSimulationBenchmark: _handleRequestSimulationBenchmark,
+  _handleRequestEventUpdate: _handleRequestEventUpdate,
+  _handleRequestAvailableCities: _handleRequestAvailableCities
 };
 
 const express = require('express');
@@ -332,13 +335,16 @@ function _handleRequestEventUpdate(message, connection, callback) {
 }
 
 function _handleRequestAvailableCities(connection) {
-  City.find()
-    .then((response) => {
-      connection.send(JSON.stringify({
-        type: "available-cities",
-        content: response
-      }));
-    });
+  City.find((err, response) => {
+    if (err) {
+      console.error(err);
+    }
+
+    connection.send(JSON.stringify({
+      type: "available-cities",
+      content: response
+    }));
+  })
 }
 
 function _handleRequestDefaultObjectTypes(connection) {
