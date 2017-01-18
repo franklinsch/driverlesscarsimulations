@@ -745,7 +745,7 @@ frontendSocketServer.on('request', function(request) {
 });
 
 const fserver = require('http').createServer();
-const frameworkSocketServer = new WebSocketServer({ httpServer: fserver, maxReceivedFrameSize: 256 * 1024 });
+const frameworkSocketServer = new WebSocketServer({ httpServer: fserver, maxReceivedFrameSize: 1024 * 1024 });
 
 function _handleFrameworkConnect(message, connection) {
   console.log("Received simulation-start from framework");
@@ -882,6 +882,9 @@ function _handleSimulationStateUpdate(message, connection) {
     Simulation.update({
       _id: simulationID,
     }, {$push: pushIndexInfo}, function(error, numAffected) {
+      if (error) {
+        console.error(error);
+      }
       Simulation.update({
         _id: simulationID,
         'frameworks._id': frameworkID
@@ -892,13 +895,24 @@ function _handleSimulationStateUpdate(message, connection) {
           'frameworks.$.nextTimestamp': nextFrameworkTimestamp
         }
       }, function(error, numAffected) {
-        Simulation.findOneAndUpdate({
+        if (error) {
+          console.log(error);
+        }
+        Simulation.update({
           _id: simulationID,
           'simulationStates.timestamp': simulationStateTimestamp,
         },{
           $push: {'simulationStates.$.participants': frameworkID}
-        }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
-          updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
+        }, function(error, numAffected) {
+          Simulation.findOne({
+            _id: simulationID,
+            'simulationStates.timestamp': simulationStateTimestamp,
+          }, {frameworks: 1, "simulationStates.$": 1}, function(error, simulation) {
+            if (error) {
+              console.error(error);
+            }
+            updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
+          });
         });
       });
     });

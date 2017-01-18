@@ -22,7 +22,7 @@ class SAVNConnectionAssistant:
     self.frameworkID = 0
     self.shouldAwait = False
 
-  def updateState(self, timestamp, state, sleepTime=1):
+  def updateState(self, timestamp, state, sleepTime=0.25):
     packet = {'type': 'simulation-state-update',
               'content':
                 {'simulationID': self.simulationID,
