@@ -8,7 +8,9 @@ module.exports = {
   _handleRequestEventUpdate: _handleRequestEventUpdate,
   _handleRequestAvailableCities: _handleRequestAvailableCities,
   _handleRequestDefaultObjectTypes: _handleRequestDefaultObjectTypes,
-  _handleRequestObjectKinds: _handleRequestObjectKinds
+  _handleRequestObjectKinds: _handleRequestObjectKinds,
+  _handleJourneyComplete: _handleJourneyComplete,
+  _handleFrameworkConnect: _handleFrameworkConnect,
 };
 
 const express = require('express');

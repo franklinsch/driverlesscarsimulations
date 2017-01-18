@@ -73,10 +73,50 @@ const Routing = function() {
   return {
     user: _user,
   }
+}();
 
+const Framework = function() {
+  const _journeyCompleteMessage = () => {
+    return {
+      simulationID: '42',
+      timestamp: 15,
+      journeyStart: 10,
+      distance: 42,
+      journeyID: '42',
+      frameworkID: '1'
+    }
+  };
+
+  const _frameworkConnectMessage = () => {
+    return {
+      simulationID: '42',
+      timeslice: 20,
+      name: 'Some framework',
+    }
+  };
+
+  const _simulation = () => {
+    return {
+      timeslice: 15,
+      latestTimestamp: 15,
+      simulationStates: {
+      },
+      frameworks: ['some other framework'],
+      frontends: [],
+      journeys: [] ,
+      city: 'some city'
+    }
+  };
+
+  return {
+    journeyCompleteMessage: _journeyCompleteMessage,
+    frameworkConnectMessage: _frameworkConnectMessage,
+    simulation: _simulation
+  };
 }();
 
 module.exports = {
   benchmarking: Benchmarking,
   routing: Routing,
+  framework: Framework
 };
