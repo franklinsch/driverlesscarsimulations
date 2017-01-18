@@ -825,7 +825,6 @@ function _handleFrameworkConnect(message, connection) {
           state: state
         }
       }));
-      console.log(sendFrameworkList);
       sendFrameworkList(simulation.frameworks, simulation.frontends);
     });
   })
