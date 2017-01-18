@@ -13,6 +13,7 @@ SAVN is separated into three components:
 - Server: Stores data and handles communication between the website and the algorithm
 
 ## Installation
+
 First, install the libraries required for the webserver by executing the following command within the `webserver` directory:
 
     npm install
