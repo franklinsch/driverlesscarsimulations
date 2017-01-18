@@ -23,6 +23,7 @@ const passwordConfig = require('./backend/passport');
 const fs = require('fs');
 const uuidV4 = require('uuid/v4');
 const jwt = require('jsonwebtoken');
+const jQuery = require('jquery');
 
 const WebSocketServer = require('websocket').server;
 
@@ -32,6 +33,7 @@ const app = express();
 const db = require('./backend/db');
 const Journey = require('./backend/models/Journey');
 const Simulation = require('./backend/models/Simulation');
+const SimulationState = require('./backend/models/SimulationState');
 const City = require('./backend/models/City');
 const User = require('./backend/models/User');
 
@@ -586,12 +588,22 @@ function _handleRequestSimulationTimestampChange(message, connection) {
 
       frontendConnections[index]['timestamp'] = message.timestamp;
       const stateIndex = Math.floor(frontendConnections[index]['timestamp'] / simulation.timeslice);
-      frontendConnections[index]['connection'].send(JSON.stringify({
-        type: "simulation-state",
-        content: {
-          state: simulation.simulationStates[stateIndex]
+
+      const simulationStateID = simulation.simulationStates[stateIndex];
+
+      SimulationState.findById(simulationStateID, function(error, simulationState) {
+        if (error || !simulationState) {
+          console.error(error);
+          return;
         }
-      }))
+
+        frontendConnections[index]['connection'].send(JSON.stringify({
+          type: "simulation-state",
+          content: {
+            state: simulationState
+          }
+        }))
+      })
     });
   }
 }
@@ -811,19 +823,21 @@ function _handleFrameworkConnect(message, connection) {
       frameworkConnections.push({connection: connection, simulationID: simulation._id});
 
       const currIndex = Math.floor(simulation.latestTimestamp / simulation.timeslice);
-      const state = simulation.simulationStates[currIndex] || [];
 
-      connection.send(JSON.stringify({
-        type: "simulation-start-parameters",
-        content: {
-          frameworkID: frameworkID,
-          city: simulation.city,
-          journeys: simulation.journeys,
-          timestamp: startTimestamp,
-          state: state
-        }
-      }));
-      sendFrameworkList(simulation.frameworks, simulation.frontends);
+      SimulationState.findById(simulation.simulationStates[currIndex], (err, state) => {
+        connection.send(JSON.stringify({
+          type: "simulation-start-parameters",
+          content: {
+            frameworkID: frameworkID,
+            city: simulation.city,
+            journeys: simulation.journeys,
+            timestamp: startTimestamp,
+            state: state
+          }
+        }));
+        sendFrameworkList(simulation.frameworks, simulation.frontends);
+      });
+
     });
   })
 }
@@ -862,18 +876,35 @@ function _handleSimulationStateUpdate(message, connection) {
     const nextIndex = Math.ceil(nextFrameworkTimestamp / simulation.timeslice);
 
     const pushIndexInfo = {};
+
     for (let i = simulationStateIndex; i < simulation.numSimulationStates; i++) {
-      pushIndexInfo['simulationStates.'+i+'.frameworkStates'] = newState;
+      const simulationStateID = simulation.simulationStates[i];
+
+      SimulationState.update({_id: simulationStateID}, {$push: {frameworkStates: newState}}, (err, simulationState) => {
+        if (err || !simulationState) {
+          console.error(err);
+          return;
+        }
+      })
     }
 
     const pushObjects = [];
     for (let i = simulation.numSimulationStates; i < nextIndex; i++) {
-      pushObjects.push({
+      const simulationState = new SimulationState({
         communicated: false,
         timestamp: i * simulation.timeslice,
         participants: [],
         frameworkStates: [newState]
       });
+
+      pushObjects.push(simulationState._id);
+
+      simulationState.save((err, simulationState) => {
+        if (err || !simulationState) {
+          console.error(err);
+          return;
+        }
+      })
     }
 
     const latestTimestamp = simulation.latestTimestamp;
@@ -881,25 +912,21 @@ function _handleSimulationStateUpdate(message, connection) {
 
     Simulation.update({
       _id: simulationID,
-    }, {$push: pushIndexInfo}, function(error, numAffected) {
-      Simulation.update({
+      'frameworks._id': frameworkID
+    }, {
+      $push: {simulationStates: {$each: pushObjects}},
+      $set: {
+        numSimulationStates: simulation.numSimulationStates + pushObjects.length,
+        'frameworks.$.nextTimestamp': nextFrameworkTimestamp
+      }
+    }, function(error, numAffected) {
+      Simulation.findOneAndUpdate({
         _id: simulationID,
-        'frameworks._id': frameworkID
-      }, {
-        $push: {simulationStates: {$each: pushObjects}},
-        $set: {
-          numSimulationStates: simulation.numSimulationStates + pushObjects.length,
-          'frameworks.$.nextTimestamp': nextFrameworkTimestamp
-        }
-      }, function(error, numAffected) {
-        Simulation.findOneAndUpdate({
-          _id: simulationID,
-          'simulationStates.timestamp': simulationStateTimestamp,
-        },{
-          $push: {'simulationStates.$.participants': frameworkID}
-        }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
-          updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
-        });
+        'simulationStates.timestamp': simulationStateTimestamp,
+      },{
+        $push: {'simulationStates.$.participants': frameworkID}
+      }, {new: true, select: {frameworks: 1, city: 1, simulationStates: {$elemMatch: {timestamp: simulationStateTimestamp}}}}, function(error, simulation) {
+        updateConnectionsWithState(simulation._id, simulation.frameworks, simulation.simulationStates[0], latestTimestamp, timeslice);
       });
     });
   });
@@ -991,10 +1018,16 @@ frameworkSocketServer.on('request', function(request) {
         }
 
         const nextIndex = Math.ceil((simulation.latestTimestamp + simulation.timeslice) / simulation.timeslice);
-        const simulationState = !isNaN(nextIndex) && simulation.simulationStates[nextIndex];
-        if (simulationState) {
+        const simulationStateID = !isNaN(nextIndex) && simulation.simulationStates[nextIndex];
+
+        SimulationState.findById(simulationStateID, (err, simulationState) => {
+          if (err || !simulationState) {
+            console.error(err);
+            return;
+          }
+
           updateConnectionsWithState(simulation._id, simulation.frameworks, simulationState, simulation.latestTimestamp, simulation.timeslice);
-        }
+        })
       });
     }
 
@@ -1014,41 +1047,62 @@ function createNewSimulationStates(simulationID, newTimeslice) {
       }
       while (time < framework.nextTimestamp) {
         const oldIndex = Math.ceil(time / simulation.timeslice);
-        const simulationState = simulation.simulationStates[oldIndex];
+        const simulationStateID = simulation.simulationStates[oldIndex];
 
-        let frameworkState = undefined;
-        for (const fState of simulationState.frameworkStates) {
-          if (fState.frameworkID == framework._id) {
-            frameworkState = fState;
-            break;
+        simulationState.findById(simulationStateId, (err, simulationState) => {
+          if (err || !simulationState) {
+            console.error(err);
+            return;
           }
-        }
 
-        const newIndex = Math.ceil(time / newTimeslice);
-
-        const nextTime = time + framework.timeslice;
-        const nextNewIndex = Math.ceil(nextTime / newTimeslice);
-        for (let i = newIndex; i < nextNewIndex; i++) {
-          if (newSimulationStates.length == i) {
-            const newFrameworkState = frameworkState ? [frameworkState] : [];
-            const timestamp = i * newTimeslice;
-            newSimulationStates.push({
-              communicated: timestamp <= simulation.latestTimestamp,
-              timestamp: timestamp,
-              participants: [],
-              frameworkStates: newFrameworkState
-            });
-          } else if (frameworkState) {
-            newSimulationStates[i].frameworkStates.push(frameworkState);
+          let frameworkState = undefined;
+          for (const fState of simulationState.frameworkStates) {
+            if (fState.frameworkID == framework._id) {
+              frameworkState = fState;
+              break;
+            }
           }
-        }
-        if (frameworkState && time > simulation.latestTimestamp) {
-          newSimulationStates[newIndex].participants.push(framework._id);
-        }
-        time = nextTime;
+
+          const newIndex = Math.ceil(time / newTimeslice);
+
+          const nextTime = time + framework.timeslice;
+          const nextNewIndex = Math.ceil(nextTime / newTimeslice);
+          for (let i = newIndex; i < nextNewIndex; i++) {
+            if (newSimulationStates.length == i) {
+              const newFrameworkState = frameworkState ? [frameworkState] : [];
+              const timestamp = i * newTimeslice;
+              newSimulationStates.push({
+                communicated: timestamp <= simulation.latestTimestamp,
+                timestamp: timestamp,
+                participants: [],
+                frameworkStates: newFrameworkState
+              });
+            } else if (frameworkState) {
+              newSimulationStates[i].frameworkStates.push(frameworkState);
+            }
+          }
+          if (frameworkState && time > simulation.latestTimestamp) {
+            newSimulationStates[newIndex].participants.push(framework._id);
+          }
+          time = nextTime;
+        })
       }
     }
-    return newSimulationStates;
+
+    let simulationStateIDs = [];
+
+    for (const newSimulationState of newSimulationStates) {
+      const simulationState = new SimulationState(newSimulationState);
+      simulationStateIDs.push(simulationState._id);
+      simulationState.save((error, simulationState) => {
+        if (error || !simulationState) {
+          console.error(error);
+          return;
+        }
+      })
+    }
+
+    return simulationStateIDs;
   });
 }
 
