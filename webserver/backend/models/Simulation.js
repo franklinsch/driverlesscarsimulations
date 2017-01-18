@@ -32,27 +32,7 @@ const simulationSchema = mongoose.Schema({
   }],
   numSimulationStates: Number,
   frameworks: [Framework.schema],
-  simulationStates: [{
-    communicated: Boolean,
-    timestamp: Number,
-    participants: [String],
-    frameworkStates: [{
-      frameworkID: String,
-      timestamp: Number,
-      objects: [{
-        id: String,
-        journeyID: String,
-        objectType: String,
-        speed: Number,
-        bearing: Number,
-        route: [{}],
-        position: {
-          lat: Number,
-          lng: Number
-        }
-      }]
-    }]
-  }],
+  simulationStates: [mongoose.Types.ObjectId],
   benchmarkValues: Object
 });
 
