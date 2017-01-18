@@ -32,7 +32,7 @@ const simulationSchema = mongoose.Schema({
   }],
   numSimulationStates: Number,
   frameworks: [Framework.schema],
-  simulationStates: [mongoose.Types.ObjectId],
+  simulationStates: [mongoose.Schema.Types.ObjectId],
   benchmarkValues: Object
 });
 
